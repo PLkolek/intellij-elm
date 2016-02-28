@@ -1,0 +1,81 @@
+{
+  parserClass="mkolaczek.elm.ElmParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Elm"
+  psiImplClassSuffix="Impl"
+  psiPackage="mkolaczek.elm.psi"
+  psiImplPackage="mkolaczek.elm.psi.impl"
+
+  elementTypeHolderClass="mkolaczek.elm.psi.ElmTypes"
+  elementTypeClass="mkolaczek.elm.psi.ElmElementType"
+  tokenTypeClass="mkolaczek.elm.psi.ElmTokenType"
+
+  psiImplUtilClass="mkolaczek.elm.psi.impl.ElmPsiImplUtil"
+}
+
+elmFile ::= module_header? declarations
+
+var ::= CAP_VAR FRESH_LINE
+
+//MODULE HEADER
+
+module_header ::= module_declaration? (doc_comment FRESH_LINE)? import2*
+
+module_declaration ::= MODULE FORCED_WS dotted_cap_var (exports | FORCED_WS) WHERE FRESH_LINE
+
+doc_comment ::= BEGIN_DOC_COMMENT (COMMENT_CONTENT | multiline_comment)* END_COMMENT
+
+import2 ::= IMPORT FORCED_WS dotted_cap_var import_method FRESH_LINE
+
+import_method ::= (FORCED_WS AS FORCED_WS CAP_VAR)? (FORCED_WS EXPOSING module_value_list)?
+
+multiline_comment ::= BEGIN_COMMENT (COMMENT_CONTENT | multiline_comment)* END_COMMENT
+
+exports ::= module_value_list FORCED_WS?
+
+module_value_list ::= <<listing module_value>>
+
+module_value ::= LOW_VAR | (LPAREN FORCED_WS? symbol_op FORCED_WS? RPAREN) | type_export
+
+type_export ::= CAP_VAR <<listing cap_var2>>?
+
+symbol_op ::= SYM_OP | COMMA_OP
+
+
+//DECLARATIONS
+declarations ::= declaration fresh_declaration*
+
+declaration ::= doc_comment | type_declaration
+
+fresh_declaration ::= FRESH_LINE declaration
+
+type_declaration ::= TYPE FORCED_WS (type_alias)
+
+type_alias ::= ALIAS FORCED_WS CAP_VAR (FORCED_WS LOW_VAR)* padded_equals type_expr
+
+type_expr ::= type_app
+
+type_app ::= dotted_cap_var | tuple_ctor (FORCED_WS term) *
+
+tuple_ctor ::= LPAREN FORCED_WS? COMMA_OP? FORCED_WS? RPAREN
+
+term ::= tuple
+
+tuple ::= LPAREN FORCED_WS? (type_expr (padded_comma))
+
+
+//UTILS/OTHERS
+
+dotted_cap_var ::= CAP_VAR (DOT CAP_VAR)*
+
+cap_var2 ::= CAP_VAR
+
+padded_comma ::= FORCED_WS? COMMA FORCED_WS?
+
+padded_equals ::= FORCED_WS? EQUALS FORCED_WS?
+
+other ::= EQUALS | ARROW | COMMENT | OR | COLON
+
+meta listing ::= FORCED_WS? LPAREN FORCED_WS? (OPEN_LISTING |  (<<param>> (padded_comma <<param>>)*)) FORCED_WS? RPAREN
