@@ -1,4 +1,4 @@
-package mkolaczek.elm;
+package mkolaczek.elm.parsers;
 
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
@@ -26,7 +26,7 @@ public class Whitespace {
         return endsWithWS;
     }
 
-    static boolean freshLine(@NotNull PsiBuilder builder) {
+    public static boolean freshLine(@NotNull PsiBuilder builder) {
         Optional<IElementType> lastToken = whitespace(builder);
         boolean endsWithNewline = lastToken.isPresent() && lastToken.get() == ElmTypes.NEW_LINE;
         if (!endsWithNewline) {
