@@ -31,7 +31,7 @@ public class ElmParserDefinition implements ParserDefinition {
 
     @Override
     public PsiParser createParser(Project project) {
-        return new ElmParser();
+        return new MyElmParser();
     }
 
     @Override

@@ -35,7 +35,6 @@ import java.util.LinkedList;
 
 CLRF="\r"|"\n"|"\r\n"
 LINE_WS=[\ \f]
-WHITE_SPACE=({LINE_WS}|{CLRF})+
 CAP_VAR=[A-Z][a-zA-Z0-9]*
 LOW_VAR=[a-z][a-zA-Z0-9]*
 FRESH_LINE=({LINE_WS}|{CLRF})*{CLRF}
@@ -70,8 +69,8 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   "."               { return DOT; }
   ":"               { return COLON; }
   "{-|"             { yypushstate(INCOMMENT); return BEGIN_DOC_COMMENT;}
-  {FRESH_LINE}      { return FRESH_LINE; }
-  {FORCED_WS}       { return FORCED_WS; }
+  {LINE_WS}         { return WHITE_SPACE; }
+  {CLRF}            { return NEW_LINE; }
   {CAP_VAR}         { return CAP_VAR; }
   {LOW_VAR}         { return LOW_VAR; }
   ","+              { return COMMA_OP; }
