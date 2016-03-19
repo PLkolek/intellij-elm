@@ -50,10 +50,16 @@ public class MyElmParser implements PsiParser {
         boolean success = Basic.sequence(builder,
                 Basic.expect(ElmTypes.LPAREN),
                 Whitespace::maybeWhitespace,
+                MyElmParser::exportListing,
+                Whitespace::maybeWhitespace,
                 Basic.expect(ElmTypes.RPAREN)
         );
         m.done(ElmTypes.MODULE_VALUE_LIST);
         return success;
+    }
+
+    private static Boolean exportListing(PsiBuilder builder) {
+        return Basic.or(builder, Basic.expect(ElmTypes.OPEN_LISTING));
     }
 
     private boolean dottedCapVar(@NotNull PsiBuilder builder) {

@@ -1,6 +1,7 @@
 package mkolaczek.elm.parsers;
 
 import com.intellij.lang.PsiBuilder;
+import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,5 +45,20 @@ public class Basic {
             builder.advanceLexer();
         }
         return true;
+    }
+
+    public static Boolean or(PsiBuilder builder, Function<PsiBuilder, Boolean>... parsers) {
+        Marker start = builder.mark();
+        for (Function<PsiBuilder, Boolean> parser : parsers) {
+            if (parser.apply(builder)) {
+                start.drop();
+                return true;
+            }
+            start.rollbackTo();
+            start = builder.mark();
+        }
+        start.drop();
+        builder.error("Someting expected in OR");
+        return false;
     }
 }
