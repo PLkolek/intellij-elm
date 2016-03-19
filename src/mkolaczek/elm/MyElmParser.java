@@ -18,6 +18,7 @@ public class MyElmParser implements PsiParser {
     public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder) {
         Marker marker = builder.mark();
         module(builder);
+        consumeRest(builder);
         marker.done(root);
         return builder.getTreeBuilt();
     }
@@ -65,19 +66,27 @@ public class MyElmParser implements PsiParser {
         return (PsiBuilder builder) ->
                 Basic.or(builder,
                         Basic.expect(ElmTypes.OPEN_LISTING),
-                        MyElmParser.exportValues(listedValue));
+                        MyElmParser.listingValues(listedValue));
     }
 
-    private static Parser exportValues(Parser listedValue) {
-        return (builder) -> listedValue.apply(builder) && Basic.many(builder, paddedComma());
+    private static Parser listingValues(Parser listedValue) {
+        return (builder) -> listedValue.apply(builder) && Basic.many(builder, paddedComma(), listedValue);
     }
 
     private static Parser paddedComma() {
-        return (builder) ->
-                Basic.sequence(builder,
-                        Whitespace::maybeWhitespace,
-                        Basic.expect(ElmTypes.COMMA),
-                        Whitespace::maybeWhitespace);
+        return (builder) -> {
+            Marker marker = builder.mark();
+            Whitespace.maybeWhitespace(builder);
+            if (builder.getTokenType() != ElmTypes.COMMA) {
+                marker.rollbackTo();
+                return false;
+            }
+            marker.drop();
+            return Basic.sequence(builder,
+                    Whitespace::maybeWhitespace,
+                    Basic.expect(ElmTypes.COMMA),
+                    Whitespace::maybeWhitespace);
+        };
     }
 
     private static Parser exportValue() {
@@ -121,6 +130,12 @@ public class MyElmParser implements PsiParser {
 
     private void consumeLine(PsiBuilder builder) {
         while (!builder.eof() && builder.getTokenType() != ElmTypes.NEW_LINE) {
+            builder.advanceLexer();
+        }
+    }
+
+    private void consumeRest(PsiBuilder builder) {
+        while (!builder.eof()) {
             builder.advanceLexer();
         }
     }
