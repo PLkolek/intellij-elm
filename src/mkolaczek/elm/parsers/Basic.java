@@ -36,7 +36,7 @@ public class Basic {
     }
 
     @NotNull
-    private static Boolean simpleExpect(PsiBuilder builder, IElementType... tokens) {
+    public static Boolean simpleExpect(PsiBuilder builder, IElementType... tokens) {
         for (IElementType token : tokens) {
             if (builder.getTokenType() != token) {
                 builder.error(token.toString() + " expected");

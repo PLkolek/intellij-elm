@@ -58,8 +58,18 @@ public class MyElmParser implements PsiParser {
         return success;
     }
 
-    private static Boolean exportListing(PsiBuilder builder) {
-        return Basic.or(builder, Basic.expect(ElmTypes.OPEN_LISTING));
+    private static boolean exportListing(PsiBuilder builder) {
+        return Basic.or(builder,
+                Basic.expect(ElmTypes.OPEN_LISTING),
+                MyElmParser::exportValues);
+    }
+
+    private static boolean exportValues(PsiBuilder builder) {
+        return exportValue(builder);
+    }
+
+    private static boolean exportValue(PsiBuilder builder) {
+        return Basic.simpleExpect(builder, ElmTypes.LOW_VAR);
     }
 
     private boolean dottedCapVar(@NotNull PsiBuilder builder) {
