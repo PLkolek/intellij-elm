@@ -5,8 +5,6 @@ import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
-
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class Basic {
@@ -50,11 +48,16 @@ public class Basic {
     public static Boolean or(PsiBuilder builder, Parser... parsers) {
         Marker start = builder.mark();
         for (Parser parser : parsers) {
+            int offsetBefore = builder.getCurrentOffset();
             if (parser.apply(builder)) {
                 start.drop();
                 return true;
             }
-            start.rollbackTo();
+            if (offsetBefore != builder.getCurrentOffset()) {
+                start.drop();
+            } else {
+                start.rollbackTo();
+            }
             start = builder.mark();
         }
         start.drop();
