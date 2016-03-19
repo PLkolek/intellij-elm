@@ -36,7 +36,11 @@ public class Whitespace {
     }
 
     public static boolean maybeWhitespace(PsiBuilder builder) {
-        whitespace(builder);
-        return true;
+        Optional<IElementType> lastToken = whitespace(builder);
+        boolean endsWithNewLine = lastToken.isPresent() && lastToken.get() == ElmTypes.NEW_LINE;
+        if (endsWithNewLine) {
+            builder.error("Whitespace expected");
+        }
+        return !endsWithNewLine;
     }
 }
