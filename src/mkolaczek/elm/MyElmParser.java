@@ -6,11 +6,10 @@ import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.parsers.Basic;
+import mkolaczek.elm.parsers.Parser;
 import mkolaczek.elm.parsers.Whitespace;
 import mkolaczek.elm.psi.ElmTypes;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Function;
 
 public class MyElmParser implements PsiParser {
 
@@ -42,7 +41,7 @@ public class MyElmParser implements PsiParser {
     }
 
 
-    private static Function<PsiBuilder, Boolean> listing(Function<PsiBuilder, Boolean> listedValue) {
+    private static Parser listing(Parser listedValue) {
         return (PsiBuilder builder) -> {
             Marker m = builder.mark();
             Whitespace.maybeWhitespace(builder);
@@ -62,18 +61,18 @@ public class MyElmParser implements PsiParser {
         };
     }
 
-    private static Function<PsiBuilder, Boolean> listingContent(Function<PsiBuilder, Boolean> listedValue) {
+    private static Parser listingContent(Parser listedValue) {
         return (PsiBuilder builder) ->
                 Basic.or(builder,
                         Basic.expect(ElmTypes.OPEN_LISTING),
                         MyElmParser.exportValues(listedValue));
     }
 
-    private static Function<PsiBuilder, Boolean> exportValues(Function<PsiBuilder, Boolean> listedValue) {
-        return (PsiBuilder builder) -> listedValue.apply(builder);
+    private static Parser exportValues(Parser listedValue) {
+        return listedValue::apply;
     }
 
-    private static Function<PsiBuilder, Boolean> exportValue() {
+    private static Parser exportValue() {
         return (PsiBuilder builder) ->
                 Basic.or(builder,
                         Basic.expect(ElmTypes.LOW_VAR),

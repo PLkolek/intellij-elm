@@ -10,8 +10,8 @@ import java.util.function.Function;
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class Basic {
-    public static boolean sequence(PsiBuilder builder, Function<PsiBuilder, Boolean>... parsers) {
-        for (Function<PsiBuilder, Boolean> parser : parsers) {
+    public static boolean sequence(PsiBuilder builder, Parser... parsers) {
+        for (Parser parser : parsers) {
             if (!parser.apply(builder)) {
                 return false;
             }
@@ -19,7 +19,7 @@ public class Basic {
         return true;
     }
 
-    public static Function<PsiBuilder, Boolean> many(IElementType... tokens) {
+    public static Parser many(IElementType... tokens) {
         checkArgument(tokens != null && tokens.length >= 1);
         return (PsiBuilder builder) -> {
             while (builder.getTokenType() == tokens[0]) {
@@ -31,7 +31,7 @@ public class Basic {
         };
     }
 
-    public static Function<PsiBuilder, Boolean> expect(IElementType... tokens) {
+    public static Parser expect(IElementType... tokens) {
         return (PsiBuilder builder) -> simpleExpect(builder, tokens);
     }
 
@@ -47,9 +47,9 @@ public class Basic {
         return true;
     }
 
-    public static Boolean or(PsiBuilder builder, Function<PsiBuilder, Boolean>... parsers) {
+    public static Boolean or(PsiBuilder builder, Parser... parsers) {
         Marker start = builder.mark();
-        for (Function<PsiBuilder, Boolean> parser : parsers) {
+        for (Parser parser : parsers) {
             if (parser.apply(builder)) {
                 start.drop();
                 return true;
