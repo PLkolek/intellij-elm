@@ -54,7 +54,7 @@ public class Basic {
                 return true;
             }
             if (offsetBefore != builder.getCurrentOffset()) {
-                start.drop();
+                break;
             } else {
                 start.rollbackTo();
             }
