@@ -83,7 +83,8 @@ public class MyElmParser implements PsiParser {
 
     private static boolean typeExport(PsiBuilder builder) {
         return Basic.sequence(builder,
-                Basic.expect(ElmTypes.CAP_VAR));
+                Basic.expect(ElmTypes.CAP_VAR),
+                listing(Basic.expect(ElmTypes.CAP_VAR)));
     }
 
     private static boolean operator(PsiBuilder builder) {
