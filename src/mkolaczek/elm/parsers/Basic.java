@@ -61,4 +61,15 @@ public class Basic {
         builder.error("Someting expected in OR");
         return false;
     }
+
+    public static boolean simpleOr(PsiBuilder builder, IElementType... tokens) {
+        for (IElementType token : tokens) {
+            if (builder.getTokenType() == token) {
+                builder.advanceLexer();
+                return true;
+            }
+        }
+        builder.error("Someting expected in simpleOR");
+        return false;
+    }
 }

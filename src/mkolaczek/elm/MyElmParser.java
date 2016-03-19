@@ -69,7 +69,24 @@ public class MyElmParser implements PsiParser {
     }
 
     private static boolean exportValue(PsiBuilder builder) {
-        return Basic.simpleExpect(builder, ElmTypes.LOW_VAR);
+        return Basic.or(builder,
+                Basic.expect(ElmTypes.LOW_VAR),
+                MyElmParser::operator
+        );
+    }
+
+    private static boolean operator(PsiBuilder builder) {
+        return Basic.sequence(builder,
+                Basic.expect(ElmTypes.LPAREN),
+                Whitespace::maybeWhitespace,
+                MyElmParser::operatorSymbol,
+                Whitespace::maybeWhitespace,
+                Basic.expect(ElmTypes.RPAREN)
+        );
+    }
+
+    private static boolean operatorSymbol(PsiBuilder builder) {
+        return Basic.simpleOr(builder, ElmTypes.SYM_OP, ElmTypes.COMMA_OP);
     }
 
     private boolean dottedCapVar(@NotNull PsiBuilder builder) {
