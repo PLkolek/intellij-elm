@@ -18,12 +18,38 @@ public class MyElmParser implements PsiParser {
     public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder) {
         Marker marker = builder.mark();
         module(builder);
+        if (!builder.eof()) {
+            builder.error("EOF expected");
+        }
         consumeRest(builder);
         marker.done(root);
         return builder.getTreeBuilt();
     }
 
-    private boolean module(@NotNull PsiBuilder builder) {
+    private void module(@NotNull PsiBuilder builder) {
+        if (builder.getTokenType() == ElmTypes.MODULE) {
+            moduleDeclaration(builder);
+        }
+        if (builder.getTokenType() == ElmTypes.BEGIN_DOC_COMMENT) {
+            docComment(builder);
+        }
+    }
+
+    private void docComment(PsiBuilder builder) {
+        Marker m = builder.mark();
+        boolean success = Basic.sequence(builder,
+                Basic.expect(ElmTypes.BEGIN_DOC_COMMENT),
+                Basic.simpleMany(ElmTypes.COMMENT_CONTENT),
+                Basic.expect(ElmTypes.END_COMMENT)
+        );
+        if (!success) {
+            IElementType token = ElmTypes.END_COMMENT;
+            consumeUntil(builder, token);
+        }
+        m.done(ElmTypes.DOC_COMMENT);
+    }
+
+    private void moduleDeclaration(@NotNull PsiBuilder builder) {
         Marker marker = builder.mark();
         boolean success = Basic.sequence(builder,
                 Basic.expect(ElmTypes.MODULE),
@@ -35,12 +61,10 @@ public class MyElmParser implements PsiParser {
                 Whitespace::freshLine
         );
         if (!success) {
-            consumeLine(builder);
+            consumeUntil(builder, ElmTypes.NEW_LINE);
         }
         marker.done(ElmTypes.MODULE_HEADER);
-        return success;
     }
-
 
     private static Parser listing(Parser listedValue) {
         return (PsiBuilder builder) -> {
@@ -61,6 +85,7 @@ public class MyElmParser implements PsiParser {
             return success;
         };
     }
+
 
     private static Parser listingContent(Parser listedValue) {
         return (PsiBuilder builder) ->
@@ -128,8 +153,11 @@ public class MyElmParser implements PsiParser {
         return success;
     }
 
-    private void consumeLine(PsiBuilder builder) {
-        while (!builder.eof() && builder.getTokenType() != ElmTypes.NEW_LINE) {
+    private void consumeUntil(PsiBuilder builder, IElementType token) {
+        while (!builder.eof() && builder.getTokenType() != token) {
+            builder.advanceLexer();
+        }
+        if (!builder.eof()) {
             builder.advanceLexer();
         }
     }
