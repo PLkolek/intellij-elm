@@ -17,7 +17,7 @@ public class Basic {
         return true;
     }
 
-    public static Parser many(IElementType... tokens) {
+    public static Parser simpleMany(IElementType... tokens) {
         checkArgument(tokens != null && tokens.length >= 1);
         return (PsiBuilder builder) -> {
             while (builder.getTokenType() == tokens[0]) {
@@ -27,6 +27,27 @@ public class Basic {
             }
             return true;
         };
+    }
+
+    public static boolean many(PsiBuilder builder, Parser... parsers) {
+        checkArgument(parsers != null && parsers.length >= 1);
+        boolean success;
+        do {
+            Marker m = builder.mark();
+            int offsetBefore = builder.getCurrentOffset();
+            success = sequence(builder, parsers);
+            if (!success) {
+                if (offsetBefore != builder.getCurrentOffset()) {
+                    m.drop();
+                    return false;
+                } else {
+                    m.rollbackTo();
+                }
+            } else {
+                m.drop();
+            }
+        } while (success);
+        return true;
     }
 
     public static Parser expect(IElementType... tokens) {

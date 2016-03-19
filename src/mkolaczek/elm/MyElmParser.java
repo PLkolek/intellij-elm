@@ -69,7 +69,15 @@ public class MyElmParser implements PsiParser {
     }
 
     private static Parser exportValues(Parser listedValue) {
-        return listedValue::apply;
+        return (builder) -> listedValue.apply(builder) && Basic.many(builder, paddedComma());
+    }
+
+    private static Parser paddedComma() {
+        return (builder) ->
+                Basic.sequence(builder,
+                        Whitespace::maybeWhitespace,
+                        Basic.expect(ElmTypes.COMMA),
+                        Whitespace::maybeWhitespace);
     }
 
     private static Parser exportValue() {
@@ -105,7 +113,7 @@ public class MyElmParser implements PsiParser {
         Marker m = builder.mark();
         boolean success = Basic.sequence(builder,
                 Basic.expect(ElmTypes.CAP_VAR),
-                Basic.many(ElmTypes.DOT, ElmTypes.CAP_VAR)
+                Basic.simpleMany(ElmTypes.DOT, ElmTypes.CAP_VAR)
         );
         m.done(ElmTypes.DOTTED_CAP_VAR);
         return success;
