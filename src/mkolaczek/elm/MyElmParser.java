@@ -10,6 +10,8 @@ import mkolaczek.elm.parsers.Whitespace;
 import mkolaczek.elm.psi.ElmTypes;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
+
 public class MyElmParser implements PsiParser {
 
     @NotNull
@@ -27,7 +29,7 @@ public class MyElmParser implements PsiParser {
                 Basic.expect(ElmTypes.MODULE),
                 Whitespace::maybeWhitespace,
                 this::dottedCapVar,
-                MyElmParser::exports,
+                MyElmParser.listing(exportValue()),
                 Whitespace::maybeWhitespace,
                 Basic.expect(ElmTypes.WHERE),
                 Whitespace::freshLine
@@ -40,39 +42,49 @@ public class MyElmParser implements PsiParser {
     }
 
 
-    private static boolean exports(PsiBuilder builder) {
-        Marker m = builder.mark();
-        Whitespace.maybeWhitespace(builder);
-        if (builder.getTokenType() != ElmTypes.LPAREN) {
-            m.rollbackTo();
-            return true;
-        }
-        boolean success = Basic.sequence(builder,
-                Basic.expect(ElmTypes.LPAREN),
-                Whitespace::maybeWhitespace,
-                MyElmParser::exportListing,
-                Whitespace::maybeWhitespace,
-                Basic.expect(ElmTypes.RPAREN)
-        );
-        m.done(ElmTypes.MODULE_VALUE_LIST);
-        return success;
+    private static Function<PsiBuilder, Boolean> listing(Function<PsiBuilder, Boolean> listedValue) {
+        return (PsiBuilder builder) -> {
+            Marker m = builder.mark();
+            Whitespace.maybeWhitespace(builder);
+            if (builder.getTokenType() != ElmTypes.LPAREN) {
+                m.rollbackTo();
+                return true;
+            }
+            boolean success = Basic.sequence(builder,
+                    Basic.expect(ElmTypes.LPAREN),
+                    Whitespace::maybeWhitespace,
+                    MyElmParser.listingContent(listedValue),
+                    Whitespace::maybeWhitespace,
+                    Basic.expect(ElmTypes.RPAREN)
+            );
+            m.done(ElmTypes.MODULE_VALUE_LIST);
+            return success;
+        };
     }
 
-    private static boolean exportListing(PsiBuilder builder) {
-        return Basic.or(builder,
-                Basic.expect(ElmTypes.OPEN_LISTING),
-                MyElmParser::exportValues);
+    private static Function<PsiBuilder, Boolean> listingContent(Function<PsiBuilder, Boolean> listedValue) {
+        return (PsiBuilder builder) ->
+                Basic.or(builder,
+                        Basic.expect(ElmTypes.OPEN_LISTING),
+                        MyElmParser.exportValues(listedValue));
     }
 
-    private static boolean exportValues(PsiBuilder builder) {
-        return exportValue(builder);
+    private static Function<PsiBuilder, Boolean> exportValues(Function<PsiBuilder, Boolean> listedValue) {
+        return (PsiBuilder builder) -> listedValue.apply(builder);
     }
 
-    private static boolean exportValue(PsiBuilder builder) {
-        return Basic.or(builder,
-                Basic.expect(ElmTypes.LOW_VAR),
-                MyElmParser::operator
-        );
+    private static Function<PsiBuilder, Boolean> exportValue() {
+        return (PsiBuilder builder) ->
+                Basic.or(builder,
+                        Basic.expect(ElmTypes.LOW_VAR),
+                        MyElmParser::operator,
+                        MyElmParser::typeExport
+                );
+    }
+
+    private static boolean typeExport(PsiBuilder builder) {
+        return Basic.sequence(builder,
+                Basic.expect(ElmTypes.CAP_VAR));
     }
 
     private static boolean operator(PsiBuilder builder) {
