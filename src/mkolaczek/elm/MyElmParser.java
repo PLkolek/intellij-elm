@@ -35,19 +35,32 @@ public class MyElmParser implements PsiParser {
         }
     }
 
-    private void docComment(PsiBuilder builder) {
+    private static void docComment(PsiBuilder builder) {
+        comment(builder, ElmTypes.BEGIN_DOC_COMMENT, ElmTypes.DOC_COMMENT);
+    }
+
+    private static boolean comment(PsiBuilder builder, IElementType startToken, IElementType type) {
+        if (builder.getTokenType() != startToken) {
+            return false; //short circuit for or in nested comments
+        }
         Marker m = builder.mark();
         boolean success = Basic.sequence(builder,
-                Basic.expect(ElmTypes.BEGIN_DOC_COMMENT),
-                Basic.simpleMany(ElmTypes.COMMENT_CONTENT),
+                Basic.expect(startToken),
+                Basic.many(Basic.or(Basic.expect(ElmTypes.COMMENT_CONTENT), MyElmParser::multilineComment)),
                 Basic.expect(ElmTypes.END_COMMENT)
         );
         if (!success) {
             IElementType token = ElmTypes.END_COMMENT;
             consumeUntil(builder, token);
         }
-        m.done(ElmTypes.DOC_COMMENT);
+        m.done(type);
+        return success;
     }
+
+    private static boolean multilineComment(PsiBuilder builder) {
+        return comment(builder, ElmTypes.BEGIN_COMMENT, ElmTypes.MULTILINE_COMMENT);
+    }
+
 
     private void moduleDeclaration(@NotNull PsiBuilder builder) {
         Marker marker = builder.mark();
@@ -89,13 +102,13 @@ public class MyElmParser implements PsiParser {
 
     private static Parser listingContent(Parser listedValue) {
         return (PsiBuilder builder) ->
-                Basic.or(builder,
+                Basic.simpleOr(builder,
                         Basic.expect(ElmTypes.OPEN_LISTING),
                         MyElmParser.listingValues(listedValue));
     }
 
     private static Parser listingValues(Parser listedValue) {
-        return (builder) -> listedValue.apply(builder) && Basic.many(builder, paddedComma(), listedValue);
+        return (builder) -> listedValue.apply(builder) && Basic.simpleMany(builder, paddedComma(), listedValue);
     }
 
     private static Parser paddedComma() {
@@ -116,7 +129,7 @@ public class MyElmParser implements PsiParser {
 
     private static Parser exportValue() {
         return (PsiBuilder builder) ->
-                Basic.or(builder,
+                Basic.simpleOr(builder,
                         Basic.expect(ElmTypes.LOW_VAR),
                         MyElmParser::operator,
                         MyElmParser::typeExport
@@ -153,7 +166,7 @@ public class MyElmParser implements PsiParser {
         return success;
     }
 
-    private void consumeUntil(PsiBuilder builder, IElementType token) {
+    private static void consumeUntil(PsiBuilder builder, IElementType token) {
         while (!builder.eof() && builder.getTokenType() != token) {
             builder.advanceLexer();
         }

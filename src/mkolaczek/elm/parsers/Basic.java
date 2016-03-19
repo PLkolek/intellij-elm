@@ -29,7 +29,11 @@ public class Basic {
         };
     }
 
-    public static boolean many(PsiBuilder builder, Parser... parsers) {
+    public static Parser many(Parser... parsers) {
+        return (builder) -> simpleMany(builder, parsers);
+    }
+
+    public static boolean simpleMany(PsiBuilder builder, Parser... parsers) {
         checkArgument(parsers != null && parsers.length >= 1);
         boolean success;
         do {
@@ -66,7 +70,11 @@ public class Basic {
         return true;
     }
 
-    public static Boolean or(PsiBuilder builder, Parser... parsers) {
+    public static Parser or(Parser... parsers) {
+        return (builder -> simpleOr(builder, parsers));
+    }
+
+    public static Boolean simpleOr(PsiBuilder builder, Parser... parsers) {
         Marker start = builder.mark();
         for (Parser parser : parsers) {
             int offsetBefore = builder.getCurrentOffset();
