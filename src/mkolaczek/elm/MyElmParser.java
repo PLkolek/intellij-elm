@@ -58,7 +58,10 @@ public class MyElmParser implements PsiParser {
 
     private boolean dottedCapVar(@NotNull PsiBuilder builder) {
         Marker m = builder.mark();
-        boolean success = Basic.sequence(builder, Basic.expect(ElmTypes.CAP_VAR), Basic.many(ElmTypes.DOT, ElmTypes.CAP_VAR));
+        boolean success = Basic.sequence(builder,
+                Basic.expect(ElmTypes.CAP_VAR),
+                Basic.many(ElmTypes.DOT, ElmTypes.CAP_VAR)
+        );
         m.done(ElmTypes.DOTTED_CAP_VAR);
         return success;
     }
