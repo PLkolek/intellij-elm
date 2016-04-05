@@ -1,107 +1,95 @@
 package mkolaczek.elm.parsers;
 
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.psi.ElmTypes;
 import org.jetbrains.annotations.NotNull;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 public class Basic {
-    public static boolean sequence(PsiBuilder builder, Parser... parsers) {
-        for (Parser parser : parsers) {
-            if (!parser.apply(builder)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static Parser simpleMany(IElementType... tokens) {
-        checkArgument(tokens != null && tokens.length >= 1);
+    public static Parser listing(NamedParser listedValue) {
         return (PsiBuilder builder) -> {
-            while (builder.getTokenType() == tokens[0]) {
-                if (!simpleExpect(builder, tokens)) {
-                    return false;
-                }
+            PsiBuilder.Marker m = builder.mark();
+            Whitespace.maybeWhitespace(builder);
+            if (builder.getTokenType() != ElmTypes.LPAREN) {
+                m.rollbackTo();
+                return true;
             }
-            return true;
+            boolean success = Combinators.simpleSequence(builder,
+                    Combinators.expect(ElmTypes.LPAREN),
+                    Whitespace::maybeWhitespace,
+                    listingContent(listedValue),
+                    Whitespace::maybeWhitespace,
+                    Combinators.expect(ElmTypes.RPAREN)
+            );
+            m.done(ElmTypes.MODULE_VALUE_LIST);
+            return success;
         };
     }
 
-    public static Parser many(Parser... parsers) {
-        return (builder) -> simpleMany(builder, parsers);
+    private static Parser listingContent(NamedParser listedValue) {
+        return (PsiBuilder builder) ->
+                Combinators.simpleOr(builder,
+                        Combinators.expect(ElmTypes.OPEN_LISTING),
+                        listingValues(listedValue));
     }
 
-    public static boolean simpleMany(PsiBuilder builder, Parser... parsers) {
-        checkArgument(parsers != null && parsers.length >= 1);
-        boolean success;
-        do {
-            Marker m = builder.mark();
-            int offsetBefore = builder.getCurrentOffset();
-            success = sequence(builder, parsers);
-            if (!success) {
-                if (offsetBefore != builder.getCurrentOffset()) {
-                    m.drop();
-                    return false;
-                } else {
-                    m.rollbackTo();
-                }
-            } else {
-                m.drop();
-            }
-        } while (success);
-        return true;
+    private static NamedParser listingValues(NamedParser listedValue) {
+        Parser parser = builder -> listedValue.apply(builder) && Combinators.simpleMany(builder, paddedComma(), listedValue);
+        return NamedParser.of(listedValue.name(), parser);
     }
 
-    public static Parser expect(IElementType... tokens) {
-        return (PsiBuilder builder) -> simpleExpect(builder, tokens);
+    public static Parser paddedComma() {
+        return padded(ElmTypes.COMMA);
+    }
+
+    public static Parser paddedEquals() {
+        return padded(ElmTypes.EQUALS);
     }
 
     @NotNull
-    public static Boolean simpleExpect(PsiBuilder builder, IElementType... tokens) {
-        for (IElementType token : tokens) {
-            if (builder.getTokenType() != token) {
-                builder.error(token.toString() + " expected");
+    public static Parser padded(IElementType token) {
+        return padded(Combinators.expect(token));
+    }
+
+    public static Parser padded(Parser parser) {
+        return (builder) -> {
+            PsiBuilder.Marker marker = builder.mark();
+            Whitespace.maybeWhitespace(builder);
+            builder.getCurrentOffset();
+            if (!parser.apply(builder)) {
+                marker.rollbackTo();
                 return false;
             }
-            builder.advanceLexer();
-        }
-        return true;
+            marker.drop();
+            return Whitespace.maybeWhitespace(builder);
+        };
     }
 
-    public static Parser or(Parser... parsers) {
-        return (builder -> simpleOr(builder, parsers));
+    public static NamedParser operator() {
+        Parser p = Combinators.sequence(
+                Combinators.expect(ElmTypes.LPAREN),
+                Whitespace::maybeWhitespace,
+                Basic::operatorSymbol,
+                Whitespace::maybeWhitespace,
+                Combinators.expect(ElmTypes.RPAREN));
+        return NamedParser.of("Operator", p);
     }
 
-    public static Boolean simpleOr(PsiBuilder builder, Parser... parsers) {
-        Marker start = builder.mark();
-        for (Parser parser : parsers) {
-            int offsetBefore = builder.getCurrentOffset();
-            if (parser.apply(builder)) {
-                start.drop();
-                return true;
-            }
-            if (offsetBefore != builder.getCurrentOffset()) {
-                break;
-            } else {
-                start.rollbackTo();
-            }
-            start = builder.mark();
-        }
-        start.drop();
-        builder.error("Someting expected in OR");
-        return false;
+    private static boolean operatorSymbol(PsiBuilder builder) {
+        return Combinators.simpleOr(builder, ElmTypes.SYM_OP, ElmTypes.COMMA_OP);
     }
 
-    public static boolean simpleOr(PsiBuilder builder, IElementType... tokens) {
-        for (IElementType token : tokens) {
-            if (builder.getTokenType() == token) {
-                builder.advanceLexer();
-                return true;
-            }
-        }
-        builder.error("Someting expected in simpleOR");
-        return false;
+    public static boolean dottedCapVar(@NotNull PsiBuilder builder) {
+        PsiBuilder.Marker m = builder.mark();
+        boolean success = Combinators.simpleSequence(builder,
+                Combinators.expect(ElmTypes.CAP_VAR),
+                Combinators.simpleMany(ElmTypes.DOT, ElmTypes.CAP_VAR)
+        );
+        m.done(ElmTypes.DOTTED_CAP_VAR);
+        return success;
+    }
+
+    public static NamedParser dottedCapVar() {
+        return NamedParser.of("Dotted cap var", Basic::dottedCapVar);
     }
 }

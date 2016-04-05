@@ -7,3 +7,4 @@ import java.util.function.Function;
 
 public interface Parser extends Function<PsiBuilder, Boolean> {
 }
+

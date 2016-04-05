@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class Whitespace {
+
     private static Optional<IElementType> whitespace(@NotNull PsiBuilder builder) {
         IElementType lastToken = null;
         while (builder.getTokenType() == ElmTypes.WHITE_SPACE || builder.getTokenType() == ElmTypes.NEW_LINE) {
@@ -17,7 +18,7 @@ public class Whitespace {
         return Optional.ofNullable(lastToken);
     }
 
-    static boolean forcedWS(@NotNull PsiBuilder builder) {
+    public static boolean forcedWS(@NotNull PsiBuilder builder) {
         Optional<IElementType> lastToken = whitespace(builder);
         boolean endsWithWS = lastToken.isPresent() && lastToken.get() == ElmTypes.WHITE_SPACE;
         if (!endsWithWS) {
