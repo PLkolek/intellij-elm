@@ -29,6 +29,7 @@
         <lang.parserDefinition language="Elm" implementationClass="mkolaczek.elm.ElmParserDefinition"/>
         <lang.syntaxHighlighterFactory language="Elm"
                                        implementationClass="mkolaczek.elm.ElmSyntaxHighlighterFactory"/>
+        <annotator language="Elm" implementationClass="mkolaczek.elm.ElmAnnotator"/>
     </extensions>
 
     <actions>
