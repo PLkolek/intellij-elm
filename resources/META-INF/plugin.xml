@@ -27,6 +27,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="mkolaczek.elm.ElmFileTypeFactory"/>
         <lang.parserDefinition language="Elm" implementationClass="mkolaczek.elm.ElmParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="Elm"
+                                       implementationClass="mkolaczek.elm.ElmSyntaxHighlighterFactory"/>
     </extensions>
 
     <actions>

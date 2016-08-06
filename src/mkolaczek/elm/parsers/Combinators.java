@@ -132,4 +132,9 @@ public class Combinators {
 
         return true;
     }
+
+    @NotNull
+    public static Parser spacePrefix(NamedParser parser) {
+        return many(tryP(sequence(Whitespace::forcedWS, parser)));
+    }
 }

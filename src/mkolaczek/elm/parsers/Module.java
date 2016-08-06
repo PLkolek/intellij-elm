@@ -66,9 +66,10 @@ public class Module {
                 Combinators.expect(ElmTypes.MODULE),
                 Whitespace::maybeWhitespace,
                 Basic::dottedCapVar,
-                Basic.listing(Module.exportValue()),
                 Whitespace::maybeWhitespace,
-                Combinators.expect(ElmTypes.WHERE),
+                Combinators.expect(ElmTypes.EXPOSING),
+                Whitespace::maybeWhitespace,
+                Basic.listing(Module.exportValue()),
                 Whitespace::freshLine
         );
         if (!success) {
@@ -78,7 +79,6 @@ public class Module {
     }
 
     private static NamedParser exportValue() {
-
         Parser parser = Combinators.or(Combinators.expect(ElmTypes.LOW_VAR),
                 Basic.operator(),
                 Module.typeExport());

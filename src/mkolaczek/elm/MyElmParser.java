@@ -30,7 +30,7 @@ public class MyElmParser implements PsiParser {
 
     private void program(@NotNull PsiBuilder builder) {
         Module.module(builder);
-        declarations(builder);
+        //    declarations(builder);
     }
 
     private void declarations(@NotNull PsiBuilder builder) {
@@ -59,7 +59,7 @@ public class MyElmParser implements PsiParser {
         }
         result = result && simpleSequence(builder,
                 expect(ElmTypes.CAP_VAR),
-                many(tryP(sequence(Whitespace::forcedWS, expect(ElmTypes.LOW_VAR)))),
+                spacePrefix(expect(ElmTypes.LOW_VAR)),
                 paddedEquals()
         );
         if (isAlias) {
@@ -78,8 +78,19 @@ public class MyElmParser implements PsiParser {
     }
 
     private static NamedParser typeApp() {
-        Parser p = or(dottedCapVar(), tryP(tupleCtor()));
+        Parser p = sequence(
+                or(dottedCapVar(), tryP(tupleCtor())),
+                spacePrefix(term())
+        );
         return NamedParser.of("App", p);
+    }
+
+    private static NamedParser term() {
+        return NamedParser.of("Type term", or(tuple()));
+    }
+
+    private static NamedParser tuple() {
+        return NamedParser.of("Type tuple", or(tuple()));
     }
 
     private static NamedParser tupleCtor() {
