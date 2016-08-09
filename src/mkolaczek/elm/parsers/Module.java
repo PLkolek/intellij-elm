@@ -24,7 +24,7 @@ public class Module {
         boolean result = Combinators.simpleSequence(builder,
                 Combinators.expect(ElmTypes.IMPORT),
                 Whitespace::maybeWhitespace,
-                Basic::dottedCapVar
+                Basic.dottedCapVar(ElmTypes.MODULE_NAME_REF)
         );
         if (!result) {
             OnError.consumeUntil(builder, ElmTypes.NEW_LINE);
@@ -65,7 +65,7 @@ public class Module {
         boolean success = Combinators.simpleSequence(builder,
                 Combinators.expect(ElmTypes.MODULE),
                 Whitespace::maybeWhitespace,
-                Basic::dottedCapVar,
+                Basic.dottedCapVar(ElmTypes.MODULE_NAME),
                 Whitespace::maybeWhitespace,
                 Combinators.expect(ElmTypes.EXPOSING),
                 Whitespace::maybeWhitespace,

@@ -79,14 +79,22 @@ public class Basic {
         return Combinators.simpleOr(builder, ElmTypes.SYM_OP, ElmTypes.COMMA_OP);
     }
 
-    public static boolean dottedCapVar(@NotNull PsiBuilder builder) {
+    private static boolean dottedCapVar(@NotNull PsiBuilder builder, @NotNull IElementType type) {
         PsiBuilder.Marker m = builder.mark();
         boolean success = Combinators.simpleSequence(builder,
                 Combinators.expect(ElmTypes.CAP_VAR),
                 Combinators.simpleMany(ElmTypes.DOT, ElmTypes.CAP_VAR)
         );
-        m.done(ElmTypes.DOTTED_CAP_VAR);
+        m.done(type);
         return success;
+    }
+
+    public static boolean dottedCapVar(@NotNull PsiBuilder builder) {
+        return dottedCapVar(builder, ElmTypes.DOTTED_CAP_VAR);
+    }
+
+    public static Parser dottedCapVar(@NotNull IElementType type) {
+        return builder -> dottedCapVar(builder, type);
     }
 
     public static NamedParser dottedCapVar() {
