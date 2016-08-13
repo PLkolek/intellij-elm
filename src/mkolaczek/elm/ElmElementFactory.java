@@ -17,5 +17,4 @@ public class ElmElementFactory {
         return (ElmFile) PsiFileFactory.getInstance(project).
                 createFileFromText(name, ElmFileType.INSTANCE, text);
     }
-
 }

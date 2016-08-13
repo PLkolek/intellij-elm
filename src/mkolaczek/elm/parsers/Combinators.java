@@ -4,6 +4,7 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -62,18 +63,32 @@ public class Combinators {
         return true;
     }
 
+    public static NamedParser expectAs(IElementType name, IElementType... tokens) {
+        return NamedParser.of(name.toString(), builder -> simpleExpectAs(builder, name, tokens));
+    }
+
     public static NamedParser expect(IElementType... tokens) {
         return NamedParser.of(tokens[0].toString(), builder -> simpleExpect(builder, tokens));
     }
 
-    @NotNull
-    public static Boolean simpleExpect(PsiBuilder builder, IElementType... tokens) {
+    public static boolean simpleExpect(PsiBuilder builder, IElementType... tokens) {
+        return simpleExpectAs(builder, null, tokens);
+    }
+
+    public static boolean simpleExpectAs(PsiBuilder builder, @Nullable IElementType name, IElementType... tokens) {
+        Marker marker = builder.mark();
         for (IElementType token : tokens) {
             if (builder.getTokenType() != token) {
                 builder.error(token.toString() + " expected");
+                marker.drop();
                 return false;
             }
             builder.advanceLexer();
+        }
+        if (name != null) {
+            marker.done(name);
+        } else {
+            marker.drop();
         }
         return true;
     }

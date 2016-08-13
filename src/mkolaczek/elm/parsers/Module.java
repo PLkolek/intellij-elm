@@ -35,7 +35,7 @@ public class Module {
         boolean hasAs = Combinators.simpleSequence(builder, Whitespace::maybeWhitespace, Combinators.expect(ElmTypes.AS));
         if (hasAs) {
             m2.drop();
-            if (!Combinators.simpleSequence(builder, Whitespace::maybeWhitespace, Combinators.expect(ElmTypes.CAP_VAR))) {
+            if (!Combinators.simpleSequence(builder, Whitespace::maybeWhitespace, Combinators.expectAs(ElmTypes.MODULE_ALIAS, ElmTypes.CAP_VAR))) {
                 OnError.consumeUntil(builder, ElmTypes.NEW_LINE);
                 m.done(ElmTypes.IMPORT_2);
                 return false;
