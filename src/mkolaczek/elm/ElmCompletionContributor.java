@@ -24,6 +24,8 @@ public class ElmCompletionContributor extends CompletionContributor {
         autocompleteKeyword(justAfterLeaf(NEW_LINE), LookupElementBuilder.create("import"));
         autocompleteKeyword(afterLeaf(childOf(MODULE_NAME_REF)), LookupElementBuilder.create("as"), exposingCompletion());
         autocompleteKeyword(afterLeaf(childOf(MODULE_ALIAS)), exposingCompletion());
+        autocompleteKeyword(psiElement().afterLeaf(psiElement().isNull()), LookupElementBuilder.create("module"));
+        autocompleteKeyword(afterLeaf(childOf(MODULE_NAME)), exposingCompletion());
     }
 
     private void autocompleteKeyword(Capture<PsiElement> afterNewLine, final LookupElementBuilder... completions) {
