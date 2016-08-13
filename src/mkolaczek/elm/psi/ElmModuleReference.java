@@ -11,6 +11,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.indexing.FileBasedIndex;
 import mkolaczek.elm.ElmFileType;
+import mkolaczek.elm.psi.node.ElmModuleName;
+import mkolaczek.elm.psi.node.ElmModuleNameRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

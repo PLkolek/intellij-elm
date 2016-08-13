@@ -4,8 +4,8 @@ import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
-import mkolaczek.elm.psi.ElmDocComment;
-import mkolaczek.elm.psi.ElmMultilineComment;
+import mkolaczek.elm.psi.node.ElmDocComment;
+import mkolaczek.elm.psi.node.ElmMultilineComment;
 import org.jetbrains.annotations.NotNull;
 
 public class ElmAnnotator implements Annotator {

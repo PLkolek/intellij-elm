@@ -1,9 +1,8 @@
-package mkolaczek.elm.psi;
+package mkolaczek.elm.psi.node;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
@@ -14,15 +13,6 @@ public class ElmModuleName extends ASTWrapperPsiElement implements PsiElement, P
 
     public ElmModuleName(ASTNode node) {
         super(node);
-    }
-
-    @Override
-    public void accept(@NotNull PsiElementVisitor visitor) {
-        if (visitor instanceof ElmVisitor) {
-            ((ElmVisitor) visitor).visitModuleName(this);
-        } else {
-            super.accept(visitor);
-        }
     }
 
     @Override

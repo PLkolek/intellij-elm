@@ -1,8 +1,8 @@
 package mkolaczek.elm;
 import com.intellij.lexer.*;
-import com.intellij.psi.tree.IElementType;
+import com.intellij.mkolaczek.elm.psi.tree.IElementType;
 import static mkolaczek.elm.psi.ElmTypes.*;
-import com.intellij.psi.TokenType;
+import com.intellij.mkolaczek.elm.psi.TokenType;
 import java.util.LinkedList;
 
 %%
