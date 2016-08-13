@@ -21,65 +21,25 @@ import static mkolaczek.elm.psi.ElmTypes.*;
 
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
-        Capture<PsiElement> afterNewLine = psiElement().afterLeaf(psiElement(NEW_LINE));
-        Capture<PsiElement> afterModuleNameRef = afterLeaf(childOf(MODULE_NAME_REF));
-        Capture<PsiElement> afterModuleAlias = afterLeaf(childOf(MODULE_ALIAS));
+        autocompleteKeyword(justAfterLeaf(NEW_LINE), LookupElementBuilder.create("import"));
+        autocompleteKeyword(afterLeaf(childOf(MODULE_NAME_REF)), LookupElementBuilder.create("as"), exposingCompletion());
+        autocompleteKeyword(afterLeaf(childOf(MODULE_ALIAS)), exposingCompletion());
+    }
 
-
+    private void autocompleteKeyword(Capture<PsiElement> afterNewLine, final LookupElementBuilder... completions) {
         extend(CompletionType.BASIC, or(afterNewLine, psiElement(LOW_VAR)),
                 new CompletionProvider<CompletionParameters>() {
                     @Override
                     public void addCompletions(@NotNull CompletionParameters parameters,
                                                ProcessingContext context,
                                                @NotNull CompletionResultSet resultSet) {
-                        resultSet.addElement(LookupElementBuilder.create("import"));
+                        for (LookupElementBuilder completion : completions) {
+                            resultSet.addElement(completion);
+                        }
+
                     }
                 }
         );
-
-        extend(CompletionType.BASIC, or(afterModuleNameRef, psiElement(LOW_VAR)),
-                new CompletionProvider<CompletionParameters>() {
-                    @Override
-                    public void addCompletions(@NotNull CompletionParameters parameters,
-                                               ProcessingContext context,
-                                               @NotNull CompletionResultSet resultSet) {
-                        resultSet.addElement(LookupElementBuilder.create("as"));
-                        resultSet.addElement(LookupElementBuilder.create("exposing").withInsertHandler(new ParenthesesInsertHandler<LookupElement>(true, false, true, true) {
-                            @Override
-                            protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item) {
-                                return true;
-                            }
-
-                            @Nullable
-                            @Override
-                            protected PsiElement findNextToken(InsertionContext context) {
-                                final PsiFile file = context.getFile();
-                                PsiElement element = file.findElementAt(context.getTailOffset());
-                                if (element != null && isWhitespace(element)) {
-                                    element = file.findElementAt(element.getTextRange().getEndOffset());
-                                }
-                                return element;
-                            }
-
-                            private boolean isWhitespace(PsiElement element) {
-                                return element.getNode().getElementType() == ElmTypes.WHITE_SPACE || element.getNode().getElementType() == ElmTypes.NEW_LINE;
-                            }
-                        }));
-                    }
-                }
-        );
-
-        extend(CompletionType.BASIC, or(afterModuleAlias, psiElement(LOW_VAR)),
-                new CompletionProvider<CompletionParameters>() {
-                    @Override
-                    public void addCompletions(@NotNull CompletionParameters parameters,
-                                               ProcessingContext context,
-                                               @NotNull CompletionResultSet resultSet) {
-                        resultSet.addElement(LookupElementBuilder.create("exposing"));
-                    }
-                }
-        );
-
     }
 
     private Capture<PsiElement> childOf(IElementType elementType) {
@@ -92,5 +52,34 @@ public class ElmCompletionContributor extends CompletionContributor {
 
     private ElementPattern whitespaceOrError() {
         return or(psiElement(WHITE_SPACE), psiElement(PsiErrorElement.class));
+    }
+
+    private Capture<PsiElement> justAfterLeaf(IElementType elementType) {
+        return psiElement().afterLeaf(psiElement(elementType));
+    }
+
+    @NotNull
+    private LookupElementBuilder exposingCompletion() {
+        return LookupElementBuilder.create("exposing").withInsertHandler(new ParenthesesInsertHandler<LookupElement>(true, false, true, true) {
+            @Override
+            protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item) {
+                return true;
+            }
+
+            @Nullable
+            @Override
+            protected PsiElement findNextToken(InsertionContext context) {
+                final PsiFile file = context.getFile();
+                PsiElement element = file.findElementAt(context.getTailOffset());
+                if (element != null && isWhitespace(element)) {
+                    element = file.findElementAt(element.getTextRange().getEndOffset());
+                }
+                return element;
+            }
+
+            private boolean isWhitespace(PsiElement element) {
+                return element.getNode().getElementType() == ElmTypes.WHITE_SPACE || element.getNode().getElementType() == ElmTypes.NEW_LINE;
+            }
+        });
     }
 }
