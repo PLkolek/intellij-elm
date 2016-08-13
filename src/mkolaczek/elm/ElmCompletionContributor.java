@@ -28,8 +28,8 @@ public class ElmCompletionContributor extends CompletionContributor {
         autocompleteKeyword(afterLeaf(childOf(MODULE_NAME)), exposingCompletion());
     }
 
-    private void autocompleteKeyword(Capture<PsiElement> afterNewLine, final LookupElementBuilder... completions) {
-        extend(CompletionType.BASIC, or(afterNewLine, psiElement(LOW_VAR)),
+    private void autocompleteKeyword(Capture<PsiElement> pattern, final LookupElementBuilder... completions) {
+        extend(CompletionType.BASIC, pattern,
                 new CompletionProvider<CompletionParameters>() {
                     @Override
                     public void addCompletions(@NotNull CompletionParameters parameters,
@@ -53,6 +53,7 @@ public class ElmCompletionContributor extends CompletionContributor {
     }
 
     private ElementPattern whitespaceOrError() {
+        //noinspection unchecked
         return or(psiElement(WHITE_SPACE), psiElement(PsiErrorElement.class));
     }
 
