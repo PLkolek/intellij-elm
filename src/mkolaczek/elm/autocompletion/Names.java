@@ -1,13 +1,10 @@
 package mkolaczek.elm.autocompletion;
 
 import com.google.common.collect.Lists;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Names {
     @NotNull
@@ -24,18 +21,16 @@ public class Names {
     }
 
     @NotNull
-    static List<LookupElementBuilder> suggest(String[] words) {
-        List<LookupElementBuilder> res = Lists.newArrayList();
+    static List<String> suggest(String[] words) {
+        List<String> res = Lists.newArrayList();
         if (words.length > 1) {
             for (int numWords = 1; numWords < words.length; numWords++) {
-                String suggestedName = concatLast(words, numWords);
-                res.add(LookupElementBuilder.create(suggestedName));
+                res.add(concatLast(words, numWords));
             }
         }
 
         List<String> previousWords = Arrays.asList(words).subList(0, words.length - 1);
-        Stream<LookupElementBuilder> suggestions = previousWords.stream().map(LookupElementBuilder::create);
-        res.addAll(suggestions.collect(Collectors.toList()));
+        res.addAll(previousWords);
         return res;
     }
 }
