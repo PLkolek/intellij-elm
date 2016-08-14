@@ -6,16 +6,16 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
-import static mkolaczek.elm.psi.ElmTypes.*;
 
 public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
 
-    private static final Set<IElementType> KEYWORDS = Sets.newHashSet(MODULE, AS, EXPOSING, IMPORT);
+    private static final Set<IElementType> KEYWORDS = Sets.newHashSet(ElmTokenTypes.MODULE, ElmTokenTypes.AS, ElmTokenTypes.EXPOSING, ElmTokenTypes.IMPORT);
 
     public static final TextAttributesKey KEY =
             createTextAttributesKey("ELM_KEY", DefaultLanguageHighlighterColors.KEYWORD);

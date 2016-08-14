@@ -13,7 +13,7 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import mkolaczek.elm.psi.ElmFile;
-import mkolaczek.elm.psi.ElmTypes;
+import mkolaczek.elm.psi.ElmElementTypes;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -60,7 +60,7 @@ public class ElmParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public PsiElement createElement(ASTNode node) {
-        return ElmTypes.Factory.createElement(node);
+        return ElmElementTypes.Factory.createElement(node);
     }
 
     @Override

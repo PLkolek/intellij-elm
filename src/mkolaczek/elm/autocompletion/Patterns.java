@@ -8,7 +8,7 @@ import com.intellij.psi.tree.IElementType;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static com.intellij.patterns.StandardPatterns.or;
-import static mkolaczek.elm.psi.ElmTypes.WHITE_SPACE;
+import static mkolaczek.elm.psi.ElmTokenTypes.WHITE_SPACE;
 
 public class Patterns {
     static PsiElementPattern.Capture<PsiElement> afterLeaf(PsiElementPattern.Capture<PsiElement> pattern) {

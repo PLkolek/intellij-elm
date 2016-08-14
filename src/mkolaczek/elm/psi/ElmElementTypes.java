@@ -6,9 +6,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.psi.node.*;
 
-public interface ElmTypes {
+public interface ElmElementTypes {
 
-    IElementType CAP_VAR_2 = new ElmElementType("CAP_VAR_2");
     IElementType DECLARATION = new ElmElementType("DECLARATION");
     IElementType DECLARATIONS = new ElmElementType("DECLARATIONS");
     IElementType DOC_COMMENT = new ElmElementType("DOC_COMMENT");
@@ -38,34 +37,6 @@ public interface ElmTypes {
     IElementType MODULE_NAME = new ElmElementType("MODULE_NAME");
     IElementType MODULE_NAME_REF = new ElmElementType("MODULE_NAME_REF");
     IElementType MODULE_ALIAS = new ElmElementType("MODULE_ALIAS");
-
-    IElementType ALIAS = new ElmTokenType("ALIAS");
-    IElementType ARROW = new ElmTokenType("ARROW");
-    IElementType AS = new ElmTokenType("AS");
-    IElementType BEGIN_COMMENT = new ElmTokenType("BEGIN_COMMENT");
-    IElementType BEGIN_DOC_COMMENT = new ElmTokenType("BEGIN_DOC_COMMENT");
-    IElementType CAP_VAR = new ElmTokenType("CAP_VAR");
-    IElementType COLON = new ElmTokenType("COLON");
-    IElementType COMMA = new ElmTokenType("COMMA");
-    IElementType COMMA_OP = new ElmTokenType("COMMA_OP");
-    IElementType COMMENT = new ElmTokenType("COMMENT");
-    IElementType COMMENT_CONTENT = new ElmTokenType("COMMENT_CONTENT");
-    IElementType DOT = new ElmTokenType("DOT");
-    IElementType END_COMMENT = new ElmTokenType("END_COMMENT");
-    IElementType EQUALS = new ElmTokenType("EQUALS");
-    IElementType EXPOSING = new ElmTokenType("EXPOSING");
-    IElementType IMPORT = new ElmTokenType("IMPORT");
-    IElementType LOW_VAR = new ElmTokenType("LOW_VAR");
-    IElementType LPAREN = new ElmTokenType("LPAREN");
-    IElementType MODULE = new ElmTokenType("MODULE");
-    IElementType OPEN_LISTING = new ElmTokenType("OPEN_LISTING");
-    IElementType OR = new ElmTokenType("OR");
-    IElementType RPAREN = new ElmTokenType("RPAREN");
-    IElementType SYM_OP = new ElmTokenType("SYM_OP");
-    IElementType TYPE = new ElmTokenType("TYPE");
-    IElementType WHERE = new ElmTokenType("WHERE");
-    IElementType WHITE_SPACE = new ElmTokenType("WHITE_SPACE");
-    IElementType NEW_LINE = new ElmTokenType("NEW_LINE");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {

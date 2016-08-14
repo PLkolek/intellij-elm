@@ -3,10 +3,9 @@
 package mkolaczek.elm;
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.psi.ElmTokenTypes;
 
 import java.util.LinkedList;
-
-import static mkolaczek.elm.psi.ElmTypes.*;
 
 
 /**
@@ -568,7 +567,7 @@ public class ElmLexer implements FlexLexer {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { return COMMENT_CONTENT;
+            { return ElmTokenTypes.COMMENT_CONTENT;
             }
           case 29: break;
           case 2: 
@@ -576,107 +575,107 @@ public class ElmLexer implements FlexLexer {
             }
           case 30: break;
           case 3: 
-            { return NEW_LINE;
+            { return ElmTokenTypes.NEW_LINE;
             }
           case 31: break;
           case 4: 
-            { return WHITE_SPACE;
+            { return ElmTokenTypes.WHITE_SPACE;
             }
           case 32: break;
           case 5: 
-            { return CAP_VAR;
+            { return ElmTokenTypes.CAP_VAR;
             }
           case 33: break;
           case 6: 
-            { return LOW_VAR;
+            { return ElmTokenTypes.LOW_VAR;
             }
           case 34: break;
           case 7: 
-            { return SYM_OP;
+            { return ElmTokenTypes.SYM_OP;
             }
           case 35: break;
           case 8: 
-            { return COLON;
+            { return ElmTokenTypes.COLON;
             }
           case 36: break;
           case 9: 
-            { return LPAREN;
+            { return ElmTokenTypes.LPAREN;
             }
           case 37: break;
           case 10: 
-            { return RPAREN;
+            { return ElmTokenTypes.RPAREN;
             }
           case 38: break;
           case 11: 
-            { return COMMA;
+            { return ElmTokenTypes.COMMA;
             }
           case 39: break;
           case 12: 
-            { return DOT;
+            { return ElmTokenTypes.DOT;
             }
           case 40: break;
           case 13: 
-            { return EQUALS;
+            { return ElmTokenTypes.EQUALS;
             }
           case 41: break;
           case 14: 
-            { return OR;
+            { return ElmTokenTypes.OR;
             }
           case 42: break;
           case 15: 
-            { return AS;
+            { return ElmTokenTypes.AS;
             }
           case 43: break;
           case 16: 
-            { return COMMA_OP;
+            { return ElmTokenTypes.COMMA_OP;
             }
           case 44: break;
           case 17: 
-            { return OPEN_LISTING;
+            { return ElmTokenTypes.OPEN_LISTING;
             }
           case 45: break;
           case 18: 
-            { return COMMENT;
+            { return ElmTokenTypes.COMMENT;
             }
           case 46: break;
           case 19: 
-            { return ARROW;
+            { return ElmTokenTypes.ARROW;
             }
           case 47: break;
           case 20: 
-            { yypopstate(); return END_COMMENT;
+            { yypopstate(); return ElmTokenTypes.END_COMMENT;
             }
           case 48: break;
           case 21: 
-            { yypushstate(INCOMMENT); return BEGIN_COMMENT;
+            { yypushstate(INCOMMENT); return ElmTokenTypes.BEGIN_COMMENT;
             }
           case 49: break;
           case 22: 
-            { yypushstate(INCOMMENT); return BEGIN_DOC_COMMENT;
+            { yypushstate(INCOMMENT); return ElmTokenTypes.BEGIN_DOC_COMMENT;
             }
           case 50: break;
           case 23: 
-            { return TYPE;
+            { return ElmTokenTypes.TYPE;
             }
           case 51: break;
           case 24: 
-            { return ALIAS;
+            { return ElmTokenTypes.ALIAS;
             }
           case 52: break;
           case 25: 
-            { return WHERE;
+            { return ElmTokenTypes.WHERE;
             }
           case 53: break;
           case 26: 
-            { return MODULE;
+            { return ElmTokenTypes.MODULE;
             }
           case 54: break;
           case 27: 
-            { return IMPORT;
+            { return ElmTokenTypes.IMPORT;
             }
           case 55: break;
           case 28: 
-            { return EXPOSING;
+            { return ElmTokenTypes.EXPOSING;
             }
           case 56: break;
           default:

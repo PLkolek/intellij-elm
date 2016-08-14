@@ -2,7 +2,7 @@ package mkolaczek.elm.parsers;
 
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.ElmTypes;
+import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -11,7 +11,7 @@ public class Whitespace {
 
     private static Optional<IElementType> whitespace(@NotNull PsiBuilder builder) {
         IElementType lastToken = null;
-        while (builder.getTokenType() == ElmTypes.WHITE_SPACE || builder.getTokenType() == ElmTypes.NEW_LINE) {
+        while (builder.getTokenType() == ElmTokenTypes.WHITE_SPACE || builder.getTokenType() == ElmTokenTypes.NEW_LINE) {
             lastToken = builder.getTokenType();
             builder.advanceLexer();
         }
@@ -20,7 +20,7 @@ public class Whitespace {
 
     public static boolean forcedWS(@NotNull PsiBuilder builder) {
         Optional<IElementType> lastToken = whitespace(builder);
-        boolean endsWithWS = lastToken.isPresent() && lastToken.get() == ElmTypes.WHITE_SPACE;
+        boolean endsWithWS = lastToken.isPresent() && lastToken.get() == ElmTokenTypes.WHITE_SPACE;
         if (!endsWithWS) {
             builder.error("Whitespace expected");
         }
@@ -29,7 +29,7 @@ public class Whitespace {
 
     public static boolean freshLine(@NotNull PsiBuilder builder) {
         Optional<IElementType> lastToken = whitespace(builder);
-        boolean endsWithNewline = lastToken.isPresent() && lastToken.get() == ElmTypes.NEW_LINE;
+        boolean endsWithNewline = lastToken.isPresent() && lastToken.get() == ElmTokenTypes.NEW_LINE;
         if (!endsWithNewline) {
             builder.error("New line expected");
         }
@@ -38,7 +38,7 @@ public class Whitespace {
 
     public static boolean maybeWhitespace(PsiBuilder builder) {
         Optional<IElementType> lastToken = whitespace(builder);
-        boolean endsWithNewLine = lastToken.isPresent() && lastToken.get() == ElmTypes.NEW_LINE;
+        boolean endsWithNewLine = lastToken.isPresent() && lastToken.get() == ElmTokenTypes.NEW_LINE;
         if (endsWithNewLine) {
             builder.error("Whitespace expected");
         }
