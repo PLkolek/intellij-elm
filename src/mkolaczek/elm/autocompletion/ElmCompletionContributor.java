@@ -1,5 +1,6 @@
-package mkolaczek.elm;
+package mkolaczek.elm.autocompletion;
 
+import com.google.common.base.Preconditions;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -10,8 +11,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import mkolaczek.elm.psi.ElmTypes;
+import mkolaczek.elm.psi.node.ElmImport2;
+import mkolaczek.elm.psi.node.ElmModuleNameRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,11 +25,25 @@ import static mkolaczek.elm.psi.ElmTypes.*;
 
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
-        autocompleteKeyword(justAfterLeaf(NEW_LINE), LookupElementBuilder.create("import"));
-        autocompleteKeyword(afterLeaf(childOf(MODULE_NAME_REF)), LookupElementBuilder.create("as"), exposingCompletion());
+        autocompleteKeyword(justAfterLeaf(NEW_LINE), LookupElementBuilder.create("import "));
+        autocompleteKeyword(afterLeaf(childOf(MODULE_NAME_REF)), LookupElementBuilder.create("as "), exposingCompletion());
         autocompleteKeyword(afterLeaf(childOf(MODULE_ALIAS)), exposingCompletion());
-        autocompleteKeyword(psiElement().afterLeaf(psiElement().isNull()), LookupElementBuilder.create("module"));
+        autocompleteKeyword(psiElement().afterLeaf(psiElement().isNull()), LookupElementBuilder.create("module "));
         autocompleteKeyword(afterLeaf(childOf(MODULE_NAME)), exposingCompletion());
+        extend(CompletionType.BASIC, afterLeaf(AS), new CompletionProvider<CompletionParameters>() {
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+                ElmImport2 importLine = PsiTreeUtil.getParentOfType(parameters.getPosition(), ElmImport2.class);
+                Preconditions.checkState(importLine != null, "As must be a child of import line");
+                ElmModuleNameRef module = importLine.findImportedModule();
+                String[] words = module.getName().split("\\.");
+                result.addAllElements(Names.suggest(words));
+            }
+        });
+    }
+
+    private Capture<PsiElement> afterLeaf(IElementType elementType) {
+        return afterLeaf(psiElement(elementType));
     }
 
     private void autocompleteKeyword(Capture<PsiElement> pattern, final LookupElementBuilder... completions) {

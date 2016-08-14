@@ -30,7 +30,7 @@
         <lang.syntaxHighlighterFactory language="Elm"
                                        implementationClass="mkolaczek.elm.ElmSyntaxHighlighterFactory"/>
         <annotator language="Elm" implementationClass="mkolaczek.elm.ElmAnnotator"/>
-        <completion.contributor language="Elm" implementationClass="mkolaczek.elm.ElmCompletionContributor"/>
+        <completion.contributor language="Elm" implementationClass="mkolaczek.elm.autocompletion.ElmCompletionContributor"/>
     </extensions>
 
     <actions>

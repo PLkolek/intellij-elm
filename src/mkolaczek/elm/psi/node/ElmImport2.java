@@ -3,6 +3,7 @@ package mkolaczek.elm.psi.node;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.util.PsiTreeUtil;
 
 public class ElmImport2 extends ASTWrapperPsiElement {
 
@@ -10,4 +11,7 @@ public class ElmImport2 extends ASTWrapperPsiElement {
         super(node);
     }
 
+    public ElmModuleNameRef findImportedModule() {
+        return PsiTreeUtil.findChildOfType(this, ElmModuleNameRef.class);
+    }
 }
