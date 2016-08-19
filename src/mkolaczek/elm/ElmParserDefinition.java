@@ -15,6 +15,7 @@ import com.intellij.psi.tree.TokenSet;
 import mkolaczek.elm.parsers.MyElmParser;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.ElmElementTypes;
+import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -49,7 +50,7 @@ public class ElmParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public TokenSet getCommentTokens() {
-        return TokenSet.EMPTY;
+        return ElmTokenTypes.COMMENT_TOKENS;
     }
 
     @NotNull
