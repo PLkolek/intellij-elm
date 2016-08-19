@@ -35,6 +35,7 @@
         <lang.findUsagesProvider language="Elm" implementationClass="mkolaczek.elm.findUsages.ElmFindUsagesProvider"/>
         <elementDescriptionProvider implementation="mkolaczek.elm.findUsages.ElmElementDescriptionProvider"/>
         <lang.refactoringSupport language="Elm" implementationClass="mkolaczek.elm.ElmRefactoringSupportProvider"/>
+        <lang.namesValidator language="Elm" implementationClass="mkolaczek.elm.ElmNamesValidator" />
     </extensions>
 
     <actions>
