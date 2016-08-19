@@ -1,4 +1,4 @@
-package mkolaczek.elm;
+package mkolaczek.elm.syntaxHinglighting;
 
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;

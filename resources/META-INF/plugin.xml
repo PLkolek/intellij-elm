@@ -28,11 +28,11 @@
         <fileTypeFactory implementation="mkolaczek.elm.ElmFileTypeFactory"/>
         <lang.parserDefinition language="Elm" implementationClass="mkolaczek.elm.ElmParserDefinition"/>
         <lang.syntaxHighlighterFactory language="Elm"
-                                       implementationClass="mkolaczek.elm.ElmSyntaxHighlighterFactory"/>
+                                       implementationClass="mkolaczek.elm.syntaxHinglighting.ElmSyntaxHighlighterFactory"/>
         <annotator language="Elm" implementationClass="mkolaczek.elm.ElmAnnotator"/>
         <completion.contributor language="Elm" implementationClass="mkolaczek.elm.autocompletion.ElmCompletionContributor"/>
-        <lang.findUsagesProvider language="Elm" implementationClass="mkolaczek.elm.ElmFindUsagesProvider"/>
-        <elementDescriptionProvider implementation="mkolaczek.elm.ElmElementDescriptionProvider" />
+        <lang.findUsagesProvider language="Elm" implementationClass="mkolaczek.elm.findUsages.ElmFindUsagesProvider"/>
+        <elementDescriptionProvider implementation="mkolaczek.elm.findUsages.ElmElementDescriptionProvider" />
     </extensions>
 
     <actions>

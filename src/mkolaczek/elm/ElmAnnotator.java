@@ -6,6 +6,7 @@ import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.psi.node.ElmDocComment;
 import mkolaczek.elm.psi.node.ElmMultilineComment;
+import mkolaczek.elm.syntaxHinglighting.ElmSyntaxHighlighter;
 import org.jetbrains.annotations.NotNull;
 
 public class ElmAnnotator implements Annotator {

@@ -1,4 +1,4 @@
-package mkolaczek.elm;
+package mkolaczek.elm.findUsages;
 
 
 import com.intellij.psi.ElementDescriptionLocation;
