@@ -1,6 +1,7 @@
 package mkolaczek.elm.psi;
 
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.TokenSet;
 
 public class ElmTokenTypes {
     public static final IElementType ALIAS = new ElmTokenType("ALIAS");
@@ -30,4 +31,8 @@ public class ElmTokenTypes {
     public static final IElementType WHERE = new ElmTokenType("WHERE");
     public static final IElementType WHITE_SPACE = new ElmTokenType("WHITE_SPACE");
     public static final IElementType NEW_LINE = new ElmTokenType("NEW_LINE");
+
+
+    public static final TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR);
+    public static final TokenSet COMMENT_TOKENS = TokenSet.create(BEGIN_COMMENT, BEGIN_DOC_COMMENT, COMMENT_CONTENT, END_COMMENT, COMMENT);
 }

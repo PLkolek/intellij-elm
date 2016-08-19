@@ -31,6 +31,8 @@
                                        implementationClass="mkolaczek.elm.ElmSyntaxHighlighterFactory"/>
         <annotator language="Elm" implementationClass="mkolaczek.elm.ElmAnnotator"/>
         <completion.contributor language="Elm" implementationClass="mkolaczek.elm.autocompletion.ElmCompletionContributor"/>
+        <lang.findUsagesProvider language="Elm" implementationClass="mkolaczek.elm.ElmFindUsagesProvider"/>
+        <elementDescriptionProvider implementation="mkolaczek.elm.ElmElementDescriptionProvider" />
     </extensions>
 
     <actions>
