@@ -3,11 +3,13 @@ package mkolaczek.elm.psi.node;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
+import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.psi.ElmModuleReference;
 import org.jetbrains.annotations.NotNull;
 
-public class ElmModuleNameRef extends ASTWrapperPsiElement implements PsiElement {
+public class ElmModuleNameRef extends ASTWrapperPsiElement implements PsiNamedElement {
 
     public ElmModuleNameRef(ASTNode node) {
         super(node);
@@ -23,5 +25,13 @@ public class ElmModuleNameRef extends ASTWrapperPsiElement implements PsiElement
     @Override
     public PsiReference getReference() {
         return new ElmModuleReference(this);
+    }
+
+    @Override
+    public PsiElement setName(@NotNull String newElementName) {
+        ASTNode newNode = ElmElementFactory.moduleNameRef(getProject(), newElementName).getNode();
+        getNode().replaceAllChildrenToChildrenOf(newNode);
+        return this;
+
     }
 }

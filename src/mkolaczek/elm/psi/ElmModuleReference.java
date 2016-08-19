@@ -9,6 +9,7 @@ import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.indexing.FileBasedIndex;
 import mkolaczek.elm.ElmFileType;
 import mkolaczek.elm.psi.node.ElmModuleName;
@@ -54,5 +55,10 @@ public class ElmModuleReference extends PsiReferenceBase<ElmModuleNameRef> {
     @Override
     public Object[] getVariants() {
         return moduleNames(myElement.getProject()).toArray();
+    }
+
+    @Override
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+        return myElement.setName(newElementName);
     }
 }

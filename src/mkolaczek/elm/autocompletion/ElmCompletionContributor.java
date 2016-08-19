@@ -41,7 +41,7 @@ public class ElmCompletionContributor extends CompletionContributor {
         simpleAutocomplete(afterLeaf(ElmTokenTypes.AS), parameters -> {
             ElmImport2 importLine = PsiTreeUtil.getParentOfType(parameters.getPosition(), ElmImport2.class);
             Preconditions.checkState(importLine != null, "As must be a child of import line");
-            ElmModuleNameRef module = importLine.findImportedModule();
+            ElmModuleNameRef module = importLine.importedModule();
             String[] words = module.getName().split("\\.");
             return Names.suggest(words);
         });

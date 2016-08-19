@@ -11,7 +11,7 @@ public class ElmImport2 extends ASTWrapperPsiElement {
         super(node);
     }
 
-    public ElmModuleNameRef findImportedModule() {
+    public ElmModuleNameRef importedModule() {
         return PsiTreeUtil.findChildOfType(this, ElmModuleNameRef.class);
     }
 }
