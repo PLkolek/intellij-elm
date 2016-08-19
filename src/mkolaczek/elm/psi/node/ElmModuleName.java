@@ -33,4 +33,9 @@ public class ElmModuleName extends ASTWrapperPsiElement implements PsiElement, P
     public PsiElement getNameIdentifier() {
         return this;
     }
+
+    @Override
+    public void delete() throws IncorrectOperationException {
+        getContainingFile().delete();
+    }
 }
