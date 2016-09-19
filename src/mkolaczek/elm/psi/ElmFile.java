@@ -10,6 +10,8 @@ import mkolaczek.elm.psi.node.ElmImport2;
 import mkolaczek.elm.psi.node.ElmModuleHeader;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+
 public class ElmFile extends PsiFileBase {
     public ElmFile(@NotNull FileViewProvider viewProvider) {
         super(viewProvider, ElmLanguage.INSTANCE);
@@ -26,11 +28,11 @@ public class ElmFile extends PsiFileBase {
         return "Simple File";
     }
 
-    public ElmImport2[] imports() {
-        return PsiTreeUtil.getChildrenOfType(this, ElmImport2.class);
+    public Collection<ElmImport2> imports() {
+        return PsiTreeUtil.findChildrenOfType(this, ElmImport2.class);
     }
 
     public ElmModuleHeader header() {
-        return PsiTreeUtil.getChildOfType(this, ElmModuleHeader.class);
+        return PsiTreeUtil.findChildOfType(this, ElmModuleHeader.class);
     }
 }

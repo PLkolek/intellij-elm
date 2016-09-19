@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Module {
     public static void module(@NotNull PsiBuilder builder) {
+        PsiBuilder.Marker module = builder.mark();
         if (builder.getTokenType() == ElmTokenTypes.MODULE) {
             moduleDeclaration(builder);
         }
@@ -15,6 +16,7 @@ public class Module {
             Whitespace.freshLine(builder);
         }
         Combinators.simpleMany(builder, Module::importLine);
+        module.done(ElmElementTypes.MODULE);
     }
 
     private static boolean importLine(PsiBuilder builder) {

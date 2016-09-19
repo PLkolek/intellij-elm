@@ -1,0 +1,5 @@
+DeclarationParser - java class parser
+PsiClassImpl - PsiElement for whole class declaration
+JavaClassReference - reference to class?
+com.intellij.openapi.fileEditor.impl.text.TextEditorPsiDataProvider.getPsiElementIn
+com.intellij.codeInsight.JavaTargetElementEvaluator.getNamedElement !!!

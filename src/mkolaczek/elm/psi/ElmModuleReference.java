@@ -12,7 +12,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.indexing.FileBasedIndex;
 import mkolaczek.elm.ElmFileType;
-import mkolaczek.elm.psi.node.ElmModuleName;
+import mkolaczek.elm.psi.node.ElmModule;
 import mkolaczek.elm.psi.node.ElmModuleNameRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,17 +31,17 @@ public class ElmModuleReference extends PsiReferenceBase<ElmModuleNameRef> {
     public PsiElement resolve() {
         Project project = myElement.getProject();
 
-        return moduleNames(project)
-                .filter(moduleName -> moduleName.getName().equals(myElement.getName()))
+        return modules(project)
+                .filter(module -> module.getName().equals(myElement.getName()))
                 .findFirst().orElse(null);
     }
 
-    private Stream<ElmModuleName> moduleNames(Project project) {
+    private Stream<ElmModule> modules(Project project) {
         return elmFiles(project).stream()
                                 .map(PsiManager.getInstance(project)::findFile)
                                 .map(ElmFile.class::cast)
                                 .filter(Objects::nonNull)
-                                .map(file -> PsiTreeUtil.getChildOfType(file.getFirstChild(), ElmModuleName.class))
+                                .map(file -> PsiTreeUtil.getChildOfType(file, ElmModule.class))
                                 .filter(Objects::nonNull);
     }
 
@@ -54,7 +54,7 @@ public class ElmModuleReference extends PsiReferenceBase<ElmModuleNameRef> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        return moduleNames(myElement.getProject()).toArray();
+        return modules(myElement.getProject()).toArray();
     }
 
     @Override

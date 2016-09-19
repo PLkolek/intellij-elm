@@ -15,7 +15,7 @@ public class ElmElementFactory {
 
     public static ElmModuleNameRef moduleNameRef(Project project, String name) {
         ElmFile file = createFile(project, "import " + name);
-        return file.imports()[0].importedModule();
+        return file.imports().iterator().next().importedModule();
     }
 
     private static ElmFile createFile(Project project, String text) {
