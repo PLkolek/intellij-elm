@@ -32,7 +32,7 @@ public class ElmModuleReference extends PsiReferenceBase<ElmModuleNameRef> {
         Project project = myElement.getProject();
 
         return modules(project)
-                .filter(module -> module.getName().equals(myElement.getName()))
+                .filter(module -> module.getName() != null && module.getName().equals(myElement.getName()))
                 .findFirst().orElse(null);
     }
 
