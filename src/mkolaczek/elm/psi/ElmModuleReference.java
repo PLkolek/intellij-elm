@@ -32,7 +32,7 @@ public class ElmModuleReference extends PsiReferenceBase<ElmModuleNameRef> {
         Project project = myElement.getProject();
 
         return modules(project)
-                .filter(module -> module.getName() != null && module.getName().equals(myElement.getName()))
+                .filter(module -> module.sameName(myElement.getName()))
                 .findFirst().orElse(null);
     }
 
@@ -54,7 +54,7 @@ public class ElmModuleReference extends PsiReferenceBase<ElmModuleNameRef> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        return modules(myElement.getProject()).toArray();
+        return modules(myElement.getProject()).filter(module -> !myElement.getContaingModule().sameName(module)).toArray();
     }
 
     @Override

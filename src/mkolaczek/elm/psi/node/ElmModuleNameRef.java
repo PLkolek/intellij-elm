@@ -5,6 +5,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.psi.ElmModuleReference;
 import org.jetbrains.annotations.NotNull;
@@ -33,5 +34,9 @@ public class ElmModuleNameRef extends ASTWrapperPsiElement implements PsiNamedEl
         getNode().replaceAllChildrenToChildrenOf(newNode);
         return this;
 
+    }
+
+    public ElmModule getContaingModule() {
+        return PsiTreeUtil.getParentOfType(this, ElmModule.class);
     }
 }

@@ -33,5 +33,4 @@ public class ModuleNameAutocompletionTest extends LightCodeInsightFixtureTestCas
         assertTrue(strings.contains("Test2"));
         assertThat(strings.size(), is(1));
     }
-
 }

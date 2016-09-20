@@ -49,4 +49,12 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
         PsiElement nameIdentifier = getNameIdentifier();
         return nameIdentifier != null ? nameIdentifier.getTextOffset() : super.getTextOffset();
     }
+
+    public boolean sameName(String name) {
+        return getName() != null && getName().equals(name);
+    }
+
+    public boolean sameName(ElmModule other) {
+        return sameName(other.getName());
+    }
 }
