@@ -28,10 +28,10 @@ import static mkolaczek.elm.psi.ElmElementTypes.*;
 
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
-        simpleAutocomplete(Patterns.justAfterLeaf(ElmTokenTypes.NEW_LINE), LookupElementBuilder.create("import "));
-        simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME_REF)), LookupElementBuilder.create("as "), exposingCompletion());
+        simpleAutocomplete(Patterns.justAfterLeaf(ElmTokenTypes.NEW_LINE), keywordElement("import"));
+        simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME_REF)), keywordElement("as"), exposingCompletion());
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_ALIAS)), exposingCompletion());
-        simpleAutocomplete(psiElement().afterLeaf(psiElement().isNull()), LookupElementBuilder.create("module "));
+        simpleAutocomplete(psiElement().afterLeaf(psiElement().isNull()), keywordElement("module"));
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME)), exposingCompletion());
         simpleAutocomplete(afterLeaf(ElmTokenTypes.MODULE), parameters -> {
             String fileName = parameters.getOriginalFile().getName();
@@ -45,6 +45,11 @@ public class ElmCompletionContributor extends CompletionContributor {
             String[] words = module.getName().split("\\.");
             return Names.suggest(words);
         });
+    }
+
+    @NotNull
+    private LookupElementBuilder keywordElement(String item) {
+        return LookupElementBuilder.create(item).withInsertHandler(AddSpaceInsertHandler.INSTANCE);
     }
 
     private Capture<PsiElement> afterLeaf(IElementType elementType) {

@@ -1,0 +1,2 @@
+<caret>
+import Test2
