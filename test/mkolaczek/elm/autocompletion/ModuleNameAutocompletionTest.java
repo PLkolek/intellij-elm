@@ -1,4 +1,4 @@
-package mkolaczek.elm;
+package mkolaczek.elm.autocompletion;
 
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
