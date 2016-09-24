@@ -8,7 +8,7 @@ public class RenameTest extends LightCodeInsightFixtureTestCase {
         return "testdata/rename";
     }
 
-    public void testFindModuleUsages() {
+    public void testRenameModule() {
         myFixture.configureByFiles("Test1.elm", "Test2.elm");
         myFixture.renameElementAtCaret("NewName");
         myFixture.checkResultByFile("Test1.elm", "Test1.expected.elm", false);
