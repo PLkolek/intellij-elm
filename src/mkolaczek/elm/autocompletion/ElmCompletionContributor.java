@@ -8,6 +8,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.patterns.PsiElementPattern.Capture;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -28,8 +29,8 @@ import static mkolaczek.elm.psi.ElmElementTypes.*;
 
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
-        simpleAutocomplete(Patterns.justAfterLeaf(ElmTokenTypes.NEW_LINE), keywordElement("import"));
-        simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME_REF)), keywordElement("as"), exposingCompletion());
+        simpleAutocomplete(afterWhitespace("\n"), keywordElement("import"));
+        simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME_REF)).andNot(afterWhitespace("\n")), keywordElement("as"), exposingCompletion());
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_ALIAS)), exposingCompletion());
         simpleAutocomplete(psiElement().afterLeaf(psiElement().isNull()), keywordElement("module"));
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME)), exposingCompletion());
@@ -45,6 +46,10 @@ public class ElmCompletionContributor extends CompletionContributor {
             String[] words = module.getName().split("\\.");
             return Names.suggest(words);
         });
+    }
+
+    private Capture<PsiElement> afterWhitespace(String wsChar) {
+        return psiElement().afterLeafSkipping(psiElement(PsiErrorElement.class), psiElement().withText(wsChar));
     }
 
     @NotNull

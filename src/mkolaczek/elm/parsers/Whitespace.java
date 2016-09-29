@@ -19,29 +19,33 @@ public class Whitespace {
     }
 
     public static boolean forcedWS(@NotNull PsiBuilder builder) {
-        Optional<IElementType> lastToken = whitespace(builder);
+        char lastChar = builder.getOriginalText().charAt(builder.getCurrentOffset());
+        return lastChar == ' ' || lastChar == '\t';
+        /*Optional<IElementType> lastToken = whitespace(builder);
         boolean endsWithWS = lastToken.isPresent() && lastToken.get() == ElmTokenTypes.WHITE_SPACE;
         if (!endsWithWS) {
             builder.error("Whitespace expected");
         }
-        return endsWithWS;
+        return endsWithWS;*/
     }
 
     public static boolean freshLine(@NotNull PsiBuilder builder) {
-        Optional<IElementType> lastToken = whitespace(builder);
+        return builder.getOriginalText().charAt(builder.getCurrentOffset() -1) == '\n';
+        /*Optional<IElementType> lastToken = whitespace(builder);
         boolean endsWithNewline = lastToken.isPresent() && lastToken.get() == ElmTokenTypes.NEW_LINE;
         if (!endsWithNewline) {
             builder.error("New line expected");
         }
-        return endsWithNewline;
+        return endsWithNewline;*/
     }
 
     public static boolean maybeWhitespace(PsiBuilder builder) {
-        Optional<IElementType> lastToken = whitespace(builder);
+        return builder.getOriginalText().charAt(builder.getCurrentOffset()-1) != '\n';
+        /*Optional<IElementType> lastToken = whitespace(builder);
         boolean endsWithNewLine = lastToken.isPresent() && lastToken.get() == ElmTokenTypes.NEW_LINE;
         if (endsWithNewLine) {
             builder.error("Whitespace expected");
         }
-        return !endsWithNewLine;
+        return !endsWithNewLine;*/
     }
 }

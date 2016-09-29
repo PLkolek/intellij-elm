@@ -1,9 +1,8 @@
 package mkolaczek.elm;
 import com.intellij.lexer.*;
-import com.intellij.mkolaczek.elm.psi.tree.IElementType;
-import static mkolaczek.elm.psi.ElmTypes.*;
-import com.intellij.mkolaczek.elm.psi.TokenType;
+import static mkolaczek.elm.psi.ElmTokenTypes.*;
 import java.util.LinkedList;
+import com.intellij.psi.TokenType;
 
 %%
 
@@ -69,8 +68,8 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   "."               { return DOT; }
   ":"               { return COLON; }
   "{-|"             { yypushstate(INCOMMENT); return BEGIN_DOC_COMMENT;}
-  {LINE_WS}         { return WHITE_SPACE; }
-  {CLRF}            { return NEW_LINE; }
+  {LINE_WS}         { return TokenType.WHITE_SPACE; }
+  {CLRF}            { return TokenType.WHITE_SPACE; }
   {CAP_VAR}         { return CAP_VAR; }
   {LOW_VAR}         { return LOW_VAR; }
   ","+              { return COMMA_OP; }
