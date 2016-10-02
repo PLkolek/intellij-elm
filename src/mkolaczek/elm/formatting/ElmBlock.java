@@ -4,7 +4,6 @@ import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.formatter.common.AbstractBlock;
-import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,16 +24,12 @@ public class ElmBlock extends AbstractBlock {
     protected List<Block> buildChildren() {
         List<Block> blocks = new ArrayList<>();
         ASTNode child = myNode.getFirstChildNode();
-        ASTNode previousChild = null;
         while (child != null) {
-            if (child.getElementType() != TokenType.WHITE_SPACE &&
-                    (previousChild == null || previousChild.getElementType() != ElmTokenTypes.NEW_LINE ||
-                            child.getElementType() != ElmTokenTypes.NEW_LINE)) {
+            if (child.getElementType() != TokenType.WHITE_SPACE) {
                 Block block = new ElmBlock(child, Wrap.createWrap(WrapType.NONE, false), Alignment.createAlignment(),
                         spacingBuilder);
                 blocks.add(block);
             }
-            previousChild = child;
             child = child.getTreeNext();
         }
         return blocks;
