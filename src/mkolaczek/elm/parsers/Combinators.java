@@ -85,24 +85,37 @@ public class Combinators {
             }
             builder.advanceLexer();
         }
+        endAs(marker, name);
+        return true;
+    }
+
+    private static void endAs(Marker marker, @Nullable IElementType name) {
         if (name != null) {
             marker.done(name);
         } else {
             marker.drop();
         }
-        return true;
     }
 
     public static Parser or(NamedParser... parsers) {
         return (builder -> simpleOr(builder, parsers));
     }
 
+    public static Parser orAs(IElementType elementType, NamedParser... parsers) {
+        return (builder -> simpleOrAs(builder, elementType, parsers));
+    }
+
     public static Boolean simpleOr(PsiBuilder builder, NamedParser... parsers) {
+        return simpleOrAs(builder, null, parsers);
+    }
+
+    @NotNull
+    private static Boolean simpleOrAs(PsiBuilder builder, IElementType as, NamedParser[] parsers) {
         Marker start = builder.mark();
         for (Parser parser : parsers) {
             int offsetBefore = builder.getCurrentOffset();
             if (parser.apply(builder)) {
-                start.drop();
+                endAs(start, as);
                 return true;
             }
             if (offsetBefore != builder.getCurrentOffset()) {

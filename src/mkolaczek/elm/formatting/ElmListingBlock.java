@@ -4,18 +4,17 @@ import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.formatter.common.AbstractBlock;
-import mkolaczek.elm.psi.ElmElementTypes;
+import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class ElmBlock extends AbstractBlock {
+public class ElmListingBlock extends AbstractBlock {
     private SpacingBuilder spacingBuilder;
 
-    protected ElmBlock(@NotNull ASTNode node, @Nullable Wrap wrap, @Nullable Alignment alignment,
+    protected ElmListingBlock(@NotNull ASTNode node, @Nullable Wrap wrap, @Nullable Alignment alignment,
                        SpacingBuilder spacingBuilder) {
         super(node, wrap, alignment);
         this.spacingBuilder = spacingBuilder;
@@ -25,10 +24,11 @@ public class ElmBlock extends AbstractBlock {
     protected List<Block> buildChildren() {
         List<Block> blocks = new ArrayList<>();
         ASTNode child = myNode.getFirstChildNode();
+        Wrap chopDownWrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
         while (child != null) {
             if (child.getElementType() != TokenType.WHITE_SPACE) {
-                if (child.getElementType() == ElmElementTypes.MODULE_VALUE_LIST) {
-                    blocks.add(new ElmListingBlock(child, Wrap.createWrap(WrapType.NONE, false), Alignment.createAlignment(),
+                if (child.getElementType() == ElmTokenTypes.COMMA || child.getElementType() == ElmTokenTypes.RPAREN) {
+                    blocks.add(new ElmBlock(child, chopDownWrap, Alignment.createAlignment(),
                             spacingBuilder));
                 } else {
                     blocks.add(new ElmBlock(child, Wrap.createWrap(WrapType.NONE, false), Alignment.createAlignment(),
@@ -55,5 +55,4 @@ public class ElmBlock extends AbstractBlock {
     public boolean isLeaf() {
         return myNode.getFirstChildNode() == null;
     }
-
 }

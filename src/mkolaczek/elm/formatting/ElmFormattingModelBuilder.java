@@ -25,7 +25,11 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
     }
 
     private static SpacingBuilder createSpaceBuilder(CodeStyleSettings settings) {
-        return new SpacingBuilder(settings, ElmLanguage.INSTANCE).after(ElmTokenTypes.MODULE).spaces(1);
+        return new SpacingBuilder(settings, ElmLanguage.INSTANCE)
+                .after(ElmTokenTypes.MODULE).spaces(1)
+                .after(ElmTokenTypes.COMMA).spacing(1, 1, 0, false, 0)
+                .before(ElmTokenTypes.COMMA).spacing(0, 0, 0, false, 0)
+                .after(ElmTokenTypes.LPAREN).spacing(1, 1, 0, false, 0);
     }
 
     @Nullable

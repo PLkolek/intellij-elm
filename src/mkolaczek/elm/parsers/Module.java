@@ -82,7 +82,7 @@ public class Module {
     }
 
     private static NamedParser exportValue() {
-        Parser parser = Combinators.or(Combinators.expect(ElmTokenTypes.LOW_VAR),
+        Parser parser = Combinators.orAs(ElmElementTypes.EXPORTED_VALUE, Combinators.expect(ElmTokenTypes.LOW_VAR),
                 Basic.operator(),
                 Module.typeExport());
         return NamedParser.of("Exported value", parser);
