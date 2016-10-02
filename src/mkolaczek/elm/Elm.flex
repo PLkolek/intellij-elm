@@ -39,10 +39,10 @@ LOW_VAR=[a-z][a-zA-Z0-9]*
 FRESH_LINE=({LINE_WS}|{CLRF})*{CLRF}
 FORCED_WS=({LINE_WS}|{CLRF})*{LINE_WS}
 SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
-        | [:unicode_math_symbol:]
-        | [:unicode_currency_symbol:]
-        | [:unicode_modifier_symbol:]
-        | [:unicode_other_symbol:]
+        | \p{General_Category:MathSymbol}
+        | \p{General_Category:CurrencySymbol}
+        | \p{General_Category:ModifierSymbol}
+        | \p{General_Category:OtherSymbol}
         ) | "`" )
 
 %state INCOMMENT
