@@ -28,8 +28,9 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
         return new SpacingBuilder(settings, ElmLanguage.INSTANCE)
                 .after(ElmTokenTypes.MODULE).spaces(1)
                 .after(ElmTokenTypes.COMMA).spacing(1, 1, 0, false, 0)
+                //remove all spacing to determine if the line should be wrapped
                 .before(ElmTokenTypes.COMMA).spacing(0, 0, 0, false, 0)
-                .after(ElmTokenTypes.LPAREN).spacing(1, 1, 0, false, 0);
+                .before(ElmTokenTypes.RPAREN).spacing(0, 0, 0, false, 0);
     }
 
     @Nullable
