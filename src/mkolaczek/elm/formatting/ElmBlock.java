@@ -4,6 +4,7 @@ import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.formatter.common.AbstractBlock;
+import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.psi.ElmElementTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,11 +14,13 @@ import java.util.List;
 
 
 public class ElmBlock extends AbstractBlock {
+    private final Indent indent;
     private SpacingBuilder spacingBuilder;
 
-    protected ElmBlock(@NotNull ASTNode node, @Nullable Wrap wrap, @Nullable Alignment alignment,
+    protected ElmBlock(@NotNull ASTNode node, @Nullable Wrap wrap, Indent indent, @Nullable Alignment alignment,
                        SpacingBuilder spacingBuilder) {
         super(node, wrap, alignment);
+        this.indent = indent;
         this.spacingBuilder = spacingBuilder;
     }
 
@@ -26,12 +29,12 @@ public class ElmBlock extends AbstractBlock {
         List<Block> blocks = new ArrayList<>();
         ASTNode child = myNode.getFirstChildNode();
         while (child != null) {
-            if (child.getElementType() != TokenType.WHITE_SPACE) {
-                if (child.getElementType() == ElmElementTypes.MODULE_VALUE_LIST) {
-                    blocks.add(new ElmListingBlock(child, Wrap.createWrap(WrapType.NONE, false), Alignment.createAlignment(),
-                            spacingBuilder));
+            IElementType type = child.getElementType();
+            if (type != TokenType.WHITE_SPACE && type != TokenType.ERROR_ELEMENT) {
+                if (type == ElmElementTypes.MODULE_VALUE_LIST) {
+                    blocks.add(new ElmListingBlock(child, spacingBuilder));
                 } else {
-                    blocks.add(new ElmBlock(child, Wrap.createWrap(WrapType.NONE, false), Alignment.createAlignment(),
+                    blocks.add(new ElmBlock(child, ElmWrapFactory.createWrap(type), ElmIndentFactory.createIndent(type), Alignment.createAlignment(),
                             spacingBuilder));
                 }
             }
@@ -42,7 +45,7 @@ public class ElmBlock extends AbstractBlock {
 
     @Override
     public Indent getIndent() {
-        return Indent.getNoneIndent();
+        return indent;
     }
 
     @Nullable

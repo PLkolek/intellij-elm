@@ -2,8 +2,8 @@ package mkolaczek.elm.parsers;
 
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.ElmTokenTypes;
 import mkolaczek.elm.psi.ElmElementTypes;
+import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class Basic {
@@ -22,8 +22,11 @@ public class Basic {
                     Whitespace::maybeWhitespace,
                     Combinators.expect(ElmTokenTypes.RPAREN)
             );
+            if(!success) {
+                OnError.consumeUntil(builder, ElmTokenTypes.RPAREN);
+            }
             m.done(ElmElementTypes.MODULE_VALUE_LIST);
-            return success;
+            return true;
         };
     }
 
