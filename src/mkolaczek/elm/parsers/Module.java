@@ -81,7 +81,7 @@ public class Module {
 
     private static Parser exposing() {
         return Combinators.sequenceAs(ElmElementTypes.EXPOSING_NODE, Combinators.expect(ElmTokenTypes.EXPOSING),
-                Whitespace::maybeWhitespace,
+                Combinators.success(Whitespace::maybeWhitespace),
                 Basic.listing(Module.exportValue()));
     }
 
