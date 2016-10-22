@@ -175,4 +175,11 @@ public class Combinators {
     public static Parser spacePrefix(NamedParser parser) {
         return many(tryP(sequence(Whitespace::forcedWS, parser)));
     }
+
+    public static Parser success(Parser parser) {
+        return builder -> {
+            parser.apply(builder);
+            return true;
+        };
+    }
 }

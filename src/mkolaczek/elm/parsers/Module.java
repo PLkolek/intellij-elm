@@ -67,11 +67,11 @@ public class Module {
         PsiBuilder.Marker marker = builder.mark();
         boolean success = Combinators.simpleSequence(builder,
                 Combinators.expect(ElmTokenTypes.MODULE),
-                Whitespace::maybeWhitespace,
+                Combinators.success(Whitespace::maybeWhitespace),
                 Basic.dottedCapVar(ElmElementTypes.MODULE_NAME),
-                Whitespace::maybeWhitespace,
+                Combinators.success(Whitespace::maybeWhitespace),
                 exposing(),
-                Whitespace::freshLine
+                Combinators.success(Whitespace::freshLine)
         );
         if (!success) {
             OnError.consumeUntil(builder, ElmTokenTypes.NEW_LINE);

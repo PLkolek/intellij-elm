@@ -28,11 +28,5 @@ public class Whitespace {
             builder.error("Whitespace expected");
         }
         return ok;
-        /*Optional<IElementType> lastToken = whitespace(builder);
-        boolean endsWithNewLine = lastToken.isPresent() && lastToken.get() == ElmTokenTypes.NEW_LINE;
-        if (endsWithNewLine) {
-            builder.error("Whitespace expected");
-        }
-        return !endsWithNewLine;*/
     }
 }
