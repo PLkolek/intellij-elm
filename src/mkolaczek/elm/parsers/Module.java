@@ -67,11 +67,11 @@ public class Module {
         PsiBuilder.Marker marker = builder.mark();
         boolean success = Combinators.simpleSequence(builder,
                 Combinators.expect(ElmTokenTypes.MODULE),
-                Combinators.success(Whitespace::maybeWhitespace),
+                Whitespace::maybeWhitespace,
                 Basic.dottedCapVar(ElmElementTypes.MODULE_NAME),
-                Combinators.success(Whitespace::maybeWhitespace),
+                Whitespace::maybeWhitespace,
                 exposing(),
-                Combinators.success(Whitespace::freshLine)
+                Whitespace::freshLine
         );
         if (!success) {
             OnError.consumeUntil(builder, ElmTokenTypes.NEW_LINE);
@@ -81,7 +81,7 @@ public class Module {
 
     private static Parser exposing() {
         return Combinators.sequenceAs(ElmElementTypes.EXPOSING_NODE, Combinators.expect(ElmTokenTypes.EXPOSING),
-                Combinators.success(Whitespace::maybeWhitespace),
+                Whitespace::maybeWhitespace,
                 Basic.listing(Module.exportValue()));
     }
 
