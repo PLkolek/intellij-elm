@@ -70,15 +70,19 @@ public class Module {
                 Whitespace::maybeWhitespace,
                 Basic.dottedCapVar(ElmElementTypes.MODULE_NAME),
                 Whitespace::maybeWhitespace,
-                Combinators.expect(ElmTokenTypes.EXPOSING),
-                Whitespace::maybeWhitespace,
-                Basic.listing(Module.exportValue()),
+                exposing(),
                 Whitespace::freshLine
         );
         if (!success) {
             OnError.consumeUntil(builder, ElmTokenTypes.NEW_LINE);
         }
         marker.done(ElmElementTypes.MODULE_HEADER);
+    }
+
+    private static Parser exposing() {
+        return Combinators.sequenceAs(ElmElementTypes.EXPOSING_NODE, Combinators.expect(ElmTokenTypes.EXPOSING),
+                Whitespace::maybeWhitespace,
+                Basic.listing(Module.exportValue()));
     }
 
     private static NamedParser exportValue() {

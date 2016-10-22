@@ -17,6 +17,16 @@ public class Combinators {
         return (builder -> simpleSequence(builder, parsers));
     }
 
+    public static Parser sequenceAs(IElementType name, Parser... parsers) {
+        return (builder -> {
+            Marker marker = builder.mark();
+            boolean result = simpleSequence(builder, parsers);
+            endAs(marker, name);
+            return result;
+        });
+
+    }
+
     public static boolean simpleSequence(PsiBuilder builder, Parser... parsers) {
         for (Parser parser : parsers) {
             if (!parser.apply(builder)) {

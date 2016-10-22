@@ -1,48 +1,62 @@
 package mkolaczek.elm.formatting;
 
+import com.google.common.collect.ImmutableSet;
 import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.TokenType;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.ASTUtil;
+import mkolaczek.elm.psi.ElmElementTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static mkolaczek.elm.psi.ElmTokenTypes.*;
 
-public class ElmListingBlock extends AbstractBlock {
+public class ElmExposingBlock extends AbstractBlock {
     private SpacingBuilder spacingBuilder;
 
-    protected ElmListingBlock(@NotNull ASTNode node, SpacingBuilder spacingBuilder) {
-        super(node, Wrap.createWrap(WrapType.NORMAL, false), Alignment.createAlignment());
+    private static final Set<IElementType> choppedElements = ImmutableSet.of(COMMA, RPAREN, LPAREN, EXPOSING);
+
+    protected ElmExposingBlock(@NotNull ASTNode node, SpacingBuilder spacingBuilder) {
+        super(node, Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true), Alignment.createAlignment());
         this.spacingBuilder = spacingBuilder;
     }
 
     @Override
     protected List<Block> buildChildren() {
         List<Block> blocks = new ArrayList<>();
-        ASTNode child = myNode.getFirstChildNode();
-        Wrap chopDownWrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
-        //chopDownWrap.ignoreParentWraps();
+        ASTNode child = ASTUtil.firstSignificantChild(myNode);
         while (child != null) {
             IElementType type = child.getElementType();
-            if (type != TokenType.WHITE_SPACE && type != TokenType.ERROR_ELEMENT) {
-                if (type == COMMA || type == RPAREN) {
-                    blocks.add(new ElmBlock(child, chopDownWrap, ElmIndentFactory.createIndent(type), Alignment.createAlignment(),
-                            spacingBuilder));
-                } else {
-                    blocks.add(new ElmBlock(child, ElmWrapFactory.createWrap(type), ElmIndentFactory.createIndent(type), Alignment.createAlignment(),
-                            spacingBuilder));
+            if (type == ElmElementTypes.MODULE_VALUE_LIST) {
+                ASTNode child2 = ASTUtil.firstSignificantChild(child);
+                while (child2 != null) {
+                    blocks.add(createBlock(child2, getWrap()));
+                    child2 = ASTUtil.nextSignificant(child2);
                 }
+            } else {
+                ElmBlock block = createBlock(child, getWrap());
+                blocks.add(block);
             }
-            child = child.getTreeNext();
+            child = ASTUtil.nextSignificant(child);
         }
         return blocks;
+    }
+
+    @NotNull
+    private ElmBlock createBlock(ASTNode child, Wrap chopDownWrap) {
+        IElementType type = child.getElementType();
+        if (choppedElements.contains(type)) {
+            return new ElmBlock(child, spacingBuilder, chopDownWrap);
+        } else {
+            return new ElmBlock(child, spacingBuilder);
+        }
     }
 
     @Override

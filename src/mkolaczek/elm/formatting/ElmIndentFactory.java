@@ -7,12 +7,11 @@ import com.intellij.psi.tree.IElementType;
 
 import java.util.Set;
 
-import static mkolaczek.elm.psi.ElmElementTypes.MODULE_NAME;
-import static mkolaczek.elm.psi.ElmElementTypes.MODULE_VALUE_LIST;
-import static mkolaczek.elm.psi.ElmTokenTypes.EXPOSING;
+import static mkolaczek.elm.psi.ElmElementTypes.EXPOSING_NODE;
+import static mkolaczek.elm.psi.ElmTokenTypes.*;
 
 public class ElmIndentFactory {
-    private static final Set<IElementType> indentedElements = ImmutableSet.of(MODULE_VALUE_LIST, EXPOSING, MODULE_NAME);
+    private static final Set<IElementType> indentedElements = ImmutableSet.of(EXPOSING_NODE, LPAREN, COMMA, RPAREN);
 
     public static Indent createIndent(IElementType type) {
         if (indentedElements.contains(type)) {
