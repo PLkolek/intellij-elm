@@ -87,6 +87,7 @@ public class Basic {
         PsiBuilder.Marker m = builder.mark();
         boolean success = Combinators.simpleSequence(builder,
                 Combinators.expect(ElmTokenTypes.CAP_VAR),
+                Whitespace::noWhitespace,
                 Combinators.simpleMany(ElmTokenTypes.DOT, ElmTokenTypes.CAP_VAR)
         );
         m.done(type);

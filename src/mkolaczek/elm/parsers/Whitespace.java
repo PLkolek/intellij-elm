@@ -29,4 +29,11 @@ public class Whitespace {
         }
         return true;
     }
+
+    public static boolean noWhitespace(PsiBuilder builder) {
+        if (Character.isWhitespace(builder.getOriginalText().charAt(builder.getCurrentOffset() - 1))) {
+            builder.error("Expected no whitespace");
+        }
+        return true;
+    }
 }

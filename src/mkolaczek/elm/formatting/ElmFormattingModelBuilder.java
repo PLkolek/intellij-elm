@@ -20,8 +20,7 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
     @Override
     public FormattingModel createModel(PsiElement element, CodeStyleSettings settings) {
         return FormattingModelProvider.createFormattingModelForPsiFile(element.getContainingFile(),
-                new ElmBlock(element.getNode(), createSpaceBuilder(settings)),
-                settings);
+                new ElmBlock(element.getNode(), createSpaceBuilder(settings)), settings);
     }
 
     private static SpacingBuilder createSpaceBuilder(CodeStyleSettings settings) {
@@ -32,12 +31,14 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .before(ElmElementTypes.DOC_COMMENT).spacing(0, 0, 2, false, 0)
                 .after(ElmElementTypes.DOC_COMMENT).spacing(0, 0, 2, false, 0)
                 .before(ElmTokenTypes.END_COMMENT).spacing(0, 0, 1, true, 99999999)
+                .aroundInside(ElmTokenTypes.DOT, ElmElementTypes.MODULE_NAME).spacing(0, 0, 0, false, 0)
                 //remove all spacing to determine if the line should be wrapped
                 .before(ElmElementTypes.EXPOSING_NODE).spacing(1, 1, 0, false, 0)
                 .before(ElmTokenTypes.LPAREN).spacing(0, 0, 0, false, 0)
                 .before(ElmTokenTypes.RPAREN).spacing(0, 0, 0, false, 0)
                 .before(ElmTokenTypes.COMMA).spacing(0, 0, 0, false, 0)
                 .before(ElmElementTypes.MODULE_VALUE_LIST).spacing(0, 0, 0, false, 0);
+
     }
 
     @Nullable
