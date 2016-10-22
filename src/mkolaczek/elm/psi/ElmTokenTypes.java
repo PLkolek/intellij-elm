@@ -34,5 +34,5 @@ public class ElmTokenTypes {
 
 
     public static final TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR);
-    public static final TokenSet COMMENT_TOKENS = TokenSet.create(BEGIN_COMMENT, BEGIN_DOC_COMMENT, COMMENT_CONTENT, END_COMMENT, COMMENT);
+    public static final TokenSet COMMENT_TOKENS = TokenSet.create(COMMENT_CONTENT);
 }

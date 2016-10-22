@@ -8,6 +8,7 @@ import mkolaczek.elm.psi.ElmElementTypes;
 
 import static mkolaczek.elm.parsers.Combinators.or;
 
+//this class should ignore COMMENT_CONTENT, as PsiBuilder can't return it, but, who cares
 public class Comment {
     public static NamedParser docComment() {
         Parser parser = builder -> comment(builder, ElmTokenTypes.BEGIN_DOC_COMMENT, ElmElementTypes.DOC_COMMENT);
