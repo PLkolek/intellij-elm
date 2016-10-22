@@ -80,7 +80,8 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
 <INCOMMENT> {
     "{-"            { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
     "-}"            { yypopstate(); return END_COMMENT; }
-    [^\-\}\{]*      { return COMMENT_CONTENT; }
+    {CLRF}          { return TokenType.WHITE_SPACE; }
+    [^\-\}\{\r\n]*      { return COMMENT_CONTENT; }
     [\-\{\}]        { return COMMENT_CONTENT; }
     [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }

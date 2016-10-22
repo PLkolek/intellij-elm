@@ -31,6 +31,7 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .after(ElmTokenTypes.MODULE).spacing(1, 1, 0, false, 0)
                 .before(ElmElementTypes.DOC_COMMENT).spacing(0, 0, 2, false, 0)
                 .after(ElmElementTypes.DOC_COMMENT).spacing(0, 0, 2, false, 0)
+                .before(ElmTokenTypes.END_COMMENT).spacing(0, 0, 1, true, 99999999)
                 //remove all spacing to determine if the line should be wrapped
                 .before(ElmElementTypes.EXPOSING_NODE).spacing(1, 1, 0, false, 0)
                 .before(ElmTokenTypes.LPAREN).spacing(0, 0, 0, false, 0)
