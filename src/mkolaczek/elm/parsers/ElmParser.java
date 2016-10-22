@@ -13,7 +13,7 @@ import static mkolaczek.elm.parsers.Basic.dottedCapVar;
 import static mkolaczek.elm.parsers.Basic.paddedEquals;
 import static mkolaczek.elm.parsers.Combinators.*;
 
-public class MyElmParser implements PsiParser {
+public class ElmParser implements PsiParser {
 
     @NotNull
     @Override
@@ -38,11 +38,11 @@ public class MyElmParser implements PsiParser {
     }
 
     private void declaration(@NotNull PsiBuilder builder) {
-        Combinators.simpleOr(builder, Comment.docComment(), MyElmParser.typeDecl());
+        Combinators.simpleOr(builder, Comment.docComment(), ElmParser.typeDecl());
     }
 
     private static NamedParser typeDecl() {
-        return NamedParser.of("Type declaration", MyElmParser::typeDecl);
+        return NamedParser.of("Type declaration", ElmParser::typeDecl);
     }
 
 

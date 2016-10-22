@@ -12,7 +12,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import mkolaczek.elm.parsers.MyElmParser;
+import mkolaczek.elm.parsers.ElmParser;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.ElmElementTypes;
 import mkolaczek.elm.psi.ElmTokenTypes;
@@ -33,7 +33,7 @@ public class ElmParserDefinition implements ParserDefinition {
 
     @Override
     public PsiParser createParser(Project project) {
-        return new MyElmParser();
+        return new ElmParser();
     }
 
     @Override
