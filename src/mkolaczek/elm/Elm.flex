@@ -33,7 +33,7 @@ import com.intellij.psi.TokenType;
 
 
 CLRF="\r"|"\n"|"\r\n"
-LINE_WS=[\ \f]
+LINE_WS=[\ \f\t]
 CAP_VAR=[A-Z][a-zA-Z0-9]*
 LOW_VAR=[a-z][a-zA-Z0-9]*
 FRESH_LINE=({LINE_WS}|{CLRF})*{CLRF}
