@@ -22,7 +22,7 @@ public class Basic {
                     Whitespace::maybeWhitespace,
                     Combinators.expect(ElmTokenTypes.RPAREN)
             );
-            if(!success) {
+            if (!success) {
                 OnError.consumeUntil(builder, ElmTokenTypes.RPAREN);
             }
             m.done(ElmElementTypes.MODULE_VALUE_LIST);
@@ -87,8 +87,10 @@ public class Basic {
         PsiBuilder.Marker m = builder.mark();
         boolean success = Combinators.simpleSequence(builder,
                 Combinators.expect(ElmTokenTypes.CAP_VAR),
-                Whitespace::noWhitespace,
-                Combinators.simpleMany(ElmTokenTypes.DOT, ElmTokenTypes.CAP_VAR)
+                Combinators.many(Whitespace::noWhitespace,
+                        Combinators.expect(ElmTokenTypes.DOT),
+                        Whitespace::noWhitespace,
+                        Combinators.expect(ElmTokenTypes.CAP_VAR))
         );
         m.done(type);
         return success;

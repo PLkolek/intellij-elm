@@ -1,8 +1,8 @@
 package mkolaczek.elm.parsers;
 
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.ElmTokenTypes;
 import mkolaczek.elm.psi.ElmElementTypes;
+import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class Module {
@@ -58,6 +58,7 @@ public class Module {
         } else {
             m2.rollbackTo();
         }
+
         boolean success = Whitespace.freshLine(builder);
         m.done(ElmElementTypes.IMPORT_2);
         return success;
