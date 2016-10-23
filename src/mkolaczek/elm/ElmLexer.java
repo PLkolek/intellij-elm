@@ -652,11 +652,11 @@ public class ElmLexer implements FlexLexer {
             }
           case 45: break;
           case 19: 
-            { yypopstate(); return END_COMMENT;
+            { yypopstate(); return yystate() == INCOMMENT ? COMMENT_CONTENT : END_COMMENT;
             }
           case 46: break;
           case 20: 
-            { yypushstate(INCOMMENT); return BEGIN_COMMENT;
+            { yypushstate(INCOMMENT); return COMMENT_CONTENT;
             }
           case 47: break;
           case 21: 
