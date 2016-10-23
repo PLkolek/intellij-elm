@@ -34,6 +34,7 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .aroundInside(ElmTokenTypes.DOT, ElmElementTypes.MODULE_NAME).spacing(0, 0, 0, false, 0)
                 .aroundInside(ElmTokenTypes.SYM_OP, ElmElementTypes.OPERATOR).spacing(0, 0, 0, false, 0)
                 .aroundInside(ElmTokenTypes.COMMA_OP, ElmElementTypes.OPERATOR).spacing(0, 0, 0, false, 0)
+                .around(ElmTokenTypes.AS).spacing(1, 1, 0, false, 0)
                 //remove all spacing to determine if the line should be wrapped
                 .before(ElmElementTypes.EXPOSING_NODE).spacing(1, 1, 0, false, 0)
                 .before(ElmTokenTypes.LPAREN).spacing(0, 0, 0, false, 0)

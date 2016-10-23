@@ -48,15 +48,15 @@ public class Module {
         }
         m2 = builder.mark();
         boolean hasExposing = Combinators.simpleSequence(builder, Whitespace::maybeWhitespace, Combinators.expect(ElmTokenTypes.EXPOSING));
+        m2.rollbackTo();
         if (hasExposing) {
-            m2.drop();
-            if (!Combinators.simpleSequence(builder, Whitespace::maybeWhitespace, Basic.listing(Module.exportValue()))) {
+            Whitespace.maybeWhitespace(builder);
+
+            if (!exposing().apply(builder)) {
                 OnError.consumeUntil(builder, ElmTokenTypes.NEW_LINE);
                 m.done(ElmElementTypes.IMPORT_2);
                 return false;
             }
-        } else {
-            m2.rollbackTo();
         }
 
         boolean success = Whitespace.freshLine(builder);
