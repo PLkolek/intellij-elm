@@ -40,6 +40,7 @@ public interface ElmElementTypes {
     IElementType MODULE = new ElmElementType("MODULE");
     IElementType EXPORTED_VALUE = new ElmElementType("EXPORTED_VALUE");
     IElementType EXPOSING_NODE = new ElmElementType("EXPOSING_NODE");
+    IElementType OPERATOR = new ElmElementType("OPERATOR");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {
@@ -108,6 +109,8 @@ public interface ElmElementTypes {
                 return new ElmExportedValue(node);
             } else if (type == EXPOSING_NODE) {
                 return new ElmExposingNode(node);
+            } else if (type == OPERATOR) {
+                return new ElmOperator(node);
             } else {
 
                 throw new AssertionError("Unknown element type: " + type);

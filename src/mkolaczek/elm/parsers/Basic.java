@@ -70,7 +70,7 @@ public class Basic {
     }
 
     public static NamedParser operator() {
-        Parser p = Combinators.sequence(
+        Parser p = Combinators.sequenceAs(ElmElementTypes.OPERATOR,
                 Combinators.expect(ElmTokenTypes.LPAREN),
                 Whitespace::maybeWhitespace,
                 Basic::operatorSymbol,
