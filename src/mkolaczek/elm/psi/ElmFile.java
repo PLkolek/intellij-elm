@@ -7,6 +7,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.ElmFileType;
 import mkolaczek.elm.ElmLanguage;
 import mkolaczek.elm.psi.node.ElmImport2;
+import mkolaczek.elm.psi.node.ElmModule;
 import mkolaczek.elm.psi.node.ElmModuleHeader;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,5 +35,9 @@ public class ElmFile extends PsiFileBase {
 
     public ElmModuleHeader header() {
         return PsiTreeUtil.findChildOfType(this, ElmModuleHeader.class);
+    }
+
+    public ElmModule module() {
+        return PsiTreeUtil.findChildOfType(this, ElmModule.class);
     }
 }

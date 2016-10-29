@@ -8,7 +8,6 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.indexing.FileBasedIndex;
 import mkolaczek.elm.ElmFileType;
@@ -41,7 +40,7 @@ public class ElmModuleReference extends PsiReferenceBase<ElmModuleNameRef> {
                                 .map(PsiManager.getInstance(project)::findFile)
                                 .map(ElmFile.class::cast)
                                 .filter(Objects::nonNull)
-                                .map(file -> PsiTreeUtil.getChildOfType(file, ElmModule.class))
+                                .map(ElmFile::module)
                                 .filter(Objects::nonNull);
     }
 
