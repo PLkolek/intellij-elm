@@ -1,2 +1,2 @@
-module <warning descr="Unused module">Test</warning> exposing (..)
+module <warning descr="Unused module"><caret>Test</warning> exposing (..)
 import Test2
