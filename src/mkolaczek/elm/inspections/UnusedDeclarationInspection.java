@@ -19,6 +19,13 @@ import org.jetbrains.annotations.Nullable;
 
 public class UnusedDeclarationInspection extends LocalInspectionTool {
 
+    @Nls
+    @NotNull
+    @Override
+    public String getDisplayName() {
+        return "Unused module";
+    }
+
     @Nullable
     @Override
     public ProblemDescriptor[] checkFile(@NotNull PsiFile file,
