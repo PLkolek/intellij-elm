@@ -43,6 +43,7 @@
                          shortName="ElmUnusedDeclaration" displayName="Unused declaration"/>
         <lang.psiStructureViewFactory language="Elm"
                                       implementationClass="mkolaczek.elm.structureView.ElmStructureViewBuilderFactory"/>
+        <gotoClassContributor implementation="mkolaczek.elm.goTo.GoToClassContributor"/>
     </extensions>
 
     <actions>

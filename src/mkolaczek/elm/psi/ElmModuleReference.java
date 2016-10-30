@@ -2,23 +2,13 @@ package mkolaczek.elm.psi;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiReferenceBase;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.indexing.FileBasedIndex;
-import mkolaczek.elm.ElmFileType;
-import mkolaczek.elm.psi.node.ElmModule;
+import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.psi.node.ElmModuleNameRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 public class ElmModuleReference extends PsiReferenceBase<ElmModuleNameRef> {
     public ElmModuleReference(ElmModuleNameRef element) {
@@ -30,30 +20,15 @@ public class ElmModuleReference extends PsiReferenceBase<ElmModuleNameRef> {
     public PsiElement resolve() {
         Project project = myElement.getProject();
 
-        return modules(project)
-                .filter(module -> module.sameName(myElement.getName()))
-                .findFirst().orElse(null);
-    }
-
-    private Stream<ElmModule> modules(Project project) {
-        return elmFiles(project).stream()
-                                .map(PsiManager.getInstance(project)::findFile)
-                                .map(ElmFile.class::cast)
-                                .filter(Objects::nonNull)
-                                .map(ElmFile::module)
-                                .filter(Objects::nonNull);
-    }
-
-    @NotNull
-    private Collection<VirtualFile> elmFiles(Project project) {
-        GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-        return FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, ElmFileType.INSTANCE, scope);
+        return ProjectUtil.modules(project)
+                          .filter(module -> module.sameName(myElement.getName()))
+                          .findFirst().orElse(null);
     }
 
     @NotNull
     @Override
     public Object[] getVariants() {
-        return modules(myElement.getProject()).filter(module -> !myElement.getContaingModule().sameName(module)).toArray();
+        return ProjectUtil.modules(myElement.getProject()).filter(module -> !myElement.getContaingModule().sameName(module)).toArray();
     }
 
     @Override
