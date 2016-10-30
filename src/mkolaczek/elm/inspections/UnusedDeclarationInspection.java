@@ -59,7 +59,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
             return new ProblemDescriptor[]{manager.createProblemDescriptor(name,
                     (TextRange) null,
                     "Unused module",
-                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                    ProblemHighlightType.LIKE_UNUSED_SYMBOL,
                     true,
                     new RemoveModuleQuickFix())
             };
