@@ -41,6 +41,8 @@
         <localInspection implementationClass="mkolaczek.elm.inspections.UnusedDeclarationInspection" groupPath="Elm"
                          groupName="Declaration redundancy" enabledByDefault="true" level="WARNING"
                          shortName="ElmUnusedDeclaration" displayName="Unused declaration"/>
+        <lang.psiStructureViewFactory language="Elm"
+                                      implementationClass="mkolaczek.elm.structureView.ElmStructureViewBuilderFactory"/>
     </extensions>
 
     <actions>
