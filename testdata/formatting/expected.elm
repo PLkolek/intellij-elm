@@ -6,7 +6,7 @@ module Test1.B
         , abbjaaal
         , (**)
         , (,,)
-        , A( ..)
+        , A(..)
         , B(Abc, Def, Ghci)
         , C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv)
         )
