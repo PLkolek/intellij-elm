@@ -18,9 +18,29 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
         myFixture.configureByFile("Test.elm");
         ElmModule module = ((ElmFile) myFixture.getFile()).module();
         String info = new ElmDocumentationProvider().getQuickNavigateInfo(module, null);
-        String expected = "module Test1.B exposing (aaaaaaa, bbbbbbb, aaaaaaaaa, abbjaaal, (    **              )," +
-                " (,,), A(           ..     ), B(Abc, Def, Ghci), C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv))";
+        String expected = "<html><head></head><body>" +
+                "module Test1.B\n" +
+                "&nbsp&nbsp&nbsp&nbsp exposing (aaaaaaa, bbbbbbb, aaaaaaaaa, abbjaaal, ( ** ), (,,), A( .. ), B(Abc, Def, Ghci),\n" +
+                "&nbsp&nbsp&nbsp&nbsp C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv))" +
+                "</body></html>";
         assertThat(info, is(expected));
-
     }
+
+    public void testModuleQuickDocumentation() {
+        myFixture.configureByFile("Test.elm");
+        ElmModule module = ((ElmFile) myFixture.getFile()).module();
+        String doc = new ElmDocumentationProvider().generateDoc(module, null);
+        String expected = "<html><head></head><body>" +
+                "<pre>module Test1.B\n" +
+                "&nbsp&nbsp&nbsp&nbsp exposing (aaaaaaa, bbbbbbb, aaaaaaaaa, abbjaaal, ( ** ), (,,), A( .. ), B(Abc, Def, Ghci),\n" +
+                "&nbsp&nbsp&nbsp&nbsp C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv))</pre>" +
+                "<p>{-|\n" +
+                "{- -}\n\n" +
+                "sdsd\n" +
+                "-}</p>" +
+                "</body></html>";
+        assertThat(doc, is(expected));
+    }
+
+
 }
