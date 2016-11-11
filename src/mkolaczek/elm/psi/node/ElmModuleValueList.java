@@ -18,6 +18,6 @@ public class ElmModuleValueList extends ASTWrapperPsiElement {
     }
 
     public boolean isOpenListing() {
-        return PsiTreeUtil.findChildOfType(this, ElmOpenListing.class) != null;
+        return PsiTreeUtil.getChildOfType(this, ElmOpenListing.class) != null;
     }
 }

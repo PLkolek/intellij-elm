@@ -19,8 +19,13 @@ public class ElmDocumentationProvider implements DocumentationProvider {
             ElmModuleValueList valueList = module.exposedValues();
             String exposedValues = "..";
             if (!valueList.isOpenListing()) {
-                exposedValues = valueList.values().stream().map(PsiElement::getText).collect(
-                        Collectors.joining(", "));
+                exposedValues = valueList.values()
+                                         .stream()
+                                         .map(PsiElement::getText)
+                                         .map(str -> str.replace("\r", ""))
+                                         .map(str -> str.replace("\n", ""))
+                                         .collect(
+                                                 Collectors.joining(", "));
             }
             return String.format("module %s exposing (%s)", module.getName(), exposedValues);
         }
