@@ -18,8 +18,8 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
         myFixture.configureByFile("Test.elm");
         ElmModule module = ((ElmFile) myFixture.getFile()).module();
         String info = new ElmDocumentationProvider().getQuickNavigateInfo(module, null);
-        String expected = "module Test1.B exposing (aaaaaaa, bbbbbbb, aaaaaaaaa, abbjaaal, (    **              ), " +
-                "(,,), A(           ..     ), B(Abc, Def, Ghci), C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv))";
+        String expected = "module Test1.B exposing (aaaaaaa, bbbbbbb, aaaaaaaaa, abbjaaal, (    **              )," +
+                " (,,), A(           ..     ), B(Abc, Def, Ghci), C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv))";
         assertThat(info, is(expected));
 
     }
