@@ -44,6 +44,9 @@
         <lang.psiStructureViewFactory language="Elm"
                                       implementationClass="mkolaczek.elm.structureView.ElmStructureViewBuilderFactory"/>
         <gotoClassContributor implementation="mkolaczek.elm.goTo.GoToClassContributor"/>
+        <gotoSymbolContributor implementation="mkolaczek.elm.goTo.GoToClassContributor"/>
+        <lang.documentationProvider language="Elm"
+                                    implementationClass="mkolaczek.elm.documentation.ElmDocumentationProvider"/>
     </extensions>
 
     <actions>

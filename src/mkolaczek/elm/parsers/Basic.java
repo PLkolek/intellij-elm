@@ -33,7 +33,7 @@ public class Basic {
     private static Parser listingContent(NamedParser listedValue) {
         return (PsiBuilder builder) ->
                 Combinators.simpleOr(builder,
-                        Combinators.expect(ElmTokenTypes.OPEN_LISTING),
+                        Combinators.expectAs(ElmElementTypes.OPEN_LISTING_NODE, ElmTokenTypes.OPEN_LISTING),
                         listingValues(listedValue));
     }
 

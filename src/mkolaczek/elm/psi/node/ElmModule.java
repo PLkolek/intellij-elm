@@ -84,4 +84,8 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
     public boolean sameName(ElmModule other) {
         return sameName(other.getName());
     }
+
+    public ElmModuleValueList exposedValues() {
+        return PsiTreeUtil.findChildOfType(this, ElmModuleValueList.class);
+    }
 }
