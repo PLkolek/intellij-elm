@@ -32,12 +32,11 @@ import com.intellij.psi.TokenType;
 %eof}
 
 
-CLRF="\r"|"\n"|"\r\n"
+CLRF="\r"|"\n"|"\r\n"|[\ \f\t]
 LINE_WS=[\ \f\t]
+WS={CLRF}|{LINE_WS}
 CAP_VAR=[A-Z][a-zA-Z0-9]*
 LOW_VAR=[a-z][a-zA-Z0-9]*
-FRESH_LINE=({LINE_WS}|{CLRF})*{CLRF}
-FORCED_WS=({LINE_WS}|{CLRF})*{LINE_WS}
 SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
         | \p{General_Category:MathSymbol}
         | \p{General_Category:CurrencySymbol}
@@ -68,8 +67,7 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   "."               { return DOT; }
   ":"               { return COLON; }
   "{-|"             { yypushstate(INCOMMENT); return BEGIN_DOC_COMMENT;}
-  {LINE_WS}         { return TokenType.WHITE_SPACE; }
-  {CLRF}            { return TokenType.WHITE_SPACE; }
+  {WS}+         { return TokenType.WHITE_SPACE; }
   {CAP_VAR}         { return CAP_VAR; }
   {LOW_VAR}         { return LOW_VAR; }
   ","+              { return COMMA_OP; }
