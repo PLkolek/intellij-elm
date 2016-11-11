@@ -88,4 +88,8 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
     public ElmModuleValueList exposedValues() {
         return PsiTreeUtil.findChildOfType(this, ElmModuleValueList.class);
     }
+
+    public ElmDocComment docComment() {
+        return PsiTreeUtil.getChildOfType(this, ElmDocComment.class);
+    }
 }

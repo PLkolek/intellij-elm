@@ -1,8 +1,11 @@
 package mkolaczek.elm.documentation;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import mkolaczek.elm.psi.node.ElmDocComment;
 import mkolaczek.elm.psi.node.ElmModule;
 import mkolaczek.elm.psi.node.ElmModuleValueList;
 import org.jetbrains.annotations.Nullable;
@@ -14,22 +17,48 @@ public class ElmDocumentationProvider implements DocumentationProvider {
     @Nullable
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
+        String result = quickInfoText(element);
+        return result != null ? wrapInHtmlTags(result) : null;
+    }
+
+    private String quickInfoText(PsiElement element) {
         if (element instanceof ElmModule) {
             ElmModule module = (ElmModule) element;
             ElmModuleValueList valueList = module.exposedValues();
-            String exposedValues = "..";
+            String exposedValuesStr = "..";
             if (!valueList.isOpenListing()) {
-                exposedValues = valueList.values()
-                                         .stream()
-                                         .map(PsiElement::getText)
-                                         .map(str -> str.replace("\r", ""))
-                                         .map(str -> str.replace("\n", ""))
-                                         .collect(
-                                                 Collectors.joining(", "));
+                String[] exposedValues = valueList.values()
+                                                  .stream()
+                                                  .map(PsiElement::getText)
+                                                  .map(str -> str.replaceAll("[ \t]+", " "))
+                                                  .map(str -> str.replace("\r", ""))
+                                                  .map(str -> str.replace("\n", ""))
+                                                  .toArray(String[]::new);
+                List<List<String>> lines = Lists.newArrayList();
+                List<String> currentLine = Lists.newArrayList();
+                int currLength = 0;
+                for (String exposedValue : exposedValues) {
+                    currentLine.add(exposedValue);
+                    currLength += exposedValue.length();
+                    if (currLength > 50) {
+                        lines.add(currentLine);
+                        currLength = 0;
+                        currentLine = Lists.newArrayList();
+                    }
+                }
+                exposedValuesStr = lines.stream()
+                                        .map(strs -> Joiner.on(", ").join(strs))
+                                        .collect(Collectors.joining(",\n&nbsp&nbsp&nbsp&nbsp "));
+
             }
-            return String.format("module %s exposing (%s)", module.getName(), exposedValues);
+            return String.format("module %s\n&nbsp&nbsp&nbsp&nbsp exposing (%s)", module.getName(), exposedValuesStr);
+
         }
         return null;
+    }
+
+    private String wrapInHtmlTags(String aa) {
+        return String.format("<html><head></head><body>" + aa + "</body></html>", aa);
     }
 
     @Nullable
@@ -41,6 +70,15 @@ public class ElmDocumentationProvider implements DocumentationProvider {
     @Nullable
     @Override
     public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
+        if (element instanceof ElmModule) {
+            ElmModule module = (ElmModule) element;
+            ElmDocComment docComment = module.docComment();
+            String docCommentText = docComment != null ? docComment.getText() : "";
+            return String.format("<html><head></head><body><pre>%s</pre><p>%s</p></body></html>",
+                    quickInfoText(module),
+                    docCommentText);
+
+        }
         return null;
     }
 
