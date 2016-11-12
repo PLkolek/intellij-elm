@@ -76,8 +76,8 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
 }
 
 <INCOMMENT> {
-    "{-"            { yypushstate(INCOMMENT); return COMMENT_CONTENT; }
-    "-}"            { yypopstate(); return yystate() == INCOMMENT ? COMMENT_CONTENT : END_COMMENT; }
+    "{-"            { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
+    "-}"            { yypopstate(); return END_COMMENT; }
     {CLRF}          { return TokenType.WHITE_SPACE; }
     [^\-\}\{\r\n]*      { return COMMENT_CONTENT; }
     [\-\{\}]        { return COMMENT_CONTENT; }

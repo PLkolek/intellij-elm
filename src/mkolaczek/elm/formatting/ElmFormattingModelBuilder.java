@@ -31,7 +31,7 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .after(ElmTokenTypes.IMPORT).spacing(1, 1, 0, false, 0)
                 .before(ElmElementTypes.DOC_COMMENT).spacing(0, 0, 2, false, 0)
                 .after(ElmElementTypes.DOC_COMMENT).spacing(0, 0, 2, false, 0)
-                .before(ElmTokenTypes.END_COMMENT).spacing(0, 0, 1, true, 99999999)
+                .beforeInside(ElmTokenTypes.END_COMMENT, ElmElementTypes.DOC_COMMENT).spacing(0, 0, 1, true, 99999999)
                 .aroundInside(ElmTokenTypes.DOT, ElmElementTypes.MODULE_NAME).spacing(0, 0, 0, false, 0)
                 .aroundInside(ElmTokenTypes.SYM_OP, ElmElementTypes.OPERATOR).spacing(0, 0, 0, false, 0)
                 .aroundInside(ElmTokenTypes.COMMA_OP, ElmElementTypes.OPERATOR).spacing(0, 0, 0, false, 0)

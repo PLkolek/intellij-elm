@@ -47,6 +47,7 @@
         <gotoSymbolContributor implementation="mkolaczek.elm.goTo.GoToClassContributor"/>
         <lang.documentationProvider language="Elm"
                                     implementationClass="mkolaczek.elm.documentation.ElmDocumentationProvider"/>
+        <lang.foldingBuilder language="Elm" implementationClass="mkolaczek.elm.folding.ElmFoldingBuilder" />
     </extensions>
 
     <actions>
