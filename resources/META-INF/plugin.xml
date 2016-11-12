@@ -48,6 +48,7 @@
         <lang.documentationProvider language="Elm"
                                     implementationClass="mkolaczek.elm.documentation.ElmDocumentationProvider"/>
         <lang.foldingBuilder language="Elm" implementationClass="mkolaczek.elm.folding.ElmFoldingBuilder" />
+        <lang.commenter language="Elm" implementationClass="mkolaczek.elm.commenting.ElmCommenter" />
     </extensions>
 
     <actions>
