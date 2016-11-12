@@ -1,5 +1,6 @@
 package mkolaczek.elm.inspections;
 
+import com.google.common.base.Strings;
 import com.intellij.codeInspection.*;
 import com.intellij.find.findUsages.FindUsagesOptions;
 import com.intellij.find.findUsages.JavaFindUsagesHelper;
@@ -35,6 +36,9 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
             return null;
         }
         ElmModule module = ((ElmFile) file).module();
+        if (module == null || Strings.isNullOrEmpty(module.getName())) {
+            return null;
+        }
         FindUsagesOptions options = new FindUsagesOptions(file.getProject());
         options.isUsages = true;
         CommonProcessors.CollectProcessor<UsageInfo> collector = new CommonProcessors.CollectProcessor<UsageInfo>() {
