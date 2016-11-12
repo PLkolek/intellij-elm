@@ -42,6 +42,7 @@ public interface ElmElementTypes {
     IElementType EXPOSING_NODE = new ElmElementType("EXPOSING_NODE");
     IElementType OPERATOR = new ElmElementType("OPERATOR");
     IElementType OPEN_LISTING_NODE = new ElmElementType("OPEN_LISTING_NODE");
+    IElementType IMPORTS = new ElmElementType("IMPORTS");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {
@@ -114,6 +115,8 @@ public interface ElmElementTypes {
                 return new ElmOperator(node);
             } else if (type == OPEN_LISTING_NODE) {
                 return new ElmOpenListing(node);
+            } else if (type == IMPORTS) {
+                return new ElmImports(node);
             }
             else {
 

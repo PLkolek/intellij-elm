@@ -15,7 +15,7 @@ public class Module {
             Comment.docComment().apply(builder);
             Whitespace.freshLine(builder);
         }
-        Combinators.simpleMany(builder, Module::importLine);
+        Combinators.simpleManyAs(builder, ElmElementTypes.IMPORTS, Module::importLine);
         module.done(ElmElementTypes.MODULE);
     }
 

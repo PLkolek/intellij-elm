@@ -53,7 +53,13 @@ public class Combinators {
     }
 
     public static boolean simpleMany(PsiBuilder builder, Parser... parsers) {
+        return simpleManyAs(builder, null, parsers);
+    }
+
+    public static boolean simpleManyAs(PsiBuilder builder, IElementType as, Parser... parsers) {
         checkArgument(parsers != null && parsers.length >= 1);
+        Marker marker = builder.mark();
+        int startingOffset = builder.getCurrentOffset();
         boolean success;
         do {
             Marker m = builder.mark();
@@ -62,6 +68,7 @@ public class Combinators {
             if (!success) {
                 if (offsetBefore != builder.getCurrentOffset()) {
                     m.drop();
+                    marker.drop();
                     return false;
                 } else {
                     m.rollbackTo();
@@ -70,7 +77,13 @@ public class Combinators {
                 m.drop();
             }
         } while (success);
+        if (startingOffset != builder.getCurrentOffset()) {
+            endAs(marker, as);
+        } else {
+            marker.drop();
+        }
         return true;
+
     }
 
     public static NamedParser expectAs(IElementType name, IElementType... tokens) {
