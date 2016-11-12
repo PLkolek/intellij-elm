@@ -1,0 +1,1 @@
+module<EOLError descr="ElmTokenType.CAP_VAR expected"></EOLError>

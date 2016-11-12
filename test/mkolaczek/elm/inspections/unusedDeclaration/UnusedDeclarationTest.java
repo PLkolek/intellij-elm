@@ -51,4 +51,13 @@ public class UnusedDeclarationTest extends LightCodeInsightFixtureTestCase {
         assertEmpty(collector.getFiles());
     }
 
+    public void testInspectionDoesntFailOnIncompleteFile() {
+        myFixture.configureByFiles("Empty.elm");
+        myFixture.enableInspections(Collections.singleton(UnusedDeclarationInspection.class));
+        myFixture.checkHighlighting();
+        myFixture.configureByFiles("Incomplete.elm");
+        myFixture.enableInspections(Collections.singleton(UnusedDeclarationInspection.class));
+        myFixture.checkHighlighting();
+    }
+
 }
