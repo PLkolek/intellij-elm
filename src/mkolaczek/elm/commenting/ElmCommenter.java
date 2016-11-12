@@ -25,12 +25,12 @@ public class ElmCommenter implements Commenter {
     @Nullable
     @Override
     public String getCommentedBlockCommentPrefix() {
-        return "{-";
+        return null;
     }
 
     @Nullable
     @Override
     public String getCommentedBlockCommentSuffix() {
-        return "-}";
+        return null;
     }
 }

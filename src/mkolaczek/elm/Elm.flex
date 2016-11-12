@@ -45,7 +45,7 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
         ) | "`" )
 
 %state INCOMMENT
-%state INDENT
+%state INLINECOMMENT
 
 %%
 <YYINITIAL> {
@@ -62,12 +62,13 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   ".."              { return OPEN_LISTING; }
   "="               { return EQUALS; }
   "->"              { return ARROW; }
-  "--"              { return COMMENT; }
+  "--"              { yypushstate(INLINECOMMENT); return COMMENT; }
   "|"               { return OR; }
   "."               { return DOT; }
   ":"               { return COLON; }
   "{-|"             { yypushstate(INCOMMENT); return BEGIN_DOC_COMMENT;}
-  {WS}+         { return TokenType.WHITE_SPACE; }
+  "{-"              { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
+  {WS}+             { return TokenType.WHITE_SPACE; }
   {CAP_VAR}         { return CAP_VAR; }
   {LOW_VAR}         { return LOW_VAR; }
   ","+              { return COMMA_OP; }
@@ -79,7 +80,13 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
     "{-"            { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
     "-}"            { yypopstate(); return END_COMMENT; }
     {CLRF}          { return TokenType.WHITE_SPACE; }
-    [^\-\}\{\r\n]*      { return COMMENT_CONTENT; }
+    [^\-\}\{\r\n]*  { return COMMENT_CONTENT; }
     [\-\{\}]        { return COMMENT_CONTENT; }
+    [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+}
+
+<INLINECOMMENT> {
+    {CLRF}          { yypopstate(); return TokenType.WHITE_SPACE; }
+    [^\r\n]*        { return COMMENT_CONTENT; }
     [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
