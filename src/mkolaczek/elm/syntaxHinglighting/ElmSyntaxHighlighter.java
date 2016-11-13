@@ -16,7 +16,13 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
 
 public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
 
-    private static final Set<IElementType> KEYWORDS = Sets.newHashSet(ElmTokenTypes.MODULE, ElmTokenTypes.AS, ElmTokenTypes.EXPOSING, ElmTokenTypes.IMPORT);
+    private static final Set<IElementType> KEYWORDS = Sets.newHashSet(
+            ElmTokenTypes.MODULE,
+            ElmTokenTypes.AS,
+            ElmTokenTypes.EXPOSING,
+            ElmTokenTypes.IMPORT,
+            ElmTokenTypes.PORT,
+            ElmTokenTypes.EFFECT);
 
     public static final TextAttributesKey KEY =
             createTextAttributesKey("ELM_KEY", DefaultLanguageHighlighterColors.KEYWORD);
@@ -43,7 +49,7 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
         if (KEYWORDS.contains(tokenType)) {
             return KEY_KEYS;
         }
-        if(tokenType == ElmTokenTypes.COMMENT_CONTENT || tokenType == ElmTokenTypes.COMMENT) {
+        if (tokenType == ElmTokenTypes.COMMENT_CONTENT || tokenType == ElmTokenTypes.COMMENT) {
             return COMMENT_KEYS;
         }
         return EMPTY_KEYS;

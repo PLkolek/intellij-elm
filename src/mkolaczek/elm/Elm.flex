@@ -49,6 +49,8 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
 
 %%
 <YYINITIAL> {
+  "port"            { return PORT; }
+  "effect"          { return EFFECT; }
   "module"          { return MODULE; }
   "where"           { return WHERE; }
   "import"          { return IMPORT; }

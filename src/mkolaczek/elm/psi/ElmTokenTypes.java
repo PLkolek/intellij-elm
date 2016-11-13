@@ -4,6 +4,9 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 
 public class ElmTokenTypes {
+
+    public static final IElementType PORT = new ElmTokenType("PORT");
+    public static final IElementType EFFECT = new ElmTokenType("EFFECT");
     public static final IElementType MODULE = new ElmTokenType("MODULE");
     public static final IElementType IMPORT = new ElmTokenType("IMPORT");
     public static final IElementType AS = new ElmTokenType("AS");

@@ -1,6 +1,7 @@
 package mkolaczek.elm.parsers;
 
 import com.intellij.lang.PsiBuilder;
+import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.psi.ElmElementTypes;
 import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +11,8 @@ public class Module {
         int startingOffset = builder.getCurrentOffset();
         PsiBuilder.Marker module = builder.mark();
         Whitespace.freshLine(builder);
-        if (builder.getTokenType() == ElmTokenTypes.MODULE) {
+        IElementType token = builder.getTokenType();
+        if (token == ElmTokenTypes.MODULE || token == ElmTokenTypes.PORT || token == ElmTokenTypes.EFFECT) {
             moduleDeclaration(builder);
         }
         if (builder.getTokenType() == ElmTokenTypes.BEGIN_DOC_COMMENT) {
@@ -79,7 +81,10 @@ public class Module {
     private static void moduleDeclaration(@NotNull PsiBuilder builder) {
         PsiBuilder.Marker marker = builder.mark();
         boolean success = Combinators.simpleSequence(builder,
-                Combinators.expect(ElmTokenTypes.MODULE),
+                Combinators.or(
+                        Combinators.expect(ElmTokenTypes.PORT, ElmTokenTypes.MODULE),
+                        Combinators.expect(ElmTokenTypes.EFFECT, ElmTokenTypes.MODULE),
+                        Combinators.expect(ElmTokenTypes.MODULE)),
                 Whitespace::maybeWhitespace,
                 Basic.dottedCapVar(ElmElementTypes.MODULE_NAME),
                 Whitespace::maybeWhitespace,

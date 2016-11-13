@@ -2,7 +2,7 @@
 
  --
 
-module Test1.B exposing ( aaaaaaa
+port module Test1.B exposing ( aaaaaaa
         , bbbbbbb
         , aaaaaaaaa
         , abbjaaal
