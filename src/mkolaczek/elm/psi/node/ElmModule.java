@@ -31,7 +31,7 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
     @Override
     public String getName() {
         PsiElement nameIdentifier = getNameIdentifier();
-        return nameIdentifier != null ? nameIdentifier.getText() : ""; //null means no header line
+        return nameIdentifier != null ? nameIdentifier.getText() : "Main"; //null means no header line
     }
 
     @Override
