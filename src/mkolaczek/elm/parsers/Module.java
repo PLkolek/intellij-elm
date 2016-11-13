@@ -9,6 +9,7 @@ public class Module {
     public static void module(@NotNull PsiBuilder builder) {
         int startingOffset = builder.getCurrentOffset();
         PsiBuilder.Marker module = builder.mark();
+        Whitespace.freshLine(builder);
         if (builder.getTokenType() == ElmTokenTypes.MODULE) {
             moduleDeclaration(builder);
         }
@@ -17,7 +18,7 @@ public class Module {
             Whitespace.freshLine(builder);
         }
         Combinators.simpleManyAs(builder, ElmElementTypes.IMPORTS, Module::importLine);
-        if(startingOffset != builder.getCurrentOffset()) {
+        if (startingOffset != builder.getCurrentOffset()) {
             module.done(ElmElementTypes.MODULE);
         } else {
             module.drop();
@@ -40,10 +41,14 @@ public class Module {
             return false;
         }
         PsiBuilder.Marker m2 = builder.mark();
-        boolean hasAs = Combinators.simpleSequence(builder, Whitespace::maybeWhitespace, Combinators.expect(ElmTokenTypes.AS));
+        boolean hasAs = Combinators.simpleSequence(builder,
+                Whitespace::maybeWhitespace,
+                Combinators.expect(ElmTokenTypes.AS));
         if (hasAs) {
             m2.drop();
-            if (!Combinators.simpleSequence(builder, Whitespace::maybeWhitespace, Combinators.expectAs(ElmElementTypes.MODULE_ALIAS, ElmTokenTypes.CAP_VAR))) {
+            if (!Combinators.simpleSequence(builder,
+                    Whitespace::maybeWhitespace,
+                    Combinators.expectAs(ElmElementTypes.MODULE_ALIAS, ElmTokenTypes.CAP_VAR))) {
                 OnError.consumeUntil(builder, ElmTokenTypes.NEW_LINE);
                 m.done(ElmElementTypes.IMPORT_2);
                 return false;
@@ -52,7 +57,9 @@ public class Module {
             m2.rollbackTo();
         }
         m2 = builder.mark();
-        boolean hasExposing = Combinators.simpleSequence(builder, Whitespace::maybeWhitespace, Combinators.expect(ElmTokenTypes.EXPOSING));
+        boolean hasExposing = Combinators.simpleSequence(builder,
+                Whitespace::maybeWhitespace,
+                Combinators.expect(ElmTokenTypes.EXPOSING));
         m2.rollbackTo();
         if (hasExposing) {
             Whitespace.maybeWhitespace(builder);

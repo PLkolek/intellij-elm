@@ -1,7 +1,6 @@
 package mkolaczek.elm;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
@@ -13,15 +12,15 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import mkolaczek.elm.parsers.ElmParser;
-import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.ElmElementTypes;
+import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
 
 public class ElmParserDefinition implements ParserDefinition {
 
-    public static final IFileElementType FILE = new IFileElementType(Language.findInstance(ElmLanguage.class));
+    public static final IFileElementType FILE = new IFileElementType(ElmLanguage.INSTANCE);
     public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
 
 

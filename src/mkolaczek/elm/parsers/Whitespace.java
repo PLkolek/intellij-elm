@@ -20,7 +20,7 @@ public class Whitespace {
 
     public static boolean freshLine(@NotNull PsiBuilder builder) {
         Comment.comments(builder);
-        if (builder.getOriginalText().charAt(builder.getCurrentOffset() - 1) != '\n') {
+        if (builder.getCurrentOffset() > 0 && builder.getOriginalText().charAt(builder.getCurrentOffset() - 1) != '\n') {
             builder.error("Fresh line expected");
         }
         return true;
