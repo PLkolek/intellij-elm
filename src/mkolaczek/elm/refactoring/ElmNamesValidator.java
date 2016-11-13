@@ -1,4 +1,4 @@
-package mkolaczek.elm;
+package mkolaczek.elm.refactoring;
 
 import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.openapi.project.Project;
