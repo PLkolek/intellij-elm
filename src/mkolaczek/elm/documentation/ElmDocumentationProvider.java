@@ -51,7 +51,9 @@ public class ElmDocumentationProvider implements DocumentationProvider {
                                         .collect(Collectors.joining(",\n&nbsp&nbsp&nbsp&nbsp "));
 
             }
-            return String.format("module %s\n&nbsp&nbsp&nbsp&nbsp exposing (%s)", module.getName(), exposedValuesStr);
+            String type = (module.type() + " ").replaceAll("^\\s+","");
+            return String.format("%smodule %s\n&nbsp&nbsp&nbsp&nbsp exposing (%s)",
+                    type, module.getName(), exposedValuesStr);
 
         }
         return null;

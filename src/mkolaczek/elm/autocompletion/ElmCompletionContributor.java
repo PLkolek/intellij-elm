@@ -30,9 +30,17 @@ import static mkolaczek.elm.psi.ElmElementTypes.*;
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
         simpleAutocomplete(afterWhitespace("\n"), keywordElement("import"));
-        simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME_REF)).andNot(afterWhitespace("\n")), keywordElement("as"), exposingCompletion());
+        simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME_REF)).andNot(afterWhitespace("\n")),
+                keywordElement("as"),
+                exposingCompletion());
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_ALIAS)), exposingCompletion());
-        simpleAutocomplete(psiElement().afterLeaf(psiElement().isNull()), keywordElement("module"));
+        simpleAutocomplete(psiElement().afterLeaf(psiElement().isNull()),
+                keywordElement("module"),
+                keywordElement("port module"),
+                keywordElement("effect module")
+                );
+        simpleAutocomplete(afterLeaf(ElmTokenTypes.PORT), keywordElement("module"));
+        simpleAutocomplete(afterLeaf(ElmTokenTypes.EFFECT), keywordElement("module"));
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME)), exposingCompletion());
         simpleAutocomplete(afterLeaf(ElmTokenTypes.MODULE), parameters -> {
             String fileName = parameters.getOriginalFile().getName();
@@ -66,14 +74,16 @@ public class ElmCompletionContributor extends CompletionContributor {
     }
 
 
-    private void simpleAutocomplete(Capture<PsiElement> pattern, Function<CompletionParameters, List<String>> autocompletion) {
+    private void simpleAutocomplete(Capture<PsiElement> pattern,
+                                    Function<CompletionParameters, List<String>> autocompletion) {
         Function<List<String>, List<LookupElementBuilder>> wrapper = strings -> strings.stream()
                                                                                        .map(LookupElementBuilder::create)
                                                                                        .collect(Collectors.toList());
         autocomplete(pattern, wrapper.compose(autocompletion));
     }
 
-    private void autocomplete(Capture<PsiElement> pattern, Function<CompletionParameters, List<LookupElementBuilder>> autocompletion) {
+    private void autocomplete(Capture<PsiElement> pattern,
+                              Function<CompletionParameters, List<LookupElementBuilder>> autocompletion) {
         extend(CompletionType.BASIC, pattern,
                 new CompletionProvider<CompletionParameters>() {
                     @Override
@@ -88,26 +98,33 @@ public class ElmCompletionContributor extends CompletionContributor {
 
     @NotNull
     private LookupElementBuilder exposingCompletion() {
-        return LookupElementBuilder.create("exposing").withInsertHandler(new ParenthesesInsertHandler<LookupElement>(true, false, true, true) {
-            @Override
-            protected boolean placeCaretInsideParentheses(InsertionContext context, LookupElement item) {
-                return true;
-            }
+        return LookupElementBuilder.create("exposing")
+                                   .withInsertHandler(new ParenthesesInsertHandler<LookupElement>(true,
+                                           false,
+                                           true,
+                                           true) {
+                                       @Override
+                                       protected boolean placeCaretInsideParentheses(InsertionContext context,
+                                                                                     LookupElement item) {
+                                           return true;
+                                       }
 
-            @Nullable
-            @Override
-            protected PsiElement findNextToken(InsertionContext context) {
-                final PsiFile file = context.getFile();
-                PsiElement element = file.findElementAt(context.getTailOffset());
-                if (element != null && isWhitespace(element)) {
-                    element = file.findElementAt(element.getTextRange().getEndOffset());
-                }
-                return element;
-            }
+                                       @Nullable
+                                       @Override
+                                       protected PsiElement findNextToken(InsertionContext context) {
+                                           final PsiFile file = context.getFile();
+                                           PsiElement element = file.findElementAt(context.getTailOffset());
+                                           if (element != null && isWhitespace(element)) {
+                                               element = file.findElementAt(element.getTextRange().getEndOffset());
+                                           }
+                                           return element;
+                                       }
 
-            private boolean isWhitespace(PsiElement element) {
-                return element.getNode().getElementType() == ElmTokenTypes.WHITE_SPACE || element.getNode().getElementType() == ElmTokenTypes.NEW_LINE;
-            }
-        });
+                                       private boolean isWhitespace(PsiElement element) {
+                                           return element.getNode()
+                                                         .getElementType() == ElmTokenTypes.WHITE_SPACE || element.getNode()
+                                                                                                                  .getElementType() == ElmTokenTypes.NEW_LINE;
+                                       }
+                                   });
     }
 }

@@ -1,2 +1,2 @@
-module Test exposing (..)
+effect module Test exposing (..)
 import Test2 as <caret>

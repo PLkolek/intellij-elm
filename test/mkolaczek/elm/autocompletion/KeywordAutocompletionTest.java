@@ -35,7 +35,7 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
     }
 
     public void testModuleCompletion() {
-        performTest("module/Test.elm", "module/expected.elm", "module");
+        performTest("module/Test.elm", "module/expected.elm", "module", "effect module", "port module");
     }
 
     private void performTest(String beforeFile, String afterFile, String... suggestions) {

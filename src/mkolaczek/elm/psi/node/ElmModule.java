@@ -7,10 +7,12 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.ElmIcon;
+import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -91,5 +93,21 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
 
     public ElmDocComment docComment() {
         return PsiTreeUtil.getChildOfType(this, ElmDocComment.class);
+    }
+
+    public ElmModuleHeader header() {
+
+        return PsiTreeUtil.findChildOfType(this, ElmModuleHeader.class);
+    }
+
+    public String type() {
+        IElementType type = header().getFirstChild().getNode().getElementType();
+        if(type == ElmTokenTypes.EFFECT) {
+            return "effect";
+        }
+        if(type == ElmTokenTypes.PORT) {
+            return "port";
+        }
+        return "";
     }
 }

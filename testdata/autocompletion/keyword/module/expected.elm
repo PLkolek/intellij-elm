@@ -1,2 +1,2 @@
-module <caret>
+effect module <caret>
 import Test2

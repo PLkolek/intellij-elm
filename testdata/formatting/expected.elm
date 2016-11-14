@@ -1,4 +1,4 @@
-module Test1.B
+port module Test1.B
     exposing
         ( aaaaaaa
         , bbbbbbb

@@ -34,7 +34,7 @@ public class ElmFile extends PsiFileBase {
     }
 
     public ElmModuleHeader header() {
-        return PsiTreeUtil.findChildOfType(this, ElmModuleHeader.class);
+        return module().header();
     }
 
     public ElmModule module() {

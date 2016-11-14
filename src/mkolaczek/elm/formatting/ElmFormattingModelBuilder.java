@@ -27,6 +27,8 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
         return new SpacingBuilder(settings, ElmLanguage.INSTANCE)
                 .after(ElmTokenTypes.COMMA).spacing(1, 1, 0, false, 0)
                 .after(ElmTokenTypes.EXPOSING).spacing(1, 1, 0, false, 0)
+                .after(ElmTokenTypes.PORT).spacing(1, 1, 0, false, 0)
+                .after(ElmTokenTypes.EFFECT).spacing(1, 1, 0, false, 0)
                 .after(ElmTokenTypes.MODULE).spacing(1, 1, 0, false, 0)
                 .after(ElmTokenTypes.IMPORT).spacing(1, 1, 0, false, 0)
                 .before(ElmElementTypes.DOC_COMMENT).spacing(0, 0, 2, false, 0)
