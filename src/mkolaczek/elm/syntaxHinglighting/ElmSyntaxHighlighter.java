@@ -22,7 +22,9 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
             ElmTokenTypes.EXPOSING,
             ElmTokenTypes.IMPORT,
             ElmTokenTypes.PORT,
-            ElmTokenTypes.EFFECT);
+            ElmTokenTypes.EFFECT,
+            ElmTokenTypes.WHERE
+            );
 
     public static final TextAttributesKey KEY =
             createTextAttributesKey("ELM_KEY", DefaultLanguageHighlighterColors.KEYWORD);

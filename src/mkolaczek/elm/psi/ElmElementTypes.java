@@ -37,7 +37,7 @@ public interface ElmElementTypes {
     IElementType MODULE_NAME = new ElmElementType("MODULE_NAME");
     IElementType MODULE_NAME_REF = new ElmElementType("MODULE_NAME_REF");
     IElementType MODULE_ALIAS = new ElmElementType("MODULE_ALIAS");
-    IElementType MODULE = new ElmElementType("MODULE");
+    IElementType MODULE_NODE = new ElmElementType("MODULE_NODE");
     IElementType EXPORTED_VALUE = new ElmElementType("EXPORTED_VALUE");
     IElementType EXPOSING_NODE = new ElmElementType("EXPOSING_NODE");
     IElementType OPERATOR = new ElmElementType("OPERATOR");
@@ -105,7 +105,7 @@ public interface ElmElementTypes {
                 return new ElmModuleName(node);
             } else if (type == MODULE_ALIAS) {
                 return new ElmModuleAlias(node);
-            } else if (type == MODULE) {
+            } else if (type == MODULE_NODE) {
                 return new ElmModule(node);
             } else if (type == EXPORTED_VALUE) {
                 return new ElmExportedValue(node);

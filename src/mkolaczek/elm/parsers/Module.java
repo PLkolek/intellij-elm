@@ -6,6 +6,11 @@ import mkolaczek.elm.psi.ElmElementTypes;
 import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
+import static mkolaczek.elm.parsers.Basic.*;
+import static mkolaczek.elm.parsers.Combinators.expect;
+import static mkolaczek.elm.parsers.Combinators.sequence;
+import static mkolaczek.elm.psi.ElmTokenTypes.CAP_VAR;
+
 public class Module {
     public static void module(@NotNull PsiBuilder builder) {
         int startingOffset = builder.getCurrentOffset();
@@ -21,7 +26,7 @@ public class Module {
         }
         Combinators.simpleManyAs(builder, ElmElementTypes.IMPORTS, Module::importLine);
         if (startingOffset != builder.getCurrentOffset()) {
-            module.done(ElmElementTypes.MODULE);
+            module.done(ElmElementTypes.MODULE_NODE);
         } else {
             module.drop();
         }
@@ -33,7 +38,7 @@ public class Module {
         }
         PsiBuilder.Marker m = builder.mark();
         boolean result = Combinators.simpleSequence(builder,
-                Combinators.expect(ElmTokenTypes.IMPORT),
+                expect(ElmTokenTypes.IMPORT),
                 Whitespace::maybeWhitespace,
                 Basic.dottedCapVar(ElmElementTypes.MODULE_NAME_REF)
         );
@@ -45,12 +50,12 @@ public class Module {
         PsiBuilder.Marker m2 = builder.mark();
         boolean hasAs = Combinators.simpleSequence(builder,
                 Whitespace::maybeWhitespace,
-                Combinators.expect(ElmTokenTypes.AS));
+                expect(ElmTokenTypes.AS));
         if (hasAs) {
             m2.drop();
             if (!Combinators.simpleSequence(builder,
                     Whitespace::maybeWhitespace,
-                    Combinators.expectAs(ElmElementTypes.MODULE_ALIAS, ElmTokenTypes.CAP_VAR))) {
+                    Combinators.expectAs(ElmElementTypes.MODULE_ALIAS, CAP_VAR))) {
                 OnError.consumeUntil(builder, ElmTokenTypes.NEW_LINE);
                 m.done(ElmElementTypes.IMPORT_2);
                 return false;
@@ -61,7 +66,7 @@ public class Module {
         m2 = builder.mark();
         boolean hasExposing = Combinators.simpleSequence(builder,
                 Whitespace::maybeWhitespace,
-                Combinators.expect(ElmTokenTypes.EXPOSING));
+                expect(ElmTokenTypes.EXPOSING));
         m2.rollbackTo();
         if (hasExposing) {
             Whitespace.maybeWhitespace(builder);
@@ -80,13 +85,16 @@ public class Module {
 
     private static void moduleDeclaration(@NotNull PsiBuilder builder) {
         PsiBuilder.Marker marker = builder.mark();
+        boolean isEffectModule = builder.getTokenType() == ElmTokenTypes.EFFECT;
         boolean success = Combinators.simpleSequence(builder,
                 Combinators.or(
-                        Combinators.expect(ElmTokenTypes.PORT, ElmTokenTypes.MODULE),
-                        Combinators.expect(ElmTokenTypes.EFFECT, ElmTokenTypes.MODULE),
-                        Combinators.expect(ElmTokenTypes.MODULE)),
+                        expect(ElmTokenTypes.EFFECT, ElmTokenTypes.MODULE),
+                        expect(ElmTokenTypes.PORT, ElmTokenTypes.MODULE),
+                        expect(ElmTokenTypes.MODULE)),
                 Whitespace::maybeWhitespace,
                 Basic.dottedCapVar(ElmElementTypes.MODULE_NAME),
+                Whitespace::maybeWhitespace,
+                isEffectModule ? settings() : empty(),
                 Whitespace::maybeWhitespace,
                 exposing(),
                 Whitespace::freshLine
@@ -97,25 +105,39 @@ public class Module {
         marker.done(ElmElementTypes.MODULE_HEADER);
     }
 
+    private static Parser settings() {
+        return sequence(
+                expect(ElmTokenTypes.WHERE),
+                Whitespace::maybeWhitespace,
+                Basic.brackets(commaSep(
+                        sequence(
+                                expect(ElmTokenTypes.LOW_VAR),
+                                padded(ElmTokenTypes.EQUALS),
+                                expect(ElmTokenTypes.CAP_VAR)
+                        )
+                ))
+        );
+    }
+
     private static Parser exposing() {
         return Combinators.sequenceAs(ElmElementTypes.EXPOSING_NODE,
-                Combinators.expect(ElmTokenTypes.EXPOSING),
+                expect(ElmTokenTypes.EXPOSING),
                 Whitespace::maybeWhitespace,
                 Basic.listing(Module.exportValue()));
     }
 
     private static NamedParser exportValue() {
         Parser parser = Combinators.orAs(ElmElementTypes.EXPORTED_VALUE,
-                Combinators.expect(ElmTokenTypes.LOW_VAR),
+                expect(ElmTokenTypes.LOW_VAR),
                 Basic.operator(),
                 Module.typeExport());
         return NamedParser.of("Exported value", parser);
     }
 
     private static NamedParser typeExport() {
-        Parser p = Combinators.sequence(
-                Combinators.expect(ElmTokenTypes.CAP_VAR),
-                Basic.listing(Combinators.expect(ElmTokenTypes.CAP_VAR)));
+        Parser p = sequence(
+                expect(CAP_VAR),
+                Basic.listing(expect(CAP_VAR)));
         return NamedParser.of("Type export", p);
     }
 }

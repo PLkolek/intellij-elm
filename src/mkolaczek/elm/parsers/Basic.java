@@ -7,6 +7,11 @@ import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class Basic {
+
+    public static Parser empty() {
+        return builder -> true;
+    }
+
     public static Parser listing(NamedParser listedValue) {
         return (PsiBuilder builder) -> {
             PsiBuilder.Marker m = builder.mark();
@@ -38,7 +43,9 @@ public class Basic {
     }
 
     private static NamedParser listingValues(NamedParser listedValue) {
-        Parser parser = builder -> listedValue.apply(builder) && Combinators.simpleMany(builder, paddedComma(), listedValue);
+        Parser parser = builder -> listedValue.apply(builder) && Combinators.simpleMany(builder,
+                paddedComma(),
+                listedValue);
         return NamedParser.of(listedValue.name(), parser);
     }
 
@@ -106,5 +113,29 @@ public class Basic {
 
     public static NamedParser dottedCapVar() {
         return NamedParser.of("Dotted cap var", Basic::dottedCapVar);
+    }
+
+    public static Parser brackets(Parser contents) {
+        return surround(ElmTokenTypes.LBRACKET, ElmTokenTypes.RBRACKET, contents);
+    }
+
+    public static Parser surround(IElementType left, IElementType right, Parser contents) {
+        return Combinators.sequence(
+                Combinators.expect(left),
+                Basic.padded(contents),
+                Combinators.expect(right)
+        );
+    }
+
+    public static Parser commaSep(Parser parser) {
+        return builder -> {
+            PsiBuilder.Marker marker = builder.mark();
+            if (!parser.apply(builder)) {
+                marker.rollbackTo();
+                return true;
+            }
+            marker.drop();
+            return Combinators.simpleMany(builder, paddedComma(), parser);
+        };
     }
 }

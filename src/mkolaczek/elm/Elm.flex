@@ -60,6 +60,8 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   "alias"           { return ALIAS; }
   "("               { return LPAREN; }
   ")"               { return RPAREN; }
+  "{"               { return LBRACKET; }
+  "}"               { return RBRACKET; }
   ","               { return COMMA; }
   ".."              { return OPEN_LISTING; }
   "="               { return EQUALS; }
