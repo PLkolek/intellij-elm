@@ -18,14 +18,34 @@ import java.util.Set;
 import static com.google.common.base.Preconditions.checkArgument;
 import static mkolaczek.elm.psi.ElmTokenTypes.*;
 
-public class ElmExposingBlock extends AbstractBlock {
+public class ElmChoppedBlock extends AbstractBlock {
     private SpacingBuilder spacingBuilder;
 
-    private static final Set<IElementType> choppedElements = ImmutableSet.of(COMMA, RPAREN, LPAREN, EXPOSING);
+    private final Set<IElementType> choppedElements;
+    private final IElementType valueList;
 
-    protected ElmExposingBlock(@NotNull ASTNode node, SpacingBuilder spacingBuilder) {
+    private ElmChoppedBlock(ASTNode node,
+                            SpacingBuilder spacingBuilder,
+                            Set<IElementType> choppedElements,
+                            IElementType valueList) {
         super(node, Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true), Alignment.createAlignment());
         this.spacingBuilder = spacingBuilder;
+        this.choppedElements = choppedElements;
+        this.valueList = valueList;
+    }
+
+    public static ElmChoppedBlock exposing(@NotNull ASTNode node, @NotNull SpacingBuilder spacingBuilder) {
+        return new ElmChoppedBlock(node,
+                spacingBuilder,
+                ImmutableSet.of(COMMA, RPAREN, LPAREN, EXPOSING),
+                ElmElementTypes.MODULE_VALUE_LIST);
+    }
+
+    public static ElmChoppedBlock effectProperties(ASTNode node, SpacingBuilder spacingBuilder) {
+        return new ElmChoppedBlock(node,
+                spacingBuilder,
+                ImmutableSet.of(COMMA, LBRACKET, RBRACKET, EXPOSING),
+                ElmElementTypes.EFFECT_MODULE_PROPERTIES_LIST);
     }
 
     @Override
@@ -34,7 +54,7 @@ public class ElmExposingBlock extends AbstractBlock {
         ASTNode child = ASTUtil.firstSignificantChild(myNode);
         while (child != null) {
             IElementType type = child.getElementType();
-            if (type == ElmElementTypes.MODULE_VALUE_LIST) {
+            if (type == valueList) {
                 ASTNode child2 = ASTUtil.firstSignificantChild(child);
                 while (child2 != null) {
                     blocks.add(createBlock(child2, getWrap()));

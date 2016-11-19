@@ -3,9 +3,11 @@
 
 {- -}
 
-port
+effect
  module
     Test1 . B
+    where
+    {aaaa=Aaaaa,bbbbbbbbbbbbbbbbbbbbbbbbbb=Bbbbbbbbbbbbbbbbbbbbbbbbb}
 exposing
             (
 aaaaaaa

@@ -7,8 +7,7 @@ import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
-import static mkolaczek.elm.parsers.Combinators.expect;
-import static mkolaczek.elm.parsers.Combinators.sequence;
+import static mkolaczek.elm.parsers.Combinators.*;
 import static mkolaczek.elm.psi.ElmTokenTypes.CAP_VAR;
 
 public class Module {
@@ -106,16 +105,25 @@ public class Module {
     }
 
     private static Parser settings() {
-        return sequence(
-                expect(ElmTokenTypes.WHERE),
-                Whitespace::maybeWhitespace,
+        return (builder -> {
+            sequenceAs(ElmElementTypes.EFFECT_MODULE_PROPERTIES,
+                    expect(ElmTokenTypes.WHERE),
+                    Whitespace::maybeWhitespace,
+                    settingsList()
+            ).apply(builder);
+            return true; //display errors, but try to continue parsing of module header
+        });
+    }
+
+    private static Parser settingsList() {
+        return Combinators.as(ElmElementTypes.EFFECT_MODULE_PROPERTIES_LIST,
                 Basic.brackets(commaSep(
                         sequence(
                                 expect(ElmTokenTypes.LOW_VAR),
                                 padded(ElmTokenTypes.EQUALS),
                                 expect(ElmTokenTypes.CAP_VAR)
-                        )
-                ))
+                        ))
+                )
         );
     }
 

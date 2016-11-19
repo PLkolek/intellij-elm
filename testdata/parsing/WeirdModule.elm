@@ -1,17 +1,17 @@
  {- -}
 
- --
+--
 
 port module Test1.B exposing ( aaaaaaa
-        , bbbbbbb
-        , aaaaaaaaa
-        , abbjaaal
-        , (**)
-        , (,,)
-        , A(..)
-        , B(Abc, Def, Ghci)
-        , C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv)
-        )
+                        , bbbbbbb
+                        , aaaaaaaaa
+                        , abbjaaal
+                        , (**)
+                        , (,,)
+                        , A(..)
+                        , B(Abc, Def, Ghci)
+                        , C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv)
+                        )
 
 {-|
 {-

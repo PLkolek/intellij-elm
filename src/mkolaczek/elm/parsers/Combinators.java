@@ -17,6 +17,15 @@ public class Combinators {
         return (builder -> simpleSequence(builder, parsers));
     }
 
+    public static Parser as(IElementType name, Parser parser) {
+        return (builder -> {
+            Marker marker = builder.mark();
+            boolean result = parser.apply(builder);
+            marker.done(name);
+            return result;
+        });
+    }
+
     public static Parser sequenceAs(IElementType name, Parser... parsers) {
         return (builder -> {
             Marker marker = builder.mark();

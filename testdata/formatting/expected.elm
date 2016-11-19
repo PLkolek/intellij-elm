@@ -1,7 +1,11 @@
 -- hdhdh
 {- -}
 
-port module Test1.B
+effect module Test1.B
+    where
+        { aaaa = Aaaaa
+        , bbbbbbbbbbbbbbbbbbbbbbbbbb = Bbbbbbbbbbbbbbbbbbbbbbbbb
+        }
     exposing
         ( aaaaaaa
         , bbbbbbb
