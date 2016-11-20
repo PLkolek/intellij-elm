@@ -10,10 +10,14 @@ import mkolaczek.elm.psi.node.ElmModule;
 import mkolaczek.elm.psi.node.ElmModuleValueList;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ElmDocumentationProvider implements DocumentationProvider {
+
+    public static final String NEWLINE = "\n&nbsp&nbsp&nbsp&nbsp ";
+
     @Nullable
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
@@ -24,39 +28,58 @@ public class ElmDocumentationProvider implements DocumentationProvider {
     private String quickInfoText(PsiElement element) {
         if (element instanceof ElmModule) {
             ElmModule module = (ElmModule) element;
-            ElmModuleValueList valueList = module.exposedValues();
-            String exposedValuesStr = "..";
-            if (!valueList.isOpenListing()) {
-                String[] exposedValues = valueList.values()
-                                                  .stream()
-                                                  .map(PsiElement::getText)
-                                                  .map(str -> str.replaceAll("[ \t]+", " "))
-                                                  .map(str -> str.replace("\r", ""))
-                                                  .map(str -> str.replace("\n", ""))
-                                                  .toArray(String[]::new);
-                List<List<String>> lines = Lists.newArrayList();
-                List<String> currentLine = Lists.newArrayList();
-                int currLength = 0;
-                for (String exposedValue : exposedValues) {
-                    currentLine.add(exposedValue);
-                    currLength += exposedValue.length();
-                    if (currLength > 50) {
-                        lines.add(currentLine);
-                        currLength = 0;
-                        currentLine = Lists.newArrayList();
-                    }
-                }
-                exposedValuesStr = lines.stream()
-                                        .map(strs -> Joiner.on(", ").join(strs))
-                                        .collect(Collectors.joining(",\n&nbsp&nbsp&nbsp&nbsp "));
-
-            }
-            String type = (module.type() + " ").replaceAll("^\\s+","");
-            return String.format("%smodule %s\n&nbsp&nbsp&nbsp&nbsp exposing (%s)",
-                    type, module.getName(), exposedValuesStr);
+            String settingsString = module.settingsList()
+                                          .map(val -> String.format("%swhere { %s }",
+                                                  NEWLINE,
+                                                  concatValues(val.elements())))
+                                          .orElse("");
+            String type = (module.type() + " ").replaceAll("^\\s+", "");
+            return String.format("%smodule %s%s%sexposing (%s)",
+                    type, module.getName(), settingsString, NEWLINE, exposedValuesString(module));
 
         }
         return null;
+    }
+
+    private String exposedValuesString(ElmModule module) {
+        ElmModuleValueList valueList = module.exposedValues();
+        String exposedValuesStr = "..";
+        if (!valueList.isOpenListing()) {
+            exposedValuesStr = concatValues(valueList.values());
+        }
+        return exposedValuesStr;
+    }
+
+    private String concatValues(Collection<? extends PsiElement> values) {
+        String[] exposedValues = values
+                .stream()
+                .map(PsiElement::getText)
+                .map(str -> str.replaceAll("[ \t]+", " "))
+                .map(str -> str.replace("\r", ""))
+                .map(str -> str.replace("\n", ""))
+                .toArray(String[]::new);
+        return chopLongLines(exposedValues);
+    }
+
+    private String chopLongLines(String[] exposedValues) {
+        List<List<String>> lines = Lists.newArrayList();
+        List<String> currentLine = Lists.newArrayList();
+        int currLength = 0;
+        for (String exposedValue : exposedValues) {
+            currentLine.add(exposedValue);
+            currLength += exposedValue.length();
+            if (currLength > 50) {
+                lines.add(currentLine);
+                currLength = 0;
+                currentLine = Lists.newArrayList();
+            }
+        }
+        if (!currentLine.isEmpty()) {
+            lines.add(currentLine);
+        }
+        return lines.stream()
+                    .map(strs -> Joiner.on(", ").join(strs))
+                    .collect(Collectors.joining("," + NEWLINE));
     }
 
     private String wrapInHtmlTags(String aa) {

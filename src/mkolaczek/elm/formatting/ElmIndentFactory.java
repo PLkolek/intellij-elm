@@ -16,7 +16,7 @@ public class ElmIndentFactory {
             COMMA,
             RPAREN,
             EXPORTED_VALUE,
-            EFFECT_MODULE_PROPERTIES,
+            EFFECT_MODULE_SETTINGS,
             LBRACKET,
             RBRACKET);
 

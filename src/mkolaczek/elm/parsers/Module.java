@@ -106,7 +106,7 @@ public class Module {
 
     private static Parser settings() {
         return (builder -> {
-            sequenceAs(ElmElementTypes.EFFECT_MODULE_PROPERTIES,
+            sequenceAs(ElmElementTypes.EFFECT_MODULE_SETTINGS,
                     expect(ElmTokenTypes.WHERE),
                     Whitespace::maybeWhitespace,
                     settingsList()
@@ -116,13 +116,15 @@ public class Module {
     }
 
     private static Parser settingsList() {
-        return Combinators.as(ElmElementTypes.EFFECT_MODULE_PROPERTIES_LIST,
+        return Combinators.as(ElmElementTypes.EFFECT_MODULE_SETTINGS_LIST,
                 Basic.brackets(commaSep(
-                        sequence(
-                                expect(ElmTokenTypes.LOW_VAR),
-                                padded(ElmTokenTypes.EQUALS),
-                                expect(ElmTokenTypes.CAP_VAR)
-                        ))
+                        as(ElmElementTypes.EFFECT_MODULE_SETTING,
+                                sequence(
+                                        expect(ElmTokenTypes.LOW_VAR),
+                                        padded(ElmTokenTypes.EQUALS),
+                                        expect(ElmTokenTypes.CAP_VAR)
+                                ))
+                        )
                 )
         );
     }

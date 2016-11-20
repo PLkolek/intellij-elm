@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Optional;
 
 public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNamedElement, PsiNameIdentifierOwner {
     public ElmModule(@NotNull ASTNode node) {
@@ -96,18 +97,21 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
     }
 
     public ElmModuleHeader header() {
-
         return PsiTreeUtil.findChildOfType(this, ElmModuleHeader.class);
     }
 
     public String type() {
         IElementType type = header().getFirstChild().getNode().getElementType();
-        if(type == ElmTokenTypes.EFFECT) {
+        if (type == ElmTokenTypes.EFFECT) {
             return "effect";
         }
-        if(type == ElmTokenTypes.PORT) {
+        if (type == ElmTokenTypes.PORT) {
             return "port";
         }
         return "";
+    }
+
+    public Optional<EffectModuleSettingsList> settingsList() {
+        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, EffectModuleSettingsList.class));
     }
 }

@@ -4,8 +4,8 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 
-public class EffectModulePropertiesList extends ASTWrapperPsiElement implements PsiElement {
-    public EffectModulePropertiesList(ASTNode node) {
+public class EffectModuleSettings extends ASTWrapperPsiElement implements PsiElement {
+    public EffectModuleSettings(ASTNode node) {
         super(node);
     }
 }

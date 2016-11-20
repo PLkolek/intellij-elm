@@ -1,4 +1,4 @@
-port module Test1.B
+effect module Test1.B where { a = A }
     exposing
         ( aaaaaaa
         , bbbbbbb

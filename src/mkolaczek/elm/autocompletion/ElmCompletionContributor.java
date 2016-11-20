@@ -41,13 +41,13 @@ public class ElmCompletionContributor extends CompletionContributor {
                 exposingCompletion());
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME))
                                    .andNot(psiElement().inside(
-                                           psiElement().withChild(psiElement(EFFECT_MODULE_PROPERTIES))
+                                           psiElement().withChild(psiElement(EFFECT_MODULE_SETTINGS))
                                    )), exposingCompletion());
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME))
-                                   .inside(psiElement().withChild(psiElement(EFFECT_MODULE_PROPERTIES))), //hack!
+                                   .inside(psiElement().withChild(psiElement(EFFECT_MODULE_SETTINGS))), //hack!
                 whereCompletion());
         simpleAutocomplete(afterLeaf(RBRACKET)
-                        .inside(psiElement().withChild(psiElement(EFFECT_MODULE_PROPERTIES))), //hack!
+                        .inside(psiElement().withChild(psiElement(EFFECT_MODULE_SETTINGS))), //hack!
                 exposingCompletion());
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_ALIAS)), exposingCompletion());
         simpleAutocomplete(psiElement().afterLeaf(psiElement().isNull()),

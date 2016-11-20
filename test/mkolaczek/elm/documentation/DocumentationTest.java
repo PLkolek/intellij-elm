@@ -19,7 +19,8 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
         ElmModule module = ((ElmFile) myFixture.getFile()).module();
         String info = new ElmDocumentationProvider().getQuickNavigateInfo(module, null);
         String expected = "<html><head></head><body>" +
-                "port module Test1.B\n" +
+                "effect module Test1.B\n" +
+                "&nbsp&nbsp&nbsp&nbsp where { a = A }\n" +
                 "&nbsp&nbsp&nbsp&nbsp exposing (aaaaaaa, bbbbbbb, aaaaaaaaa, abbjaaal, ( ** ), (,,), A( .. ), B(Abc, Def, Ghci),\n" +
                 "&nbsp&nbsp&nbsp&nbsp C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv))" +
                 "</body></html>";
@@ -31,7 +32,8 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
         ElmModule module = ((ElmFile) myFixture.getFile()).module();
         String doc = new ElmDocumentationProvider().generateDoc(module, null);
         String expected = "<html><head></head><body>" +
-                "<pre>port module Test1.B\n" +
+                "<pre>effect module Test1.B\n" +
+                "&nbsp&nbsp&nbsp&nbsp where { a = A }\n" +
                 "&nbsp&nbsp&nbsp&nbsp exposing (aaaaaaa, bbbbbbb, aaaaaaaaa, abbjaaal, ( ** ), (,,), A( .. ), B(Abc, Def, Ghci),\n" +
                 "&nbsp&nbsp&nbsp&nbsp C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv))</pre>" +
                 "<p>{-|\n" +

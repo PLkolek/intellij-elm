@@ -45,7 +45,7 @@ public class ElmChoppedBlock extends AbstractBlock {
         return new ElmChoppedBlock(node,
                 spacingBuilder,
                 ImmutableSet.of(COMMA, LBRACKET, RBRACKET, EXPOSING),
-                ElmElementTypes.EFFECT_MODULE_PROPERTIES_LIST);
+                ElmElementTypes.EFFECT_MODULE_SETTINGS_LIST);
     }
 
     @Override

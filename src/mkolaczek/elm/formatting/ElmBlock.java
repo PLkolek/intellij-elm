@@ -35,7 +35,7 @@ public class ElmBlock extends AbstractBlock {
             IElementType type = child.getElementType();
             if (type == ElmElementTypes.EXPOSING_NODE) {
                 blocks.add(ElmChoppedBlock.exposing(child, spacingBuilder));
-            } else if (type == ElmElementTypes.EFFECT_MODULE_PROPERTIES) {
+            } else if (type == ElmElementTypes.EFFECT_MODULE_SETTINGS) {
                 blocks.add(ElmChoppedBlock.effectProperties(child, spacingBuilder));
             } else {
                 blocks.add(new ElmBlock(child, spacingBuilder));

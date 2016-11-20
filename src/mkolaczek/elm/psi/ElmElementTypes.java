@@ -40,8 +40,9 @@ public interface ElmElementTypes {
     IElementType MODULE_NODE = new ElmElementType("MODULE_NODE");
     IElementType EXPORTED_VALUE = new ElmElementType("EXPORTED_VALUE");
     IElementType EXPOSING_NODE = new ElmElementType("EXPOSING_NODE");
-    IElementType EFFECT_MODULE_PROPERTIES = new ElmElementType("EFFECT_MODULE_PROPERTIES");
-    IElementType EFFECT_MODULE_PROPERTIES_LIST = new ElmElementType("EFFECT_MODULE_PROPERTIES_LIST");
+    IElementType EFFECT_MODULE_SETTINGS = new ElmElementType("EFFECT_MODULE_SETTINGS");
+    IElementType EFFECT_MODULE_SETTINGS_LIST = new ElmElementType("EFFECT_MODULE_SETTINGS_LIST");
+    IElementType EFFECT_MODULE_SETTING = new ElmElementType("EFFECT_MODULE_SETTING");
     IElementType OPERATOR = new ElmElementType("OPERATOR");
     IElementType OPEN_LISTING_NODE = new ElmElementType("OPEN_LISTING_NODE");
     IElementType IMPORTS = new ElmElementType("IMPORTS");
@@ -119,11 +120,14 @@ public interface ElmElementTypes {
                 return new ElmOpenListing(node);
             } else if (type == IMPORTS) {
                 return new ElmImports(node);
-            } else if (type == EFFECT_MODULE_PROPERTIES) {
-                return new EffectModuleProperties(node);
-            } else if (type == EFFECT_MODULE_PROPERTIES_LIST) {
-                return new EffectModulePropertiesList(node);
-            } else {
+            } else if (type == EFFECT_MODULE_SETTINGS) {
+                return new EffectModuleSettings(node);
+            } else if (type == EFFECT_MODULE_SETTINGS_LIST) {
+                return new EffectModuleSettingsList(node);
+            } else if (type == EFFECT_MODULE_SETTING) {
+                return new EffectModuleSetting(node);
+            }
+            else {
 
                 throw new AssertionError("Unknown element type: " + type);
             }
