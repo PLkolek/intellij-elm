@@ -74,6 +74,7 @@ public class ElmFoldingBuilder implements FoldingBuilder {
         if (type == IMPORTS || type == EFFECT_MODULE_SETTINGS) {
             return true;
         }
+        //noinspection RedundantIfStatement
         if (type == EXPOSING_NODE && PsiTreeUtil.getParentOfType(node.getPsi(), ElmModuleHeader.class) != null) {
             return true;
         }
