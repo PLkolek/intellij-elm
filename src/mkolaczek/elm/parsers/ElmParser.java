@@ -18,19 +18,24 @@ public class ElmParser implements PsiParser {
     @NotNull
     @Override
     public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder) {
-        Marker marker = builder.mark();
+        PsiBuilder.Marker module = builder.mark();
+        int startingOffset = builder.getCurrentOffset();
         program(builder);
         if (!builder.eof()) {
             builder.error("EOF expected");
         }
         consumeRest(builder);
-        marker.done(root);
+        if (startingOffset != builder.getCurrentOffset()) {
+            module.done(ElmElementTypes.MODULE_NODE);
+        } else {
+            module.drop();
+        }
         return builder.getTreeBuilt();
     }
 
     private void program(@NotNull PsiBuilder builder) {
         Module.module(builder);
-        //    declarations(builder);
+        declarations(builder);
     }
 
     private void declarations(@NotNull PsiBuilder builder) {
@@ -73,25 +78,29 @@ public class ElmParser implements PsiParser {
         return true;
     }
 
+    private static NamedParser typeExpr() {
+        return NamedParser.of("Type expression", ElmParser::typeExpr);
+    }
+
     private static boolean typeExpr(PsiBuilder builder) {
         return simpleOr(builder, typeApp());
     }
 
     private static NamedParser typeApp() {
         Parser p = sequence(
-                or(dottedCapVar(), tryP(tupleCtor())),
-                spacePrefix(term())
+                or(dottedCapVar(), tryP(tupleCtor()))
+                //spacePrefix(term())
         );
         return NamedParser.of("App", p);
     }
 
-    private static NamedParser term() {
+    /*private static NamedParser term() {
         return NamedParser.of("Type term", or(tuple()));
     }
 
     private static NamedParser tuple() {
-        return NamedParser.of("Type tuple", or(tuple()));
-    }
+        return NamedParser.of("Type tuple", Combinators.);
+    }*/
 
     private static NamedParser tupleCtor() {
         Parser parser = sequence(expect(ElmTokenTypes.LPAREN), Basic.padded(ElmTokenTypes.COMMA_OP), expect(ElmTokenTypes.RPAREN));

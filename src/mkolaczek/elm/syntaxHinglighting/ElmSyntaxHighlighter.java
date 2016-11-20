@@ -23,7 +23,9 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
             ElmTokenTypes.IMPORT,
             ElmTokenTypes.PORT,
             ElmTokenTypes.EFFECT,
-            ElmTokenTypes.WHERE
+            ElmTokenTypes.WHERE,
+            ElmTokenTypes.TYPE,
+            ElmTokenTypes.ALIAS
             );
 
     public static final TextAttributesKey KEY =

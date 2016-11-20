@@ -12,8 +12,6 @@ import static mkolaczek.elm.psi.ElmTokenTypes.CAP_VAR;
 
 public class Module {
     public static void module(@NotNull PsiBuilder builder) {
-        int startingOffset = builder.getCurrentOffset();
-        PsiBuilder.Marker module = builder.mark();
         Whitespace.freshLine(builder);
         IElementType token = builder.getTokenType();
         if (token == ElmTokenTypes.MODULE || token == ElmTokenTypes.PORT || token == ElmTokenTypes.EFFECT) {
@@ -24,11 +22,6 @@ public class Module {
             Whitespace.freshLine(builder);
         }
         Combinators.simpleManyAs(builder, ElmElementTypes.IMPORTS, Module::importLine);
-        if (startingOffset != builder.getCurrentOffset()) {
-            module.done(ElmElementTypes.MODULE_NODE);
-        } else {
-            module.drop();
-        }
     }
 
     private static boolean importLine(PsiBuilder builder) {

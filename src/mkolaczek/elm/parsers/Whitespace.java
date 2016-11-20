@@ -3,7 +3,8 @@ package mkolaczek.elm.parsers;
 import com.intellij.lang.PsiBuilder;
 import org.jetbrains.annotations.NotNull;
 
-/** When parsing whitespace, errors are inserted into AST, but ignored in whole parsing.
+/**
+ * When parsing whitespace, errors are inserted into AST, but ignored in whole parsing.
  * I don't want to screw everything just because somebody forgot to indent a line.
  */
 public class Whitespace {
@@ -11,7 +12,7 @@ public class Whitespace {
     public static boolean forcedWS(@NotNull PsiBuilder builder) {
         Comment.comments(builder);
 
-        char lastChar = builder.getOriginalText().charAt(builder.getCurrentOffset());
+        char lastChar = builder.getOriginalText().charAt(builder.getCurrentOffset() - 1);
         if (lastChar != ' ' && lastChar != '\t') {
             builder.error("Forced WS expected");
         }
@@ -20,7 +21,8 @@ public class Whitespace {
 
     public static boolean freshLine(@NotNull PsiBuilder builder) {
         Comment.comments(builder);
-        if (builder.getCurrentOffset() > 0 && builder.getOriginalText().charAt(builder.getCurrentOffset() - 1) != '\n') {
+        if (builder.getCurrentOffset() > 0 && builder.getOriginalText()
+                                                     .charAt(builder.getCurrentOffset() - 1) != '\n') {
             builder.error("Fresh line expected");
         }
         return true;

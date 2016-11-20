@@ -76,6 +76,10 @@ public class Basic {
         };
     }
 
+    public static Parser parens(Parser parser) {
+        return surround(ElmTokenTypes.LPAREN, ElmTokenTypes.RPAREN, parser);
+    }
+
     public static NamedParser operator() {
         Parser p = Combinators.sequenceAs(ElmElementTypes.OPERATOR,
                 Combinators.expect(ElmTokenTypes.LPAREN),
