@@ -5,8 +5,8 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.ElmTokenTypes;
 import mkolaczek.elm.psi.ElmElementTypes;
+import mkolaczek.elm.psi.ElmTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.dottedCapVar;
@@ -38,12 +38,28 @@ public class ElmParser implements PsiParser {
         declarations(builder);
     }
 
-    private void declarations(@NotNull PsiBuilder builder) {
+    private static void declarations(@NotNull PsiBuilder builder) {
         declaration(builder);
+        Combinators.simpleMany(builder, ElmParser::freshDef);
     }
 
-    private void declaration(@NotNull PsiBuilder builder) {
-        Combinators.simpleOr(builder, Comment.docComment(), ElmParser.typeDecl());
+    private static boolean declaration(@NotNull PsiBuilder builder) {
+        return Combinators.simpleOr(builder, Comment.docComment(), ElmParser.typeDecl());
+    }
+
+    private static boolean freshDef(PsiBuilder builder) {
+        Marker marker = builder.mark();
+        Whitespace.freshLine(builder);
+        if (!builder.eof()) {
+            char currentChar = builder.getOriginalText().charAt(builder.getCurrentOffset());
+            if (Character.isLetter(currentChar) || currentChar == '_') {
+                marker.drop();
+                return declaration(builder);
+            }
+        }
+        marker.rollbackTo();
+        return false;
+
     }
 
     private static NamedParser typeDecl() {
@@ -103,7 +119,9 @@ public class ElmParser implements PsiParser {
     }*/
 
     private static NamedParser tupleCtor() {
-        Parser parser = sequence(expect(ElmTokenTypes.LPAREN), Basic.padded(ElmTokenTypes.COMMA_OP), expect(ElmTokenTypes.RPAREN));
+        Parser parser = sequence(expect(ElmTokenTypes.LPAREN),
+                Basic.padded(ElmTokenTypes.COMMA_OP),
+                expect(ElmTokenTypes.RPAREN));
         return NamedParser.of("TupleCtor", parser);
     }
 
