@@ -10,6 +10,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.patterns.PsiElementPattern.Capture;
+import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
@@ -69,10 +70,13 @@ public class ElmCompletionContributor extends CompletionContributor {
             String[] words = module.getName().split("\\.");
             return Names.suggest(words);
         });
+
+
+
     }
 
     private Capture<PsiElement> afterWhitespace(String wsChar) {
-        return psiElement().afterLeafSkipping(psiElement(PsiErrorElement.class), psiElement().withText(wsChar));
+        return psiElement().afterLeafSkipping(psiElement(PsiErrorElement.class), psiElement().withText(StandardPatterns.string().endsWith(wsChar)));
     }
 
     @NotNull
