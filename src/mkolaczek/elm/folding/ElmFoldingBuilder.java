@@ -25,7 +25,8 @@ public class ElmFoldingBuilder implements FoldingBuilder {
             DOC_COMMENT,
             MULTILINE_COMMENT,
             IMPORTS,
-            EXPOSING_NODE);
+            EXPOSING_NODE,
+            EFFECT_MODULE_SETTINGS);
 
     @NotNull
     @Override
@@ -61,13 +62,16 @@ public class ElmFoldingBuilder implements FoldingBuilder {
         if (type == EXPOSING_NODE) {
             return "exposing ...";
         }
+        if (type == EFFECT_MODULE_SETTINGS) {
+            return "where ...";
+        }
         return null;
     }
 
     @Override
     public boolean isCollapsedByDefault(@NotNull ASTNode node) {
         IElementType type = node.getElementType();
-        if (type == IMPORTS) {
+        if (type == IMPORTS || type == EFFECT_MODULE_SETTINGS) {
             return true;
         }
         if (type == EXPOSING_NODE && PsiTreeUtil.getParentOfType(node.getPsi(), ElmModuleHeader.class) != null) {
