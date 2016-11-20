@@ -26,25 +26,28 @@ public class ElmChoppedBlock extends AbstractBlock {
 
     private ElmChoppedBlock(ASTNode node,
                             SpacingBuilder spacingBuilder,
-                            Set<IElementType> choppedElements,
+                            Wrap chopDown, Set<IElementType> choppedElements,
                             IElementType valueList) {
-        super(node, Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true), Alignment.createAlignment());
+        super(node, chopDown, Alignment.createAlignment());
         this.spacingBuilder = spacingBuilder;
         this.choppedElements = choppedElements;
         this.valueList = valueList;
     }
 
-    public static ElmChoppedBlock exposing(@NotNull ASTNode node, @NotNull SpacingBuilder spacingBuilder) {
+    public static ElmChoppedBlock exposing(@NotNull ASTNode node,
+                                           @NotNull SpacingBuilder spacingBuilder,
+                                           Wrap chopDown) {
         return new ElmChoppedBlock(node,
                 spacingBuilder,
+                chopDown,
                 ImmutableSet.of(COMMA, RPAREN, LPAREN, EXPOSING),
                 ElmElementTypes.MODULE_VALUE_LIST);
     }
 
-    public static ElmChoppedBlock effectProperties(ASTNode node, SpacingBuilder spacingBuilder) {
+    public static ElmChoppedBlock effectProperties(ASTNode node, SpacingBuilder spacingBuilder, Wrap chopDown) {
         return new ElmChoppedBlock(node,
                 spacingBuilder,
-                ImmutableSet.of(COMMA, LBRACKET, RBRACKET, EXPOSING),
+                chopDown, ImmutableSet.of(COMMA, LBRACKET, RBRACKET, EXPOSING),
                 ElmElementTypes.EFFECT_MODULE_SETTINGS_LIST);
     }
 
