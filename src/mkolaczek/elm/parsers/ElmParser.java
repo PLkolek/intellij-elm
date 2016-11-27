@@ -18,6 +18,7 @@ public class ElmParser implements PsiParser {
     @NotNull
     @Override
     public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder) {
+        Marker rootMarker = builder.mark();
         PsiBuilder.Marker module = builder.mark();
         int startingOffset = builder.getCurrentOffset();
         program(builder);
@@ -30,6 +31,7 @@ public class ElmParser implements PsiParser {
         } else {
             module.drop();
         }
+        rootMarker.done(root);
         return builder.getTreeBuilt();
     }
 
