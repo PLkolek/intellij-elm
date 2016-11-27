@@ -21,7 +21,7 @@ port module Test1.B exposing ( aaaaaaa
 sdsd
 -}
 
-import Test2 as D
+import Test as D
     exposing
         ( aaaa
         , bbb
@@ -31,3 +31,5 @@ import Test2 as D
         , saj
         )
 import Test2 exposing (A, B)
+
+type alias X = A

@@ -1,0 +1,1 @@
+<EOLError descr="Doc comment, Type declaration expected in OR"></EOLError>
