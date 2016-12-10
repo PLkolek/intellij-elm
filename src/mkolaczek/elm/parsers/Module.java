@@ -1,5 +1,6 @@
 package mkolaczek.elm.parsers;
 
+import com.google.common.collect.ImmutableSet;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.psi.ElmElementTypes;
@@ -71,7 +72,7 @@ public class Module {
 
     private static boolean moduleDeclaration(@NotNull PsiBuilder builder) {
         IElementType token = builder.getTokenType();
-        if (token != ElmTokenTypes.MODULE && token != ElmTokenTypes.PORT && token != ElmTokenTypes.EFFECT) {
+        if (!ImmutableSet.of(ElmTokenTypes.MODULE, ElmTokenTypes.PORT, ElmTokenTypes.EFFECT).contains(token)) {
             return false;
         }
         PsiBuilder.Marker marker = builder.mark();
