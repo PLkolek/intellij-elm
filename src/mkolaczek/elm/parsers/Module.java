@@ -14,11 +14,8 @@ public class Module {
     public static void module(@NotNull PsiBuilder builder) {
         Whitespace.freshLine(builder);
         simpleTry(builder, Module::moduleDeclaration);
-        if (builder.getTokenType() == ElmTokenTypes.BEGIN_DOC_COMMENT) {
-            Comment.docComment().apply(builder);
-            Whitespace.freshLine(builder);
-        }
-        Combinators.simpleManyAs(builder, ElmElementTypes.IMPORTS, Module::importLine);
+        simpleTry(builder, sequence(Comment.docComment(), Whitespace::freshLine));
+        simpleManyAs(builder, ElmElementTypes.IMPORTS, Module::importLine);
     }
 
     private static boolean importLine(PsiBuilder builder) {
