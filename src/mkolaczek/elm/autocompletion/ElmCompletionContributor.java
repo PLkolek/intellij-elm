@@ -72,11 +72,11 @@ public class ElmCompletionContributor extends CompletionContributor {
         });
 
 
-
     }
 
     private Capture<PsiElement> afterWhitespace(String wsChar) {
-        return psiElement().afterLeafSkipping(psiElement(PsiErrorElement.class), psiElement().withText(StandardPatterns.string().endsWith(wsChar)));
+        return psiElement().afterLeafSkipping(psiElement(PsiErrorElement.class),
+                psiElement().withText(StandardPatterns.string().endsWith(wsChar)));
     }
 
     @NotNull
@@ -156,9 +156,7 @@ public class ElmCompletionContributor extends CompletionContributor {
                                        }
 
                                        private boolean isWhitespace(PsiElement element) {
-                                           return element.getNode()
-                                                         .getElementType() == ElmTokenTypes.WHITE_SPACE || element.getNode()
-                                                                                                                  .getElementType() == ElmTokenTypes.NEW_LINE;
+                                           return element.getNode().getElementType() == ElmTokenTypes.NEW_LINE;
                                        }
                                    });
     }

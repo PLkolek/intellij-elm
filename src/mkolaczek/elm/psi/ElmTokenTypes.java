@@ -23,7 +23,6 @@ public class ElmTokenTypes {
     public static final IElementType COMMENT = new ElmTokenType("COMMENT");
     public static final IElementType COMMENT_CONTENT = new ElmTokenType("COMMENT_CONTENT");
 
-    public static final IElementType WHITE_SPACE = new ElmTokenType("WHITE_SPACE");
     public static final IElementType NEW_LINE = new ElmTokenType("NEW_LINE");
 
     public static final IElementType LBRACKET = new ElmTokenType("LBRACKET");
