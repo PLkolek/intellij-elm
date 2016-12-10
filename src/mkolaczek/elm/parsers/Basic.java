@@ -99,7 +99,7 @@ public class Basic {
             return false;
         }
         PsiBuilder.Marker m = builder.mark();
-        boolean success = Combinators.simpleSequence(builder,
+        Combinators.simpleSequence(builder,
                 Combinators.expect(Tokens.CAP_VAR),
                 Combinators.many(Whitespace::noWhitespace,
                         Combinators.expect(Tokens.DOT),
@@ -107,7 +107,7 @@ public class Basic {
                         Combinators.expect(Tokens.CAP_VAR))
         );
         m.done(type);
-        return success;
+        return true;
     }
 
     public static boolean dottedCapVar(@NotNull PsiBuilder builder) {
