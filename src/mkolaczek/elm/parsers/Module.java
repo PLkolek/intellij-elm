@@ -13,10 +13,7 @@ import static mkolaczek.elm.psi.ElmTokenTypes.CAP_VAR;
 public class Module {
     public static void module(@NotNull PsiBuilder builder) {
         Whitespace.freshLine(builder);
-        IElementType token = builder.getTokenType();
-        if (token == ElmTokenTypes.MODULE || token == ElmTokenTypes.PORT || token == ElmTokenTypes.EFFECT) {
-            moduleDeclaration(builder);
-        }
+        simpleTry(builder, Module::moduleDeclaration);
         if (builder.getTokenType() == ElmTokenTypes.BEGIN_DOC_COMMENT) {
             Comment.docComment().apply(builder);
             Whitespace.freshLine(builder);
@@ -75,7 +72,11 @@ public class Module {
         return success;
     }
 
-    private static void moduleDeclaration(@NotNull PsiBuilder builder) {
+    private static boolean moduleDeclaration(@NotNull PsiBuilder builder) {
+        IElementType token = builder.getTokenType();
+        if (token != ElmTokenTypes.MODULE && token != ElmTokenTypes.PORT && token != ElmTokenTypes.EFFECT) {
+            return false;
+        }
         PsiBuilder.Marker marker = builder.mark();
         boolean isEffectModule = builder.getTokenType() == ElmTokenTypes.EFFECT;
         boolean success = Combinators.simpleSequence(builder,
@@ -95,6 +96,7 @@ public class Module {
             OnError.consumeUntil(builder, ElmTokenTypes.NEW_LINE);
         }
         marker.done(ElmElementTypes.MODULE_HEADER);
+        return true;
     }
 
     private static Parser settings() {
