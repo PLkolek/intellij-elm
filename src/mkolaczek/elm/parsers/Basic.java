@@ -95,6 +95,9 @@ public class Basic {
     }
 
     private static boolean dottedCapVar(@NotNull PsiBuilder builder, @NotNull IElementType type) {
+        if (builder.getTokenType() != Tokens.CAP_VAR) {
+            return false;
+        }
         PsiBuilder.Marker m = builder.mark();
         boolean success = Combinators.simpleSequence(builder,
                 Combinators.expect(Tokens.CAP_VAR),
@@ -111,8 +114,8 @@ public class Basic {
         return dottedCapVar(builder, Elements.DOTTED_CAP_VAR);
     }
 
-    public static Parser dottedCapVar(@NotNull IElementType type) {
-        return builder -> dottedCapVar(builder, type);
+    public static NamedParser dottedCapVar(@NotNull IElementType type) {
+        return NamedParser.of(type.toString(), builder -> dottedCapVar(builder, type));
     }
 
     public static NamedParser dottedCapVar() {

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.joining;
@@ -202,6 +203,46 @@ public class Combinators {
         return builder -> {
             parser.apply(builder);
             return true;
+        };
+    }
+
+    public static Parser skipUntil(NamedParser expected, Predicate<PsiBuilder> skipEnd) {
+        return builder -> {
+            int startOffset = builder.getCurrentOffset();
+            Marker errorStart = builder.mark();
+            while (!builder.eof()) {
+                int endOffset = builder.getCurrentOffset();
+                Marker currentMarker = builder.mark();
+                if (expected.apply(builder)) {
+                    if (endOffset != startOffset) {
+                        errorStart.errorBefore(expected.name() + " expected", currentMarker);
+                    } else {
+                        errorStart.drop();
+                    }
+                    currentMarker.drop();
+                    return true;
+                }
+                if (skipEnd.test(builder)) {
+                    if (endOffset != startOffset) {
+                        errorStart.errorBefore(expected.name() + " expected", currentMarker);
+                    } else {
+                        errorStart.drop();
+                        builder.error(expected.name() + " expected");
+                    }
+                    currentMarker.drop();
+                    return false;
+                }
+                currentMarker.drop();
+                builder.advanceLexer();
+            }
+            int endOffset = builder.getCurrentOffset();
+            if (endOffset != startOffset) {
+                errorStart.error(expected.name() + " expected");
+            } else {
+                errorStart.drop();
+                builder.error(expected.name() + " expected");
+            }
+            return false;
         };
     }
 }

@@ -83,7 +83,7 @@ public class Module {
                         expect(Tokens.PORT, Tokens.MODULE),
                         expect(Tokens.MODULE)),
                 Whitespace::maybeWhitespace,
-                Basic.dottedCapVar(Elements.MODULE_NAME),
+                Combinators.skipUntil(Basic.dottedCapVar(Elements.MODULE_NAME), Whitespace::isFreshLine),
                 Whitespace::maybeWhitespace,
                 isEffectModule ? settings() : empty(),
                 Whitespace::maybeWhitespace,
