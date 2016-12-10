@@ -5,9 +5,13 @@ import mkolaczek.elm.ElmLanguage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-public class ElmElementType extends IElementType {
-
-    public ElmElementType(@NotNull @NonNls String debugName) {
+public class Token extends IElementType {
+    public Token(@NotNull @NonNls String debugName) {
         super(debugName, ElmLanguage.INSTANCE);
+    }
+
+    @Override
+    public String toString() {
+        return "Token." + super.toString();
     }
 }
