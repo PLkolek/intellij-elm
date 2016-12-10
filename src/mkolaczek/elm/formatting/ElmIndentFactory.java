@@ -7,8 +7,8 @@ import com.intellij.psi.tree.IElementType;
 
 import java.util.Set;
 
-import static mkolaczek.elm.psi.ElmElementTypes.*;
-import static mkolaczek.elm.psi.ElmTokenTypes.*;
+import static mkolaczek.elm.psi.Elements.*;
+import static mkolaczek.elm.psi.Tokens.*;
 
 public class ElmIndentFactory {
     private static final Set<IElementType> indentedElements = ImmutableSet.of(EXPOSING_NODE,

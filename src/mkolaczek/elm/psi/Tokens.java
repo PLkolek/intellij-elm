@@ -3,7 +3,7 @@ package mkolaczek.elm.psi;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 
-public class ElmTokenTypes {
+public class Tokens {
 
     public static final IElementType PORT = new ElmTokenType("PORT");
     public static final IElementType EFFECT = new ElmTokenType("EFFECT");

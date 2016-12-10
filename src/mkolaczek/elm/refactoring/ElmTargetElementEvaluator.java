@@ -11,8 +11,8 @@ import mkolaczek.elm.psi.node.ElmModuleName;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static mkolaczek.elm.psi.ElmTokenTypes.CAP_VAR;
-import static mkolaczek.elm.psi.ElmTokenTypes.DOT;
+import static mkolaczek.elm.psi.Tokens.CAP_VAR;
+import static mkolaczek.elm.psi.Tokens.DOT;
 
 public class ElmTargetElementEvaluator extends TargetElementEvaluatorEx2 {
     @Nullable

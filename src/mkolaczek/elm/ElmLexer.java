@@ -8,7 +8,7 @@ import com.intellij.psi.tree.IElementType;
 
 import java.util.LinkedList;
 
-import static mkolaczek.elm.psi.ElmTokenTypes.*;
+import static mkolaczek.elm.psi.Tokens.*;
 
 
 /**

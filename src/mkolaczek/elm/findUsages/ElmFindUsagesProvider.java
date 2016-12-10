@@ -9,8 +9,8 @@ import com.intellij.psi.tree.TokenSet;
 import mkolaczek.elm.ElmLexerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import static mkolaczek.elm.psi.ElmTokenTypes.COMMENT_TOKENS;
-import static mkolaczek.elm.psi.ElmTokenTypes.KEY_TOKENS;
+import static mkolaczek.elm.psi.Tokens.COMMENT_TOKENS;
+import static mkolaczek.elm.psi.Tokens.KEY_TOKENS;
 
 public class ElmFindUsagesProvider implements FindUsagesProvider {
 

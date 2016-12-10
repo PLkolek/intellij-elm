@@ -18,7 +18,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
-import mkolaczek.elm.psi.ElmTokenTypes;
+import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.ElmImport2;
 import mkolaczek.elm.psi.node.ElmModuleNameRef;
 import org.jetbrains.annotations.NotNull;
@@ -30,9 +30,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
-import static mkolaczek.elm.psi.ElmElementTypes.*;
-import static mkolaczek.elm.psi.ElmTokenTypes.EFFECT;
-import static mkolaczek.elm.psi.ElmTokenTypes.RBRACKET;
+import static mkolaczek.elm.psi.Elements.*;
+import static mkolaczek.elm.psi.Tokens.EFFECT;
+import static mkolaczek.elm.psi.Tokens.RBRACKET;
 
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
@@ -56,14 +56,14 @@ public class ElmCompletionContributor extends CompletionContributor {
                 keywordElement("port module"),
                 keywordElement("effect module")
         );
-        simpleAutocomplete(afterLeaf(ElmTokenTypes.PORT), keywordElement("module"));
+        simpleAutocomplete(afterLeaf(Tokens.PORT), keywordElement("module"));
         simpleAutocomplete(afterLeaf(EFFECT), keywordElement("module"));
-        simpleAutocomplete(afterLeaf(ElmTokenTypes.MODULE), parameters -> {
+        simpleAutocomplete(afterLeaf(Tokens.MODULE), parameters -> {
             String fileName = parameters.getOriginalFile().getName();
             String moduleName = fileName.substring(0, fileName.length() - 4);//cut out .elm
             return Lists.newArrayList(moduleName);
         });
-        simpleAutocomplete(afterLeaf(ElmTokenTypes.AS), parameters -> {
+        simpleAutocomplete(afterLeaf(Tokens.AS), parameters -> {
             ElmImport2 importLine = PsiTreeUtil.getParentOfType(parameters.getPosition(), ElmImport2.class);
             Preconditions.checkState(importLine != null, "As must be a child of import line");
             ElmModuleNameRef module = importLine.importedModule();
@@ -156,7 +156,7 @@ public class ElmCompletionContributor extends CompletionContributor {
                                        }
 
                                        private boolean isWhitespace(PsiElement element) {
-                                           return element.getNode().getElementType() == ElmTokenTypes.NEW_LINE;
+                                           return element.getNode().getElementType() == Tokens.NEW_LINE;
                                        }
                                    });
     }

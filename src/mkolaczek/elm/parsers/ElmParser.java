@@ -5,8 +5,8 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.ElmElementTypes;
-import mkolaczek.elm.psi.ElmTokenTypes;
+import mkolaczek.elm.psi.Elements;
+import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.dottedCapVar;
@@ -27,7 +27,7 @@ public class ElmParser implements PsiParser {
         }
         consumeRest(builder);
         if (startingOffset != builder.getCurrentOffset()) {
-            module.done(ElmElementTypes.MODULE_NODE);
+            module.done(Elements.MODULE_NODE);
         } else {
             module.drop();
         }
@@ -70,19 +70,19 @@ public class ElmParser implements PsiParser {
 
 
     public static boolean typeDecl(@NotNull PsiBuilder builder) {
-        if (builder.getTokenType() != ElmTokenTypes.TYPE) {
+        if (builder.getTokenType() != Tokens.TYPE) {
             return false;
         }
         Marker marker = builder.mark();
-        boolean result = simpleSequence(builder, expect(ElmTokenTypes.TYPE), Whitespace::forcedWS);
+        boolean result = simpleSequence(builder, expect(Tokens.TYPE), Whitespace::forcedWS);
         boolean isAlias = false;
-        if (result && builder.getTokenType() == ElmTokenTypes.ALIAS) {
-            result = simpleSequence(builder, expect(ElmTokenTypes.ALIAS), Whitespace::forcedWS);
+        if (result && builder.getTokenType() == Tokens.ALIAS) {
+            result = simpleSequence(builder, expect(Tokens.ALIAS), Whitespace::forcedWS);
             isAlias = true;
         }
         result = result && simpleSequence(builder,
-                expect(ElmTokenTypes.CAP_VAR),
-                spacePrefix(expect(ElmTokenTypes.LOW_VAR)),
+                expect(Tokens.CAP_VAR),
+                spacePrefix(expect(Tokens.LOW_VAR)),
                 paddedEquals()
         );
         if (isAlias) {
@@ -90,9 +90,9 @@ public class ElmParser implements PsiParser {
         }
 
         if (!result) {
-            OnError.consumeUntil(builder, ElmTokenTypes.NEW_LINE);
+            OnError.consumeUntil(builder, Tokens.NEW_LINE);
         }
-        marker.done(ElmElementTypes.TYPE_DECLARATION);
+        marker.done(Elements.TYPE_DECLARATION);
         return true;
     }
 
@@ -121,9 +121,9 @@ public class ElmParser implements PsiParser {
     }*/
 
     private static NamedParser tupleCtor() {
-        Parser parser = sequence(expect(ElmTokenTypes.LPAREN),
-                Basic.padded(ElmTokenTypes.COMMA_OP),
-                expect(ElmTokenTypes.RPAREN));
+        Parser parser = sequence(expect(Tokens.LPAREN),
+                Basic.padded(Tokens.COMMA_OP),
+                expect(Tokens.RPAREN));
         return NamedParser.of("TupleCtor", parser);
     }
 

@@ -13,8 +13,8 @@ import mkolaczek.elm.ElmLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static mkolaczek.elm.psi.ElmElementTypes.*;
-import static mkolaczek.elm.psi.ElmTokenTypes.*;
+import static mkolaczek.elm.psi.Elements.*;
+import static mkolaczek.elm.psi.Tokens.*;
 
 public class ElmFormattingModelBuilder implements FormattingModelBuilder {
     @NotNull

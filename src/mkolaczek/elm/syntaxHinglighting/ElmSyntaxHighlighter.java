@@ -7,7 +7,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.ElmLexerAdapter;
-import mkolaczek.elm.psi.ElmTokenTypes;
+import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -17,15 +17,15 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
 public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
 
     private static final Set<IElementType> KEYWORDS = Sets.newHashSet(
-            ElmTokenTypes.MODULE,
-            ElmTokenTypes.AS,
-            ElmTokenTypes.EXPOSING,
-            ElmTokenTypes.IMPORT,
-            ElmTokenTypes.PORT,
-            ElmTokenTypes.EFFECT,
-            ElmTokenTypes.WHERE,
-            ElmTokenTypes.TYPE,
-            ElmTokenTypes.ALIAS
+            Tokens.MODULE,
+            Tokens.AS,
+            Tokens.EXPOSING,
+            Tokens.IMPORT,
+            Tokens.PORT,
+            Tokens.EFFECT,
+            Tokens.WHERE,
+            Tokens.TYPE,
+            Tokens.ALIAS
             );
 
     public static final TextAttributesKey KEY =
@@ -53,7 +53,7 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
         if (KEYWORDS.contains(tokenType)) {
             return KEY_KEYS;
         }
-        if (tokenType == ElmTokenTypes.COMMENT_CONTENT || tokenType == ElmTokenTypes.COMMENT) {
+        if (tokenType == Tokens.COMMENT_CONTENT || tokenType == Tokens.COMMENT) {
             return COMMENT_KEYS;
         }
         return EMPTY_KEYS;

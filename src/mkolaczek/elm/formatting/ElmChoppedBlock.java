@@ -7,7 +7,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.ASTUtil;
-import mkolaczek.elm.psi.ElmElementTypes;
+import mkolaczek.elm.psi.Elements;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static mkolaczek.elm.psi.ElmTokenTypes.*;
+import static mkolaczek.elm.psi.Tokens.*;
 
 public class ElmChoppedBlock extends AbstractBlock {
     private SpacingBuilder spacingBuilder;
@@ -41,14 +41,14 @@ public class ElmChoppedBlock extends AbstractBlock {
                 spacingBuilder,
                 chopDown,
                 ImmutableSet.of(COMMA, RPAREN, LPAREN, EXPOSING),
-                ElmElementTypes.MODULE_VALUE_LIST);
+                Elements.MODULE_VALUE_LIST);
     }
 
     public static ElmChoppedBlock effectProperties(ASTNode node, SpacingBuilder spacingBuilder, Wrap chopDown) {
         return new ElmChoppedBlock(node,
                 spacingBuilder,
                 chopDown, ImmutableSet.of(COMMA, LBRACKET, RBRACKET, EXPOSING),
-                ElmElementTypes.EFFECT_MODULE_SETTINGS_LIST);
+                Elements.EFFECT_MODULE_SETTINGS_LIST);
     }
 
     @Override

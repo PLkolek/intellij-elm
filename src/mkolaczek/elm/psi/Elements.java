@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.psi.node.*;
 
-public interface ElmElementTypes {
+public interface Elements {
 
     IElementType DECLARATION = new ElmElementType("DECLARATION");
     IElementType DECLARATIONS = new ElmElementType("DECLARATIONS");

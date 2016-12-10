@@ -5,7 +5,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.ASTUtil;
-import mkolaczek.elm.psi.ElmElementTypes;
+import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.node.ElmExposingNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,14 +35,14 @@ public class ElmBlock extends AbstractBlock {
         Wrap chopDown = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
         while (child != null) {
             IElementType type = child.getElementType();
-            if (type == ElmElementTypes.EXPOSING_NODE) {
+            if (type == Elements.EXPOSING_NODE) {
                 ElmExposingNode exposingNode = (ElmExposingNode) child.getPsi();
                 if (exposingNode.valueList().isOpenListing()) {
                     blocks.add(new ElmBlock(child, spacingBuilder, chopDown));
                 } else {
                     blocks.add(ElmChoppedBlock.exposing(child, spacingBuilder, chopDown));
                 }
-            } else if (type == ElmElementTypes.EFFECT_MODULE_SETTINGS) {
+            } else if (type == Elements.EFFECT_MODULE_SETTINGS) {
                 blocks.add(ElmChoppedBlock.effectProperties(child, spacingBuilder, chopDown));
             } else {
                 blocks.add(new ElmBlock(child, spacingBuilder));

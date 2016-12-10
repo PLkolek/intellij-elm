@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import mkolaczek.elm.psi.ElmElementTypes;
+import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.node.ElmModuleHeader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 
-import static mkolaczek.elm.psi.ElmElementTypes.*;
+import static mkolaczek.elm.psi.Elements.*;
 
 public class ElmFoldingBuilder implements FoldingBuilder {
 
@@ -53,7 +53,7 @@ public class ElmFoldingBuilder implements FoldingBuilder {
         if (type == DOC_COMMENT) {
             return "{-|...-}";
         }
-        if (type == ElmElementTypes.MULTILINE_COMMENT) {
+        if (type == Elements.MULTILINE_COMMENT) {
             return "{-...-}";
         }
         if (type == IMPORTS) {

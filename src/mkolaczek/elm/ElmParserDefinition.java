@@ -12,9 +12,9 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import mkolaczek.elm.parsers.ElmParser;
-import mkolaczek.elm.psi.ElmElementTypes;
+import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.ElmFile;
-import mkolaczek.elm.psi.ElmTokenTypes;
+import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -49,7 +49,7 @@ public class ElmParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public TokenSet getCommentTokens() {
-        return ElmTokenTypes.COMMENT_TOKENS;
+        return Tokens.COMMENT_TOKENS;
     }
 
     @NotNull
@@ -61,7 +61,7 @@ public class ElmParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public PsiElement createElement(ASTNode node) {
-        return ElmElementTypes.Factory.createElement(node);
+        return Elements.Factory.createElement(node);
     }
 
     @Override

@@ -2,8 +2,8 @@ package mkolaczek.elm.parsers;
 
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.ElmElementTypes;
-import mkolaczek.elm.psi.ElmTokenTypes;
+import mkolaczek.elm.psi.Elements;
+import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 public class Basic {
@@ -16,21 +16,21 @@ public class Basic {
         return (PsiBuilder builder) -> {
             PsiBuilder.Marker m = builder.mark();
             Whitespace.maybeWhitespace(builder);
-            if (builder.getTokenType() != ElmTokenTypes.LPAREN) {
+            if (builder.getTokenType() != Tokens.LPAREN) {
                 m.rollbackTo();
                 return true;
             }
             boolean success = Combinators.simpleSequence(builder,
-                    Combinators.expect(ElmTokenTypes.LPAREN),
+                    Combinators.expect(Tokens.LPAREN),
                     Whitespace::maybeWhitespace,
                     listingContent(listedValue),
                     Whitespace::maybeWhitespace,
-                    Combinators.expect(ElmTokenTypes.RPAREN)
+                    Combinators.expect(Tokens.RPAREN)
             );
             if (!success) {
-                OnError.consumeUntil(builder, ElmTokenTypes.RPAREN);
+                OnError.consumeUntil(builder, Tokens.RPAREN);
             }
-            m.done(ElmElementTypes.MODULE_VALUE_LIST);
+            m.done(Elements.MODULE_VALUE_LIST);
             return true;
         };
     }
@@ -38,7 +38,7 @@ public class Basic {
     private static Parser listingContent(NamedParser listedValue) {
         return (PsiBuilder builder) ->
                 Combinators.simpleOr(builder,
-                        Combinators.expectAs(ElmElementTypes.OPEN_LISTING_NODE, ElmTokenTypes.OPEN_LISTING),
+                        Combinators.expectAs(Elements.OPEN_LISTING_NODE, Tokens.OPEN_LISTING),
                         listingValues(listedValue));
     }
 
@@ -50,11 +50,11 @@ public class Basic {
     }
 
     public static Parser paddedComma() {
-        return padded(ElmTokenTypes.COMMA);
+        return padded(Tokens.COMMA);
     }
 
     public static Parser paddedEquals() {
-        return padded(ElmTokenTypes.EQUALS);
+        return padded(Tokens.EQUALS);
     }
 
     @NotNull
@@ -77,38 +77,38 @@ public class Basic {
     }
 
     public static Parser parens(Parser parser) {
-        return surround(ElmTokenTypes.LPAREN, ElmTokenTypes.RPAREN, parser);
+        return surround(Tokens.LPAREN, Tokens.RPAREN, parser);
     }
 
     public static NamedParser operator() {
-        Parser p = Combinators.sequenceAs(ElmElementTypes.OPERATOR,
-                Combinators.expect(ElmTokenTypes.LPAREN),
+        Parser p = Combinators.sequenceAs(Elements.OPERATOR,
+                Combinators.expect(Tokens.LPAREN),
                 Whitespace::maybeWhitespace,
                 Basic::operatorSymbol,
                 Whitespace::maybeWhitespace,
-                Combinators.expect(ElmTokenTypes.RPAREN));
+                Combinators.expect(Tokens.RPAREN));
         return NamedParser.of("Operator", p);
     }
 
     private static boolean operatorSymbol(PsiBuilder builder) {
-        return Combinators.simpleOr(builder, ElmTokenTypes.SYM_OP, ElmTokenTypes.COMMA_OP);
+        return Combinators.simpleOr(builder, Tokens.SYM_OP, Tokens.COMMA_OP);
     }
 
     private static boolean dottedCapVar(@NotNull PsiBuilder builder, @NotNull IElementType type) {
         PsiBuilder.Marker m = builder.mark();
         boolean success = Combinators.simpleSequence(builder,
-                Combinators.expect(ElmTokenTypes.CAP_VAR),
+                Combinators.expect(Tokens.CAP_VAR),
                 Combinators.many(Whitespace::noWhitespace,
-                        Combinators.expect(ElmTokenTypes.DOT),
+                        Combinators.expect(Tokens.DOT),
                         Whitespace::noWhitespace,
-                        Combinators.expect(ElmTokenTypes.CAP_VAR))
+                        Combinators.expect(Tokens.CAP_VAR))
         );
         m.done(type);
         return success;
     }
 
     public static boolean dottedCapVar(@NotNull PsiBuilder builder) {
-        return dottedCapVar(builder, ElmElementTypes.DOTTED_CAP_VAR);
+        return dottedCapVar(builder, Elements.DOTTED_CAP_VAR);
     }
 
     public static Parser dottedCapVar(@NotNull IElementType type) {
@@ -120,7 +120,7 @@ public class Basic {
     }
 
     public static Parser brackets(Parser contents) {
-        return surround(ElmTokenTypes.LBRACKET, ElmTokenTypes.RBRACKET, contents);
+        return surround(Tokens.LBRACKET, Tokens.RBRACKET, contents);
     }
 
     public static Parser surround(IElementType left, IElementType right, Parser contents) {

@@ -5,7 +5,7 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.ElmTokenTypes;
+import mkolaczek.elm.psi.Tokens;
 
 public class ElmMultilineComment extends ASTWrapperPsiElement implements PsiComment {
 
@@ -15,6 +15,6 @@ public class ElmMultilineComment extends ASTWrapperPsiElement implements PsiComm
 
     @Override
     public IElementType getTokenType() {
-        return ElmTokenTypes.BEGIN_COMMENT;
+        return Tokens.BEGIN_COMMENT;
     }
 }

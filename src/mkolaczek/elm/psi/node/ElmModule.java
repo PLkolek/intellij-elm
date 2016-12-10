@@ -12,7 +12,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.ElmIcon;
-import mkolaczek.elm.psi.ElmTokenTypes;
+import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -102,10 +102,10 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
 
     public String type() {
         IElementType type = header().getFirstChild().getNode().getElementType();
-        if (type == ElmTokenTypes.EFFECT) {
+        if (type == Tokens.EFFECT) {
             return "effect";
         }
-        if (type == ElmTokenTypes.PORT) {
+        if (type == Tokens.PORT) {
             return "port";
         }
         return "";
