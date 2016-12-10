@@ -70,40 +70,42 @@ public class Module {
     }
 
     private static boolean moduleDeclaration(@NotNull PsiBuilder builder) {
+        //noinspection SuspiciousMethodCalls
         if (!ImmutableSet.of(Tokens.MODULE, Tokens.PORT, Tokens.EFFECT).contains(builder.getTokenType())) {
             return false;
         }
         PsiBuilder.Marker marker = builder.mark();
         boolean isEffectModule = builder.getTokenType() == Tokens.EFFECT;
-        boolean success = Combinators.simpleSequence(builder,
+        Combinators.simpleSequence(builder,
                 Combinators.or(
                         expect(Tokens.EFFECT, Tokens.MODULE),
                         expect(Tokens.PORT, Tokens.MODULE),
                         expect(Tokens.MODULE)),
                 Whitespace::maybeWhitespace,
-                Combinators.skipUntil(Basic.dottedCapVar(Elements.MODULE_NAME), Whitespace::isFreshLine),
+                Combinators.skipUntilFL(Basic.dottedCapVar(Elements.MODULE_NAME)),
                 Whitespace::maybeWhitespace,
-                isEffectModule ? settings() : empty(),
+                isEffectModule ? Combinators.skipUntilFL(settings(), Tokens.EXPOSING) : empty(),
                 Whitespace::maybeWhitespace,
                 exposing(),
                 Whitespace::freshLine
         );
-        if (!success) {
-            OnError.consumeUntil(builder, Tokens.NEW_LINE);
-        }
         marker.done(Elements.MODULE_HEADER);
         return true;
     }
 
-    private static Parser settings() {
-        return (builder -> {
-            sequenceAs(Elements.EFFECT_MODULE_SETTINGS,
-                    expect(Tokens.WHERE),
-                    Whitespace::maybeWhitespace,
-                    settingsList()
-            ).apply(builder);
-            return true; //display errors, but try to continue parsing of module header
-        });
+    private static NamedParser settings() {
+        return NamedParser.of("Effect module settings",
+                builder -> {
+                    if (builder.getTokenType() != Tokens.WHERE) {
+                        return false;
+                    }
+                    sequenceAs(Elements.EFFECT_MODULE_SETTINGS,
+                            expect(Tokens.WHERE),
+                            Whitespace::maybeWhitespace,
+                            settingsList()
+                    ).apply(builder);
+                    return true;
+                });
     }
 
     private static Parser settingsList() {

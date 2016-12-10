@@ -33,7 +33,7 @@ public class ElmDocumentationProvider implements DocumentationProvider {
                                                   NEWLINE,
                                                   concatValues(val.elements())))
                                           .orElse("");
-            String type = (module.type() + " ").replaceAll("^\\s+", "");
+            String type = (module.typeStr() + " ").replaceAll("^\\s+", "");
             return String.format("%smodule %s%s%sexposing (%s)",
                     type, module.getName(), settingsString, NEWLINE, exposedValuesString(module));
 

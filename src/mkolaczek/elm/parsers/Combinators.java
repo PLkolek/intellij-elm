@@ -1,12 +1,15 @@
 package mkolaczek.elm.parsers;
 
+import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.psi.Token;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -206,8 +209,17 @@ public class Combinators {
         };
     }
 
-    public static Parser skipUntil(NamedParser expected, Predicate<PsiBuilder> skipEnd) {
+    public static Parser skipUntilFL(NamedParser expected, Token... nextTokens) {
+        return skipUntil(expected, Whitespace::isFreshLine, (IElementType[]) nextTokens);
+    }
+
+    public static Parser skipUntilFL(NamedParser expected) {
+        return skipUntil(expected, Whitespace::isFreshLine);
+    }
+
+    public static Parser skipUntil(NamedParser expected, Predicate<PsiBuilder> skipEnd, IElementType... nextTokens) {
         return builder -> {
+            Set<IElementType> nextTokensSet = Sets.newHashSet(nextTokens);
             int startOffset = builder.getCurrentOffset();
             Marker errorStart = builder.mark();
             while (!builder.eof()) {
@@ -222,7 +234,7 @@ public class Combinators {
                     currentMarker.drop();
                     return true;
                 }
-                if (skipEnd.test(builder)) {
+                if (skipEnd.test(builder) || nextTokensSet.contains(builder.getTokenType())) {
                     if (endOffset != startOffset) {
                         errorStart.errorBefore(expected.name() + " expected", currentMarker);
                     } else {
@@ -230,7 +242,7 @@ public class Combinators {
                         builder.error(expected.name() + " expected");
                     }
                     currentMarker.drop();
-                    return false;
+                    return nextTokensSet.contains(builder.getTokenType());
                 }
                 currentMarker.drop();
                 builder.advanceLexer();

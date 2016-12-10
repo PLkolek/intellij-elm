@@ -30,6 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
+import static mkolaczek.elm.autocompletion.ModulePattern.module;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.EFFECT;
 import static mkolaczek.elm.psi.Tokens.RBRACKET;
@@ -40,16 +41,13 @@ public class ElmCompletionContributor extends CompletionContributor {
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME_REF)).andNot(afterWhitespace("\n")),
                 keywordElement("as"),
                 exposingCompletion());
+        Capture<PsiElement> insideEffectModule = psiElement().inside(module().effectModule());
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME))
-                                   .andNot(psiElement().inside(
-                                           psiElement().withChild(psiElement(EFFECT_MODULE_SETTINGS))
-                                   )), exposingCompletion());
+                                   .andNot(insideEffectModule), exposingCompletion());
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME))
-                                   .inside(psiElement().withChild(psiElement(EFFECT_MODULE_SETTINGS))), //hack!
+                                   .andOr(insideEffectModule, Patterns.afterLeaf(insideEffectModule)),
                 whereCompletion());
-        simpleAutocomplete(afterLeaf(RBRACKET)
-                        .inside(psiElement().withChild(psiElement(EFFECT_MODULE_SETTINGS))), //hack!
-                exposingCompletion());
+        simpleAutocomplete(afterLeaf(RBRACKET).inside(module().effectModule()), exposingCompletion());
         simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_ALIAS)), exposingCompletion());
         simpleAutocomplete(psiElement().afterLeaf(psiElement().isNull()),
                 keywordElement("module"),

@@ -100,8 +100,8 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
         return PsiTreeUtil.findChildOfType(this, ElmModuleHeader.class);
     }
 
-    public String type() {
-        IElementType type = header().getFirstChild().getNode().getElementType();
+    public String typeStr() {
+        IElementType type = type();
         if (type == Tokens.EFFECT) {
             return "effect";
         }
@@ -109,6 +109,10 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
             return "port";
         }
         return "";
+    }
+
+    public IElementType type() {
+        return header().getFirstChild().getNode().getElementType();
     }
 
     public Optional<EffectModuleSettingsList> settingsList() {
