@@ -692,8 +692,9 @@ public class ElmLexer implements FlexLexer {
             }
             case 53:
                 break;
-          case 21: 
-            { yypushstate(INLINECOMMENT); return COMMENT;
+          case 21: {
+            yypushstate(INLINECOMMENT);
+            return LINE_COMMENT;
             }
             case 54:
                 break;
