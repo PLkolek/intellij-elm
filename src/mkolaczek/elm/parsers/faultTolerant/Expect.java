@@ -17,11 +17,11 @@ public class Expect extends FTParserAbstr {
         return new Expect(expectedToken, as);
     }
 
-    protected Expect(Token expectedToken) {
+    private Expect(Token expectedToken) {
         this(expectedToken, null);
     }
 
-    public Expect(Token expectedToken, Element as) {
+    private Expect(Token expectedToken, Element as) {
         super(expectedToken.getName(), ImmutableSet.of(expectedToken), false, as);
     }
 

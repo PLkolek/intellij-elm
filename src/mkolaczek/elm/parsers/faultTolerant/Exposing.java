@@ -10,6 +10,7 @@ import java.util.Set;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
 import static mkolaczek.elm.parsers.faultTolerant.FTBasic.listing;
+import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
 
 public class Exposing extends FTParserAbstr {
@@ -18,7 +19,7 @@ public class Exposing extends FTParserAbstr {
 
     protected Exposing() {
         super("exposing list", Sets.newHashSet(Tokens.EXPOSING), false, Elements.EXPOSING_NODE);
-        this.sequence = new Sequence("exposing list",
+        this.sequence = sequence("exposing list",
                 expect(Tokens.EXPOSING),
                 maybeWhitespace(),
                 listing("list of exposed values", expect(Tokens.LOW_VAR)));

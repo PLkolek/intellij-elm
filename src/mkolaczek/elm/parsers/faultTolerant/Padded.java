@@ -5,6 +5,7 @@ import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
 
+import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
 
 public class Padded extends FTParserAbstr {
@@ -13,7 +14,7 @@ public class Padded extends FTParserAbstr {
 
     public Padded(FTParser parser) {
         super(parser.name(), parser.startingTokens(), parser.isOptional(), null);
-        this.sequence = new Sequence(parser.name(),
+        this.sequence = sequence(parser.name(),
                 maybeWhitespace(),
                 parser,
                 maybeWhitespace()

@@ -66,7 +66,7 @@ public class WhiteSpace implements FTParser {
         return new WhiteSpace(Type.NO);
     }
 
-    public WhiteSpace(Type type) {
+    private WhiteSpace(Type type) {
         this.type = type;
     }
 

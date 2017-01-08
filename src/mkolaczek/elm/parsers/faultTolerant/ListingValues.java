@@ -5,15 +5,17 @@ import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
 
+import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
+
 public class ListingValues extends FTParserAbstr {
     private final Sequence sequence;
 
     public ListingValues(FTParser listedValue) {
         super("listing values", listedValue.startingTokens(), false, null);
-        this.sequence = new Sequence("listing values",
+        this.sequence = sequence("listing values",
                 listedValue,
                 new Many("more listing values",
-                        new Sequence("more listing values",
+                        sequence("more listing values",
                                 new PaddedComma(),
                                 listedValue
                         )

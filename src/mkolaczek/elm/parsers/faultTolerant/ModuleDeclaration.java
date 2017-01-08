@@ -10,6 +10,7 @@ import mkolaczek.elm.psi.Tokens;
 import java.util.Set;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
+import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.freshLine;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
 
@@ -22,14 +23,14 @@ public class ModuleDeclaration extends FTParserAbstr {
                 ImmutableSet.of(Tokens.MODULE, Tokens.PORT, Tokens.EFFECT),
                 true, Elements.MODULE_HEADER);
         this.sequence =
-                new Sequence(name,
+                sequence(name,
                         new Or("Module declaration keywords",
-                                new Sequence("Effect module declaration keywords",
+                                sequence("Effect module declaration keywords",
                                         expect(Tokens.EFFECT),
                                         maybeWhitespace(),
                                         expect(Tokens.MODULE)
                                 ),
-                                new Sequence("Port module declaration keywords",
+                                sequence("Port module declaration keywords",
                                         expect(Tokens.EFFECT),
                                         maybeWhitespace(),
                                         expect(Tokens.MODULE)
@@ -50,7 +51,7 @@ public class ModuleDeclaration extends FTParserAbstr {
         sequence.parse(builder);
       /*  Marker marker = builder.mark();
         boolean isEffectModule = builder.getTokenType() == Tokens.EFFECT;
-        new Sequence(name, nextTokens,
+        sequence(name, nextTokens,
                 new Or("Module declaration keywords", )
                 Combinators.or(
                         expect(Tokens.EFFECT, Tokens.MODULE),

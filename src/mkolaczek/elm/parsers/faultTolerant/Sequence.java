@@ -12,11 +12,15 @@ public class Sequence extends FTParserAbstr {
 
     private final FTParser[] parsers;
 
-    public Sequence(String name, FTParser... parsers) {
-        this(name, null, parsers);
+    public static Sequence sequence(String name, FTParser... parsers) {
+        return new Sequence(name, null, parsers);
     }
 
-    public Sequence(String name, Element as, FTParser... parsers) {
+    public static Sequence sequenceAs(String name, Element as, FTParser... parsers) {
+        return new Sequence(name, as, parsers);
+    }
+
+    private Sequence(String name, Element as, FTParser... parsers) {
         super(name, startingTokens(parsers), isOptional(parsers), as);
         this.parsers = parsers;
     }
