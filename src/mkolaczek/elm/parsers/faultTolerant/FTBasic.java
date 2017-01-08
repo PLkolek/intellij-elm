@@ -18,7 +18,7 @@ import static mkolaczek.elm.psi.Tokens.RPAREN;
 public class FTBasic {
 
     public static FTParser listing(String name, FTParser listedValue) {
-        return sequenceAs(name, Elements.MODULE_VALUE_LIST,
+        return sequenceAs(Elements.MODULE_VALUE_LIST,
                 expect(LPAREN),
                 listingContent(name + " content", listedValue),
                 expect(RPAREN)
@@ -55,7 +55,7 @@ public class FTBasic {
     }
 
     public static FTParser dottedCapVar(String name, Element as) {
-        return sequenceAs(name, as,
+        return sequenceAs(as,
                 expect(Tokens.CAP_VAR),
                 many(name + " parts",
                         noWhitespace(),
@@ -64,5 +64,17 @@ public class FTBasic {
                         expect(Tokens.CAP_VAR)
                 )
         );
+    }
+
+    public static FTParser operator() {
+        return sequenceAs(Elements.OPERATOR,
+                expect(Tokens.LPAREN),
+                operatorSymbol(),
+                expect(Tokens.RPAREN)
+        ).separatedBy(maybeWhitespace());
+    }
+
+    private static FTParser operatorSymbol() {
+        return or("operator symbol", expect(Tokens.SYM_OP), expect(Tokens.COMMA_OP));
     }
 }

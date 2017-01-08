@@ -16,8 +16,8 @@ public class Sequence extends FTParserAbstr {
         return new Sequence(name, null, parsers);
     }
 
-    public static Sequence sequenceAs(String name, Element as, FTParser... parsers) {
-        return new Sequence(name, as, parsers);
+    public static Sequence sequenceAs(Element as, FTParser... parsers) {
+        return new Sequence(as.getName(), as, parsers);
     }
 
     public Sequence separatedBy(WhiteSpace whiteSpace) {
