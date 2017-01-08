@@ -7,13 +7,15 @@ import mkolaczek.elm.psi.Tokens;
 
 import java.util.Set;
 
+import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
+
 public class PaddedComma extends FTParserAbstr {
 
     private final Padded padded;
 
     protected PaddedComma() {
         super(",", Sets.newHashSet(Tokens.COMMA), false, null);
-        this.padded = new Padded(new Expect(Tokens.COMMA));
+        this.padded = new Padded(expect(Tokens.COMMA));
     }
 
     @Override

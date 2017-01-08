@@ -9,6 +9,14 @@ import java.util.Set;
 
 public class Expect extends FTParserAbstr {
 
+    public static Expect expect(Token expectedToken) {
+        return new Expect(expectedToken);
+    }
+
+    public static Expect expectAs(Token expectedToken, Element as) {
+        return new Expect(expectedToken, as);
+    }
+
     protected Expect(Token expectedToken) {
         this(expectedToken, null);
     }
@@ -16,6 +24,7 @@ public class Expect extends FTParserAbstr {
     public Expect(Token expectedToken, Element as) {
         super(expectedToken.getName(), ImmutableSet.of(expectedToken), false, as);
     }
+
 
     @Override
     protected void parse2(PsiBuilder builder) {

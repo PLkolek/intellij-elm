@@ -9,6 +9,7 @@ import mkolaczek.elm.psi.Tokens;
 
 import java.util.Set;
 
+import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.Type.FRESH_LINE;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.Type.MAYBE;
 
@@ -24,16 +25,16 @@ public class ModuleDeclaration extends FTParserAbstr {
                 new Sequence(name,
                         new Or("Module declaration keywords",
                                 new Sequence("Effect module declaration keywords",
-                                        new Expect(Tokens.EFFECT),
+                                        expect(Tokens.EFFECT),
                                         new WhiteSpace(MAYBE),
-                                        new Expect(Tokens.MODULE)
+                                        expect(Tokens.MODULE)
                                 ),
                                 new Sequence("Port module declaration keywords",
-                                        new Expect(Tokens.EFFECT),
+                                        expect(Tokens.EFFECT),
                                         new WhiteSpace(MAYBE),
-                                        new Expect(Tokens.MODULE)
+                                        expect(Tokens.MODULE)
                                 ),
-                                new Expect(Tokens.MODULE)
+                                expect(Tokens.MODULE)
                         ),
                         new WhiteSpace(MAYBE),
                         FTParsers.dottedCapVar("Module name", Elements.MODULE_NAME),

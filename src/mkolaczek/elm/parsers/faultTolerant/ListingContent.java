@@ -8,13 +8,15 @@ import mkolaczek.elm.psi.Tokens;
 
 import java.util.Set;
 
+import static mkolaczek.elm.parsers.faultTolerant.Expect.expectAs;
+
 public class ListingContent extends FTParserAbstr {
     private final Or or;
 
     public ListingContent(String name, FTParser listedValue) {
         super(name, Sets.union(listedValue.startingTokens(), Sets.newHashSet(Tokens.OPEN_LISTING)), false, null);
         this.or = new Or(name,
-                new Expect(Tokens.OPEN_LISTING, Elements.OPEN_LISTING_NODE),
+                expectAs(Tokens.OPEN_LISTING, Elements.OPEN_LISTING_NODE),
                 new ListingValues(listedValue)
         );
     }
