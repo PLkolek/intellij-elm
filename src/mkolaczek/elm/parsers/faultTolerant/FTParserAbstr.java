@@ -12,7 +12,7 @@ public abstract class FTParserAbstr implements FTParser {
     protected final String name;
     protected final Set<Token> startingTokens;
     protected final boolean isOptional;
-    private final Element as;
+    protected final Element as;
     private Set<Token> nextTokens;
 
     protected FTParserAbstr(String name, Set<Token> startingTokens, boolean isOptional, Element as) {

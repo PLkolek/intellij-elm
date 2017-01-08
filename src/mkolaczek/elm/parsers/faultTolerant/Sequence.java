@@ -20,6 +20,18 @@ public class Sequence extends FTParserAbstr {
         return new Sequence(name, as, parsers);
     }
 
+    public Sequence separatedBy(WhiteSpace whiteSpace) {
+        FTParser[] newParsers = new FTParser[parsers.length * 2 - 1];
+        for (int i = 0; i < parsers.length; i++) {
+            newParsers[2 * i] = parsers[i];
+            if (i > 0) {
+                newParsers[2 * i - 1] = whiteSpace;
+            }
+        }
+
+        return new Sequence(name, as, newParsers);
+    }
+
     private Sequence(String name, Element as, FTParser... parsers) {
         super(name, startingTokens(parsers), isOptional(parsers), as);
         this.parsers = parsers;
