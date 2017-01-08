@@ -8,6 +8,7 @@ import mkolaczek.elm.psi.Tokens;
 
 import java.util.Set;
 
+import static mkolaczek.elm.parsers.faultTolerant.FTBasic.listing;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.Type.MAYBE;
 
 public class Exposing extends FTParserAbstr {
@@ -17,9 +18,9 @@ public class Exposing extends FTParserAbstr {
     protected Exposing() {
         super("exposing list", Sets.newHashSet(Tokens.EXPOSING), false, Elements.EXPOSING_NODE);
         this.sequence = new Sequence("exposing list",
-                new Expect("exposing", Tokens.EXPOSING),
+                new Expect(Tokens.EXPOSING),
                 new WhiteSpace(MAYBE),
-                new Listing("list of exposed values", new Expect("TODO", Tokens.LOW_VAR)));
+                listing("list of exposed values", new Expect(Tokens.LOW_VAR)));
     }
 
     @Override

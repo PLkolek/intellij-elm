@@ -14,7 +14,7 @@ public class ListingContent extends FTParserAbstr {
     public ListingContent(String name, FTParser listedValue) {
         super(name, Sets.union(listedValue.startingTokens(), Sets.newHashSet(Tokens.OPEN_LISTING)), false, null);
         this.or = new Or(name,
-                new Expect("..", Tokens.OPEN_LISTING, Elements.OPEN_LISTING_NODE),
+                new Expect(Tokens.OPEN_LISTING, Elements.OPEN_LISTING_NODE),
                 new ListingValues(listedValue)
         );
     }

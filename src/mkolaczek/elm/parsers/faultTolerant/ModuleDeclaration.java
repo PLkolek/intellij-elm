@@ -24,16 +24,16 @@ public class ModuleDeclaration extends FTParserAbstr {
                 new Sequence(name,
                         new Or("Module declaration keywords",
                                 new Sequence("Effect module declaration keywords",
-                                        new Expect("\"effect\" keyword", Tokens.EFFECT),
+                                        new Expect(Tokens.EFFECT),
                                         new WhiteSpace(MAYBE),
-                                        new Expect("\"module\" keyword", Tokens.MODULE)
+                                        new Expect(Tokens.MODULE)
                                 ),
                                 new Sequence("Port module declaration keywords",
-                                        new Expect("\"port\" keyword", Tokens.EFFECT),
+                                        new Expect(Tokens.EFFECT),
                                         new WhiteSpace(MAYBE),
-                                        new Expect("\"module\" keyword", Tokens.MODULE)
+                                        new Expect(Tokens.MODULE)
                                 ),
-                                new Expect("\"module\" keyword", Tokens.MODULE)
+                                new Expect(Tokens.MODULE)
                         ),
                         new WhiteSpace(MAYBE),
                         FTParsers.dottedCapVar("Module name", Elements.MODULE_NAME),

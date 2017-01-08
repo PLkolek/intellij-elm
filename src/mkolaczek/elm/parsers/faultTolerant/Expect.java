@@ -9,12 +9,12 @@ import java.util.Set;
 
 public class Expect extends FTParserAbstr {
 
-    protected Expect(String name, Token expectedToken) {
-        this(name, expectedToken, null);
+    protected Expect(Token expectedToken) {
+        this(expectedToken, null);
     }
 
-    public Expect(String name, Token expectedToken, Element as) {
-        super(name, ImmutableSet.of(expectedToken), false, as);
+    public Expect(Token expectedToken, Element as) {
+        super(expectedToken.getName(), ImmutableSet.of(expectedToken), false, as);
     }
 
     @Override

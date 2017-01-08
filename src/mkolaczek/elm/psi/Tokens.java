@@ -8,43 +8,43 @@ import java.util.function.Predicate;
 
 public class Tokens {
 
-    public static final Token PORT = new Token("PORT");
-    public static final Token EFFECT = new Token("EFFECT");
-    public static final Token MODULE = new Token("MODULE_NODE");
-    public static final Token IMPORT = new Token("IMPORT");
-    public static final Token AS = new Token("AS");
-    public static final Token EXPOSING = new Token("EXPOSING");
-    public static final Token OPEN_LISTING = new Token("OPEN_LISTING");
+    public static final Token PORT = new Token("port");
+    public static final Token EFFECT = new Token("effect");
+    public static final Token MODULE = new Token("module");
+    public static final Token IMPORT = new Token("import");
+    public static final Token AS = new Token("as");
+    public static final Token EXPOSING = new Token("exposing");
+    public static final Token OPEN_LISTING = new Token("..");
 
-    public static final Token ALIAS = new Token("ALIAS");
-    public static final Token ARROW = new Token("ARROW");
+    public static final Token ALIAS = new Token("alias");
+    public static final Token ARROW = new Token("->");
 
 
-    public static final Token BEGIN_COMMENT = new Token("BEGIN_COMMENT");
-    public static final Token BEGIN_DOC_COMMENT = new Token("BEGIN_DOC_COMMENT");
-    public static final Token END_COMMENT = new Token("END_COMMENT");
-    public static final Token END_DOC_COMMENT = new Token("END_DOC_COMMENT");
-    public static final Token COMMENT = new Token("COMMENT");
-    public static final Token COMMENT_CONTENT = new Token("COMMENT_CONTENT");
+    public static final Token BEGIN_COMMENT = new Token("{-");
+    public static final Token BEGIN_DOC_COMMENT = new Token("{-|");
+    public static final Token END_COMMENT = new Token("END_COMMENT", "-}");
+    public static final Token END_DOC_COMMENT = new Token("END_DOC_COMMENT", "-}");
+    public static final Token COMMENT = new Token("--");
+    public static final Token COMMENT_CONTENT = new Token("comment content");
 
-    public static final Token NEW_LINE = new Token("NEW_LINE");
+    public static final Token NEW_LINE = new Token("new line");
 
-    public static final Token LBRACKET = new Token("LBRACKET");
-    public static final Token RBRACKET = new Token("RBRACKET");
-    public static final Token LPAREN = new Token("LPAREN");
-    public static final Token RPAREN = new Token("RPAREN");
+    public static final Token LBRACKET = new Token("{");
+    public static final Token RBRACKET = new Token("}");
+    public static final Token LPAREN = new Token("(");
+    public static final Token RPAREN = new Token(")");
 
-    public static final Token CAP_VAR = new Token("CAP_VAR");
-    public static final Token LOW_VAR = new Token("LOW_VAR");
-    public static final Token COLON = new Token("COLON");
-    public static final Token COMMA = new Token("COMMA");
-    public static final Token COMMA_OP = new Token("COMMA_OP");
-    public static final Token DOT = new Token("DOT");
-    public static final Token EQUALS = new Token("EQUALS");
-    public static final Token OR = new Token("OR");
-    public static final Token SYM_OP = new Token("SYM_OP");
-    public static final Token TYPE = new Token("TYPE");
-    public static final Token WHERE = new Token("WHERE");
+    public static final Token CAP_VAR = new Token("CAP_VAR", "uppercase identifier");
+    public static final Token LOW_VAR = new Token("LOW_VAR", "lowercase identifier");
+    public static final Token COLON = new Token(":");
+    public static final Token COMMA = new Token(",");
+    public static final Token COMMA_OP = new Token("COMMA_OP", "operator consisting of commas");
+    public static final Token DOT = new Token(".");
+    public static final Token EQUALS = new Token("=");
+    public static final Token OR = new Token("|");
+    public static final Token SYM_OP = new Token("SYM_OP", "operator consisting of symbols");
+    public static final Token TYPE = new Token("type");
+    public static final Token WHERE = new Token("where");
 
 
     public static final TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR);

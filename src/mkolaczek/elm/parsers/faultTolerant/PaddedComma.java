@@ -13,7 +13,7 @@ public class PaddedComma extends FTParserAbstr {
 
     protected PaddedComma() {
         super(",", Sets.newHashSet(Tokens.COMMA), false, null);
-        this.padded = new Padded(new Expect(",", Tokens.COMMA));
+        this.padded = new Padded(new Expect(Tokens.COMMA));
     }
 
     @Override
