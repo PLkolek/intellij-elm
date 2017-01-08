@@ -6,6 +6,7 @@ import mkolaczek.elm.psi.Tokens;
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expectAs;
 import static mkolaczek.elm.parsers.faultTolerant.Or.or;
+import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequenceAs;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
@@ -24,7 +25,19 @@ public class FTBasic {
     public static FTParser listingContent(String name, FTParser listedValue) {
         return or(name,
                 expectAs(Tokens.OPEN_LISTING, Elements.OPEN_LISTING_NODE),
-                new ListingValues(listedValue)
+                listingValues(listedValue)
+        );
+    }
+
+    public static FTParser listingValues(FTParser listedValue) {
+        return sequence("listing values",
+                listedValue,
+                new Many("more listing values",
+                        sequence("more listing values",
+                                new PaddedComma(),
+                                listedValue
+                        )
+                )
         );
     }
 
