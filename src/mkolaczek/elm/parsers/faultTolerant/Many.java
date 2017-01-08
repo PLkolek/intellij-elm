@@ -5,12 +5,18 @@ import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
 
+import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
+
 public class Many extends FTParserAbstr {
 
     private final FTParser parser;
 
     public static Many many(String name, FTParser parser) {
         return new Many(name, parser);
+    }
+
+    public static Many many(String name, FTParser... parsers) {
+        return new Many(name, sequence(name, parsers));
     }
 
     private Many(String name, FTParser parser) {

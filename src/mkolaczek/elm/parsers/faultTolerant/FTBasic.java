@@ -34,12 +34,11 @@ public class FTBasic {
         return sequence("listing values",
                 listedValue,
                 many("more listing values",
-                        sequence("more listing values",
-                                new PaddedComma(),
-                                listedValue
-                        )
+                        new PaddedComma(),
+                        listedValue
                 )
         );
     }
+
 
 }
