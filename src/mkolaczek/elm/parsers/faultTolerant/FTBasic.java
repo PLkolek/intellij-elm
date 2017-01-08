@@ -5,6 +5,7 @@ import mkolaczek.elm.psi.Tokens;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expectAs;
+import static mkolaczek.elm.parsers.faultTolerant.Many.many;
 import static mkolaczek.elm.parsers.faultTolerant.Or.or;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequenceAs;
@@ -32,7 +33,7 @@ public class FTBasic {
     public static FTParser listingValues(FTParser listedValue) {
         return sequence("listing values",
                 listedValue,
-                new Many("more listing values",
+                many("more listing values",
                         sequence("more listing values",
                                 new PaddedComma(),
                                 listedValue

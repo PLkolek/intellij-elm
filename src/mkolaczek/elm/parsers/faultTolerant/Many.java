@@ -9,7 +9,11 @@ public class Many extends FTParserAbstr {
 
     private final FTParser parser;
 
-    protected Many(String name, FTParser parser) {
+    public static Many many(String name, FTParser parser) {
+        return new Many(name, parser);
+    }
+
+    private Many(String name, FTParser parser) {
         super(name, parser.startingTokens(), true, null);
         this.parser = parser;
     }
