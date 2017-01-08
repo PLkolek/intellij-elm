@@ -32,7 +32,7 @@ public class Module {
         );
         if (!result) {
             OnError.consumeUntil(builder, Tokens.NEW_LINE);
-            m.done(Elements.IMPORT_2);
+            m.done(Elements.IMPORT_LINE);
             return false;
         }
         PsiBuilder.Marker m2 = builder.mark();
@@ -45,7 +45,7 @@ public class Module {
                     Whitespace::maybeWhitespace,
                     Combinators.expectAs(Elements.MODULE_ALIAS, CAP_VAR))) {
                 OnError.consumeUntil(builder, Tokens.NEW_LINE);
-                m.done(Elements.IMPORT_2);
+                m.done(Elements.IMPORT_LINE);
                 return false;
             }
         } else {
@@ -61,13 +61,13 @@ public class Module {
 
             if (!exposing().apply(builder)) {
                 OnError.consumeUntil(builder, Tokens.NEW_LINE);
-                m.done(Elements.IMPORT_2);
+                m.done(Elements.IMPORT_LINE);
                 return false;
             }
         }
 
         boolean success = Whitespace.freshLine(builder);
-        m.done(Elements.IMPORT_2);
+        m.done(Elements.IMPORT_LINE);
         return success;
     }
 

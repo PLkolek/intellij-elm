@@ -14,8 +14,18 @@ public class FTModule {
         return sequenceAs("exposing list", Elements.EXPOSING_NODE,
                 expect(Tokens.EXPOSING),
                 maybeWhitespace(),
-                listing("list of exposed values", expect(Tokens.LOW_VAR)));
+                listing("list of exposed values", exportValue()));
 
+    }
+
+    private static FTParser exportValue() {
+        return Or.orAs(Elements.EXPORTED_VALUE,
+                expect(Tokens.LOW_VAR)
+        );
+        /*Parser parser = Combinators.orAs(Elements.EXPORTED_VALUE,
+                Combinators.expect(Tokens.LOW_VAR),
+                Basic.operator(),
+                Module.typeExport());*/
     }
 
 

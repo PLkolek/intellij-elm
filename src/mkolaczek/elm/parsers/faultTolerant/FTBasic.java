@@ -54,7 +54,6 @@ public class FTBasic {
         );
     }
 
-
     public static FTParser dottedCapVar(String name, Element as) {
         return sequenceAs(name, as,
                 expect(Tokens.CAP_VAR),
