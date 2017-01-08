@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 public class Whitespace {
 
     public static boolean forcedWS(@NotNull PsiBuilder builder) {
-        Comment.comments(builder);
 
         char lastChar = builder.getOriginalText().charAt(builder.getCurrentOffset() - 1);
         if (lastChar != ' ' && lastChar != '\t') {
@@ -20,7 +19,6 @@ public class Whitespace {
     }
 
     public static boolean freshLine(@NotNull PsiBuilder builder) {
-        Comment.comments(builder);
         if (!isFreshLine(builder)) {
             builder.error("Fresh line expected");
         }
@@ -33,7 +31,6 @@ public class Whitespace {
     }
 
     public static boolean maybeWhitespace(PsiBuilder builder) {
-        Comment.comments(builder);
         if (builder.getOriginalText().charAt(builder.getCurrentOffset() - 1) == '\n') {
             builder.error("Whitespace expected");
         }

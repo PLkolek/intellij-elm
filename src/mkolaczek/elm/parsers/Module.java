@@ -2,6 +2,7 @@ package mkolaczek.elm.parsers;
 
 import com.google.common.collect.ImmutableSet;
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.faultTolerant.ModuleDeclaration;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,7 @@ public class Module {
     public static void module(@NotNull PsiBuilder builder) {
         Whitespace.freshLine(builder);
         simpleTry(builder, Module::moduleDeclaration);
+        new ModuleDeclaration().parse(builder);
         simpleTry(builder, sequence(Comment.docComment(), Whitespace::freshLine));
         simpleManyAs(builder, Elements.IMPORTS, Module::importLine);
     }

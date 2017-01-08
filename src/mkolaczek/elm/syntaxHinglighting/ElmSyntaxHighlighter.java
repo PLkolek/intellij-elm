@@ -53,7 +53,7 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
         if (KEYWORDS.contains(tokenType)) {
             return KEY_KEYS;
         }
-        if (tokenType == Tokens.COMMENT_CONTENT || tokenType == Tokens.COMMENT) {
+        if (Tokens.COMMENT_TOKENS.contains(tokenType)) {
             return COMMENT_KEYS;
         }
         return EMPTY_KEYS;

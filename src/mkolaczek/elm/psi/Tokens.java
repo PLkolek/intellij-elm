@@ -23,6 +23,7 @@ public class Tokens {
     public static final Token BEGIN_COMMENT = new Token("BEGIN_COMMENT");
     public static final Token BEGIN_DOC_COMMENT = new Token("BEGIN_DOC_COMMENT");
     public static final Token END_COMMENT = new Token("END_COMMENT");
+    public static final Token END_DOC_COMMENT = new Token("END_DOC_COMMENT");
     public static final Token COMMENT = new Token("COMMENT");
     public static final Token COMMENT_CONTENT = new Token("COMMENT_CONTENT");
 
@@ -47,7 +48,7 @@ public class Tokens {
 
 
     public static final TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR);
-    public static final TokenSet COMMENT_TOKENS = TokenSet.create(COMMENT_CONTENT);
+    public static final TokenSet COMMENT_TOKENS = TokenSet.create(COMMENT_CONTENT, BEGIN_COMMENT, END_COMMENT, COMMENT);
 
     public static boolean is(Token compared, Token... expected) {
         return Sets.newHashSet(expected).contains(compared);

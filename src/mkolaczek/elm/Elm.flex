@@ -1,6 +1,6 @@
 package mkolaczek.elm;
 import com.intellij.lexer.*;
-import static mkolaczek.elm.psi.ElmTokenTypes.*;
+import static mkolaczek.elm.psi.Tokens.*;
 import java.util.LinkedList;
 import com.intellij.psi.TokenType;
 
@@ -45,6 +45,7 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
         ) | "`" )
 
 %state INCOMMENT
+%state DOCCOMMENT
 %state INLINECOMMENT
 
 %%
@@ -70,7 +71,7 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   "|"               { return OR; }
   "."               { return DOT; }
   ":"               { return COLON; }
-  "{-|"             { yypushstate(INCOMMENT); return BEGIN_DOC_COMMENT;}
+  "{-|"             { yypushstate(DOCCOMMENT); return BEGIN_DOC_COMMENT;}
   "{-"              { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
   {WS}+             { return TokenType.WHITE_SPACE; }
   {CAP_VAR}         { return CAP_VAR; }
@@ -79,6 +80,16 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   {SYMBOL}+         { return SYM_OP; }
   [^]               { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
+
+<DOCCOMMENT> {
+    "{-"            { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
+    "-}"            { yypopstate(); return END_DOC_COMMENT; }
+    {CLRF}          { return TokenType.WHITE_SPACE; }
+    [^\-\}\{\r\n]*  { return COMMENT_CONTENT; }
+    [\-\{\}]        { return COMMENT_CONTENT; }
+    [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+}
+
 
 <INCOMMENT> {
     "{-"            { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
