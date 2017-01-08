@@ -3,17 +3,17 @@ package mkolaczek.elm.parsers.faultTolerant;
 import mkolaczek.elm.psi.Tokens;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
-import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.Type.MAYBE;
+import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
 
 public class FTBasic {
 
     public static FTParser listing(String name, FTParser listedValue) {
         return new Sequence(name,
-                new WhiteSpace(MAYBE),
+                maybeWhitespace(),
                 expect(Tokens.LPAREN),
-                new WhiteSpace(MAYBE),
+                maybeWhitespace(),
                 new ListingContent(name + " content", listedValue),
-                new WhiteSpace(MAYBE),
+                maybeWhitespace(),
                 expect(Tokens.RPAREN)
         );
     }

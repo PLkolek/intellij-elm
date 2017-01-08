@@ -21,6 +21,22 @@ public class WhiteSpace implements FTParser {
     private Set<Token> nextTokens;
     private final Type type;
 
+    public static WhiteSpace maybeWhitespace() {
+        return new WhiteSpace(Type.MAYBE);
+    }
+
+    public static WhiteSpace freshLine() {
+        return new WhiteSpace(Type.FRESH_LINE);
+    }
+
+    public static WhiteSpace forcedWhitespace() {
+        return new WhiteSpace(Type.FORCED);
+    }
+
+    public static WhiteSpace noWhitespace() {
+        return new WhiteSpace(Type.NO);
+    }
+
     public WhiteSpace(Type type) {
         this.type = type;
     }

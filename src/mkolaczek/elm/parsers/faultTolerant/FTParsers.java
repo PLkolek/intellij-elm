@@ -4,7 +4,7 @@ import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Tokens;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
-import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.Type.NO;
+import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.noWhitespace;
 
 public class FTParsers {
     public static FTParser dottedCapVar(String name, Element moduleName) {
@@ -12,9 +12,9 @@ public class FTParsers {
                 expect(Tokens.CAP_VAR),
                 new Many(name + " parts",
                         new Sequence(name + " part",
-                                new WhiteSpace(NO),
+                                noWhitespace(),
                                 expect(Tokens.DOT),
-                                new WhiteSpace(NO),
+                                noWhitespace(),
                                 expect(Tokens.CAP_VAR)
                         )
                 )

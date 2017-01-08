@@ -10,8 +10,8 @@ import mkolaczek.elm.psi.Tokens;
 import java.util.Set;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
-import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.Type.FRESH_LINE;
-import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.Type.MAYBE;
+import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.freshLine;
+import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
 
 public class ModuleDeclaration extends FTParserAbstr {
 
@@ -26,21 +26,21 @@ public class ModuleDeclaration extends FTParserAbstr {
                         new Or("Module declaration keywords",
                                 new Sequence("Effect module declaration keywords",
                                         expect(Tokens.EFFECT),
-                                        new WhiteSpace(MAYBE),
+                                        maybeWhitespace(),
                                         expect(Tokens.MODULE)
                                 ),
                                 new Sequence("Port module declaration keywords",
                                         expect(Tokens.EFFECT),
-                                        new WhiteSpace(MAYBE),
+                                        maybeWhitespace(),
                                         expect(Tokens.MODULE)
                                 ),
                                 expect(Tokens.MODULE)
                         ),
-                        new WhiteSpace(MAYBE),
+                        maybeWhitespace(),
                         FTParsers.dottedCapVar("Module name", Elements.MODULE_NAME),
-                        new WhiteSpace(MAYBE),
+                        maybeWhitespace(),
                         new Exposing(),
-                        new WhiteSpace(FRESH_LINE)
+                        freshLine()
                 );
         sequence.computeNextTokens(Sets.newHashSet(Tokens.BEGIN_DOC_COMMENT, Tokens.IMPORT));
     }
