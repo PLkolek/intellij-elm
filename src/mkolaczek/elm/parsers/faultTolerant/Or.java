@@ -10,7 +10,11 @@ public class Or extends FTParserAbstr {
 
     private final FTParser[] parsers;
 
-    protected Or(String name, FTParser... parsers) {
+    public static Or or(String name, FTParser... parsers) {
+        return new Or(name, parsers);
+    }
+
+    private Or(String name, FTParser... parsers) {
         super(name, startingTokens(parsers), false, null);
         this.parsers = parsers;
     }

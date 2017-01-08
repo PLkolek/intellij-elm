@@ -10,6 +10,7 @@ import mkolaczek.elm.psi.Tokens;
 import java.util.Set;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
+import static mkolaczek.elm.parsers.faultTolerant.Or.or;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.freshLine;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
@@ -24,7 +25,7 @@ public class ModuleDeclaration extends FTParserAbstr {
                 true, Elements.MODULE_HEADER);
         this.sequence =
                 sequence(name,
-                        new Or("Module declaration keywords",
+                        or("Module declaration keywords",
                                 sequence("Effect module declaration keywords",
                                         expect(Tokens.EFFECT),
                                         maybeWhitespace(),
@@ -45,6 +46,7 @@ public class ModuleDeclaration extends FTParserAbstr {
                 );
         sequence.computeNextTokens(Sets.newHashSet(Tokens.BEGIN_DOC_COMMENT, Tokens.IMPORT));
     }
+
 
     @Override
     protected void parse2(PsiBuilder builder) {
