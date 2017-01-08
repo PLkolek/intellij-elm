@@ -34,9 +34,21 @@ public class FTBasic {
         return sequence("listing values",
                 listedValue,
                 many("more listing values",
-                        new PaddedComma(),
+                        paddedComma(),
                         listedValue
                 )
+        );
+    }
+
+    private static FTParser paddedComma() {
+        return padded(expect(Tokens.COMMA));
+    }
+
+    private static FTParser padded(FTParser paddedValue) {
+        return sequence(paddedValue.name(),
+                maybeWhitespace(),
+                paddedValue,
+                maybeWhitespace()
         );
     }
 
