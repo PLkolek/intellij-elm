@@ -1,5 +1,6 @@
 package mkolaczek.elm.parsers.faultTolerant;
 
+import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 
@@ -10,6 +11,7 @@ import static mkolaczek.elm.parsers.faultTolerant.Or.or;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequenceAs;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
+import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.noWhitespace;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
 import static mkolaczek.elm.psi.Tokens.RPAREN;
 
@@ -53,4 +55,15 @@ public class FTBasic {
     }
 
 
+    public static FTParser dottedCapVar(String name, Element as) {
+        return sequenceAs(name, as,
+                expect(Tokens.CAP_VAR),
+                many(name + " parts",
+                        noWhitespace(),
+                        expect(Tokens.DOT),
+                        noWhitespace(),
+                        expect(Tokens.CAP_VAR)
+                )
+        );
+    }
 }
