@@ -15,7 +15,36 @@ import java.util.Set;
 public class WhiteSpace implements FTParser {
 
     public enum Type {
-        MAYBE, FORCED, FRESH_LINE, NO
+        MAYBE("Whitespace") {
+            @Override
+            boolean accepts(PsiBuilder builder) {
+                return lastChar(builder) != '\n';
+            }
+        },
+        FORCED("Forced WS") {
+            @Override
+            boolean accepts(PsiBuilder builder) {
+                return lastChar(builder) == ' ' || lastChar(builder) == '\t';
+            }
+        }, FRESH_LINE("Fresh line") {
+            @Override
+            boolean accepts(PsiBuilder builder) {
+                return Whitespace.isFreshLine(builder);
+            }
+        }, NO("No whitespace") {
+            @Override
+            boolean accepts(PsiBuilder builder) {
+                return !Character.isWhitespace(lastChar(builder));
+            }
+        };
+
+        private final String name;
+
+        Type(String name) {
+            this.name = name;
+        }
+
+        abstract boolean accepts(PsiBuilder builder);
     }
 
     private Set<Token> nextTokens;
@@ -43,33 +72,13 @@ public class WhiteSpace implements FTParser {
 
     @Override
     public boolean parse(PsiBuilder builder) {
-        switch (type) {
-            case NO:
-                if (Character.isWhitespace(lastChar(builder))) {
-                    error(builder);
-                }
-                break;
-            case MAYBE:
-                if (lastChar(builder) == '\n') {
-                    error(builder);
-                }
-                break;
-            case FRESH_LINE:
-                if (!Whitespace.isFreshLine(builder)) {
-                    error(builder);
-                }
-                break;
-            case FORCED:
-                char lastChar = lastChar(builder);
-                if (lastChar != ' ' && lastChar != '\t') {
-                    error(builder);
-                }
-                break;
+        if (!type.accepts(builder)) {
+            error(builder);
         }
         return true;
     }
 
-    private char lastChar(PsiBuilder builder) {
+    private static char lastChar(PsiBuilder builder) {
         return builder.getOriginalText().charAt(builder.getCurrentOffset() - 1);
     }
 
@@ -89,17 +98,7 @@ public class WhiteSpace implements FTParser {
 
     @Override
     public String name() {
-        switch (type) {
-            case MAYBE:
-                return "Whitespace";
-            case FORCED:
-                return "Forced WS";
-            case FRESH_LINE:
-                return "Fresh line";
-            case NO:
-                return "No whitespace";
-        }
-        throw new IllegalStateException("Unsupported type: " + type);
+        return type.name;
     }
 
     @Override
