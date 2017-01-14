@@ -40,7 +40,7 @@ public abstract class FTParserAbstr implements FTParser {
     @Override
     public boolean parse(PsiBuilder psiBuilder) {
         //noinspection SuspiciousMethodCalls
-        if (!startingTokens.contains(psiBuilder.getTokenType())) {
+        if (psiBuilder.eof() || !startingTokens.contains(psiBuilder.getTokenType())) {
             return isOptional;
         }
         PsiBuilder.Marker marker = as != null ? psiBuilder.mark() : null;

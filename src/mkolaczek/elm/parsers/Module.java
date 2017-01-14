@@ -14,7 +14,6 @@ import static mkolaczek.elm.psi.Tokens.CAP_VAR;
 public class Module {
     public static void module(@NotNull PsiBuilder builder) {
         Whitespace.freshLine(builder);
-        simpleTry(builder, Module::moduleDeclaration);
         new ModuleDeclaration().parse(builder);
         simpleTry(builder, sequence(Comment.docComment(), Whitespace::freshLine));
         simpleManyAs(builder, Elements.IMPORTS, Module::importLine);

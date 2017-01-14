@@ -13,12 +13,13 @@ import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
 import static mkolaczek.elm.parsers.faultTolerant.FTModule.exposing;
 import static mkolaczek.elm.parsers.faultTolerant.Or.or;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
+import static mkolaczek.elm.parsers.faultTolerant.Try.tryP;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.freshLine;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
 
 public class ModuleDeclaration extends FTParserAbstr {
 
-    private final Or or;
+    private final FTParser myParser;
 
     public ModuleDeclaration() {
         super("Module declaration",
@@ -41,13 +42,8 @@ public class ModuleDeclaration extends FTParserAbstr {
         Sequence sequence =
                 sequence(name,
                         or("Module declaration keywords",
-                                sequence("Effect module declaration keywords",
-                                        expect(Tokens.EFFECT),
-                                        maybeWhitespace(),
-                                        expect(Tokens.MODULE)
-                                ),
                                 sequence("Port module declaration keywords",
-                                        expect(Tokens.EFFECT),
+                                        expect(Tokens.PORT),
                                         maybeWhitespace(),
                                         expect(Tokens.MODULE)
                                 ),
@@ -59,19 +55,19 @@ public class ModuleDeclaration extends FTParserAbstr {
                         exposing(),
                         freshLine()
                 );
-        this.or = or("Module declaration", effectSequence, sequence);
+        this.myParser = tryP(or("Module declaration", effectSequence, sequence));
 
-        or.computeNextTokens(Sets.newHashSet(Tokens.BEGIN_DOC_COMMENT, Tokens.IMPORT));
+        myParser.computeNextTokens(Sets.newHashSet(Tokens.BEGIN_DOC_COMMENT, Tokens.IMPORT));
     }
 
 
     @Override
     protected void parse2(PsiBuilder builder) {
-        or.parse(builder);
+        myParser.parse(builder);
     }
 
     @Override
     protected void computeNextTokens2(Set<Token> myNextTokens) {
-        or.computeNextTokens(myNextTokens);
+        myParser.computeNextTokens(myNextTokens);
     }
 }

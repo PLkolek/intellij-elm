@@ -1,1 +1,1 @@
-module<EOLError descr="MODULE_NAME expected"></EOLError>
+module<EOLError descr="module name expected"></EOLError><EOLError descr="exposing expected"></EOLError><EOLError descr="Fresh line expected"></EOLError>
