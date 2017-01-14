@@ -31,10 +31,6 @@ public class Basic {
         };
     }
 
-    private static boolean operatorSymbol(PsiBuilder builder) {
-        return Combinators.simpleOr(builder, Tokens.SYM_OP, Tokens.COMMA_OP);
-    }
-
     private static boolean dottedCapVar(@NotNull PsiBuilder builder, @NotNull IElementType type) {
         if (builder.getTokenType() != Tokens.CAP_VAR) {
             return false;

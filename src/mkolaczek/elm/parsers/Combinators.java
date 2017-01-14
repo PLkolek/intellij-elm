@@ -17,16 +17,6 @@ public class Combinators {
         return (builder -> simpleSequence(builder, parsers));
     }
 
-    public static Parser sequenceAs(IElementType name, Parser... parsers) {
-        return (builder -> {
-            Marker marker = builder.mark();
-            boolean result = simpleSequence(builder, parsers);
-            endAs(marker, name);
-            return result;
-        });
-
-    }
-
     public static boolean simpleSequence(PsiBuilder builder, Parser... parsers) {
         for (Parser parser : parsers) {
             if (!parser.apply(builder)) {
@@ -72,10 +62,6 @@ public class Combinators {
         }
         return true;
 
-    }
-
-    public static NamedParser expectAs(IElementType name, IElementType... tokens) {
-        return NamedParser.of(name.toString(), builder -> simpleExpectAs(builder, name, tokens));
     }
 
     public static NamedParser expect(IElementType... tokens) {
@@ -135,17 +121,6 @@ public class Combinators {
         start.drop();
         String expected = Arrays.stream(parsers).map(NamedParser::name).collect(joining(", "));
         builder.error(expected + " expected in OR");
-        return false;
-    }
-
-    public static boolean simpleOr(PsiBuilder builder, IElementType... tokens) {
-        for (IElementType token : tokens) {
-            if (builder.getTokenType() == token) {
-                builder.advanceLexer();
-                return true;
-            }
-        }
-        builder.error("Someting expected in simpleOR");
         return false;
     }
 
