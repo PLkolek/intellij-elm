@@ -10,8 +10,10 @@ import mkolaczek.elm.psi.Tokens;
 import java.util.Set;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
+import static mkolaczek.elm.parsers.faultTolerant.FTBasic.dottedCapVar;
 import static mkolaczek.elm.parsers.faultTolerant.FTModule.exposing;
 import static mkolaczek.elm.parsers.faultTolerant.Or.or;
+import static mkolaczek.elm.parsers.faultTolerant.Or.orAs;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.Try.tryP;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.freshLine;
@@ -23,15 +25,25 @@ public class ModuleDeclaration extends FTParserAbstr {
 
     public ModuleDeclaration() {
         super("Module declaration",
-                ImmutableSet.of(Tokens.MODULE, Tokens.PORT, Tokens.EFFECT),
-                true, Elements.MODULE_HEADER);
+                ImmutableSet.of(Tokens.MODULE, Tokens.PORT, Tokens.EFFECT, Tokens.IMPORT),
+                true, null);
+        this.myParser =
+                sequence("Module Header",
+                        moduleDeclaration(),
+                        Many.manyAs(Elements.IMPORTS, FTModule.importLine())
+                );
+        myParser.computeNextTokens(Sets.newHashSet());
+    }
+
+    private static FTParser moduleDeclaration() {
         Sequence effectSequence =
-                sequence(name,
+
+                sequence("Module declaration",
                         expect(Tokens.EFFECT),
                         maybeWhitespace(),
                         expect(Tokens.MODULE),
                         maybeWhitespace(),
-                        FTBasic.dottedCapVar("Module name", Elements.MODULE_NAME),
+                        dottedCapVar(Elements.MODULE_NAME),
                         maybeWhitespace(),
                         FTModule.settings(),
                         maybeWhitespace(),
@@ -40,7 +52,7 @@ public class ModuleDeclaration extends FTParserAbstr {
                 );
 
         Sequence sequence =
-                sequence(name,
+                sequence("Module declaration",
                         or("Module declaration keywords",
                                 sequence("Port module declaration keywords",
                                         expect(Tokens.PORT),
@@ -50,14 +62,12 @@ public class ModuleDeclaration extends FTParserAbstr {
                                 expect(Tokens.MODULE)
                         ),
                         maybeWhitespace(),
-                        FTBasic.dottedCapVar("Module name", Elements.MODULE_NAME),
+                        dottedCapVar(Elements.MODULE_NAME),
                         maybeWhitespace(),
                         exposing(),
                         freshLine()
                 );
-        this.myParser = tryP(or("Module declaration", effectSequence, sequence));
-
-        myParser.computeNextTokens(Sets.newHashSet(Tokens.BEGIN_DOC_COMMENT, Tokens.IMPORT));
+        return tryP(orAs(Elements.MODULE_HEADER, effectSequence, sequence));
     }
 
 

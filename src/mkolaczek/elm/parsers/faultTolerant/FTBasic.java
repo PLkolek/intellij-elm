@@ -59,10 +59,10 @@ public class FTBasic {
         );
     }
 
-    public static FTParser dottedCapVar(String name, Element as) {
+    public static FTParser dottedCapVar(Element as) {
         return sequenceAs(as,
                 expect(Tokens.CAP_VAR),
-                many(name + " parts",
+                many(as.getName() + " parts",
                         noWhitespace(),
                         expect(Tokens.DOT),
                         noWhitespace(),

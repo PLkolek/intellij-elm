@@ -1,6 +1,7 @@
 package mkolaczek.elm.parsers.faultTolerant;
 
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
@@ -12,18 +13,22 @@ public class Many extends FTParserAbstr {
     private final FTParser parser;
 
     public static Many many(String name, FTParser parser) {
-        return new Many(name, parser);
+        return new Many(name, null, parser);
     }
 
     public static Many many(String name, FTParser... parsers) {
-        return new Many(name, sequence(name, parsers));
+        return new Many(name, null, sequence(name, parsers));
     }
 
-    private Many(String name, FTParser parser) {
-        super(name, parser.startingTokens(), true, null);
+    public static Many manyAs(Element as, FTParser parser) {
+        return new Many(as.getName(), as, parser);
+    }
+
+
+    private Many(String name, Element as, FTParser parser) {
+        super(name, parser.startingTokens(), true, as);
         this.parser = parser;
     }
-
 
     @Override
     protected void parse2(PsiBuilder builder) {

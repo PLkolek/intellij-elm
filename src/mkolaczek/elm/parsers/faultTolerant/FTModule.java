@@ -4,13 +4,40 @@ import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
+import static mkolaczek.elm.parsers.faultTolerant.Expect.expectAs;
 import static mkolaczek.elm.parsers.faultTolerant.FTBasic.*;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequenceAs;
+import static mkolaczek.elm.parsers.faultTolerant.Try.tryP;
+import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.freshLine;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
+import static mkolaczek.elm.psi.Elements.MODULE_ALIAS;
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
 
 public class FTModule {
+
+    public static FTParser importLine() {
+        return sequenceAs(Elements.IMPORT_LINE,
+                expect(Tokens.IMPORT),
+                maybeWhitespace(),
+                dottedCapVar(Elements.MODULE_NAME_REF),
+                tryP(
+                        sequence("as clause",
+                                maybeWhitespace(),
+                                expect(Tokens.AS),
+                                maybeWhitespace(),
+                                expectAs(CAP_VAR, MODULE_ALIAS)
+                        )
+                ),
+                tryP(
+                        sequence("exposing clause",
+                                maybeWhitespace(),
+                                exposing()
+                        )
+                ),
+                freshLine()
+        );
+    }
 
     public static FTParser exposing() {
         return sequenceAs(Elements.EXPOSING_NODE,
@@ -31,7 +58,9 @@ public class FTModule {
     private static FTParser typeExport() {
         return sequence("exported type",
                 expect(CAP_VAR),
-                listing("type constructors", expect(CAP_VAR))
+                tryP(
+                        listing("type constructors", expect(CAP_VAR))
+                )
         );
     }
 
