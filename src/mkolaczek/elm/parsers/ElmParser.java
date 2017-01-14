@@ -5,6 +5,7 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.parsers.faultTolerant.ModuleDeclaration;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,7 @@ public class ElmParser implements PsiParser {
     }
 
     private void program(@NotNull PsiBuilder builder) {
-        Module.module(builder);
+        new ModuleDeclaration().parse(builder);
         declarations(builder);
     }
 
