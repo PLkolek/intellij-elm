@@ -4,8 +4,7 @@ import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
-import static mkolaczek.elm.parsers.faultTolerant.FTBasic.listing;
-import static mkolaczek.elm.parsers.faultTolerant.FTBasic.operator;
+import static mkolaczek.elm.parsers.faultTolerant.FTBasic.*;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequenceAs;
 import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
@@ -37,4 +36,23 @@ public class FTModule {
     }
 
 
+    public static FTParser settings() {
+        return sequenceAs(Elements.EFFECT_MODULE_SETTINGS,
+                expect(Tokens.WHERE),
+                maybeWhitespace(),
+                settingsList()
+        );
+    }
+
+    private static FTParser settingsList() {
+        return FTBasic.bracketsAs(Elements.EFFECT_MODULE_SETTINGS_LIST,
+                commaSep(
+                        sequenceAs(Elements.EFFECT_MODULE_SETTING,
+                                expect(Tokens.LOW_VAR),
+                                padded(expect(Tokens.EQUALS)),
+                                expect(Tokens.CAP_VAR)
+                        )
+                )
+        );
+    }
 }

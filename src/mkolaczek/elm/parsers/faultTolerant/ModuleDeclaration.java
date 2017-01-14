@@ -18,13 +18,27 @@ import static mkolaczek.elm.parsers.faultTolerant.WhiteSpace.maybeWhitespace;
 
 public class ModuleDeclaration extends FTParserAbstr {
 
-    private final Sequence sequence;
+    private final Or or;
 
     public ModuleDeclaration() {
         super("Module declaration",
                 ImmutableSet.of(Tokens.MODULE, Tokens.PORT, Tokens.EFFECT),
                 true, Elements.MODULE_HEADER);
-        this.sequence =
+        Sequence effectSequence =
+                sequence(name,
+                        expect(Tokens.EFFECT),
+                        maybeWhitespace(),
+                        expect(Tokens.MODULE),
+                        maybeWhitespace(),
+                        FTBasic.dottedCapVar("Module name", Elements.MODULE_NAME),
+                        maybeWhitespace(),
+                        FTModule.settings(),
+                        maybeWhitespace(),
+                        exposing(),
+                        freshLine()
+                );
+
+        Sequence sequence =
                 sequence(name,
                         or("Module declaration keywords",
                                 sequence("Effect module declaration keywords",
@@ -45,35 +59,19 @@ public class ModuleDeclaration extends FTParserAbstr {
                         exposing(),
                         freshLine()
                 );
-        sequence.computeNextTokens(Sets.newHashSet(Tokens.BEGIN_DOC_COMMENT, Tokens.IMPORT));
+        this.or = or("Module declaration", effectSequence, sequence);
+
+        or.computeNextTokens(Sets.newHashSet(Tokens.BEGIN_DOC_COMMENT, Tokens.IMPORT));
     }
 
 
     @Override
     protected void parse2(PsiBuilder builder) {
-        sequence.parse(builder);
-      /*  Marker marker = builder.mark();
-        boolean isEffectModule = builder.getTokenType() == Tokens.EFFECT;
-        sequence(name, nextTokens,
-                new Or("Module declaration keywords", )
-                Combinators.or(
-                        expect(Tokens.EFFECT, Tokens.MODULE),
-                        expect(Tokens.PORT, Tokens.MODULE),
-                        expect(Tokens.MODULE)),
-                Whitespace::maybeWhitespace,
-                Combinators.skipUntilFL(Basic.dottedCapVar(Elements.MODULE_NAME)),
-                Whitespace::maybeWhitespace,
-                isEffectModule ? Combinators.skipUntilFL(settings(), Tokens.EXPOSING) : empty(),
-                Whitespace::maybeWhitespace,
-                exposing(),
-                Whitespace::freshLine
-        );
-        marker.done(Elements.MODULE_HEADER);
-        return true;*/
+        or.parse(builder);
     }
 
     @Override
     protected void computeNextTokens2(Set<Token> myNextTokens) {
-        sequence.computeNextTokens(myNextTokens);
+        or.computeNextTokens(myNextTokens);
     }
 }

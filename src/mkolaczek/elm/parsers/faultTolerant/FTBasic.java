@@ -2,6 +2,7 @@ package mkolaczek.elm.parsers.faultTolerant;
 
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Elements;
+import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
@@ -46,7 +47,11 @@ public class FTBasic {
         return padded(expect(Tokens.COMMA));
     }
 
-    private static FTParser padded(FTParser paddedValue) {
+    public static FTParser padded(Token paddedToken) {
+        return padded(expect(paddedToken));
+    }
+
+    public static FTParser padded(FTParser paddedValue) {
         return sequence(paddedValue.name(),
                 maybeWhitespace(),
                 paddedValue,
@@ -76,5 +81,29 @@ public class FTBasic {
 
     private static FTParser operatorSymbol() {
         return or("operator symbol", expect(Tokens.SYM_OP), expect(Tokens.COMMA_OP));
+    }
+
+    public static FTParser commaSep(FTParser parser) {
+        return Try.tryP(
+                sequence(String.format("comma separated list of %ss", parser.name()),
+                        parser,
+                        many(String.format("more %ss", parser.name()),
+                                paddedComma(),
+                                parser
+                        )
+                )
+        );
+    }
+
+    public static FTParser bracketsAs(Element as, FTParser contents) {
+        return surroundAs(as, Tokens.LBRACKET, Tokens.RBRACKET, contents);
+    }
+
+    public static FTParser surroundAs(Element as, Token left, Token right, FTParser contents) {
+        return sequenceAs(as,
+                expect(left),
+                padded(contents),
+                expect(right)
+        );
     }
 }
