@@ -1,4 +1,5 @@
 -- hdhdh
+
 {- -}
 
 effect module Test1.B
@@ -19,7 +20,8 @@ effect module Test1.B
         )
 
 {-|
-{- -}
+{-
+-}
 
 sdsd
 -}
