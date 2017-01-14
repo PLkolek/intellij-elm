@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ElmBlock extends AbstractBlock {
     private final Indent indent;
-    private SpacingBuilder spacingBuilder;
+    private final SpacingBuilder spacingBuilder;
 
     ElmBlock(@NotNull ASTNode node, SpacingBuilder spacingBuilder, Wrap wrap) {
         super(node, wrap, Alignment.createAlignment());

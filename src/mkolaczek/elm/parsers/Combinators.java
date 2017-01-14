@@ -1,16 +1,12 @@
 package mkolaczek.elm.parsers;
 
-import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.Token;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Set;
-import java.util.function.Predicate;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.joining;
@@ -19,15 +15,6 @@ public class Combinators {
 
     public static Parser sequence(Parser... parsers) {
         return (builder -> simpleSequence(builder, parsers));
-    }
-
-    public static Parser as(IElementType name, Parser parser) {
-        return (builder -> {
-            Marker marker = builder.mark();
-            boolean result = parser.apply(builder);
-            marker.done(name);
-            return result;
-        });
     }
 
     public static Parser sequenceAs(IElementType name, Parser... parsers) {
@@ -47,18 +34,6 @@ public class Combinators {
             }
         }
         return true;
-    }
-
-    public static Parser simpleMany(IElementType... tokens) {
-        checkArgument(tokens != null && tokens.length >= 1);
-        return (PsiBuilder builder) -> {
-            while (builder.getTokenType() == tokens[0]) {
-                if (!simpleExpect(builder, tokens)) {
-                    return false;
-                }
-            }
-            return true;
-        };
     }
 
     public static Parser many(Parser... parsers) {
@@ -137,10 +112,6 @@ public class Combinators {
         return (builder -> simpleOr(builder, parsers));
     }
 
-    public static Parser orAs(IElementType elementType, NamedParser... parsers) {
-        return (builder -> simpleOrAs(builder, elementType, parsers));
-    }
-
     public static Boolean simpleOr(PsiBuilder builder, NamedParser... parsers) {
         return simpleOrAs(builder, null, parsers);
     }
@@ -202,59 +173,4 @@ public class Combinators {
         return many(tryP(sequence(Whitespace::forcedWS, parser)));
     }
 
-    public static Parser success(Parser parser) {
-        return builder -> {
-            parser.apply(builder);
-            return true;
-        };
-    }
-
-    public static Parser skipUntilFL(NamedParser expected, Token... nextTokens) {
-        return skipUntil(expected, Whitespace::isFreshLine, (IElementType[]) nextTokens);
-    }
-
-    public static Parser skipUntilFL(NamedParser expected) {
-        return skipUntil(expected, Whitespace::isFreshLine);
-    }
-
-    public static Parser skipUntil(NamedParser expected, Predicate<PsiBuilder> skipEnd, IElementType... nextTokens) {
-        return builder -> {
-            Set<IElementType> nextTokensSet = Sets.newHashSet(nextTokens);
-            int startOffset = builder.getCurrentOffset();
-            Marker errorStart = builder.mark();
-            while (!builder.eof()) {
-                int endOffset = builder.getCurrentOffset();
-                Marker currentMarker = builder.mark();
-                if (expected.apply(builder)) {
-                    if (endOffset != startOffset) {
-                        errorStart.errorBefore(expected.name() + " expected", currentMarker);
-                    } else {
-                        errorStart.drop();
-                    }
-                    currentMarker.drop();
-                    return true;
-                }
-                if (skipEnd.test(builder) || nextTokensSet.contains(builder.getTokenType())) {
-                    if (endOffset != startOffset) {
-                        errorStart.errorBefore(expected.name() + " expected", currentMarker);
-                    } else {
-                        errorStart.drop();
-                        builder.error(expected.name() + " expected");
-                    }
-                    currentMarker.drop();
-                    return nextTokensSet.contains(builder.getTokenType());
-                }
-                currentMarker.drop();
-                builder.advanceLexer();
-            }
-            int endOffset = builder.getCurrentOffset();
-            if (endOffset != startOffset) {
-                errorStart.error(expected.name() + " expected");
-            } else {
-                errorStart.drop();
-                builder.error(expected.name() + " expected");
-            }
-            return false;
-        };
-    }
 }

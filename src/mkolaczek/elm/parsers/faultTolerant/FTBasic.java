@@ -44,7 +44,7 @@ public class FTBasic {
     }
 
     private static FTParser paddedComma() {
-        return padded(expect(Tokens.COMMA));
+        return padded(Tokens.COMMA);
     }
 
     public static FTParser padded(Token paddedToken) {

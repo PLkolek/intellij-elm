@@ -14,8 +14,8 @@ import java.util.List;
 
 public class UnusedDeclarationTest extends LightCodeInsightFixtureTestCase {
 
-    private CollectingContentIterator collector = new CollectingContentIterator() {
-        List<VirtualFile> files = Lists.newArrayList();
+    private final CollectingContentIterator collector = new CollectingContentIterator() {
+        final List<VirtualFile> files = Lists.newArrayList();
 
         @NotNull
         @Override

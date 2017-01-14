@@ -11,7 +11,7 @@ import com.intellij.psi.PsiNamedElement;
 import org.jetbrains.annotations.NotNull;
 
 public class ElmStructureViewElement implements StructureViewTreeElement, SortableTreeElement {
-    private PsiElement element;
+    private final PsiElement element;
 
     public ElmStructureViewElement(PsiElement element) {
         this.element = element;

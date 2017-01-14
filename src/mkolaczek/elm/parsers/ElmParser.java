@@ -97,10 +97,6 @@ public class ElmParser implements PsiParser {
         return true;
     }
 
-    private static NamedParser typeExpr() {
-        return NamedParser.of("Type expression", ElmParser::typeExpr);
-    }
-
     private static boolean typeExpr(PsiBuilder builder) {
         return simpleOr(builder, typeApp());
     }

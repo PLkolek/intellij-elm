@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class ElmChoppedBlock extends AbstractBlock {
-    private SpacingBuilder spacingBuilder;
+    private final SpacingBuilder spacingBuilder;
 
     private final Set<IElementType> choppedElements;
     private final IElementType valueList;
