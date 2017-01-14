@@ -10,7 +10,7 @@ public interface FTParser {
 
     Set<Token> startingTokens();
 
-    boolean isOptional();
+    boolean isRequired();
 
     String name();
 

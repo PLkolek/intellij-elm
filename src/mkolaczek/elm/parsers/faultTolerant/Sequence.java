@@ -62,7 +62,7 @@ public class Sequence extends FTParserAbstr {
         Set<Token> startingTokens = Sets.newHashSet();
         for (FTParser parser : parsers) {
             startingTokens.addAll(parser.startingTokens());
-            if (!parser.isOptional()) {
+            if (parser.isRequired()) {
                 break;
             }
         }
@@ -71,7 +71,7 @@ public class Sequence extends FTParserAbstr {
 
     private static boolean isOptional(FTParser... parsers) {
         for (FTParser parser : parsers) {
-            if (!parser.isOptional()) {
+            if (parser.isRequired()) {
                 return false;
             }
         }

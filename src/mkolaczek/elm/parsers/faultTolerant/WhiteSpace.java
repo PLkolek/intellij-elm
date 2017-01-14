@@ -92,8 +92,8 @@ public class WhiteSpace implements FTParser {
     }
 
     @Override
-    public boolean isOptional() {
-        return true;
+    public boolean isRequired() {
+        return false;
     }
 
     @Override

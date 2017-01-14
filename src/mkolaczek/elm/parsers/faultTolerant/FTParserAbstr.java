@@ -28,8 +28,8 @@ public abstract class FTParserAbstr implements FTParser {
     }
 
     @Override
-    public boolean isOptional() {
-        return isOptional;
+    public boolean isRequired() {
+        return !isOptional;
     }
 
     @Override
