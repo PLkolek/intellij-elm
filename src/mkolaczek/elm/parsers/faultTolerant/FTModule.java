@@ -6,6 +6,8 @@ import mkolaczek.elm.psi.Tokens;
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expectAs;
 import static mkolaczek.elm.parsers.faultTolerant.FTBasic.*;
+import static mkolaczek.elm.parsers.faultTolerant.Or.or;
+import static mkolaczek.elm.parsers.faultTolerant.Or.orAs;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequenceAs;
 import static mkolaczek.elm.parsers.faultTolerant.Try.tryP;
@@ -83,5 +85,40 @@ public class FTModule {
                         )
                 )
         );
+    }
+
+    static FTParser moduleDeclaration() {
+        Sequence effectSequence =
+
+                sequence("Module declaration",
+                        expect(Tokens.EFFECT),
+                        maybeWhitespace(),
+                        expect(Tokens.MODULE),
+                        maybeWhitespace(),
+                        dottedCapVar(Elements.MODULE_NAME),
+                        maybeWhitespace(),
+                        settings(),
+                        maybeWhitespace(),
+                        exposing(),
+                        freshLine()
+                );
+
+        Sequence sequence =
+                sequence("Module declaration",
+                        or("Module declaration keywords",
+                                sequence("Port module declaration keywords",
+                                        expect(Tokens.PORT),
+                                        maybeWhitespace(),
+                                        expect(Tokens.MODULE)
+                                ),
+                                expect(Tokens.MODULE)
+                        ),
+                        maybeWhitespace(),
+                        dottedCapVar(Elements.MODULE_NAME),
+                        maybeWhitespace(),
+                        exposing(),
+                        freshLine()
+                );
+        return tryP(orAs(Elements.MODULE_HEADER, effectSequence, sequence));
     }
 }

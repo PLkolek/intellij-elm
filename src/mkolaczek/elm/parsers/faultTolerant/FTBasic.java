@@ -106,4 +106,11 @@ public class FTBasic {
                 expect(right)
         );
     }
+
+    public static FTParser docComment() {
+        return sequenceAs(Elements.DOC_COMMENT,
+                expect(Tokens.BEGIN_DOC_COMMENT),
+                expect(Tokens.END_DOC_COMMENT)
+        );
+    }
 }
