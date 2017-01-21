@@ -6,6 +6,7 @@ import mkolaczek.elm.psi.Tokens;
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expectAs;
 import static mkolaczek.elm.parsers.faultTolerant.FTBasic.*;
+import static mkolaczek.elm.parsers.faultTolerant.Many.manyAs;
 import static mkolaczek.elm.parsers.faultTolerant.Or.or;
 import static mkolaczek.elm.parsers.faultTolerant.Or.orAs;
 import static mkolaczek.elm.parsers.faultTolerant.Sequence.sequence;
@@ -17,6 +18,15 @@ import static mkolaczek.elm.psi.Elements.MODULE_ALIAS;
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
 
 public class FTModule {
+
+    public static FTParser moduleHeader() {
+        return sequence("Module Header",
+                freshLine(),
+                moduleDeclaration(),
+                tryP(sequence("Doc comment", docComment(), freshLine())),
+                manyAs(Elements.IMPORTS, FTModule.importLine())
+        );
+    }
 
     public static FTParser importLine() {
         return sequenceAs(Elements.IMPORT_LINE,

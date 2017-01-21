@@ -1,11 +1,13 @@
 package mkolaczek.elm.parsers;
 
+import com.google.common.collect.Sets;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.parsers.faultTolerant.ModuleDeclaration;
+import mkolaczek.elm.parsers.faultTolerant.FTModule;
+import mkolaczek.elm.parsers.faultTolerant.FTParser;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +39,9 @@ public class ElmParser implements PsiParser {
     }
 
     private void program(@NotNull PsiBuilder builder) {
-        new ModuleDeclaration().parse(builder);
+        FTParser parser = FTModule.moduleHeader();
+        parser.computeNextTokens(Sets.newHashSet());
+        parser.parse(builder);
         declarations(builder);
     }
 
