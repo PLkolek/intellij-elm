@@ -12,8 +12,15 @@ public class Many extends FTParserAbstr {
 
     private final FTParser parser;
 
-    public static Many many(String name, FTParser parser) {
-        return new Many(name, null, parser);
+    public static Sequence many1(FTParser parser) {
+        return sequence(parser.name() + "s",
+                parser,
+                many(parser)
+        );
+    }
+
+    public static Many many(FTParser parser) {
+        return new Many(parser.name() + "s", null, parser);
     }
 
     public static Many many(String name, FTParser... parsers) {

@@ -13,13 +13,19 @@ public abstract class FTParserAbstr implements FTParser {
     protected final Set<Token> startingTokens;
     protected final boolean isOptional;
     protected final Element as;
+    private final boolean isRoot;
     private Set<Token> nextTokens;
 
-    protected FTParserAbstr(String name, Set<Token> startingTokens, boolean isOptional, Element as) {
+    protected FTParserAbstr(String name, Set<Token> startingTokens, boolean isOptional, boolean root, Element as) {
         this.name = name;
         this.startingTokens = startingTokens;
         this.isOptional = isOptional;
         this.as = as;
+        this.isRoot = root;
+    }
+
+    protected FTParserAbstr(String name, Set<Token> startingTokens, boolean isOptional, Element as) {
+        this(name, startingTokens, isOptional, false, as);
     }
 
     @Override
@@ -40,7 +46,7 @@ public abstract class FTParserAbstr implements FTParser {
     @Override
     public boolean parse(PsiBuilder psiBuilder) {
         //noinspection SuspiciousMethodCalls
-        if (psiBuilder.eof() || !startingTokens.contains(psiBuilder.getTokenType())) {
+        if (!isRoot && (psiBuilder.eof() || !startingTokens.contains(psiBuilder.getTokenType()))) {
             return isOptional;
         }
         PsiBuilder.Marker marker = as != null ? psiBuilder.mark() : null;

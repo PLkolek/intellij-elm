@@ -9,6 +9,7 @@ public class SkipUntil {
 
     public static void skipUntil(String expectedName, Set<Token> nextTokens, PsiBuilder builder) {
         PsiBuilder.Marker errorStart = builder.mark();
+        int startingOffset = builder.getCurrentOffset();
         while (!builder.eof()) {
             //noinspection SuspiciousMethodCalls
             if (nextTokens.contains(builder.getTokenType())) {
@@ -17,6 +18,11 @@ public class SkipUntil {
             }
             builder.advanceLexer();
         }
-        errorStart.error(expectedName + " expected");
+        if (startingOffset != builder.getCurrentOffset()) {
+            errorStart.error(expectedName + " expected");
+        } else {
+            errorStart.drop();
+            builder.error(expectedName + " expected");
+        }
     }
 }

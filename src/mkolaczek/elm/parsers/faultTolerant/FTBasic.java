@@ -4,6 +4,7 @@ import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
+import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expect;
 import static mkolaczek.elm.parsers.faultTolerant.Expect.expectAs;
@@ -59,16 +60,25 @@ public class FTBasic {
         );
     }
 
+    public static FTParser dottedCapVar(String name) {
+        return sequence(name, dottedCapVarBody(name)
+        );
+    }
+
     public static FTParser dottedCapVar(Element as) {
-        return sequenceAs(as,
-                expect(Tokens.CAP_VAR),
-                many(as.getName() + " parts",
+        return sequenceAs(as, dottedCapVarBody(as.getName())
+        );
+    }
+
+    @NotNull
+    private static FTParser[] dottedCapVarBody(String name) {
+        return new FTParser[]{expect(Tokens.CAP_VAR),
+                many(name + " parts",
                         noWhitespace(),
                         expect(Tokens.DOT),
                         noWhitespace(),
                         expect(Tokens.CAP_VAR)
-                )
-        );
+                )};
     }
 
     public static FTParser operator() {

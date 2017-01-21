@@ -1,1 +1,1 @@
-<EOLError descr="Doc comment, Type declaration expected in OR"></EOLError>
+<EOLError descr="declarations expected"></EOLError>

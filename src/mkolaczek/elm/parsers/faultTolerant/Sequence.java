@@ -12,6 +12,10 @@ public class Sequence extends FTParserAbstr {
 
     private final FTParser[] parsers;
 
+    public static FTParser rootSequence(String name, FTParser... parsers) {
+        return new Sequence(name, null, true, parsers);
+    }
+
     public static Sequence sequence(String name, FTParser... parsers) {
         return new Sequence(name, null, parsers);
     }
@@ -32,9 +36,13 @@ public class Sequence extends FTParserAbstr {
         return new Sequence(name, as, newParsers);
     }
 
-    private Sequence(String name, Element as, FTParser... parsers) {
-        super(name, startingTokens(parsers), isOptional(parsers), as);
+    public Sequence(String name, Element as, boolean root, FTParser... parsers) {
+        super(name, startingTokens(parsers), isOptional(parsers), root, as);
         this.parsers = parsers;
+    }
+
+    private Sequence(String name, Element as, FTParser... parsers) {
+        this(name, as, false, parsers);
     }
 
     @Override
