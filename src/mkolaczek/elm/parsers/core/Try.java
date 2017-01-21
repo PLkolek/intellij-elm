@@ -1,19 +1,19 @@
-package mkolaczek.elm.parsers.faultTolerant;
+package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
 
-public class Try extends FTParserAbstr {
+public class Try extends ParserAbstr {
 
-    private final FTParser contents;
+    private final Parser contents;
 
-    public static FTParser tryP(FTParser contents) {
+    public static Parser tryP(Parser contents) {
         return new Try(contents);
     }
 
-    public Try(FTParser contents) {
+    public Try(Parser contents) {
         super(contents.name(), contents.startingTokens(), true, null);
         this.contents = contents;
     }

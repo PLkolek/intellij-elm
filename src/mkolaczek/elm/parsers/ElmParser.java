@@ -6,10 +6,8 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.parsers.faultTolerant.FTDeclaration;
-import mkolaczek.elm.parsers.faultTolerant.FTModule;
-import mkolaczek.elm.parsers.faultTolerant.FTParser;
-import mkolaczek.elm.parsers.faultTolerant.Sequence;
+import mkolaczek.elm.parsers.core.Parser;
+import mkolaczek.elm.parsers.core.Sequence;
 import mkolaczek.elm.psi.Elements;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,15 +34,13 @@ public class ElmParser implements PsiParser {
     }
 
     private void program(@NotNull PsiBuilder builder) {
-        FTParser parser = Sequence.rootSequence("program",
-                FTModule.moduleHeader(),
-                FTDeclaration.declarations()
+        Parser parser = Sequence.rootSequence("program",
+                Module.moduleHeader(),
+                Declaration.declarations()
         );
         parser.computeNextTokens(Sets.newHashSet());
         parser.parse(builder);
     }
-
-
 
     private void consumeRest(PsiBuilder builder) {
         while (!builder.eof()) {

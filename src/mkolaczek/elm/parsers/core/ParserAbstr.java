@@ -1,4 +1,4 @@
-package mkolaczek.elm.parsers.faultTolerant;
+package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
@@ -7,7 +7,7 @@ import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
 
-public abstract class FTParserAbstr implements FTParser {
+public abstract class ParserAbstr implements Parser {
 
     protected final String name;
     protected final Set<Token> startingTokens;
@@ -16,7 +16,7 @@ public abstract class FTParserAbstr implements FTParser {
     private final boolean isRoot;
     private Set<Token> nextTokens;
 
-    protected FTParserAbstr(String name, Set<Token> startingTokens, boolean isOptional, boolean root, Element as) {
+    protected ParserAbstr(String name, Set<Token> startingTokens, boolean isOptional, boolean root, Element as) {
         this.name = name;
         this.startingTokens = startingTokens;
         this.isOptional = isOptional;
@@ -24,7 +24,7 @@ public abstract class FTParserAbstr implements FTParser {
         this.isRoot = root;
     }
 
-    protected FTParserAbstr(String name, Set<Token> startingTokens, boolean isOptional, Element as) {
+    protected ParserAbstr(String name, Set<Token> startingTokens, boolean isOptional, Element as) {
         this(name, startingTokens, isOptional, false, as);
     }
 

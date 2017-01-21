@@ -1,4 +1,4 @@
-package mkolaczek.elm.parsers.faultTolerant;
+package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Token;

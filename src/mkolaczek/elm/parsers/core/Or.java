@@ -1,4 +1,4 @@
-package mkolaczek.elm.parsers.faultTolerant;
+package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
@@ -7,26 +7,26 @@ import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
 
-public class Or extends FTParserAbstr {
+public class Or extends ParserAbstr {
 
-    private final FTParser[] parsers;
+    private final Parser[] parsers;
 
-    public static Or or(String name, FTParser... parsers) {
+    public static Or or(String name, Parser... parsers) {
         return new Or(name, null, parsers);
     }
 
-    public static Or orAs(Element as, FTParser... parsers) {
+    public static Or orAs(Element as, Parser... parsers) {
         return new Or(as.getName(), as, parsers);
     }
 
-    private Or(String name, Element as, FTParser... parsers) {
+    private Or(String name, Element as, Parser... parsers) {
         super(name, startingTokens(parsers), false, as);
         this.parsers = parsers;
     }
 
     @Override
     protected void parse2(PsiBuilder builder) {
-        for (FTParser parser : parsers) {
+        for (Parser parser : parsers) {
             if (parser.parse(builder)) {
                 return;
             }
@@ -36,14 +36,14 @@ public class Or extends FTParserAbstr {
 
     @Override
     protected void computeNextTokens2(Set<Token> myNextTokens) {
-        for (FTParser parser : parsers) {
+        for (Parser parser : parsers) {
             parser.computeNextTokens(myNextTokens);
         }
     }
 
-    private static Set<Token> startingTokens(FTParser... parsers) {
+    private static Set<Token> startingTokens(Parser... parsers) {
         Set<Token> result = Sets.newHashSet();
-        for (FTParser parser : parsers) {
+        for (Parser parser : parsers) {
             result.addAll(parser.startingTokens());
         }
         return result;

@@ -1,10 +1,10 @@
-package mkolaczek.elm.parsers.faultTolerant;
+package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.parsers.Whitespace;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -12,7 +12,12 @@ import java.util.Set;
  * When parsing whitespace, errors are inserted into AST, but ignored in whole parsing.
  * I don't want to screw everything just because somebody forgot to indent a line.
  */
-public class WhiteSpace implements FTParser {
+public class WhiteSpace implements Parser {
+
+    public static boolean isFreshLine(@NotNull PsiBuilder builder) {
+        return builder.getCurrentOffset() <= 0 || builder.getOriginalText()
+                                                         .charAt(builder.getCurrentOffset() - 1) == '\n';
+    }
 
     public enum Type {
         MAYBE("Whitespace") {
@@ -29,7 +34,7 @@ public class WhiteSpace implements FTParser {
         }, FRESH_LINE("Fresh line") {
             @Override
             boolean accepts(PsiBuilder builder) {
-                return Whitespace.isFreshLine(builder);
+                return isFreshLine(builder);
             }
         }, NO("No whitespace") {
             @Override

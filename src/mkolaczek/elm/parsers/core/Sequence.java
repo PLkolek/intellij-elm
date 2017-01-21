@@ -1,4 +1,4 @@
-package mkolaczek.elm.parsers.faultTolerant;
+package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
@@ -8,24 +8,24 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public class Sequence extends FTParserAbstr {
+public class Sequence extends ParserAbstr {
 
-    private final FTParser[] parsers;
+    private final Parser[] parsers;
 
-    public static FTParser rootSequence(String name, FTParser... parsers) {
+    public static Parser rootSequence(String name, Parser... parsers) {
         return new Sequence(name, null, true, parsers);
     }
 
-    public static Sequence sequence(String name, FTParser... parsers) {
+    public static Sequence sequence(String name, Parser... parsers) {
         return new Sequence(name, null, parsers);
     }
 
-    public static Sequence sequenceAs(Element as, FTParser... parsers) {
+    public static Sequence sequenceAs(Element as, Parser... parsers) {
         return new Sequence(as.getName(), as, parsers);
     }
 
     public Sequence separatedBy(WhiteSpace whiteSpace) {
-        FTParser[] newParsers = new FTParser[parsers.length * 2 - 1];
+        Parser[] newParsers = new Parser[parsers.length * 2 - 1];
         for (int i = 0; i < parsers.length; i++) {
             newParsers[2 * i] = parsers[i];
             if (i > 0) {
@@ -36,18 +36,18 @@ public class Sequence extends FTParserAbstr {
         return new Sequence(name, as, newParsers);
     }
 
-    public Sequence(String name, Element as, boolean root, FTParser... parsers) {
+    public Sequence(String name, Element as, boolean root, Parser... parsers) {
         super(name, startingTokens(parsers), isOptional(parsers), root, as);
         this.parsers = parsers;
     }
 
-    private Sequence(String name, Element as, FTParser... parsers) {
+    private Sequence(String name, Element as, Parser... parsers) {
         this(name, as, false, parsers);
     }
 
     @Override
     protected void parse2(PsiBuilder psiBuilder) {
-        for (FTParser parser : parsers) {
+        for (Parser parser : parsers) {
             if (!parser.parse(psiBuilder)) {
                 SkipUntil.skipUntil(parser.name(), parser.nextTokens(), psiBuilder);
                 parser.parse(psiBuilder);
@@ -66,9 +66,9 @@ public class Sequence extends FTParserAbstr {
     }
 
     @NotNull
-    private static Set<Token> startingTokens(FTParser... parsers) {
+    private static Set<Token> startingTokens(Parser... parsers) {
         Set<Token> startingTokens = Sets.newHashSet();
-        for (FTParser parser : parsers) {
+        for (Parser parser : parsers) {
             startingTokens.addAll(parser.startingTokens());
             if (parser.isRequired()) {
                 break;
@@ -77,8 +77,8 @@ public class Sequence extends FTParserAbstr {
         return startingTokens;
     }
 
-    private static boolean isOptional(FTParser... parsers) {
-        for (FTParser parser : parsers) {
+    private static boolean isOptional(Parser... parsers) {
+        for (Parser parser : parsers) {
             if (parser.isRequired()) {
                 return false;
             }

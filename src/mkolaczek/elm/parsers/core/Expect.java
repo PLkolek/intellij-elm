@@ -1,4 +1,4 @@
-package mkolaczek.elm.parsers.faultTolerant;
+package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.intellij.lang.PsiBuilder;
@@ -7,7 +7,7 @@ import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
 
-public class Expect extends FTParserAbstr {
+public class Expect extends ParserAbstr {
 
     public static Expect expect(Token expectedToken) {
         return new Expect(expectedToken);
