@@ -108,6 +108,10 @@ public class Basic {
         return surroundAs(as, Tokens.LBRACKET, Tokens.RBRACKET, contents);
     }
 
+    public static Parser brackets(String name, Parser contents) {
+        return surround(name, Tokens.LBRACKET, Tokens.RBRACKET, contents);
+    }
+
     public static Parser surround(String name, Token left, Token right, Parser contents) {
         return sequence(name, surroundContent(left, right, contents));
     }

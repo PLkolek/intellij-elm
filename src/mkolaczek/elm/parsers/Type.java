@@ -9,6 +9,7 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
+import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
 public class Type {
 
@@ -17,13 +18,29 @@ public class Type {
     private static Parser tuple =
             parens("tuple type", tryP(commaSep(expression)));
 
+    private static Parser field =
+            sequence("record field",
+                    expect(Tokens.LOW_VAR),
+                    maybeWhitespace(),
+                    expect(Tokens.COLON),
+                    maybeWhitespace(),
+                    expression
+            );
+
+
+    private static Parser record =
+            brackets("record type",
+                    //TODO
+                    commaSep(field)
+            );
 
     //TODO
     private static Parser term =
             or("type term",
                     Basic.dottedCapVar("type name"),
                     expect(Tokens.LOW_VAR),
-                    tuple
+                    tuple,
+                    record
             );
 
     private static Parser app =
