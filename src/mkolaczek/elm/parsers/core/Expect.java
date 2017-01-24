@@ -9,6 +9,8 @@ import java.util.Set;
 
 public class Expect extends ParserAbstr {
 
+    private final Token expectedToken;
+
     public static Expect expect(Token expectedToken) {
         return new Expect(expectedToken);
     }
@@ -22,7 +24,8 @@ public class Expect extends ParserAbstr {
     }
 
     private Expect(Token expectedToken, Element as) {
-        super(expectedToken.getName(), ImmutableSet.of(expectedToken), false, as);
+        super(expectedToken.getName(), false, as);
+        this.expectedToken = expectedToken;
     }
 
 
@@ -33,5 +36,15 @@ public class Expect extends ParserAbstr {
 
     @Override
     protected void computeNextTokens2(Set<Token> myNextTokens) {
+    }
+
+    @Override
+    public Set<Token> startingTokens() {
+        return ImmutableSet.of(expectedToken);
+    }
+
+    @Override
+    public boolean isRequired() {
+        return true;
     }
 }

@@ -10,32 +10,18 @@ import java.util.Set;
 public abstract class ParserAbstr implements Parser {
 
     protected final String name;
-    protected final Set<Token> startingTokens;
-    protected final boolean isOptional;
     protected final Element as;
     private final boolean isRoot;
     private Set<Token> nextTokens;
 
-    protected ParserAbstr(String name, Set<Token> startingTokens, boolean isOptional, boolean root, Element as) {
+    protected ParserAbstr(String name, boolean root, Element as) {
         this.name = name;
-        this.startingTokens = startingTokens;
-        this.isOptional = isOptional;
         this.as = as;
         this.isRoot = root;
     }
 
-    protected ParserAbstr(String name, Set<Token> startingTokens, boolean isOptional, Element as) {
-        this(name, startingTokens, isOptional, false, as);
-    }
-
-    @Override
-    public Set<Token> startingTokens() {
-        return startingTokens;
-    }
-
-    @Override
-    public boolean isRequired() {
-        return !isOptional;
+    protected ParserAbstr(String name, Element as) {
+        this(name, false, as);
     }
 
     @Override
@@ -46,8 +32,8 @@ public abstract class ParserAbstr implements Parser {
     @Override
     public boolean parse(PsiBuilder psiBuilder) {
         //noinspection SuspiciousMethodCalls
-        if (!isRoot && (psiBuilder.eof() || !startingTokens.contains(psiBuilder.getTokenType()))) {
-            return isOptional;
+        if (!isRoot && (psiBuilder.eof() || !startingTokens().contains(psiBuilder.getTokenType()))) {
+            return !isRequired();
         }
         PsiBuilder.Marker marker = as != null ? psiBuilder.mark() : null;
         parse2(psiBuilder);
@@ -59,8 +45,10 @@ public abstract class ParserAbstr implements Parser {
 
     @Override
     public void computeNextTokens(Set<Token> myNextTokens) {
-        computeNextTokens2(myNextTokens);
-        this.nextTokens = Sets.union(myNextTokens, startingTokens);
+        if (nextTokens == null) {
+            this.nextTokens = Sets.union(myNextTokens, startingTokens());
+            computeNextTokens2(myNextTokens);
+        }
     }
 
     @Override

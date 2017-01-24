@@ -14,7 +14,7 @@ public class Try extends ParserAbstr {
     }
 
     public Try(Parser contents) {
-        super(contents.name(), contents.startingTokens(), true, null);
+        super(contents.name(), true, null);
         this.contents = contents;
     }
 
@@ -26,5 +26,15 @@ public class Try extends ParserAbstr {
     @Override
     protected void computeNextTokens2(Set<Token> myNextTokens) {
         contents.computeNextTokens(myNextTokens);
+    }
+
+    @Override
+    public Set<Token> startingTokens() {
+        return contents.startingTokens();
+    }
+
+    @Override
+    public boolean isRequired() {
+        return false;
     }
 }

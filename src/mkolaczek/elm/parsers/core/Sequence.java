@@ -37,7 +37,7 @@ public class Sequence extends ParserAbstr {
     }
 
     public Sequence(String name, Element as, boolean root, Parser... parsers) {
-        super(name, startingTokens(parsers), isOptional(parsers), root, as);
+        super(name, root, as);
         this.parsers = parsers;
     }
 
@@ -84,5 +84,15 @@ public class Sequence extends ParserAbstr {
             }
         }
         return true;
+    }
+
+    @Override
+    public Set<Token> startingTokens() {
+        return startingTokens(parsers);
+    }
+
+    @Override
+    public boolean isRequired() {
+        return !isOptional(parsers);
     }
 }

@@ -31,7 +31,7 @@ public class Many extends ParserAbstr {
 
 
     private Many(String name, Element as, Parser parser) {
-        super(name, parser.startingTokens(), true, as);
+        super(name, true, as);
         this.parser = parser;
     }
 
@@ -46,5 +46,15 @@ public class Many extends ParserAbstr {
     @Override
     protected void computeNextTokens2(Set<Token> myNextTokens) {
         this.parser.computeNextTokens(myNextTokens);
+    }
+
+    @Override
+    public Set<Token> startingTokens() {
+        return parser.startingTokens();
+    }
+
+    @Override
+    public boolean isRequired() {
+        return false;
     }
 }

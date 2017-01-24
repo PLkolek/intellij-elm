@@ -32,19 +32,10 @@ public class Declaration {
                 Expect.expect(Tokens.ALIAS),
                 WhiteSpace.forcedWhitespace(),
                 Expect.expect(Tokens.CAP_VAR),
-                spacePrefix(Expect.expect(Tokens.LOW_VAR)),
+                Basic.spacePrefix(Expect.expect(Tokens.LOW_VAR)),
                 Basic.padded(Tokens.EQUALS),
-                Type.expression()
+                Type.expression
         );
     }
 
-    private static Parser spacePrefix(Parser parser) {
-        return Many.many(String.format("space prefixed list of %ss", parser.name()),
-                Try.tryP(
-                        Sequence.sequence("space prefixed " + parser.name(),
-                                WhiteSpace.forcedWhitespace(),
-                                parser)
-                )
-        );
-    }
 }

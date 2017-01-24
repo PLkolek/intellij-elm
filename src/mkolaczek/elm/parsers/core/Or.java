@@ -20,7 +20,7 @@ public class Or extends ParserAbstr {
     }
 
     private Or(String name, Element as, Parser... parsers) {
-        super(name, startingTokens(parsers), false, as);
+        super(name, as);
         this.parsers = parsers;
     }
 
@@ -47,5 +47,15 @@ public class Or extends ParserAbstr {
             result.addAll(parser.startingTokens());
         }
         return result;
+    }
+
+    @Override
+    public Set<Token> startingTokens() {
+        return startingTokens(parsers);
+    }
+
+    @Override
+    public boolean isRequired() {
+        return true;
     }
 }
