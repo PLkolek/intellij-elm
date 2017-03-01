@@ -73,12 +73,21 @@ public class Type {
             );
 
     private static Parser expression2 =
-            or("type expression",
-                    app,
-                    term
+            sequence("type expression",
+                    or("first part of type expression",
+                            app,
+                            term
+                    ),
+                    tryP(
+                            sequence("function type suffix",
+                                    maybeWhitespace(),
+                                    expect(Tokens.ARROW),
+                                    maybeWhitespace(),
+                                    expression
+                            )
+                    )
             );
 
-    //TODO
     static {
         expression.setParser(expression2);
     }
