@@ -88,8 +88,14 @@ public class Type {
                     )
             );
 
+    public static Parser unionConstructor() {
+        return sequence("union constructor",
+                expect(Tokens.CAP_VAR),
+                spacePrefix(term)
+        );
+    }
+
     static {
         expression.setParser(expression2);
     }
-
 }

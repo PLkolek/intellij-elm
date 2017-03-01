@@ -36,10 +36,6 @@ public class Basic {
         );
     }
 
-    private static Parser paddedComma() {
-        return padded(Tokens.COMMA);
-    }
-
     public static Parser padded(Token paddedToken) {
         return padded(Expect.expect(paddedToken));
     }
@@ -94,10 +90,22 @@ public class Basic {
         );
     }
 
+    public static Parser sepBy(Token separator, Parser parser) {
+        return sequence(String.format("%s separated list of %ss", separator.getName(), parser.name()),
+                parser,
+                sepSuffix(separator, parser)
+        );
+    }
+
     @NotNull
     public static Many commaSepSuffix(Parser parser) {
+        return sepSuffix(Tokens.COMMA, parser);
+    }
+
+    @NotNull
+    private static Many sepSuffix(Token separator, Parser parser) {
         return Many.many(String.format("more %ss", parser.name()),
-                paddedComma(),
+                padded(separator),
                 parser
         );
     }

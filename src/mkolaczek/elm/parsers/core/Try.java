@@ -20,7 +20,10 @@ public class Try extends ParserAbstr {
 
     @Override
     protected void parse2(PsiBuilder builder) {
-        contents.parse(builder);
+        //noinspection SuspiciousMethodCalls
+        if (contents.startingTokens().contains(builder.getTokenType())) {
+            contents.parse(builder);
+        }
     }
 
     @Override
