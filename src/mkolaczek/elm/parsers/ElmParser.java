@@ -34,8 +34,7 @@ public class ElmParser implements PsiParser {
     }
 
     private void program(@NotNull PsiBuilder builder) {
-        Parser parser = Sequence.rootSequence("program",
-                Module.moduleHeader(),
+        Parser parser = Sequence.rootSequence(Module.moduleHeader(),
                 Declaration.declarations()
         );
         parser.computeNextTokens(Sets.newHashSet());

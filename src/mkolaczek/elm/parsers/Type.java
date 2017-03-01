@@ -40,16 +40,16 @@ public class Type {
     private static Parser record =
             brackets("record type",
                     tryP(
-                            sequence("record type contents",
+                            sequence(
                                     expect(Tokens.LOW_VAR),
                                     maybeWhitespace(),
-                                    or("record type contents suffix",
-                                            sequence("extensible record type suffix",
+                                    or(
+                                            sequence(
                                                     expect(Tokens.PIPE),
                                                     maybeWhitespace(),
                                                     commaSep(field)
                                             ),
-                                            sequence("record type contents suffix inner",
+                                            sequence(
                                                     fieldSuffix(),
                                                     maybeWhitespace(),
                                                     commaSepSuffix(field))
@@ -60,7 +60,7 @@ public class Type {
 
     private static Parser term =
             or("type term",
-                    Basic.dottedCapVar("type name"),
+                    dottedCapVar("type name"),
                     expect(Tokens.LOW_VAR),
                     tuple,
                     record
@@ -68,18 +68,18 @@ public class Type {
 
     private static Parser app =
             sequence("type application",
-                    Basic.dottedCapVar("type name"),
+                    dottedCapVar("type name"),
                     spacePrefix(term)
             );
 
     private static Parser expression2 =
             sequence("type expression",
-                    or("first part of type expression",
+                    or(
                             app,
                             term
                     ),
                     tryP(
-                            sequence("function type suffix",
+                            sequence(
                                     maybeWhitespace(),
                                     expect(Tokens.ARROW),
                                     maybeWhitespace(),

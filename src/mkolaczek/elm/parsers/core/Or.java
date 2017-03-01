@@ -1,11 +1,15 @@
 package mkolaczek.elm.parsers.core;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
+
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 
 public class Or extends ParserAbstr {
 
@@ -15,8 +19,18 @@ public class Or extends ParserAbstr {
         return new Or(name, null, parsers);
     }
 
+    public static Or or(Parser... parsers) {
+        return new Or(name(parsers), null, parsers);
+    }
+
     public static Or orAs(Element as, Parser... parsers) {
         return new Or(as.getName(), as, parsers);
+    }
+
+    private static String name(Parser[] parsers) {
+        Preconditions.checkArgument(parsers.length > 0);
+        String joinedNames = stream(parsers).map(Parser::name).collect(joining(", "));
+        return String.format("One of [%s]", joinedNames);
     }
 
     private Or(String name, Element as, Parser... parsers) {

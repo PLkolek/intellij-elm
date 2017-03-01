@@ -1,5 +1,6 @@
 package mkolaczek.elm.parsers.core;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Element;
@@ -12,12 +13,26 @@ public class Sequence extends ParserAbstr {
 
     private final Parser[] parsers;
 
-    public static Parser rootSequence(String name, Parser... parsers) {
-        return new Sequence(name, null, true, parsers);
+    public static Parser rootSequence(Parser... parsers) {
+        return new Sequence("program", null, true, parsers);
     }
 
     public static Sequence sequence(String name, Parser... parsers) {
         return new Sequence(name, null, parsers);
+    }
+
+    public static Sequence sequence(Parser... parsers) {
+        return new Sequence(name(parsers), null, parsers);
+    }
+
+    private static String name(Parser[] parsers) {
+        Preconditions.checkArgument(parsers.length > 0);
+        for (Parser parser : parsers) {
+            if (parser.isRequired()) {
+                return parser.name();
+            }
+        }
+        return "Something is wrong, that name should never be needed!";
     }
 
     public static Sequence sequenceAs(Element as, Parser... parsers) {
