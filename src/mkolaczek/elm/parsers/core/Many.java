@@ -1,10 +1,13 @@
 package mkolaczek.elm.parsers.core;
 
+import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
+
+import static mkolaczek.elm.parsers.core.SkipUntil.skipUntil;
 
 public class Many extends ParserAbstr {
 
@@ -35,12 +38,20 @@ public class Many extends ParserAbstr {
         this.parser = parser;
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     protected void parse2(PsiBuilder builder) {
-        //noinspection SuspiciousMethodCalls
-        while (parser.startingTokens().contains(builder.getTokenType())) {
-            parser.parse(builder);
-        }
+
+        do {
+            if (startingTokens().contains(builder.getTokenType())) {
+                parser.parse(builder);
+            } else if (nextTokens().contains(builder.getTokenType()) || builder.eof()) {
+                return;
+            } else {
+                String name = parser.name() + " or " + "NEXTNAME";
+                skipUntil(name, Sets.union(startingTokens(), nextTokens()), builder);
+            }
+        } while (true);
     }
 
     @Override

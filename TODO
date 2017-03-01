@@ -3,3 +3,4 @@
 * Module reference in documentation comments?
 * External documentation?
 * Smart enter
+* startingTokens() doesnt do any caching
