@@ -21,8 +21,8 @@ public class ParserBox implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder) {
-        return containedParser.parse(psiBuilder);
+    public boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens) {
+        return containedParser.parse(psiBuilder, nextTokens);
     }
 
     @Override
@@ -40,13 +40,4 @@ public class ParserBox implements Parser {
         return name;
     }
 
-    @Override
-    public Set<Token> nextTokens() {
-        return containedParser.nextTokens();
-    }
-
-    @Override
-    public void computeNextTokens(Set<Token> result) {
-        containedParser.computeNextTokens(result);
-    }
 }

@@ -1,12 +1,14 @@
 package mkolaczek.elm.parsers.core;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Set;
 
 public class Sequence extends ParserAbstr {
@@ -61,23 +63,28 @@ public class Sequence extends ParserAbstr {
     }
 
     @Override
-    protected void parse2(PsiBuilder psiBuilder) {
-        for (Parser parser : parsers) {
-            if (!parser.parse(psiBuilder)) {
-                SkipUntil.skipUntil(parser.name(), parser.nextTokens(), psiBuilder);
-                parser.parse(psiBuilder);
+    protected void parse2(PsiBuilder psiBuilder, Set<Token> nextTokens) {
+        List<Set<Token>> childrenNextTokens = nextTokens2(nextTokens);
+
+        for (int i = 0; i < parsers.length; i++) {
+            Parser parser = parsers[i];
+            Set<Token> parserNextTokens = childrenNextTokens.get(i);
+            if (!parser.parse(psiBuilder, parserNextTokens)) {
+                SkipUntil.skipUntil(parser.name(), parserNextTokens, psiBuilder);
+                parser.parse(psiBuilder, parserNextTokens);
             }
         }
     }
 
-    @Override
-    protected void computeNextTokens2(Set<Token> myNextTokens) {
-        Set<Token> result = Sets.newHashSet(myNextTokens);
-        for (int i = parsers.length - 1; i >= 0; i--) {
-            parsers[i].computeNextTokens(result);
-            result.addAll(parsers[i].startingTokens());
-
+    protected List<Set<Token>> nextTokens2(Set<Token> myNextTokens) {
+        List<Set<Token>> result = Lists.newArrayList();
+        result.add(myNextTokens);
+        Set<Token> nextTokens = Sets.newHashSet(myNextTokens);
+        for (int i = parsers.length - 1; i > 0; i--) {
+            nextTokens.addAll(parsers[i].startingTokens());
+            result.add(nextTokens);
         }
+        return Lists.reverse(result);
     }
 
     @NotNull

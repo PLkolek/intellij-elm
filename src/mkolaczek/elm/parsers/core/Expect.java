@@ -30,12 +30,8 @@ public class Expect extends ParserAbstr {
 
 
     @Override
-    protected void parse2(PsiBuilder builder) {
+    protected void parse2(PsiBuilder builder, Set<Token> nextTokens) {
         builder.advanceLexer();
-    }
-
-    @Override
-    protected void computeNextTokens2(Set<Token> myNextTokens) {
     }
 
     @Override

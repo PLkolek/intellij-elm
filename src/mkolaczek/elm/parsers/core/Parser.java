@@ -6,7 +6,7 @@ import mkolaczek.elm.psi.Token;
 import java.util.Set;
 
 public interface Parser {
-    boolean parse(PsiBuilder psiBuilder);
+    boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens);
 
     Set<Token> startingTokens();
 
@@ -14,7 +14,4 @@ public interface Parser {
 
     String name();
 
-    Set<Token> nextTokens();
-
-    void computeNextTokens(Set<Token> result);
 }

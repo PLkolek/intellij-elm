@@ -76,7 +76,7 @@ public class WhiteSpace implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder builder) {
+    public boolean parse(PsiBuilder builder, Set<Token> nextTokens) {
         if (!type.accepts(builder)) {
             error(builder);
         }
@@ -106,13 +106,4 @@ public class WhiteSpace implements Parser {
         return type.name;
     }
 
-    @Override
-    public Set<Token> nextTokens() {
-        return nextTokens;
-    }
-
-    @Override
-    public void computeNextTokens(Set<Token> myNextTokens) {
-        this.nextTokens = myNextTokens;
-    }
 }

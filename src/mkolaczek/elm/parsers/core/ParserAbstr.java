@@ -1,6 +1,5 @@
 package mkolaczek.elm.parsers.core;
 
-import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
@@ -12,7 +11,6 @@ public abstract class ParserAbstr implements Parser {
     protected final String name;
     protected final Element as;
     private final boolean isRoot;
-    private Set<Token> nextTokens;
 
     protected ParserAbstr(String name, boolean root, Element as) {
         this.name = name;
@@ -30,34 +28,19 @@ public abstract class ParserAbstr implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder) {
+    public boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens) {
         //noinspection SuspiciousMethodCalls
         if (!isRoot && (psiBuilder.eof() || !startingTokens().contains(psiBuilder.getTokenType()))) {
             return !isRequired();
         }
         PsiBuilder.Marker marker = as != null ? psiBuilder.mark() : null;
-        parse2(psiBuilder);
+        parse2(psiBuilder, nextTokens);
         if (marker != null) {
             marker.done(as);
         }
         return true;
     }
 
-    @Override
-    public void computeNextTokens(Set<Token> myNextTokens) {
-        if (nextTokens == null) {
-            this.nextTokens = Sets.union(myNextTokens, startingTokens());
-            computeNextTokens2(myNextTokens);
-        }
-    }
 
-    @Override
-    public Set<Token> nextTokens() {
-        return nextTokens;
-    }
-
-
-    protected abstract void parse2(PsiBuilder builder);
-
-    protected abstract void computeNextTokens2(Set<Token> myNextTokens);
+    protected abstract void parse2(PsiBuilder builder, Set<Token> nextTokens);
 }

@@ -39,19 +39,11 @@ public class Or extends ParserAbstr {
     }
 
     @Override
-    protected void parse2(PsiBuilder builder) {
+    protected void parse2(PsiBuilder builder, Set<Token> myNextTokens) {
         for (Parser parser : parsers) {
-            if (parser.parse(builder)) {
+            if (parser.parse(builder, myNextTokens)) {
                 return;
             }
-        }
-    }
-
-
-    @Override
-    protected void computeNextTokens2(Set<Token> myNextTokens) {
-        for (Parser parser : parsers) {
-            parser.computeNextTokens(myNextTokens);
         }
     }
 

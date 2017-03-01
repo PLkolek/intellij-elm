@@ -40,23 +40,19 @@ public class Many extends ParserAbstr {
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    protected void parse2(PsiBuilder builder) {
+    protected void parse2(PsiBuilder builder, Set<Token> myNextTokens) {
 
+        Set<Token> childNextTokens = Sets.union(myNextTokens, startingTokens());
         do {
             if (startingTokens().contains(builder.getTokenType())) {
-                parser.parse(builder);
-            } else if (nextTokens().contains(builder.getTokenType()) || builder.eof()) {
+                parser.parse(builder, childNextTokens);
+            } else if (myNextTokens.contains(builder.getTokenType()) || builder.eof()) {
                 return;
             } else {
                 String name = parser.name() + " or " + "NEXTNAME";
-                skipUntil(name, Sets.union(startingTokens(), nextTokens()), builder);
+                skipUntil(name, childNextTokens, builder);
             }
         } while (true);
-    }
-
-    @Override
-    protected void computeNextTokens2(Set<Token> myNextTokens) {
-        this.parser.computeNextTokens(myNextTokens);
     }
 
     @Override

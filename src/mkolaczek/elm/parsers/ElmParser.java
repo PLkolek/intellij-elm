@@ -37,8 +37,7 @@ public class ElmParser implements PsiParser {
         Parser parser = Sequence.rootSequence(Module.moduleHeader(),
                 Declaration.declarations()
         );
-        parser.computeNextTokens(Sets.newHashSet());
-        parser.parse(builder);
+        parser.parse(builder, Sets.newHashSet());
     }
 
     private void consumeRest(PsiBuilder builder) {
