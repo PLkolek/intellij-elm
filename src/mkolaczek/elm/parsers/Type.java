@@ -72,9 +72,15 @@ public class Type {
                     spacePrefix(term)
             );
 
+    private static Parser expression2 =
+            or("type expression",
+                    app,
+                    term
+            );
+
     //TODO
     static {
-        expression.setParser(app);
+        expression.setParser(expression2);
     }
 
 }
