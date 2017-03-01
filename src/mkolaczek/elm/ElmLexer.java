@@ -657,8 +657,8 @@ public class ElmLexer implements FlexLexer {
             }
             case 46:
                 break;
-          case 14: 
-            { return OR;
+          case 14: {
+            return PIPE;
             }
             case 47:
                 break;

@@ -2,7 +2,9 @@ package mkolaczek.elm.parsers;
 
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.ParserBox;
+import mkolaczek.elm.parsers.core.Sequence;
 import mkolaczek.elm.psi.Tokens;
+import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
 import static mkolaczek.elm.parsers.core.Expect.expect;
@@ -21,20 +23,41 @@ public class Type {
     private static Parser field =
             sequence("record field",
                     expect(Tokens.LOW_VAR),
-                    maybeWhitespace(),
-                    expect(Tokens.COLON),
-                    maybeWhitespace(),
-                    expression
+                    fieldSuffix()
             );
+
+    @NotNull
+    private static Sequence fieldSuffix() {
+        return sequence("record field suffix",
+                maybeWhitespace(),
+                expect(Tokens.COLON),
+                maybeWhitespace(),
+                expression
+        );
+    }
 
 
     private static Parser record =
             brackets("record type",
-                    //TODO
-                    commaSep(field)
+                    tryP(
+                            sequence("record type contents",
+                                    expect(Tokens.LOW_VAR),
+                                    maybeWhitespace(),
+                                    or("record type contents suffix",
+                                            sequence("extensible record type suffix",
+                                                    expect(Tokens.PIPE),
+                                                    maybeWhitespace(),
+                                                    commaSep(field)
+                                            ),
+                                            sequence("record type contents suffix inner",
+                                                    fieldSuffix(),
+                                                    maybeWhitespace(),
+                                                    commaSepSuffix(field))
+                                    )
+                            )
+                    )
             );
 
-    //TODO
     private static Parser term =
             or("type term",
                     Basic.dottedCapVar("type name"),

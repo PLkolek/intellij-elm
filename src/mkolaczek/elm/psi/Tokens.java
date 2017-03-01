@@ -41,7 +41,7 @@ public class Tokens {
     public static final Token COMMA_OP = new Token("COMMA_OP", "operator consisting of commas");
     public static final Token DOT = new Token("DOT", ".");
     public static final Token EQUALS = new Token("EQUALS", "=");
-    public static final Token OR = new Token("OR", "|");
+    public static final Token PIPE = new Token("PIPE", "|");
     public static final Token SYM_OP = new Token("SYM_OP", "operator consisting of symbols");
     public static final Token TYPE = new Token("type");
     public static final Token WHERE = new Token("where");

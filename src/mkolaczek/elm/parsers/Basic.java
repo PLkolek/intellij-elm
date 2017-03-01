@@ -32,10 +32,7 @@ public class Basic {
     public static Parser listingValues(Parser listedValue) {
         return sequence("listing values",
                 listedValue,
-                Many.many("more listing values",
-                        paddedComma(),
-                        listedValue
-                )
+                commaSepSuffix(listedValue)
         );
     }
 
@@ -92,11 +89,16 @@ public class Basic {
         return Try.tryP(
                 sequence(String.format("comma separated list of %ss", parser.name()),
                         parser,
-                        Many.many(String.format("more %ss", parser.name()),
-                                paddedComma(),
-                                parser
-                        )
+                        commaSepSuffix(parser)
                 )
+        );
+    }
+
+    @NotNull
+    public static Many commaSepSuffix(Parser parser) {
+        return Many.many(String.format("more %ss", parser.name()),
+                paddedComma(),
+                parser
         );
     }
 

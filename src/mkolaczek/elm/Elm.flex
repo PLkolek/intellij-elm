@@ -68,7 +68,7 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   "="               { return EQUALS; }
   "->"              { return ARROW; }
   "--"              { yypushstate(INLINECOMMENT); return COMMENT; }
-  "|"               { return OR; }
+  "|"               { return PIPE; }
   "."               { return DOT; }
   ":"               { return COLON; }
   "{-|"             { yypushstate(DOCCOMMENT); return BEGIN_DOC_COMMENT;}
