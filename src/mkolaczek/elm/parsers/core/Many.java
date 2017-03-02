@@ -14,6 +14,13 @@ public class Many extends ParserAbstr {
 
     private final Parser parser;
 
+    public static Parser many1As(Element as, Parser parser) {
+        return Sequence.sequenceAs(as,
+                parser,
+                many(parser)
+        );
+    }
+
     public static Sequence many1(Parser parser) {
         return Sequence.sequence(parser.name() + "s",
                 parser,
@@ -29,10 +36,10 @@ public class Many extends ParserAbstr {
         return new Many(name, null, Sequence.sequence(name, parsers));
     }
 
+
     public static Many manyAs(Element as, Parser parser) {
         return new Many(as.getName(), as, parser);
     }
-
 
     private Many(String name, Element as, Parser parser) {
         super(name, true, as);

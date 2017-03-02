@@ -18,9 +18,10 @@ import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 public class Declaration {
 
     public static Parser declarations() {
-        return Many.many1(sequence("declaration",
-                WhiteSpace.freshLine(),
-                declaration()
+        return Many.many1As(Elements.DECLARATIONS,
+                sequence("declaration",
+                        WhiteSpace.freshLine(),
+                        declaration()
                 )
         );
     }
