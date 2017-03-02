@@ -82,7 +82,7 @@ public class Sequence extends ParserAbstr {
         Set<Token> nextTokens = Sets.newHashSet(myNextTokens);
         for (int i = parsers.length - 1; i > 0; i--) {
             nextTokens.addAll(parsers[i].startingTokens());
-            result.add(nextTokens);
+            result.add(Sets.newHashSet(nextTokens));
         }
         return Lists.reverse(result);
     }
