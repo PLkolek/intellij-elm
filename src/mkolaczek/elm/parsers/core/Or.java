@@ -3,7 +3,6 @@ package mkolaczek.elm.parsers.core;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
@@ -16,16 +15,13 @@ public class Or extends ParserAbstr {
     private final Parser[] parsers;
 
     public static Or or(String name, Parser... parsers) {
-        return new Or(name, null, parsers);
+        return new Or(name, parsers);
     }
 
     public static Or or(Parser... parsers) {
-        return new Or(name(parsers), null, parsers);
+        return new Or(name(parsers), parsers);
     }
 
-    public static Or orAs(Element as, Parser... parsers) {
-        return new Or(as.getName(), as, parsers);
-    }
 
     private static String name(Parser[] parsers) {
         Preconditions.checkArgument(parsers.length > 0);
@@ -33,8 +29,8 @@ public class Or extends ParserAbstr {
         return String.format("One of [%s]", joinedNames);
     }
 
-    private Or(String name, Element as, Parser... parsers) {
-        super(name, as);
+    private Or(String name, Parser... parsers) {
+        super(name);
         this.parsers = parsers;
     }
 

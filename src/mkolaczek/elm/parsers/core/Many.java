@@ -2,7 +2,6 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 
 import java.util.Optional;
@@ -14,35 +13,23 @@ public class Many extends ParserAbstr {
 
     private final Parser parser;
 
-    public static Parser many1As(Element as, Parser parser) {
-        return Sequence.sequenceAs(as,
-                parser,
-                many(parser)
-        );
-    }
-
-    public static Sequence many1(Parser parser) {
-        return Sequence.sequence(parser.name() + "s",
+    public static Parser many1(Parser parser) {
+        return Sequence.sequence(
                 parser,
                 many(parser)
         );
     }
 
     public static Many many(Parser parser) {
-        return new Many(parser.name() + "s", null, parser);
+        return new Many(parser.name() + "s", parser);
     }
 
     public static Many many(String name, Parser... parsers) {
-        return new Many(name, null, Sequence.sequence(name, parsers));
+        return new Many(name, Sequence.sequence(name, parsers));
     }
 
-
-    public static Many manyAs(Element as, Parser parser) {
-        return new Many(as.getName(), as, parser);
-    }
-
-    private Many(String name, Element as, Parser parser) {
-        super(name, true, as);
+    private Many(String name, Parser parser) {
+        super(name, true);
         this.parser = parser;
     }
 

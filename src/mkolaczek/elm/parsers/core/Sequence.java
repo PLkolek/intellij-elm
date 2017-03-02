@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,15 +15,15 @@ public class Sequence extends ParserAbstr {
     private final Parser[] parsers;
 
     public static Parser rootSequence(Parser... parsers) {
-        return new Sequence("program", null, true, parsers);
+        return new Sequence("program", true, parsers);
     }
 
     public static Sequence sequence(String name, Parser... parsers) {
-        return new Sequence(name, null, parsers);
+        return new Sequence(name, parsers);
     }
 
     public static Sequence sequence(Parser... parsers) {
-        return new Sequence(name(parsers), null, parsers);
+        return new Sequence(name(parsers), parsers);
     }
 
     private static String name(Parser[] parsers) {
@@ -37,10 +36,6 @@ public class Sequence extends ParserAbstr {
         return "Something is wrong, that name should never be needed!";
     }
 
-    public static Sequence sequenceAs(Element as, Parser... parsers) {
-        return new Sequence(as.getName(), as, parsers);
-    }
-
     public Sequence separatedBy(WhiteSpace whiteSpace) {
         Parser[] newParsers = new Parser[parsers.length * 2 - 1];
         for (int i = 0; i < parsers.length; i++) {
@@ -50,16 +45,16 @@ public class Sequence extends ParserAbstr {
             }
         }
 
-        return new Sequence(name, as, newParsers);
+        return new Sequence(name, newParsers);
     }
 
-    public Sequence(String name, Element as, boolean root, Parser... parsers) {
-        super(name, root, as);
+    public Sequence(String name, boolean root, Parser... parsers) {
+        super(name, root);
         this.parsers = parsers;
     }
 
-    private Sequence(String name, Element as, Parser... parsers) {
-        this(name, as, false, parsers);
+    private Sequence(String name, Parser... parsers) {
+        this(name, false, parsers);
     }
 
     @Override

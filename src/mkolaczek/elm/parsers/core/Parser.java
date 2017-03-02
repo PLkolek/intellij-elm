@@ -1,6 +1,7 @@
 package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
@@ -13,5 +14,9 @@ public interface Parser {
     boolean isRequired();
 
     String name();
+
+    default Parser as(Element as) {
+        return new As(this, as);
+    }
 
 }

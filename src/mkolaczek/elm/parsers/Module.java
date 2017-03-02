@@ -1,88 +1,96 @@
 package mkolaczek.elm.parsers;
 
-import mkolaczek.elm.parsers.core.*;
+import mkolaczek.elm.parsers.core.Parser;
+import mkolaczek.elm.parsers.core.Sequence;
+import mkolaczek.elm.parsers.core.WhiteSpace;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 
+import static mkolaczek.elm.parsers.core.Expect.expect;
+import static mkolaczek.elm.parsers.core.Many.many;
+import static mkolaczek.elm.parsers.core.Or.or;
+import static mkolaczek.elm.parsers.core.Sequence.sequence;
+import static mkolaczek.elm.parsers.core.Try.tryP;
 import static mkolaczek.elm.psi.Elements.MODULE_ALIAS;
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
 
 public class Module {
 
     public static Parser moduleHeader() {
-        return Sequence.sequence("Module Header",
+        return sequence("Module Header",
                 WhiteSpace.freshLine(),
                 moduleDeclaration(),
-                Try.tryP(Sequence.sequence("Doc comment", Basic.docComment(), WhiteSpace.freshLine())),
-                Many.manyAs(Elements.IMPORTS, Module.importLine())
+                tryP(sequence("Doc comment", Basic.docComment(), WhiteSpace.freshLine())),
+                many(Module.importLine()).as(Elements.IMPORTS)
         );
     }
 
     public static Parser importLine() {
-        return Sequence.sequenceAs(Elements.IMPORT_LINE,
-                Expect.expect(Tokens.IMPORT),
+        return sequence(
+                expect(Tokens.IMPORT),
                 WhiteSpace.maybeWhitespace(),
                 Basic.dottedCapVar(Elements.MODULE_NAME_REF),
-                Try.tryP(
-                        Sequence.sequence("as clause",
+                tryP(
+                        sequence("as clause",
                                 WhiteSpace.maybeWhitespace(),
-                                Expect.expect(Tokens.AS),
+                                expect(Tokens.AS),
                                 WhiteSpace.maybeWhitespace(),
-                                Expect.expectAs(CAP_VAR, MODULE_ALIAS)
+                                expect(CAP_VAR).as(MODULE_ALIAS)
                         )
                 ),
-                Try.tryP(
-                        Sequence.sequence("exposing clause",
+                tryP(
+                        sequence("exposing clause",
                                 WhiteSpace.maybeWhitespace(),
                                 exposing()
                         )
                 ),
                 WhiteSpace.freshLine()
-        );
+        ).as(Elements.IMPORT_LINE);
     }
 
     public static Parser exposing() {
-        return Sequence.sequenceAs(Elements.EXPOSING_NODE,
-                Expect.expect(Tokens.EXPOSING),
+        return sequence(
+                expect(Tokens.EXPOSING),
                 WhiteSpace.maybeWhitespace(),
-                Basic.listing("list of exposed values", exportValue()));
+                Basic.listing("list of exposed values", exportValue())
+        ).as(Elements.EXPOSING_NODE);
 
     }
 
     private static Parser exportValue() {
-        return Or.orAs(Elements.EXPORTED_VALUE,
-                Expect.expect(Tokens.LOW_VAR),
+        return or(
+                expect(Tokens.LOW_VAR),
                 Basic.operator(),
                 typeExport()
-        );
+        ).as(Elements.EXPORTED_VALUE);
     }
 
     private static Parser typeExport() {
-        return Sequence.sequence("exported type",
-                Expect.expect(CAP_VAR),
-                Try.tryP(
-                        Basic.listing("type constructors", Expect.expect(CAP_VAR))
+        return sequence("exported type",
+                expect(CAP_VAR),
+                tryP(
+                        Basic.listing("type constructors", expect(CAP_VAR))
                 )
         );
     }
 
 
     public static Parser settings() {
-        return Sequence.sequenceAs(Elements.EFFECT_MODULE_SETTINGS,
-                Expect.expect(Tokens.WHERE),
+        return sequence(
+                expect(Tokens.WHERE),
                 WhiteSpace.maybeWhitespace(),
                 settingsList()
-        );
+        ).as(Elements.EFFECT_MODULE_SETTINGS);
     }
 
     private static Parser settingsList() {
         return Basic.bracketsAs(Elements.EFFECT_MODULE_SETTINGS_LIST,
                 Basic.commaSep(
-                        Sequence.sequenceAs(Elements.EFFECT_MODULE_SETTING,
-                                Expect.expect(Tokens.LOW_VAR),
-                                Basic.padded(Expect.expect(Tokens.EQUALS)),
-                                Expect.expect(Tokens.CAP_VAR)
-                        )
+                        sequence(
+                                expect(Tokens.LOW_VAR),
+                                Basic.padded(expect(Tokens.EQUALS)),
+                                expect(Tokens.CAP_VAR)
+                        ).as(Elements.EFFECT_MODULE_SETTING)
                 )
         );
     }
@@ -90,10 +98,10 @@ public class Module {
     static Parser moduleDeclaration() {
         Sequence effectSequence =
 
-                Sequence.sequence("Module declaration",
-                        Expect.expect(Tokens.EFFECT),
+                sequence("Module declaration",
+                        expect(Tokens.EFFECT),
                         WhiteSpace.maybeWhitespace(),
-                        Expect.expect(Tokens.MODULE),
+                        expect(Tokens.MODULE),
                         WhiteSpace.maybeWhitespace(),
                         Basic.dottedCapVar(Elements.MODULE_NAME),
                         WhiteSpace.maybeWhitespace(),
@@ -104,14 +112,14 @@ public class Module {
                 );
 
         Sequence sequence =
-                Sequence.sequence("Module declaration",
-                        Or.or("Module declaration keywords",
-                                Sequence.sequence("Port module declaration keywords",
-                                        Expect.expect(Tokens.PORT),
+                sequence("Module declaration",
+                        or("Module declaration keywords",
+                                sequence("Port module declaration keywords",
+                                        expect(Tokens.PORT),
                                         WhiteSpace.maybeWhitespace(),
-                                        Expect.expect(Tokens.MODULE)
+                                        expect(Tokens.MODULE)
                                 ),
-                                Expect.expect(Tokens.MODULE)
+                                expect(Tokens.MODULE)
                         ),
                         WhiteSpace.maybeWhitespace(),
                         Basic.dottedCapVar(Elements.MODULE_NAME),
@@ -119,6 +127,6 @@ public class Module {
                         exposing(),
                         WhiteSpace.freshLine()
                 );
-        return Try.tryP(Or.orAs(Elements.MODULE_HEADER, effectSequence, sequence));
+        return tryP(or(effectSequence, sequence).as(Elements.MODULE_HEADER));
     }
 }

@@ -2,7 +2,6 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
@@ -15,16 +14,8 @@ public class Expect extends ParserAbstr {
         return new Expect(expectedToken);
     }
 
-    public static Expect expectAs(Token expectedToken, Element as) {
-        return new Expect(expectedToken, as);
-    }
-
     private Expect(Token expectedToken) {
-        this(expectedToken, null);
-    }
-
-    private Expect(Token expectedToken, Element as) {
-        super(expectedToken.getName(), false, as);
+        super(expectedToken.getName(), false);
         this.expectedToken = expectedToken;
     }
 

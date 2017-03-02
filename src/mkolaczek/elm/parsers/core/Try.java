@@ -19,7 +19,7 @@ public class Try extends ParserAbstr {
     }
 
     public Try(Parser contents) {
-        super(contents.name(), true, null);
+        super(contents.name(), true);
         this.contents = contents;
     }
 

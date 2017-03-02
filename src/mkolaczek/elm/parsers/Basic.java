@@ -7,24 +7,25 @@ import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
+import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
-import static mkolaczek.elm.parsers.core.Sequence.sequenceAs;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
 import static mkolaczek.elm.psi.Tokens.RPAREN;
 
 public class Basic {
 
     public static Parser listing(String name, Parser listedValue) {
-        return sequenceAs(Elements.MODULE_VALUE_LIST,
-                Expect.expect(LPAREN),
+        return sequence(
+                expect(LPAREN),
                 listingContent(name + " content", listedValue),
-                Expect.expect(RPAREN)
-        ).separatedBy(WhiteSpace.maybeWhitespace());
+                expect(RPAREN)
+        ).separatedBy(WhiteSpace.maybeWhitespace())
+         .as(Elements.MODULE_VALUE_LIST);
     }
 
     public static Parser listingContent(String name, Parser listedValue) {
         return Or.or(name,
-                Expect.expectAs(Tokens.OPEN_LISTING, Elements.OPEN_LISTING_NODE),
+                expect(Tokens.OPEN_LISTING).as(Elements.OPEN_LISTING_NODE),
                 listingValues(listedValue)
         );
     }
@@ -37,7 +38,7 @@ public class Basic {
     }
 
     public static Parser padded(Token paddedToken) {
-        return padded(Expect.expect(paddedToken));
+        return padded(expect(paddedToken));
     }
 
     public static Parser padded(Parser paddedValue) {
@@ -54,31 +55,30 @@ public class Basic {
     }
 
     public static Parser dottedCapVar(Element as) {
-        return sequenceAs(as, dottedCapVarBody(as.getName())
-        );
+        return sequence(dottedCapVarBody(as.getName())).as(as);
     }
 
     @NotNull
     private static Parser[] dottedCapVarBody(String name) {
-        return new Parser[]{Expect.expect(Tokens.CAP_VAR),
+        return new Parser[]{expect(Tokens.CAP_VAR),
                 Many.many(name + " parts",
                         WhiteSpace.noWhitespace(),
-                        Expect.expect(Tokens.DOT),
+                        expect(Tokens.DOT),
                         WhiteSpace.noWhitespace(),
-                        Expect.expect(Tokens.CAP_VAR)
+                        expect(Tokens.CAP_VAR)
                 )};
     }
 
     public static Parser operator() {
-        return sequenceAs(Elements.OPERATOR,
-                Expect.expect(Tokens.LPAREN),
+        return sequence(
+                expect(Tokens.LPAREN),
                 operatorSymbol(),
-                Expect.expect(Tokens.RPAREN)
-        ).separatedBy(WhiteSpace.maybeWhitespace());
+                expect(Tokens.RPAREN)
+        ).separatedBy(WhiteSpace.maybeWhitespace()).as(Elements.OPERATOR);
     }
 
     private static Parser operatorSymbol() {
-        return Or.or("operator symbol", Expect.expect(Tokens.SYM_OP), Expect.expect(Tokens.COMMA_OP));
+        return Or.or("operator symbol", expect(Tokens.SYM_OP), expect(Tokens.COMMA_OP));
     }
 
     public static Parser commaSep(Parser parser) {
@@ -128,18 +128,18 @@ public class Basic {
 
     @NotNull
     private static Parser[] surroundContent(Token left, Token right, Parser contents) {
-        return new Parser[]{Expect.expect(left), padded(contents), Expect.expect(right)};
+        return new Parser[]{expect(left), padded(contents), expect(right)};
     }
 
     public static Parser surroundAs(Element as, Token left, Token right, Parser contents) {
-        return sequenceAs(as, surroundContent(left, right, contents));
+        return sequence(surroundContent(left, right, contents)).as(as);
     }
 
     public static Parser docComment() {
-        return sequenceAs(Elements.DOC_COMMENT,
-                Expect.expect(Tokens.BEGIN_DOC_COMMENT),
-                Expect.expect(Tokens.END_DOC_COMMENT)
-        );
+        return sequence(
+                expect(Tokens.BEGIN_DOC_COMMENT),
+                expect(Tokens.END_DOC_COMMENT)
+        ).as(Elements.DOC_COMMENT);
     }
 
     public static Parser spacePrefix(Parser parser) {
