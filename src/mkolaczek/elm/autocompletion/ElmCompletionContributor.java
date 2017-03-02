@@ -145,7 +145,7 @@ public class ElmCompletionContributor extends CompletionContributor {
 
                                        @Nullable
                                        @Override
-                                       protected PsiElement findNextToken(InsertionContext context) {
+                                       protected PsiElement findNextToken(@NotNull InsertionContext context) {
                                            final PsiFile file = context.getFile();
                                            PsiElement element = file.findElementAt(context.getTailOffset());
                                            if (element != null && isWhitespace(element)) {
