@@ -22,6 +22,12 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
         performTest("import/Test.elm", "import/expected.elm", "import");
     }
 
+    public void testImportCompletionDoesntTriggerInTheMiddleOfAnImport() {
+        performTest("import/AutocompleteInTheMiddleOfAnImport.elm",
+                "import/expectedAutocompleteInTheMiddleOfAnImport.elm"
+        );
+    }
+
     public void testAfterImportedModuleNameCompletion() {
         performTest("afterImportedModuleName/Test.elm", "afterImportedModuleName/expected.elm", "as", "exposing");
     }
@@ -47,7 +53,9 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
         List<String> strings = autocomplete();
         assertThat(strings, hasItems(suggestions));
         assertThat(strings.size(), is(suggestions.length));
-        selectItem(myItems[0]);
+        if (suggestions.length > 0) {
+            selectItem(myItems[0]);
+        }
         checkResultByFile(afterFile);
     }
 

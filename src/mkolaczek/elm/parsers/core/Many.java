@@ -1,11 +1,11 @@
 package mkolaczek.elm.parsers.core;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static mkolaczek.elm.parsers.core.SkipUntil.skipUntil;
@@ -50,8 +50,12 @@ public class Many extends ParserAbstr {
             } else if (myNextTokens.contains(builder.getTokenType()) || builder.eof()) {
                 return;
             } else {
-                String name = parser.name() + " or " + Joiner.on(", ").join(Token.names(myNextTokens));
-                skipUntil(name, childNextTokens, builder);
+                Optional<Token> nextValid = SkipUntil.nextValid(childNextTokens, builder);
+                if (nextValid.isPresent() && startingTokens().contains(nextValid.get())) {
+                    skipUntil(parser.name(), myNextTokens, builder);
+                } else {
+                    return;
+                }
             }
         } while (true);
     }

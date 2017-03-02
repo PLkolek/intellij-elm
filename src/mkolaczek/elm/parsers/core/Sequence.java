@@ -77,10 +77,11 @@ public class Sequence extends ParserAbstr {
     }
 
     protected List<Set<Token>> nextTokens2(Set<Token> myNextTokens) {
+        //if a parser fails, we might either skip tokens until it succeeds, or until the next parser succeeds
+        //hence, next tokes for each parser contain next parsers' tokens and its starting tokens
         List<Set<Token>> result = Lists.newArrayList();
-        result.add(myNextTokens);
         Set<Token> nextTokens = Sets.newHashSet(myNextTokens);
-        for (int i = parsers.length - 1; i > 0; i--) {
+        for (int i = parsers.length - 1; i >= 0; i--) {
             nextTokens.addAll(parsers[i].startingTokens());
             result.add(Sets.newHashSet(nextTokens));
         }
