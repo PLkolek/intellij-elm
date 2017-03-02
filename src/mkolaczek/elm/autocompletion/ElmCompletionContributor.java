@@ -10,12 +10,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.patterns.PsiElementPattern.Capture;
-import com.intellij.patterns.StandardPatterns;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import mkolaczek.elm.psi.Tokens;
@@ -29,40 +26,40 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static mkolaczek.elm.autocompletion.ModulePattern.module;
+import static mkolaczek.elm.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.EFFECT;
 import static mkolaczek.elm.psi.Tokens.RBRACKET;
 
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
-        simpleAutocomplete(afterWhitespace("\n").andNot(psiElement().inside(psiElement(IMPORT_LINE))),
-                keywordElement("import"));
-        simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME_REF)).andNot(afterWhitespace("\n")),
-                keywordElement("as"),
+        autocomplete(afterWhitespace("\n").andNot(e().inside(e(IMPORT_LINE))),
+                keyword("import"));
+        autocomplete(afterLeaf(childOf(MODULE_NAME_REF)).andNot(afterWhitespace("\n")),
+                keyword("as"),
                 exposingCompletion());
-        Capture<PsiElement> insideEffectModule = psiElement().inside(module().effectModule());
-        simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME))
-                                   .andNot(insideEffectModule), exposingCompletion());
-        simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_NAME))
-                                   .andOr(insideEffectModule, Patterns.afterLeaf(insideEffectModule)),
+        Capture<PsiElement> insideEffectModule = e().inside(module().effectModule());
+        autocomplete(afterLeaf(childOf(MODULE_NAME))
+                .andNot(insideEffectModule), exposingCompletion());
+        autocomplete(afterLeaf(childOf(MODULE_NAME))
+                        .andOr(insideEffectModule, afterLeaf(insideEffectModule)),
                 whereCompletion());
-        simpleAutocomplete(afterLeaf(RBRACKET).inside(module().effectModule()), exposingCompletion());
-        simpleAutocomplete(Patterns.afterLeaf(Patterns.childOf(MODULE_ALIAS)), exposingCompletion());
-        simpleAutocomplete(psiElement().afterLeaf(psiElement().isNull()),
-                keywordElement("module"),
-                keywordElement("port module"),
-                keywordElement("effect module")
+        autocomplete(afterLeaf(RBRACKET).inside(module().effectModule()), exposingCompletion());
+        autocomplete(afterLeaf(childOf(MODULE_ALIAS)), exposingCompletion());
+        autocomplete(e().afterLeaf(e().isNull()),
+                keyword("module"),
+                keyword("port module"),
+                keyword("effect module")
         );
-        simpleAutocomplete(afterLeaf(Tokens.PORT), keywordElement("module"));
-        simpleAutocomplete(afterLeaf(EFFECT), keywordElement("module"));
-        simpleAutocomplete(afterLeaf(Tokens.MODULE), parameters -> {
+        autocomplete(afterLeaf(Tokens.PORT), keyword("module"));
+        autocomplete(afterLeaf(EFFECT), keyword("module"));
+        autocomplete(afterLeaf(Tokens.MODULE), parameters -> {
             String fileName = parameters.getOriginalFile().getName();
             String moduleName = fileName.substring(0, fileName.length() - 4);//cut out .elm
             return Lists.newArrayList(moduleName);
         });
-        simpleAutocomplete(afterLeaf(Tokens.AS), parameters -> {
+        autocomplete(afterLeaf(Tokens.AS), parameters -> {
             ElmImport2 importLine = PsiTreeUtil.getParentOfType(parameters.getPosition(), ElmImport2.class);
             Preconditions.checkState(importLine != null, "As must be a child of import line");
             ElmModuleNameRef module = importLine.importedModule();
@@ -73,35 +70,27 @@ public class ElmCompletionContributor extends CompletionContributor {
 
     }
 
-    private Capture<PsiElement> afterWhitespace(String wsChar) {
-        return psiElement().afterLeafSkipping(psiElement(PsiErrorElement.class),
-                psiElement().withText(StandardPatterns.string().endsWith(wsChar)));
-    }
 
     @NotNull
-    private LookupElementBuilder keywordElement(String item) {
+    private LookupElementBuilder keyword(String item) {
         return LookupElementBuilder.create(item).withInsertHandler(AddSpaceInsertHandler.INSTANCE);
     }
 
-    private Capture<PsiElement> afterLeaf(IElementType elementType) {
-        return Patterns.afterLeaf(psiElement(elementType));
+    private void autocomplete(Capture<PsiElement> pattern, final LookupElementBuilder... completions) {
+        autocomplete2(pattern, parameters -> Arrays.asList(completions));
     }
 
-    private void simpleAutocomplete(Capture<PsiElement> pattern, final LookupElementBuilder... completions) {
-        autocomplete(pattern, parameters -> Arrays.asList(completions));
-    }
-
-    private void simpleAutocomplete(Capture<PsiElement> pattern,
-                                    Function<CompletionParameters, List<String>> autocompletion) {
+    private void autocomplete(Capture<PsiElement> pattern,
+                              Function<CompletionParameters, List<String>> autocompletion) {
         Function<List<String>, List<LookupElementBuilder>> wrapper = strings -> strings.stream()
                                                                                        .map(LookupElementBuilder::create)
                                                                                        .collect(Collectors.toList());
-        autocomplete(pattern, wrapper.compose(autocompletion));
+        autocomplete2(pattern, wrapper.compose(autocompletion));
     }
 
 
-    private void autocomplete(Capture<PsiElement> pattern,
-                              Function<CompletionParameters, List<LookupElementBuilder>> autocompletion) {
+    private void autocomplete2(Capture<PsiElement> pattern,
+                               Function<CompletionParameters, List<LookupElementBuilder>> autocompletion) {
         extend(CompletionType.BASIC, pattern,
                 new CompletionProvider<CompletionParameters>() {
                     @Override
