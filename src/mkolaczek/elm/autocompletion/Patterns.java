@@ -63,7 +63,11 @@ public class Patterns {
         return e().inside(e().afterSibling(e(element)));
     }
 
+    static PsiElementPattern.Capture<PsiElement> inBlock(Element block) {
+        return e().andOr(inside(block), after(block));
+    }
+
     static PsiElementPattern.Capture<PsiElement> inBlock(Element block, Element nextBlock) {
-        return e().andOr(inside(block), after(block).andNot(inside(nextBlock)));
+        return inBlock(block).andNot(inside(nextBlock));
     }
 }

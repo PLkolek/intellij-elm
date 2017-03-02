@@ -18,13 +18,23 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
         return "testdata/autocompletion/keyword";
     }
 
-    public void testImportCompletion() {
-        performTest("import/Test.elm", "import/expected.elm", "import");
+    public void testAfterImportsCompletion() {
+        performTest("import/Test.elm", "import/expected.elm", "import", "type");
     }
 
     public void testImportCompletionDoesntTriggerInTheMiddleOfAnImport() {
         performTest("import/AutocompleteInTheMiddleOfAnImport.elm",
                 "import/expectedAutocompleteInTheMiddleOfAnImport.elm"
+        );
+    }
+
+    public void testTypeCompletion() {
+        performTest("type/Test.elm", "type/expected.elm", "type");
+    }
+
+    public void testTypeCompletionDoesntTriggerInTheMiddleOfTypeDeclaration() {
+        performTest("type/AutocompleteInTheMiddleOfTypeDeclaration.elm",
+                "type/expectedAutocompleteInTheMiddleOfTypeDeclaration.elm"
         );
     }
 

@@ -68,6 +68,10 @@ public class ElmCompletionContributor extends CompletionContributor {
         });
 
 
+        autocomplete(afterWhitespace("\n").and(after(IMPORTS)).andNot(inside(TYPE_DECLARATION)),
+                keyword("type"));
+
+
     }
 
     @NotNull
@@ -151,5 +155,10 @@ public class ElmCompletionContributor extends CompletionContributor {
     @Override
     public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
         super.fillCompletionVariants(parameters, result);
+    }
+
+    @Override
+    public void beforeCompletion(@NotNull CompletionInitializationContext context) {
+        context.setDummyIdentifier("\u16DC");
     }
 }

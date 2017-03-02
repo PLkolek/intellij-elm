@@ -2,7 +2,6 @@ package mkolaczek.elm;
 
 import com.intellij.lang.ASTNode;
 
-import static com.intellij.psi.TokenType.ERROR_ELEMENT;
 import static com.intellij.psi.TokenType.WHITE_SPACE;
 
 public class ASTUtil {
@@ -16,7 +15,7 @@ public class ASTUtil {
     }
 
     private static boolean isSignificant(ASTNode node) {
-        return node == null || (node.getElementType() != WHITE_SPACE && node.getElementType() != ERROR_ELEMENT);
+        return node == null || node.getElementType() != WHITE_SPACE;
     }
 
     public static ASTNode firstSignificantChild(ASTNode node) {
