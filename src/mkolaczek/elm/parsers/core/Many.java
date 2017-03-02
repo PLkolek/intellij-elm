@@ -1,5 +1,6 @@
 package mkolaczek.elm.parsers.core;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Element;
@@ -49,7 +50,7 @@ public class Many extends ParserAbstr {
             } else if (myNextTokens.contains(builder.getTokenType()) || builder.eof()) {
                 return;
             } else {
-                String name = parser.name() + " or " + "NEXTNAME";
+                String name = parser.name() + " or " + Joiner.on(", ").join(Token.names(myNextTokens));
                 skipUntil(name, childNextTokens, builder);
             }
         } while (true);
