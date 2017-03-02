@@ -34,7 +34,7 @@ import static mkolaczek.elm.psi.Tokens.RBRACKET;
 
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
-        autocomplete(afterWhitespace("\n").andNot(e().inside(e(IMPORT_LINE))),
+        autocomplete(afterWhitespace("\n").and(inBlock(IMPORTS, DECLARATIONS)).andNot(inside(IMPORT_LINE)),
                 keyword("import"));
         autocomplete(afterLeaf(childOf(MODULE_NAME_REF)).andNot(afterWhitespace("\n")),
                 keyword("as"),
@@ -69,7 +69,6 @@ public class ElmCompletionContributor extends CompletionContributor {
 
 
     }
-
 
     @NotNull
     private LookupElementBuilder keyword(String item) {

@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.psi.Element;
 import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
@@ -52,5 +53,17 @@ public class Patterns {
     static PsiElementPattern.Capture<PsiElement> afterWhitespace(String wsChar) {
         return e().afterLeafSkipping(e(PsiErrorElement.class),
                 e().withText(StandardPatterns.string().endsWith(wsChar)));
+    }
+
+    static PsiElementPattern.Capture<PsiElement> inside(Element element) {
+        return e().inside(e(element));
+    }
+
+    static PsiElementPattern.Capture<PsiElement> after(Element element) {
+        return e().inside(e().afterSibling(e(element)));
+    }
+
+    static PsiElementPattern.Capture<PsiElement> inBlock(Element block, Element nextBlock) {
+        return e().andOr(inside(block), after(block).andNot(inside(nextBlock)));
     }
 }
