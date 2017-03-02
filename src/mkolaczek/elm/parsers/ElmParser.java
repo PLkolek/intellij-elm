@@ -10,6 +10,8 @@ import mkolaczek.elm.parsers.core.Sequence;
 import mkolaczek.elm.psi.Elements;
 import org.jetbrains.annotations.NotNull;
 
+import static mkolaczek.elm.parsers.core.Try.tryP;
+
 public class ElmParser implements PsiParser {
 
     @NotNull
@@ -33,7 +35,8 @@ public class ElmParser implements PsiParser {
     }
 
     private void program(@NotNull PsiBuilder builder) {
-        Sequence parser = Sequence.sequence(Module.moduleHeader(),
+        Sequence parser = Sequence.sequence(
+                tryP(Module.moduleHeader()),
                 Declaration.declarations()
         );
         parser.parse2(builder, Sets.newHashSet());

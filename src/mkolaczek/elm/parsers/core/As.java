@@ -42,6 +42,6 @@ public class As implements Parser {
 
     @Override
     public String name() {
-        return content.name();
+        return as.getName();
     }
 }
