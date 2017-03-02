@@ -10,13 +10,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Set;
 
-public class Sequence extends ParserAbstr {
+public class Sequence implements Parser {
 
+    private final String name;
     private final Parser[] parsers;
-
-    public static Parser rootSequence(Parser... parsers) {
-        return new Sequence("program", true, parsers);
-    }
 
     public static Sequence sequence(String name, Parser... parsers) {
         return new Sequence(name, parsers);
@@ -48,30 +45,12 @@ public class Sequence extends ParserAbstr {
         return new Sequence(name, newParsers);
     }
 
-    public Sequence(String name, boolean root, Parser... parsers) {
-        super(name, root);
+    private Sequence(String name, Parser... parsers) {
+        this.name = name;
         this.parsers = parsers;
     }
 
-    private Sequence(String name, Parser... parsers) {
-        this(name, false, parsers);
-    }
-
-    @Override
-    protected void parse2(PsiBuilder psiBuilder, Set<Token> nextTokens) {
-        List<Set<Token>> childrenNextTokens = nextTokens2(nextTokens);
-
-        for (int i = 0; i < parsers.length; i++) {
-            Parser parser = parsers[i];
-            Set<Token> parserNextTokens = childrenNextTokens.get(i);
-            if (!parser.parse(psiBuilder, parserNextTokens)) {
-                SkipUntil.skipUntil(parser.name(), parserNextTokens, psiBuilder);
-                parser.parse(psiBuilder, parserNextTokens);
-            }
-        }
-    }
-
-    protected List<Set<Token>> nextTokens2(Set<Token> myNextTokens) {
+    private List<Set<Token>> nextTokens2(Set<Token> myNextTokens) {
         //if a parser fails, we might either skip tokens until it succeeds, or until the next parser succeeds
         //hence, next tokes for each parser contain next parsers' tokens and its starting tokens
         List<Set<Token>> result = Lists.newArrayList();
@@ -105,6 +84,30 @@ public class Sequence extends ParserAbstr {
     }
 
     @Override
+    public boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens) {
+        //noinspection SuspiciousMethodCalls
+        if (psiBuilder.eof() || !startingTokens().contains(psiBuilder.getTokenType())) {
+            return false;
+        }
+
+        parse2(psiBuilder, nextTokens);
+        return true;
+    }
+
+    public void parse2(PsiBuilder psiBuilder, Set<Token> nextTokens) {
+        List<Set<Token>> childrenNextTokens = nextTokens2(nextTokens);
+
+        for (int i = 0; i < parsers.length; i++) {
+            Parser parser = parsers[i];
+            Set<Token> parserNextTokens = childrenNextTokens.get(i);
+            if (!parser.parse(psiBuilder, parserNextTokens)) {
+                SkipUntil.skipUntil(parser.name(), parserNextTokens, psiBuilder);
+                parser.parse(psiBuilder, parserNextTokens);
+            }
+        }
+    }
+
+    @Override
     public Set<Token> startingTokens() {
         return startingTokens(parsers);
     }
@@ -112,5 +115,10 @@ public class Sequence extends ParserAbstr {
     @Override
     public boolean isRequired() {
         return !isOptional(parsers);
+    }
+
+    @Override
+    public String name() {
+        return name;
     }
 }

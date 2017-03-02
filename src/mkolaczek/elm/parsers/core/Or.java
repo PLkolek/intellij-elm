@@ -10,8 +10,9 @@ import java.util.Set;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
-public class Or extends ParserAbstr {
+public class Or implements Parser {
 
+    private final String name;
     private final Parser[] parsers;
 
     public static Or or(String name, Parser... parsers) {
@@ -30,17 +31,8 @@ public class Or extends ParserAbstr {
     }
 
     private Or(String name, Parser... parsers) {
-        super(name);
+        this.name = name;
         this.parsers = parsers;
-    }
-
-    @Override
-    protected void parse2(PsiBuilder builder, Set<Token> myNextTokens) {
-        for (Parser parser : parsers) {
-            if (parser.parse(builder, myNextTokens)) {
-                return;
-            }
-        }
     }
 
     private static Set<Token> startingTokens(Parser... parsers) {
@@ -52,6 +44,20 @@ public class Or extends ParserAbstr {
     }
 
     @Override
+    public boolean parse(PsiBuilder psiBuilder, Set<Token> myNextTokens) {
+        //noinspection SuspiciousMethodCalls
+        if (psiBuilder.eof() || !startingTokens().contains(psiBuilder.getTokenType())) {
+            return false;
+        }
+        for (Parser parser : parsers) {
+            if (parser.parse(psiBuilder, myNextTokens)) {
+                break;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public Set<Token> startingTokens() {
         return startingTokens(parsers);
     }
@@ -59,5 +65,10 @@ public class Or extends ParserAbstr {
     @Override
     public boolean isRequired() {
         return true;
+    }
+
+    @Override
+    public String name() {
+        return name;
     }
 }

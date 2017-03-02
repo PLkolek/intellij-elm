@@ -6,7 +6,7 @@ import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
 
-public class Expect extends ParserAbstr {
+public class Expect implements Parser {
 
     private final Token expectedToken;
 
@@ -15,14 +15,16 @@ public class Expect extends ParserAbstr {
     }
 
     private Expect(Token expectedToken) {
-        super(expectedToken.getName(), false);
         this.expectedToken = expectedToken;
     }
 
-
     @Override
-    protected void parse2(PsiBuilder builder, Set<Token> nextTokens) {
-        builder.advanceLexer();
+    public boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens) {
+        if (psiBuilder.eof() || expectedToken != psiBuilder.getTokenType()) {
+            return false;
+        }
+        psiBuilder.advanceLexer();
+        return true;
     }
 
     @Override
@@ -33,5 +35,10 @@ public class Expect extends ParserAbstr {
     @Override
     public boolean isRequired() {
         return true;
+    }
+
+    @Override
+    public String name() {
+        return expectedToken.getName();
     }
 }

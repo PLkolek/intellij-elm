@@ -9,9 +9,10 @@ import java.util.Set;
 
 import static mkolaczek.elm.parsers.core.SkipUntil.skipUntil;
 
-public class Many extends ParserAbstr {
+public class Many implements Parser {
 
     private final Parser parser;
+    private final String name;
 
     public static Parser many1(Parser parser) {
         return Sequence.sequence(
@@ -29,29 +30,29 @@ public class Many extends ParserAbstr {
     }
 
     private Many(String name, Parser parser) {
-        super(name, true);
+        this.name = name;
         this.parser = parser;
     }
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    protected void parse2(PsiBuilder builder, Set<Token> myNextTokens) {
-
+    public boolean parse(PsiBuilder builder, Set<Token> myNextTokens) {
         Set<Token> childNextTokens = Sets.union(myNextTokens, startingTokens());
         do {
             if (startingTokens().contains(builder.getTokenType())) {
                 parser.parse(builder, childNextTokens);
             } else if (myNextTokens.contains(builder.getTokenType()) || builder.eof()) {
-                return;
+                break;
             } else {
                 Optional<Token> nextValid = SkipUntil.nextValid(childNextTokens, builder);
                 if (nextValid.isPresent() && startingTokens().contains(nextValid.get())) {
                     skipUntil(parser.name(), myNextTokens, builder);
                 } else {
-                    return;
+                    break;
                 }
             }
         } while (true);
+        return true;
     }
 
     @Override
@@ -62,5 +63,10 @@ public class Many extends ParserAbstr {
     @Override
     public boolean isRequired() {
         return false;
+    }
+
+    @Override
+    public String name() {
+        return name;
     }
 }

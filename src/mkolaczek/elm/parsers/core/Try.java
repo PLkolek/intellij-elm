@@ -10,7 +10,7 @@ import java.util.Set;
 
 import static mkolaczek.elm.parsers.core.SkipUntil.nextValid;
 
-public class Try extends ParserAbstr {
+public class Try implements Parser {
 
     private final Parser contents;
 
@@ -19,26 +19,24 @@ public class Try extends ParserAbstr {
     }
 
     public Try(Parser contents) {
-        super(contents.name(), true);
         this.contents = contents;
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    protected void parse2(PsiBuilder builder, Set<Token> myNextTokens) {
+    public boolean parse(PsiBuilder builder, Set<Token> myNextTokens) {
         Set<Token> nextTokens = Sets.union(myNextTokens, startingTokens());
-        //noinspection SuspiciousMethodCalls
         IElementType token = builder.getTokenType();
-        //noinspection SuspiciousMethodCalls
         if (startingTokens().contains(token)) {
             contents.parse(builder, myNextTokens);
-        } else //noinspection SuspiciousMethodCalls
-            if (!myNextTokens.contains(token)) {
-                Optional<Token> nextValid = nextValid(nextTokens, builder);
-                if (nextValid.isPresent() && startingTokens().contains(nextValid.get())) {
-                    SkipUntil.skipUntil(name(), startingTokens(), builder);
-                    contents.parse(builder, myNextTokens);
-                }
+        } else if (!myNextTokens.contains(token)) {
+            Optional<Token> nextValid = nextValid(nextTokens, builder);
+            if (nextValid.isPresent() && startingTokens().contains(nextValid.get())) {
+                SkipUntil.skipUntil(name(), startingTokens(), builder);
+                contents.parse(builder, myNextTokens);
             }
+        }
+        return true;
     }
 
     @Override
@@ -49,5 +47,10 @@ public class Try extends ParserAbstr {
     @Override
     public boolean isRequired() {
         return false;
+    }
+
+    @Override
+    public String name() {
+        return contents.name();
     }
 }
