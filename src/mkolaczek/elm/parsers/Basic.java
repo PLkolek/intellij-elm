@@ -114,8 +114,8 @@ public class Basic {
         return surround(name, Tokens.LPAREN, Tokens.RPAREN, contents);
     }
 
-    public static Parser bracketsAs(Element as, Parser contents) {
-        return surroundAs(as, Tokens.LBRACKET, Tokens.RBRACKET, contents);
+    public static Parser brackets(Parser contents) {
+        return surround(Tokens.LBRACKET, Tokens.RBRACKET, contents);
     }
 
     public static Parser brackets(String name, Parser contents) {
@@ -131,8 +131,8 @@ public class Basic {
         return new Parser[]{expect(left), padded(contents), expect(right)};
     }
 
-    public static Parser surroundAs(Element as, Token left, Token right, Parser contents) {
-        return sequence(surroundContent(left, right, contents)).as(as);
+    public static Parser surround(Token left, Token right, Parser contents) {
+        return sequence(surroundContent(left, right, contents));
     }
 
     public static Parser docComment() {

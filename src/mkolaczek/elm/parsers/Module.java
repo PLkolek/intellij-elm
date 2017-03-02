@@ -84,7 +84,7 @@ public class Module {
     }
 
     private static Parser settingsList() {
-        return Basic.bracketsAs(Elements.EFFECT_MODULE_SETTINGS_LIST,
+        return Basic.brackets(
                 Basic.commaSep(
                         sequence(
                                 expect(Tokens.LOW_VAR),
@@ -92,7 +92,7 @@ public class Module {
                                 expect(Tokens.CAP_VAR)
                         ).as(Elements.EFFECT_MODULE_SETTING)
                 )
-        );
+        ).as(Elements.EFFECT_MODULE_SETTINGS_LIST);
     }
 
     static Parser moduleDeclaration() {
