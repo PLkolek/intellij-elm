@@ -71,7 +71,7 @@ public class Module {
                 tryP(
                         Basic.listing("type constructors", expect(CAP_VAR))
                 )
-        );
+        ).as(Elements.TYPE_EXPORT);
     }
 
 

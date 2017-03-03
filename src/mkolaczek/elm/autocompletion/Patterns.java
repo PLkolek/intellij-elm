@@ -10,6 +10,8 @@ import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.psi.Element;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static com.intellij.patterns.StandardPatterns.or;
 
@@ -31,8 +33,9 @@ public class Patterns {
         return psiElement().withParent(psiElement(elementType));
     }
 
-    static PsiElementPattern.Capture<PsiElement> afterLeaf(IElementType elementType) {
-        return afterLeaf(psiElement(elementType));
+    static PsiElementPattern.Capture<PsiElement> e(IElementType... types) {
+        ElementPattern[] patterns = Arrays.stream(types).map(Patterns::e).toArray(ElementPattern[]::new);
+        return e().andOr(patterns);
     }
 
     @NotNull
@@ -43,6 +46,10 @@ public class Patterns {
     @NotNull
     static PsiElementPattern.Capture<PsiElement> e(IElementType type) {
         return psiElement(type);
+    }
+
+    static PsiElementPattern.Capture<PsiElement> afterLeaf(IElementType... elementType) {
+        return afterLeaf(e(elementType));
     }
 
     @NotNull

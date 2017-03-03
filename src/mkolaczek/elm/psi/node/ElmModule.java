@@ -96,23 +96,26 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
         return PsiTreeUtil.getChildOfType(this, ElmDocComment.class);
     }
 
-    public ElmModuleHeader header() {
-        return PsiTreeUtil.findChildOfType(this, ElmModuleHeader.class);
+    public Optional<ElmModuleHeader> header() {
+        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, ElmModuleHeader.class));
     }
 
     public String typeStr() {
-        IElementType type = type();
-        if (type == Tokens.EFFECT) {
+        Optional<IElementType> type = type();
+        if (!type.isPresent()) {
+            return "";
+        }
+        if (type.get() == Tokens.EFFECT) {
             return "effect";
         }
-        if (type == Tokens.PORT) {
+        if (type.get() == Tokens.PORT) {
             return "port";
         }
-        return "";
+        throw new IllegalStateException("Unsupported type: " + type.get());
     }
 
-    public IElementType type() {
-        return header().getFirstChild().getNode().getElementType();
+    public Optional<IElementType> type() {
+        return header().map(h -> h.getFirstChild().getNode().getElementType());
     }
 
     public Optional<EffectModuleSettingsList> settingsList() {

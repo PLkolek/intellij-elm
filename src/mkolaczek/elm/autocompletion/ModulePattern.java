@@ -7,6 +7,8 @@ import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.ElmModule;
 import org.jetbrains.annotations.NotNull;
 
+import static java.util.function.Predicate.isEqual;
+
 public class ModulePattern extends PsiElementPattern<ElmModule, ModulePattern> {
     protected ModulePattern() {
         super(ElmModule.class);
@@ -20,7 +22,7 @@ public class ModulePattern extends PsiElementPattern<ElmModule, ModulePattern> {
         return with(new PatternCondition<ElmModule>("effectModule") {
             @Override
             public boolean accepts(@NotNull ElmModule elmModule, ProcessingContext context) {
-                return elmModule.type() == Tokens.EFFECT;
+                return elmModule.type().filter(isEqual(Tokens.EFFECT)).isPresent();
             }
         });
     }

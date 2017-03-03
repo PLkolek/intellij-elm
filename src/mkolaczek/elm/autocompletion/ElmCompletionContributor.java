@@ -1,7 +1,6 @@
 package mkolaczek.elm.autocompletion;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -15,17 +14,19 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
+import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.Tokens;
-import mkolaczek.elm.psi.node.ElmImport2;
-import mkolaczek.elm.psi.node.ElmModuleNameRef;
+import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.stream.Collectors.toList;
 import static mkolaczek.elm.autocompletion.ModulePattern.module;
 import static mkolaczek.elm.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
@@ -56,7 +57,7 @@ public class ElmCompletionContributor extends CompletionContributor {
         autocomplete(afterLeaf(Tokens.MODULE), parameters -> {
             String fileName = parameters.getOriginalFile().getName();
             String moduleName = fileName.substring(0, fileName.length() - 4);//cut out .elm
-            return Lists.newArrayList(moduleName);
+            return newArrayList(moduleName);
         });
         autocomplete(afterLeaf(Tokens.AS), parameters -> {
             ElmImport2 importLine = PsiTreeUtil.getParentOfType(parameters.getPosition(), ElmImport2.class);
@@ -64,6 +65,14 @@ public class ElmCompletionContributor extends CompletionContributor {
             ElmModuleNameRef module = importLine.importedModule();
             String[] words = module.getName().split("\\.");
             return Names.suggest(words);
+        });
+
+        autocomplete(afterLeaf(e(TYPE, ALIAS)), parameters -> {
+            Optional<ElmModuleHeader> header = ((ElmFile) parameters.getPosition().getContainingFile()).header();
+            return header.flatMap(ElmModuleHeader::exposingList)
+                         .map(ElmModuleValueList::exportedTypes)
+                         .orElse(newArrayList())
+                         .stream().map(ElmTypeExport::typeName).collect(toList());
         });
 
 
@@ -87,7 +96,7 @@ public class ElmCompletionContributor extends CompletionContributor {
                               Function<CompletionParameters, List<String>> autocompletion) {
         Function<List<String>, List<LookupElementBuilder>> wrapper = strings -> strings.stream()
                                                                                        .map(LookupElementBuilder::create)
-                                                                                       .collect(Collectors.toList());
+                                                                                       .collect(toList());
         autocomplete2(pattern, wrapper.compose(autocompletion));
     }
 

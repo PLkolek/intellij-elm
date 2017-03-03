@@ -10,7 +10,7 @@ public class ElmElementFactory {
 
     public static ElmModuleName moduleName(Project project, String name) {
         ElmFile file = createFile(project, "module " + name);
-        return file.header().moduleName();
+        return file.header().get().moduleName();
     }
 
     public static ElmModuleNameRef moduleNameRef(Project project, String name) {

@@ -2,7 +2,10 @@ package mkolaczek.elm.psi.node;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.util.PsiTreeUtil;
+
+import java.util.Optional;
+
+import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 
 public class ElmModuleHeader extends ASTWrapperPsiElement {
 
@@ -11,6 +14,11 @@ public class ElmModuleHeader extends ASTWrapperPsiElement {
     }
 
     public ElmModuleName moduleName() {
-        return PsiTreeUtil.findChildOfType(this, ElmModuleName.class);
+        return findChildOfType(this, ElmModuleName.class);
+    }
+
+    public Optional<ElmModuleValueList> exposingList() {
+        ElmExposingNode exposingNode = findChildOfType(this, ElmExposingNode.class);
+        return Optional.ofNullable(exposingNode).map(ElmExposingNode::valueList);
     }
 }

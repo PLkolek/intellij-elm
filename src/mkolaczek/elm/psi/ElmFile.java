@@ -12,6 +12,7 @@ import mkolaczek.elm.psi.node.ElmModuleHeader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public class ElmFile extends PsiFileBase {
     public ElmFile(@NotNull FileViewProvider viewProvider) {
@@ -33,7 +34,7 @@ public class ElmFile extends PsiFileBase {
         return PsiTreeUtil.findChildrenOfType(this, ElmImport2.class);
     }
 
-    public ElmModuleHeader header() {
+    public Optional<ElmModuleHeader> header() {
         return module().header();
     }
 
