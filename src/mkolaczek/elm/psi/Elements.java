@@ -30,6 +30,7 @@ public interface Elements {
     Element OPEN_LISTING_NODE = new Element("OPEN_LISTING_NODE", "open listing");
     Element IMPORTS = new Element("imports");
     Element TYPE_EXPORT = new Element("type export");
+    Element TYPE_CONSTRUCTOR = new Element("type constructor");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {
@@ -78,6 +79,8 @@ public interface Elements {
                 return new EffectModuleSetting(node);
             } else if (type == TYPE_EXPORT) {
                 return new ElmTypeExport(node);
+            } else if (type == TYPE_CONSTRUCTOR) {
+                return new ElmTypeConstructor(node);
             } else {
 
                 throw new AssertionError("Unknown element type: " + type);

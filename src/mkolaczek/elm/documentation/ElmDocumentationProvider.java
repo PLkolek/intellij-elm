@@ -6,6 +6,7 @@ import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import mkolaczek.elm.psi.node.ElmDocComment;
+import mkolaczek.elm.psi.node.ElmExportedValue;
 import mkolaczek.elm.psi.node.ElmModule;
 import mkolaczek.elm.psi.node.ElmModuleValueList;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,7 @@ public class ElmDocumentationProvider implements DocumentationProvider {
         ElmModuleValueList valueList = module.exposedValues();
         String exposedValuesStr = "..";
         if (!valueList.isOpenListing()) {
-            exposedValuesStr = concatValues(valueList.values());
+            exposedValuesStr = concatValues(valueList.values(ElmExportedValue.class));
         }
         return exposedValuesStr;
     }

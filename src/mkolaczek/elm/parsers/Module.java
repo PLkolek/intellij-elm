@@ -69,7 +69,7 @@ public class Module {
         return sequence("exported type",
                 expect(CAP_VAR),
                 tryP(
-                        Basic.listing("type constructors", expect(CAP_VAR))
+                        Basic.listing("type constructors", expect(CAP_VAR).as(Elements.TYPE_CONSTRUCTOR))
                 )
         ).as(Elements.TYPE_EXPORT);
     }

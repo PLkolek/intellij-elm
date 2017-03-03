@@ -1,6 +1,8 @@
 package mkolaczek.elm.autocompletion;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
@@ -20,10 +22,12 @@ import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
@@ -72,7 +76,9 @@ public class ElmCompletionContributor extends CompletionContributor {
             return header.flatMap(ElmModuleHeader::exposingList)
                          .map(ElmModuleValueList::exportedTypes)
                          .orElse(newArrayList())
-                         .stream().map(ElmTypeExport::typeName).collect(toList());
+                         .stream()
+                         .flatMap(ElmCompletionContributor::typeCompletions)
+                         .collect(toList());
         });
 
         autocomplete(afterLeaf(e(ALIAS)), parameters -> {
@@ -91,6 +97,18 @@ public class ElmCompletionContributor extends CompletionContributor {
         autocomplete(afterLeaf(TYPE), keyword("alias"));
 
 
+    }
+
+    private static Stream<String> typeCompletions(ElmTypeExport typeExport) {
+        ArrayList<String> result = Lists.newArrayList(typeExport.typeName());
+        if (!typeExport.withoutConstructors()) {
+            result.add(typeDeclaration(typeExport));
+        }
+        return result.stream();
+    }
+
+    private static String typeDeclaration(ElmTypeExport typeExport) {
+        return typeExport.typeName() + " = " + Joiner.on(" | ").join(typeExport.constructors());
     }
 
     @NotNull

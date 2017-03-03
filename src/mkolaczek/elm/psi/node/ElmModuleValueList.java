@@ -3,6 +3,7 @@ package mkolaczek.elm.psi.node;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 
 import java.util.Collection;
@@ -16,8 +17,8 @@ public class ElmModuleValueList extends ASTWrapperPsiElement {
         super(node);
     }
 
-    public Collection<ElmExportedValue> values() {
-        return PsiTreeUtil.findChildrenOfType(this, ElmExportedValue.class);
+    public <T extends PsiElement> Collection<T> values(Class<T> nodeType) {
+        return PsiTreeUtil.findChildrenOfType(this, nodeType);
     }
 
     public boolean isOpenListing() {
@@ -25,10 +26,10 @@ public class ElmModuleValueList extends ASTWrapperPsiElement {
     }
 
     public Collection<ElmTypeExport> exportedTypes() {
-        return values().stream()
-                       .map(ElmExportedValue::typeExport)
-                       .filter(Optional::isPresent)
-                       .map(Optional::get)
-                       .collect(toList());
+        return values(ElmExportedValue.class).stream()
+                                             .map(ElmExportedValue::typeExport)
+                                             .filter(Optional::isPresent)
+                                             .map(Optional::get)
+                                             .collect(toList());
     }
 }
