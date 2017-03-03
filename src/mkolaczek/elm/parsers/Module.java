@@ -29,7 +29,7 @@ public class Module {
         return sequence(
                 expect(Tokens.IMPORT),
                 WhiteSpace.maybeWhitespace(),
-                Basic.dottedCapVar(Elements.MODULE_NAME_REF),
+                Basic.dottedCapVar("blabla").absorbingErrors().as(Elements.MODULE_NAME_REF),
                 tryP(
                         sequence("as clause",
                                 WhiteSpace.maybeWhitespace(),
@@ -103,7 +103,7 @@ public class Module {
                         WhiteSpace.maybeWhitespace(),
                         expect(Tokens.MODULE),
                         WhiteSpace.maybeWhitespace(),
-                        Basic.dottedCapVar(Elements.MODULE_NAME),
+                        Basic.dottedCapVar("blabla").as(Elements.MODULE_NAME),
                         WhiteSpace.maybeWhitespace(),
                         settings(),
                         WhiteSpace.maybeWhitespace(),
@@ -122,7 +122,7 @@ public class Module {
                                 expect(Tokens.MODULE)
                         ),
                         WhiteSpace.maybeWhitespace(),
-                        Basic.dottedCapVar(Elements.MODULE_NAME),
+                        Basic.dottedCapVar("blabla").as(Elements.MODULE_NAME),
                         WhiteSpace.maybeWhitespace(),
                         exposing(),
                         WhiteSpace.freshLine()

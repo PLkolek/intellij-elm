@@ -1,7 +1,6 @@
 package mkolaczek.elm.parsers;
 
 import mkolaczek.elm.parsers.core.*;
-import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
@@ -52,10 +51,6 @@ public class Basic {
     public static Parser dottedCapVar(String name) {
         return sequence(name, dottedCapVarBody(name)
         );
-    }
-
-    public static Parser dottedCapVar(Element as) {
-        return sequence(dottedCapVarBody(as.getName())).as(as);
     }
 
     @NotNull
