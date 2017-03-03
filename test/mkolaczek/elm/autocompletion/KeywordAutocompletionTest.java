@@ -22,12 +22,6 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
         performTest("import/Test.elm", "import/expected.elm", "import", "type");
     }
 
-    public void testImportCompletionDoesntTriggerInTheMiddleOfAnImport() {
-        performTest("import/AutocompleteInTheMiddleOfAnImport.elm",
-                "import/expectedAutocompleteInTheMiddleOfAnImport.elm"
-        );
-    }
-
     public void testAfterImportedModuleNameCompletion() {
         performTest("afterImportedModuleName/Test.elm", "afterImportedModuleName/expected.elm", "as", "exposing");
     }

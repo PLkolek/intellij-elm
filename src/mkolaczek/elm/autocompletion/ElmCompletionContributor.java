@@ -34,7 +34,7 @@ import static mkolaczek.elm.psi.Tokens.*;
 
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
-        autocomplete(afterWhitespace("\n").and(inBlock(IMPORTS, DECLARATIONS)).andNot(inside(IMPORT_LINE)),
+        autocomplete(afterWhitespace("\n").and(inBlock(IMPORTS, DECLARATIONS)),
                 keyword("import"));
         autocomplete(afterLeaf(childOf(MODULE_NAME_REF)).andNot(afterWhitespace("\n")),
                 keyword("as"),
@@ -76,7 +76,7 @@ public class ElmCompletionContributor extends CompletionContributor {
         });
 
 
-        autocomplete(afterWhitespace("\n").and(after(IMPORTS)).andNot(inside(TYPE_DECLARATION)),
+        autocomplete(afterWhitespace("\n").and(after(IMPORTS)),
                 keyword("type"));
         autocomplete(afterLeaf(TYPE), keyword("alias"));
 
