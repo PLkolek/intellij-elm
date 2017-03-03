@@ -1,6 +1,11 @@
+Features:
 * Module types
 * bundles
 * Module reference in documentation comments?
 * External documentation?
 * Smart enter
+
+Refactorings:
 * startingTokens() doesnt do any caching
+* sort out the distinction between startingTokens() and parse()
+* try to encoding parser naming in types
