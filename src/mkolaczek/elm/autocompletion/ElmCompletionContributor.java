@@ -14,7 +14,6 @@ import com.intellij.patterns.PsiElementPattern.Capture;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.Tokens;
@@ -24,12 +23,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.stream.Collectors.toList;
 import static mkolaczek.elm.autocompletion.ModulePattern.module;
 import static mkolaczek.elm.autocompletion.Patterns.*;
@@ -64,7 +64,7 @@ public class ElmCompletionContributor extends CompletionContributor {
             return newArrayList(moduleName);
         });
         autocomplete(afterLeaf(Tokens.AS), parameters -> {
-            ElmImport2 importLine = PsiTreeUtil.getParentOfType(parameters.getPosition(), ElmImport2.class);
+            ElmImport2 importLine = getParentOfType(parameters.getPosition(), ElmImport2.class);
             Preconditions.checkState(importLine != null, "As must be a child of import line");
             ElmModuleNameRef module = importLine.importedModule();
             String[] words = module.getName().split("\\.");
@@ -73,22 +73,40 @@ public class ElmCompletionContributor extends CompletionContributor {
 
         autocomplete(afterLeaf(e(TYPE)), parameters -> {
             Optional<ElmModuleHeader> header = ((ElmFile) parameters.getPosition().getContainingFile()).header();
-            return header.flatMap(ElmModuleHeader::exposingList)
-                         .map(ElmModuleValueList::exportedTypes)
-                         .orElse(newArrayList())
+            if (!header.isPresent()) {
+                return Lists.newArrayList();
+            }
+            return header.get().typeExports()
                          .stream()
                          .flatMap(ElmCompletionContributor::typeCompletions)
                          .collect(toList());
         });
 
+
         autocomplete(afterLeaf(e(ALIAS)), parameters -> {
             Optional<ElmModuleHeader> header = ((ElmFile) parameters.getPosition().getContainingFile()).header();
-            return header.flatMap(ElmModuleHeader::exposingList)
-                         .map(ElmModuleValueList::exportedTypes)
-                         .orElse(newArrayList())
+            if (!header.isPresent()) {
+                return Lists.newArrayList();
+            }
+            return header.get().typeExports()
                          .stream()
                          .filter(ElmTypeExport::withoutConstructors)
                          .map(ElmTypeExport::typeName).collect(toList());
+        });
+
+        autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)), parameters -> {
+            Optional<ElmModuleHeader> header = ((ElmFile) parameters.getPosition().getContainingFile()).header();
+            if (!header.isPresent()) {
+                return Lists.newArrayList();
+            }
+            ElmTypeDeclaration declaration = getParentOfType(parameters.getPosition(), ElmTypeDeclaration.class);
+            assert declaration != null;
+            Optional<String> typeName = declaration.typeName();
+            Collection<String> constructors = typeName.flatMap(header.get()::typeExport)
+                                                      .map(ElmTypeExport::constructors)
+                                                      .orElse(newArrayList());
+
+            return constructors;
         });
 
 
@@ -121,8 +139,8 @@ public class ElmCompletionContributor extends CompletionContributor {
     }
 
     private void autocomplete(Capture<PsiElement> pattern,
-                              Function<CompletionParameters, List<String>> autocompletion) {
-        Function<List<String>, List<LookupElementBuilder>> wrapper = strings -> strings.stream()
+                              Function<CompletionParameters, Collection<String>> autocompletion) {
+        Function<Collection<String>, Collection<LookupElementBuilder>> wrapper = strings -> strings.stream()
                                                                                        .map(LookupElementBuilder::create)
                                                                                        .collect(toList());
         autocomplete2(pattern, wrapper.compose(autocompletion));
@@ -130,7 +148,7 @@ public class ElmCompletionContributor extends CompletionContributor {
 
 
     private void autocomplete2(Capture<PsiElement> pattern,
-                               Function<CompletionParameters, List<LookupElementBuilder>> autocompletion) {
+                               Function<CompletionParameters, Collection<LookupElementBuilder>> autocompletion) {
         extend(CompletionType.BASIC, pattern,
                 new CompletionProvider<CompletionParameters>() {
                     @Override

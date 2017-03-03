@@ -50,7 +50,7 @@ public class Declaration {
         return sequence("type declaration contents suffix",
                 nameArgsEquals(),
                 sepBy(Tokens.PIPE, Type.unionConstructor())
-        );
+        ).as(Elements.TYPE_DECL_NODE);
     }
 
     private static Parser typeAliasDecl() {
@@ -59,13 +59,13 @@ public class Declaration {
                 forcedWhitespace(),
                 nameArgsEquals(),
                 Type.expression
-        );
+        ).as(Elements.TYPE_ALIAS_DECL_NODE);
     }
 
     @NotNull
     private static Sequence nameArgsEquals() {
         return sequence("type and equals",
-                expect(Tokens.CAP_VAR),
+                expect(Tokens.CAP_VAR).as(Elements.TYPE_NAME),
                 spacePrefix(expect(Tokens.LOW_VAR)),
                 padded(Tokens.EQUALS),
                 maybeWhitespace()
