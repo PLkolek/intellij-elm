@@ -12,4 +12,8 @@ public class ElmTypeExport extends ASTWrapperPsiElement {
     public String typeName() {
         return PsiTreeUtil.firstChild(this).getText();
     }
+
+    public boolean withoutConstructors() {
+        return PsiTreeUtil.findChildOfType(this, ElmModuleValueList.class) == null;
+    }
 }

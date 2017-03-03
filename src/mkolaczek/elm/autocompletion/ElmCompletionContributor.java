@@ -67,12 +67,22 @@ public class ElmCompletionContributor extends CompletionContributor {
             return Names.suggest(words);
         });
 
-        autocomplete(afterLeaf(e(TYPE, ALIAS)), parameters -> {
+        autocomplete(afterLeaf(e(TYPE)), parameters -> {
             Optional<ElmModuleHeader> header = ((ElmFile) parameters.getPosition().getContainingFile()).header();
             return header.flatMap(ElmModuleHeader::exposingList)
                          .map(ElmModuleValueList::exportedTypes)
                          .orElse(newArrayList())
                          .stream().map(ElmTypeExport::typeName).collect(toList());
+        });
+
+        autocomplete(afterLeaf(e(ALIAS)), parameters -> {
+            Optional<ElmModuleHeader> header = ((ElmFile) parameters.getPosition().getContainingFile()).header();
+            return header.flatMap(ElmModuleHeader::exposingList)
+                         .map(ElmModuleValueList::exportedTypes)
+                         .orElse(newArrayList())
+                         .stream()
+                         .filter(ElmTypeExport::withoutConstructors)
+                         .map(ElmTypeExport::typeName).collect(toList());
         });
 
 
