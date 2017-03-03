@@ -19,10 +19,4 @@ public interface Parser {
         return new As(this, as);
     }
 
-    //must be called before as, it doesn't make sense the other way around
-    //TODO: encode this in types
-    default Parser absorbingErrors() {
-        return new AbsorbingErrors(this);
-    }
-
 }

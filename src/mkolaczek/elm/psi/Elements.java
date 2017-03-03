@@ -97,7 +97,6 @@ public interface Elements {
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new ElmRuneOfAutocompletion(node);
             } else {
-
                 throw new AssertionError("Unknown element type: " + type);
             }
         }

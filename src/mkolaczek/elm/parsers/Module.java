@@ -6,13 +6,16 @@ import mkolaczek.elm.parsers.core.WhiteSpace;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 
+import static mkolaczek.elm.parsers.Basic.dottedCapVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Many.many;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
 import static mkolaczek.elm.psi.Elements.MODULE_ALIAS;
+import static mkolaczek.elm.psi.Elements.MODULE_NAME_REF;
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
+import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
 
 public class Module {
 
@@ -29,7 +32,10 @@ public class Module {
         return sequence(
                 expect(Tokens.IMPORT),
                 WhiteSpace.maybeWhitespace(),
-                Basic.dottedCapVar("module name").absorbingErrors().as(Elements.MODULE_NAME_REF),
+                or(
+                        dottedCapVar("module name").as(Elements.MODULE_NAME_REF),
+                        expect(RUNE_OF_AUTOCOMPLETION).as(MODULE_NAME_REF)
+                ),
                 tryP(
                         sequence("as clause",
                                 WhiteSpace.maybeWhitespace(),
@@ -104,7 +110,7 @@ public class Module {
                         WhiteSpace.maybeWhitespace(),
                         expect(Tokens.MODULE),
                         WhiteSpace.maybeWhitespace(),
-                        Basic.dottedCapVar("module name").as(Elements.MODULE_NAME),
+                        dottedCapVar("module name").as(Elements.MODULE_NAME),
                         WhiteSpace.maybeWhitespace(),
                         settings(),
                         WhiteSpace.maybeWhitespace(),
@@ -123,7 +129,7 @@ public class Module {
                                 expect(Tokens.MODULE)
                         ),
                         WhiteSpace.maybeWhitespace(),
-                        Basic.dottedCapVar("module name").as(Elements.MODULE_NAME),
+                        dottedCapVar("module name").as(Elements.MODULE_NAME),
                         WhiteSpace.maybeWhitespace(),
                         exposing(),
                         WhiteSpace.freshLine()
