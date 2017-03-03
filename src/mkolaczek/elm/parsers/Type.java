@@ -3,6 +3,7 @@ package mkolaczek.elm.parsers;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.ParserBox;
 import mkolaczek.elm.parsers.core.Sequence;
+import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
@@ -90,7 +91,7 @@ public class Type {
 
     public static Parser unionConstructor() {
         return sequence("union constructor",
-                expect(Tokens.CAP_VAR),
+                expect(Tokens.CAP_VAR).as(Elements.TYPE_CONSTRUCTOR),
                 spacePrefix(term)
         );
     }

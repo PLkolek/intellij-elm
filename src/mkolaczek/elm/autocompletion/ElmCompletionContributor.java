@@ -21,10 +21,7 @@ import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -105,7 +102,12 @@ public class ElmCompletionContributor extends CompletionContributor {
             Collection<String> constructors = typeName.flatMap(header.get()::typeExport)
                                                       .map(ElmTypeExport::constructors)
                                                       .orElse(newArrayList());
+            List<String> presentConstructors = declaration.constructors()
+                                                          .stream()
+                                                          .map(ElmTypeConstructor::getText)
+                                                          .collect(toList());
 
+            constructors.removeAll(presentConstructors);
             return constructors;
         });
 
@@ -141,8 +143,8 @@ public class ElmCompletionContributor extends CompletionContributor {
     private void autocomplete(Capture<PsiElement> pattern,
                               Function<CompletionParameters, Collection<String>> autocompletion) {
         Function<Collection<String>, Collection<LookupElementBuilder>> wrapper = strings -> strings.stream()
-                                                                                       .map(LookupElementBuilder::create)
-                                                                                       .collect(toList());
+                                                                                                   .map(LookupElementBuilder::create)
+                                                                                                   .collect(toList());
         autocomplete2(pattern, wrapper.compose(autocompletion));
     }
 
