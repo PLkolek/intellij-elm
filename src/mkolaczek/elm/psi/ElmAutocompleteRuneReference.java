@@ -3,12 +3,12 @@ package mkolaczek.elm.psi;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
-import mkolaczek.elm.psi.node.ElmAutocompleteRune;
+import mkolaczek.elm.psi.node.ElmRuneOfAutocompletion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ElmAutocompleteRuneReference extends PsiReferenceBase<ElmAutocompleteRune> {
-    public ElmAutocompleteRuneReference(ElmAutocompleteRune element) {
+public class ElmAutocompleteRuneReference extends PsiReferenceBase<ElmRuneOfAutocompletion> {
+    public ElmAutocompleteRuneReference(ElmRuneOfAutocompletion element) {
         super(element, TextRange.create(0, element.getTextLength()));
     }
 

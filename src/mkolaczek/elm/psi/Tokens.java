@@ -47,7 +47,7 @@ public class Tokens {
     public static final Token WHERE = new Token("where");
 
 
-    public static final Token AUTOCOMPLETE_RUNE = new Token("AUTOCOMPLETE_RUNE");
+    public static final Token RUNE_OF_AUTOCOMPLETION = new Token("RUNE_OF_AUTOCOMPLETION");
 
     public static final TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR);
     public static final TokenSet COMMENT_TOKENS = TokenSet.create(COMMENT_CONTENT, BEGIN_COMMENT, END_COMMENT,

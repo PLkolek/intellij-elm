@@ -62,7 +62,7 @@ public class Module {
                 expect(Tokens.LOW_VAR),
                 Basic.operator(),
                 typeExport(),
-                expect(Tokens.AUTOCOMPLETE_RUNE).as(Elements.AUTOCOMPLETE_RUNE_EL)
+                expect(Tokens.RUNE_OF_AUTOCOMPLETION).as(Elements.RUNE_OF_AUTOCOMPLETION_EL)
         ).as(Elements.EXPORTED_VALUE);
     }
 

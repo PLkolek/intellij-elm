@@ -5,8 +5,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiReference;
 import mkolaczek.elm.psi.ElmAutocompleteRuneReference;
 
-public class ElmAutocompleteRune extends ASTWrapperPsiElement {
-    public ElmAutocompleteRune(ASTNode node) {
+public class ElmRuneOfAutocompletion extends ASTWrapperPsiElement {
+    public ElmRuneOfAutocompletion(ASTNode node) {
         super(node);
     }
 

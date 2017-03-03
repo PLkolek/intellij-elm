@@ -677,7 +677,7 @@ public class ElmLexer implements FlexLexer {
           case 49:
             break;
           case 16: {
-            return AUTOCOMPLETE_RUNE;
+            return RUNE_OF_AUTOCOMPLETION;
             }
           case 50:
             break;
