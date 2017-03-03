@@ -35,8 +35,8 @@ import com.intellij.psi.TokenType;
 CLRF="\r"|"\n"|"\r\n"|[\ \f\t]
 LINE_WS=[\ \f\t]
 WS={CLRF}|{LINE_WS}
-CAP_VAR=[A-Z][a-zA-Z0-9]*
-LOW_VAR=[a-z][a-zA-Z0-9]*
+CAP_VAR=[A-Z][a-zA-Z0-9ᛜ]*
+LOW_VAR=[a-z][a-zA-Z0-9ᛜ]*
 SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
         | \p{General_Category:MathSymbol}
         | \p{General_Category:CurrencySymbol}
@@ -67,7 +67,7 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   ".."              { return OPEN_LISTING; }
   "="               { return EQUALS; }
   "->"              { return ARROW; }
-  "--"              { yypushstate(INLINECOMMENT); return COMMENT; }
+  "--"              { yypushstate(INLINECOMMENT); return LINE_COMMENT; }
   "|"               { return PIPE; }
   "."               { return DOT; }
   ":"               { return COLON; }
