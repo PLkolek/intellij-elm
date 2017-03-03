@@ -9,6 +9,7 @@ import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
+import static mkolaczek.elm.parsers.core.ConsumeRest.consumeRest;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
@@ -18,11 +19,14 @@ import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 public class Declaration {
 
     public static Parser declarations() {
-        return Many.many1(
-                sequence("declaration",
-                        WhiteSpace.freshLine(),
-                        declaration()
-                )
+        return sequence("declarations",
+                Many.many1(
+                        sequence("declaration",
+                                WhiteSpace.freshLine(),
+                                declaration()
+                        )
+                ),
+                consumeRest("declaration")
         ).as(Elements.DECLARATIONS);
     }
 

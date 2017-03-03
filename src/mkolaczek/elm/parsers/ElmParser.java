@@ -22,9 +22,8 @@ public class ElmParser implements PsiParser {
         int startingOffset = builder.getCurrentOffset();
         program(builder);
         if (!builder.eof()) {
-            builder.error("EOF expected");
+            throw new IllegalStateException("Parser should have consumed everything!");
         }
-        consumeRest(builder);
         if (startingOffset != builder.getCurrentOffset()) {
             module.done(Elements.MODULE_NODE);
         } else {
