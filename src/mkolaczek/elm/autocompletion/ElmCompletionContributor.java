@@ -108,6 +108,7 @@ public class ElmCompletionContributor extends CompletionContributor {
                                                           .collect(toList());
 
             constructors.removeAll(presentConstructors);
+            constructors.add(Joiner.on(" | ").join(constructors));
             return constructors;
         });
 
