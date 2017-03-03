@@ -30,6 +30,6 @@ public class ElmModuleHeader extends ASTWrapperPsiElement {
 
 
     public Optional<ElmTypeExport> typeExport(String typeName) {
-        return typeExports().stream().filter(export -> typeName.equals(export.typeName())).findFirst();
+        return typeExports().stream().filter(export -> typeName.equals(export.typeNameString())).findFirst();
     }
 }

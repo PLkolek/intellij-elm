@@ -18,8 +18,12 @@ public class ElmTypeDeclaration extends ASTWrapperPsiElement {
     }
 
 
-    public Optional<String> typeName() {
+    public Optional<String> typeNameString() {
         return Optional.ofNullable(findChildOfType(this, ElmTypeName.class)).map(PsiElement::getText);
+    }
+
+    public Optional<ElmTypeName> typeName() {
+        return Optional.ofNullable(findChildOfType(this, ElmTypeName.class));
     }
 
     public Collection<ElmTypeConstructor> constructors() {

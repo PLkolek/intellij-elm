@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
@@ -17,16 +18,20 @@ public class ElmTypeExport extends ASTWrapperPsiElement {
         super(node);
     }
 
-    public String typeName() {
+    public ElmTypeNameRef typeName() {
+        return findChildOfType(this, ElmTypeNameRef.class);
+    }
+
+    public String typeNameString() {
         return PsiTreeUtil.firstChild(this).getText();
     }
 
     public boolean withoutConstructors() {
-        return PsiTreeUtil.findChildOfType(this, ElmModuleValueList.class) == null;
+        return findChildOfType(this, ElmModuleValueList.class) == null;
     }
 
     public Collection<String> constructors() {
-        ElmModuleValueList constructors = PsiTreeUtil.findChildOfType(this, ElmModuleValueList.class);
+        ElmModuleValueList constructors = findChildOfType(this, ElmModuleValueList.class);
 
         return ofNullable(constructors).map(this::constructorNames).orElse(newArrayList());
     }

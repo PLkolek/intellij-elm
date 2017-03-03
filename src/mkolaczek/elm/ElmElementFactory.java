@@ -1,12 +1,24 @@
 package mkolaczek.elm;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.ElmModuleName;
 import mkolaczek.elm.psi.node.ElmModuleNameRef;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class ElmElementFactory {
+
+    public static PsiElement typeName(Project project, String name) {
+        ElmFile file = createFile(project, String.format("type %s = A", name));
+        return file.typeDeclarations().iterator().next().typeName().get();
+    }
+
+    public static PsiElement typeNameRef(Project project, String name) {
+        ElmFile file = createFile(project, String.format("module Dummy exposing (%s)", name));
+        return file.header().get().typeExport(name).get().typeName();
+    }
 
     public static ElmModuleName moduleName(Project project, String name) {
         ElmFile file = createFile(project, "module " + name);

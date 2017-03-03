@@ -67,7 +67,7 @@ public class Module {
 
     private static Parser typeExport() {
         return sequence("exported type",
-                expect(CAP_VAR),
+                expect(CAP_VAR).as(Elements.TYPE_NAME_REF),
                 tryP(
                         Basic.listing("type constructors", expect(CAP_VAR).as(Elements.TYPE_CONSTRUCTOR))
                 )

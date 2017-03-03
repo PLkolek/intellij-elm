@@ -34,6 +34,7 @@ public interface Elements {
     Element TYPE_ALIAS_DECL_NODE = new Element("TYPE_ALIAS_DECL_NODE", "type alias declaration");
     Element TYPE_DECL_NODE = new Element("TYPE_DECL_NODE", "type declaration");
     Element TYPE_NAME = new Element("TYPE_NAME", "name of a type");
+    Element TYPE_NAME_REF = new Element("TYPE_NAME_REF", "name of a type");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {
@@ -90,6 +91,8 @@ public interface Elements {
                 return new ElmTypeDeclNode(node);
             } else if (type == TYPE_NAME) {
                 return new ElmTypeName(node);
+            } else if (type == TYPE_NAME_REF) {
+                return new ElmTypeNameRef(node);
             } else {
 
                 throw new AssertionError("Unknown element type: " + type);

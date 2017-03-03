@@ -61,7 +61,7 @@ public class Type {
 
     private static Parser term =
             or("type term",
-                    dottedCapVar("type name"),
+                    typeRef(),
                     expect(Tokens.LOW_VAR),
                     tuple,
                     record
@@ -69,9 +69,13 @@ public class Type {
 
     private static Parser app =
             sequence("type application",
-                    dottedCapVar("type name"),
+                    typeRef(),
                     spacePrefix(term)
             );
+
+    private static Parser typeRef() {
+        return dottedCapVar("type name").as(Elements.TYPE_NAME_REF);
+    }
 
     private static Parser expression2 =
             sequence("type expression",
@@ -97,6 +101,7 @@ public class Type {
     }
 
     static {
+
         expression.setParser(expression2);
     }
 }

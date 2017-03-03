@@ -9,6 +9,7 @@ import mkolaczek.elm.ElmLanguage;
 import mkolaczek.elm.psi.node.ElmImport2;
 import mkolaczek.elm.psi.node.ElmModule;
 import mkolaczek.elm.psi.node.ElmModuleHeader;
+import mkolaczek.elm.psi.node.ElmTypeDeclaration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -40,5 +41,9 @@ public class ElmFile extends PsiFileBase {
 
     public ElmModule module() {
         return PsiTreeUtil.findChildOfType(this, ElmModule.class);
+    }
+
+    public Collection<ElmTypeDeclaration> typeDeclarations() {
+        return PsiTreeUtil.findChildrenOfType(this, ElmTypeDeclaration.class);
     }
 }

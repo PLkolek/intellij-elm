@@ -5,14 +5,12 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.ElmElementFactory;
-import mkolaczek.elm.psi.ElmModuleReference;
+import mkolaczek.elm.psi.ElmTypeReference;
 import org.jetbrains.annotations.NotNull;
 
-public class ElmModuleNameRef extends ASTWrapperPsiElement implements PsiNamedElement {
-
-    public ElmModuleNameRef(ASTNode node) {
+public class ElmTypeNameRef extends ASTWrapperPsiElement implements PsiNamedElement {
+    public ElmTypeNameRef(ASTNode node) {
         super(node);
     }
 
@@ -22,20 +20,15 @@ public class ElmModuleNameRef extends ASTWrapperPsiElement implements PsiNamedEl
         return getNode().getText();
     }
 
-
-    @Override
-    public PsiReference getReference() {
-        return new ElmModuleReference(this);
-    }
-
     @Override
     public PsiElement setName(@NotNull String newElementName) {
-        ASTNode newNode = ElmElementFactory.moduleNameRef(getProject(), newElementName).getNode();
+        ASTNode newNode = ElmElementFactory.typeNameRef(getProject(), newElementName).getNode();
         getNode().replaceAllChildrenToChildrenOf(newNode);
         return this;
     }
 
-    public ElmModule getContaingModule() {
-        return PsiTreeUtil.getParentOfType(this, ElmModule.class);
+    @Override
+    public PsiReference getReference() {
+        return new ElmTypeReference(this);
     }
 }
