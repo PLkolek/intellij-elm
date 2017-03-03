@@ -31,16 +31,20 @@ public class ElmTypeReference extends PsiReferenceBase<ElmTypeNameRef> {
     @NotNull
     @Override
     public Object[] getVariants() {
+        return variants(myElement);
+    }
+
+    @Override
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+        return myElement.setName(newElementName);
+    }
+
+    public static Object[] variants(PsiElement myElement) {
         ElmFile file = (ElmFile) myElement.getContainingFile();
         return file.typeDeclarations()
                    .stream()
                    .map(ElmTypeDeclaration::typeName)
                    .flatMap(Optionals::stream)
                    .toArray();
-    }
-
-    @Override
-    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        return myElement.setName(newElementName);
     }
 }

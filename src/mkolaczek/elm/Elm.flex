@@ -78,6 +78,7 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   {LOW_VAR}         { return LOW_VAR; }
   ","+              { return COMMA_OP; }
   {SYMBOL}+         { return SYM_OP; }
+  "ᛜ"               { return AUTOCOMPLETE_RUNE; }
   [^]               { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 

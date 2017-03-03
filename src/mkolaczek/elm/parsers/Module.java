@@ -61,7 +61,8 @@ public class Module {
         return or(
                 expect(Tokens.LOW_VAR),
                 Basic.operator(),
-                typeExport()
+                typeExport(),
+                expect(Tokens.AUTOCOMPLETE_RUNE).as(Elements.AUTOCOMPLETE_RUNE_EL)
         ).as(Elements.EXPORTED_VALUE);
     }
 

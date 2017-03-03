@@ -35,6 +35,7 @@ public interface Elements {
     Element TYPE_DECL_NODE = new Element("TYPE_DECL_NODE", "type declaration");
     Element TYPE_NAME = new Element("TYPE_NAME", "name of a type");
     Element TYPE_NAME_REF = new Element("TYPE_NAME_REF", "name of a type");
+    Element AUTOCOMPLETE_RUNE_EL = new Element("AUTOCOMPLETE_RUNE_EL");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {
@@ -93,6 +94,8 @@ public interface Elements {
                 return new ElmTypeName(node);
             } else if (type == TYPE_NAME_REF) {
                 return new ElmTypeNameRef(node);
+            } else if (type == AUTOCOMPLETE_RUNE_EL) {
+                return new ElmAutocompleteRune(node);
             } else {
 
                 throw new AssertionError("Unknown element type: " + type);
