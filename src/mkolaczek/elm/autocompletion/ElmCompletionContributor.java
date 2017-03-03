@@ -29,8 +29,7 @@ import java.util.stream.Collectors;
 import static mkolaczek.elm.autocompletion.ModulePattern.module;
 import static mkolaczek.elm.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
-import static mkolaczek.elm.psi.Tokens.EFFECT;
-import static mkolaczek.elm.psi.Tokens.RBRACKET;
+import static mkolaczek.elm.psi.Tokens.*;
 
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
@@ -70,6 +69,7 @@ public class ElmCompletionContributor extends CompletionContributor {
 
         autocomplete(afterWhitespace("\n").and(after(IMPORTS)).andNot(inside(TYPE_DECLARATION)),
                 keyword("type"));
+        autocomplete(afterLeaf(TYPE), keyword("alias"));
 
 
     }

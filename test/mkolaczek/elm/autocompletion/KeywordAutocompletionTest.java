@@ -28,16 +28,6 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
         );
     }
 
-    public void testTypeCompletion() {
-        performTest("type/Test.elm", "type/expected.elm", "type");
-    }
-
-    public void testTypeCompletionDoesntTriggerInTheMiddleOfTypeDeclaration() {
-        performTest("type/AutocompleteInTheMiddleOfTypeDeclaration.elm",
-                "type/expectedAutocompleteInTheMiddleOfTypeDeclaration.elm"
-        );
-    }
-
     public void testAfterImportedModuleNameCompletion() {
         performTest("afterImportedModuleName/Test.elm", "afterImportedModuleName/expected.elm", "as", "exposing");
     }
@@ -56,6 +46,10 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
 
     public void testModuleCompletion() {
         performTest("module/Test.elm", "module/expected.elm", "module", "effect module", "port module");
+    }
+
+    public void testAliasCompletion() {
+        performTest("alias/Test.elm", "alias/expected.elm", "alias");
     }
 
     private void performTest(String beforeFile, String afterFile, String... suggestions) {
