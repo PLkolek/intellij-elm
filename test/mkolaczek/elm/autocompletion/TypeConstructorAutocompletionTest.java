@@ -18,6 +18,11 @@ public class TypeConstructorAutocompletionTest extends LightCodeInsightFixtureTe
         return "testdata/autocompletion/typeConstructor";
     }
 
+    public void testTypeConstructorNameCompletion() {
+        myFixture.configureByFiles("typeConstructorName/Test.elm");
+        autocomplete("ACons", "BCons", "ACons | BCons");
+    }
+
     public void testInExportCompletion() {
         myFixture.configureByFiles("export/Test.elm");
         autocomplete("BCons");
