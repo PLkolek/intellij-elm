@@ -16,7 +16,17 @@ public class FindUsagesTest extends LightCodeInsightFixtureTestCase {
     }
 
     public void testFindModuleUsages() {
-        Collection<UsageInfo> usageInfos = myFixture.testFindUsages("Test1.elm", "Test2.elm");
+        Collection<UsageInfo> usageInfos = myFixture.testFindUsages("module/Test1.elm", "module/Test2.elm");
+        assertThat(usageInfos.size(), is(1));
+    }
+
+    public void testFindTypeUsages() {
+        Collection<UsageInfo> usageInfos = myFixture.testFindUsages("type/Test.elm");
+        assertThat(usageInfos.size(), is(2));
+    }
+
+    public void testFindConstructorUsages() {
+        Collection<UsageInfo> usageInfos = myFixture.testFindUsages("typeConstructor/Test.elm");
         assertThat(usageInfos.size(), is(1));
     }
 
