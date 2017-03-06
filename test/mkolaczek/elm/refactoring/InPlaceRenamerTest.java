@@ -1,11 +1,16 @@
 package mkolaczek.elm.refactoring;
 
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.ElmLanguage;
 import mkolaczek.elm.psi.node.ElmModule;
 import mkolaczek.elm.psi.node.ElmTypeConstructor;
 import mkolaczek.elm.psi.node.ElmTypeName;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
@@ -37,16 +42,30 @@ public class InPlaceRenamerTest {
 
     @Test
     public void isIdentifier() throws Exception {
-        assertFalse(new InplaceRenamer(module, something, editor).isIdentifier("123", ElmLanguage.INSTANCE));
-        assertTrue(new InplaceRenamer(module, something, editor).isIdentifier("A.B", ElmLanguage.INSTANCE));
+        assertFalse(renamer(module).isIdentifier("123", ElmLanguage.INSTANCE));
+        assertTrue(renamer(module).isIdentifier("A.B", ElmLanguage.INSTANCE));
 
-        assertFalse(new InplaceRenamer(type, something, editor).isIdentifier("123", ElmLanguage.INSTANCE));
-        assertTrue(new InplaceRenamer(type, something, editor).isIdentifier("A", ElmLanguage.INSTANCE));
-        assertFalse(new InplaceRenamer(type, something, editor).isIdentifier("A.B", ElmLanguage.INSTANCE));
+        assertFalse(renamer(type).isIdentifier("123", ElmLanguage.INSTANCE));
+        assertTrue(renamer(type).isIdentifier("A", ElmLanguage.INSTANCE));
+        assertFalse(renamer(type).isIdentifier("A.B", ElmLanguage.INSTANCE));
 
-        assertFalse(new InplaceRenamer(constructor, something, editor).isIdentifier("123", ElmLanguage.INSTANCE));
-        assertTrue(new InplaceRenamer(constructor, something, editor).isIdentifier("A", ElmLanguage.INSTANCE));
-        assertFalse(new InplaceRenamer(constructor, something, editor).isIdentifier("A.B", ElmLanguage.INSTANCE));
+        assertFalse(renamer(constructor).isIdentifier("123", ElmLanguage.INSTANCE));
+        assertTrue(renamer(constructor).isIdentifier("A", ElmLanguage.INSTANCE));
+        assertFalse(renamer(constructor).isIdentifier("A.B", ElmLanguage.INSTANCE));
+    }
+
+    @NotNull
+    private InplaceRenamer renamer(PsiNamedElement element) {
+        return new InplaceRenamer(element, something, editor) {
+            @Override
+            protected boolean notSameFile(@Nullable VirtualFile file, @NotNull PsiFile containingFile) {
+                return false;
+            }
+
+            @Override
+            protected void showDialogAdvertisement(String actionId) {
+            }
+        };
     }
 
 }
