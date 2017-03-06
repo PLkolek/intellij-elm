@@ -15,7 +15,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
-import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +69,7 @@ public class ElmCompletionContributor extends CompletionContributor {
         });
 
         autocomplete(afterLeaf(e(TYPE)), parameters -> {
-            Optional<ElmModuleHeader> header = ((ElmFile) parameters.getPosition().getContainingFile()).header();
+            Optional<ElmModuleHeader> header = ElmModule.module(parameters.getPosition()).header();
             if (!header.isPresent()) {
                 return Lists.newArrayList();
             }
@@ -82,7 +81,7 @@ public class ElmCompletionContributor extends CompletionContributor {
 
 
         autocomplete(afterLeaf(e(ALIAS)), parameters -> {
-            Optional<ElmModuleHeader> header = ((ElmFile) parameters.getPosition().getContainingFile()).header();
+            Optional<ElmModuleHeader> header = ElmModule.module(parameters.getPosition()).header();
             if (!header.isPresent()) {
                 return Lists.newArrayList();
             }
@@ -93,7 +92,7 @@ public class ElmCompletionContributor extends CompletionContributor {
         });
 
         autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)), parameters -> {
-            Optional<ElmModuleHeader> header = ((ElmFile) parameters.getPosition().getContainingFile()).header();
+            Optional<ElmModuleHeader> header = ElmModule.module(parameters.getPosition()).header();
             if (!header.isPresent()) {
                 return Lists.newArrayList();
             }

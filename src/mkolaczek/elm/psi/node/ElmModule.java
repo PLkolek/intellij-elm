@@ -18,7 +18,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Collection;
 import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNamedElement, PsiNameIdentifierOwner {
     public ElmModule(@NotNull ASTNode node) {
@@ -122,5 +125,22 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
 
     public Optional<EffectModuleSettingsList> settingsList() {
         return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, EffectModuleSettingsList.class));
+    }
+
+    @NotNull
+    public static ElmModule module(PsiElement element) {
+        return checkNotNull(PsiTreeUtil.getParentOfType(element, ElmModule.class));
+    }
+
+    public Collection<ElmImport2> imports() {
+        return PsiTreeUtil.findChildrenOfType(this, ElmImport2.class);
+    }
+
+    public Collection<ElmTypeDeclaration> typeDeclarations() {
+        return PsiTreeUtil.findChildrenOfType(this, ElmTypeDeclaration.class);
+    }
+
+    public Optional<ElmTypeDeclaration> typeDeclaration(String typeName) {
+        return typeDeclarations().stream().filter(decl -> typeName.equals(decl.typeNameString().orElse(""))).findAny();
     }
 }

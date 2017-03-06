@@ -6,7 +6,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.util.Optionals;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +15,7 @@ import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.stream.Collectors.toSet;
+import static mkolaczek.elm.psi.node.ElmModule.module;
 
 public class ElmTypeReference extends PsiReferenceBase<ElmTypeNameRef> {
     public ElmTypeReference(ElmTypeNameRef element) {
@@ -26,13 +26,12 @@ public class ElmTypeReference extends PsiReferenceBase<ElmTypeNameRef> {
     @Nullable
     @Override
     public PsiElement resolve() {
-        ElmFile file = (ElmFile) myElement.getContainingFile();
-        return file.typeDeclarations()
-                   .stream()
-                   .map(ElmTypeDeclaration::typeName)
-                   .flatMap(Optionals::stream)
-                   .filter(type -> myElement.getText().equals(type.getText()))
-                   .findFirst().orElse(null);
+        return module(myElement).typeDeclarations()
+                                .stream()
+                                .map(ElmTypeDeclaration::typeName)
+                                .flatMap(Optionals::stream)
+                                .filter(type -> myElement.getText().equals(type.getText()))
+                                .findFirst().orElse(null);
     }
 
     @NotNull
@@ -63,12 +62,11 @@ public class ElmTypeReference extends PsiReferenceBase<ElmTypeNameRef> {
             }
         }
 
-        ElmFile file = (ElmFile) myElement.getContainingFile();
         Set<String> finalExcluded = excluded;
-        return file.typeDeclarations()
-                   .stream()
-                   .map(ElmTypeDeclaration::typeName)
-                   .flatMap(Optionals::stream).filter(elem -> !finalExcluded.contains(elem.getName()))
-                   .toArray();
+        return module(myElement).typeDeclarations()
+                                .stream()
+                                .map(ElmTypeDeclaration::typeName)
+                                .flatMap(Optionals::stream).filter(elem -> !finalExcluded.contains(elem.getName()))
+                                .toArray();
     }
 }
