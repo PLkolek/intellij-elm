@@ -11,7 +11,6 @@ public interface Elements {
     Element DECLARATION = new Element("declaration");
     Element DECLARATIONS = new Element("declarations");
     Element DOC_COMMENT = new Element("DOC_COMMENT", "doc comment");
-    Element DOTTED_CAP_VAR = new Element("DOTTED_CAP_VAR");
     Element IMPORT_LINE = new Element("IMPORT_LINE", "import line");
     Element MODULE_HEADER = new Element("MODULE_HEADER", "module header");
     Element MODULE_VALUE_LIST = new Element("MODULE_VALUE_LIST", "exposed values");
@@ -47,8 +46,6 @@ public interface Elements {
                 return new Declarations(node);
             } else if (type == DOC_COMMENT) {
                 return new DocComment(node);
-            } else if (type == DOTTED_CAP_VAR) {
-                return new DottedCapVar(node);
             } else if (type == IMPORT_LINE) {
                 return new Import(node);
             } else if (type == MODULE_HEADER) {
