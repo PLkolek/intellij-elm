@@ -7,6 +7,7 @@ import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
+import mkolaczek.elm.goTo.ItemPresentation;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,5 +34,10 @@ public class ElmTypeName extends ASTWrapperPsiElement implements PsiNamedElement
     public PsiElement getNameIdentifier() {
         //required for ctrl+click find usages to work
         return this;
+    }
+
+    @Override
+    public ItemPresentation getPresentation() {
+        return new ItemPresentation(getName());
     }
 }

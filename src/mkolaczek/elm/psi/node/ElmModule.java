@@ -3,7 +3,6 @@ package mkolaczek.elm.psi.node;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.PsiNamedElement;
@@ -11,13 +10,12 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
-import mkolaczek.elm.ElmIcon;
+import mkolaczek.elm.goTo.ItemPresentation;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -64,25 +62,7 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
 
     @Override
     public ItemPresentation getPresentation() {
-        return new ItemPresentation() {
-            @Nullable
-            @Override
-            public String getPresentableText() {
-                return getName();
-            }
-
-            @Nullable
-            @Override
-            public String getLocationString() {
-                return null;
-            }
-
-            @Nullable
-            @Override
-            public Icon getIcon(boolean unused) {
-                return ElmIcon.FILE;
-            }
-        };
+        return new ItemPresentation(getName());
     }
 
     public boolean sameName(String name) {
@@ -143,4 +123,5 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
     public Optional<ElmTypeDeclaration> typeDeclaration(String typeName) {
         return typeDeclarations().stream().filter(decl -> typeName.equals(decl.typeNameString().orElse(""))).findAny();
     }
+
 }
