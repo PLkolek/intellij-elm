@@ -50,7 +50,8 @@ public class ElmFindUsagesProvider implements FindUsagesProvider {
     @Override
     public String getDescriptiveName(@NotNull PsiElement element) {
         String prefix = "";
-        ElmModule module = getParentOfType(element, ElmModule.class);
+        ElmModule module = element instanceof ElmModule ? (ElmModule) element : getParentOfType(element,
+                ElmModule.class);
         assert module != null;
         if (element instanceof ElmTypeName) {
             prefix = module.getName() + ".";
