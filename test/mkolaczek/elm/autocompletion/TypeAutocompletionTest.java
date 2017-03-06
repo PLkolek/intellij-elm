@@ -10,28 +10,29 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class ModuleNameAutocompletionTest extends LightCodeInsightFixtureTestCase {
+public class TypeAutocompletionTest extends LightCodeInsightFixtureTestCase {
 
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/autocompletion/moduleName";
+        return "testdata/autocompletion/type";
     }
 
-    public void testImportCompletion() {
-        myFixture.configureByFiles("import/Test2.elm", "Test1.elm");
-        autocomplete("Test1");
+    public void testTypeNameCompletion() {
+        myFixture.configureByFiles("typeName/Test.elm");
+        autocomplete("Type1", "Type2", "alias");
     }
 
-    public void testModuleNameCompletion() {
-        myFixture.configureByFiles("moduleName/Test2.elm", "Test1.elm");
-        autocomplete("Test2");
-
+    public void testAliasNameCompletion() {
+        myFixture.configureByFiles("aliasName/Test.elm");
+        myFixture.complete(CompletionType.BASIC, 1);
+        assertNull(myFixture.getLookupElementStrings());
+        myFixture.checkResultByFile("aliasName/Expected.elm");
     }
 
-    public void testAsAutocompletion() {
-        myFixture.configureByFiles("as/Test2.elm", "Test1.elm");
-        autocomplete("A", "B", "C", "BC");
+    public void testInTypeExpressionCompletion() {
+        myFixture.configureByFiles("typeExpression/Test.elm");
+        autocomplete("SomeType", "Alias");
     }
 
     private void autocomplete(String... suggestions) {

@@ -74,7 +74,10 @@ public class Type {
             );
 
     private static Parser typeRef() {
-        return dottedCapVar("type name").as(Elements.TYPE_NAME_REF);
+        return or(
+                dottedCapVar("type name"),
+                expect(Tokens.RUNE_OF_AUTOCOMPLETION)
+        ).as(Elements.TYPE_NAME_REF);
     }
 
     private static Parser expression2 =
