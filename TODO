@@ -1,7 +1,5 @@
 Current:
-* remove already used type completions in exposing list
 * autocomplete type constructors
-* do not suggest recursive aliases
 
 Features:
 * Module types

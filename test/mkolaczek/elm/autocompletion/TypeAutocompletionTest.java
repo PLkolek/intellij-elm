@@ -32,7 +32,12 @@ public class TypeAutocompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testInTypeExpressionCompletion() {
         myFixture.configureByFiles("typeExpression/Test.elm");
-        autocomplete("SomeType", "Alias");
+        autocomplete("SomeType");
+    }
+
+    public void testInExportCompletion() {
+        myFixture.configureByFiles("export/Test.elm");
+        autocomplete("BType");
     }
 
     private void autocomplete(String... suggestions) {

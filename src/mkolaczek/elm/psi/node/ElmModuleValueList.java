@@ -5,9 +5,9 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import mkolaczek.util.Optionals;
 
 import java.util.Collection;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,8 +28,7 @@ public class ElmModuleValueList extends ASTWrapperPsiElement {
     public Collection<ElmTypeExport> exportedTypes() {
         return values(ElmExportedValue.class).stream()
                                              .map(ElmExportedValue::typeExport)
-                                             .filter(Optional::isPresent)
-                                             .map(Optional::get)
+                                             .flatMap(Optionals::stream)
                                              .collect(toList());
     }
 }
