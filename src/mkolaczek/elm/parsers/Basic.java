@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
+import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
 import static mkolaczek.elm.psi.Tokens.RPAREN;
 
@@ -18,7 +19,7 @@ public class Basic {
                 expect(LPAREN),
                 listingContent(name + " content", listedValue),
                 expect(RPAREN)
-        ).separatedBy(WhiteSpace.maybeWhitespace())
+        ).separatedBy(maybeWhitespace())
          .as(Elements.MODULE_VALUE_LIST);
     }
 
@@ -42,15 +43,14 @@ public class Basic {
 
     public static Parser padded(Parser paddedValue) {
         return sequence(paddedValue.name(),
-                WhiteSpace.maybeWhitespace(),
+                maybeWhitespace(),
                 paddedValue,
-                WhiteSpace.maybeWhitespace()
+                maybeWhitespace()
         );
     }
 
     public static Parser dottedCapVar(String name) {
-        return sequence(name, dottedCapVarBody(name)
-        );
+        return sequence(name, dottedCapVarBody(name));
     }
 
     @NotNull
@@ -69,7 +69,7 @@ public class Basic {
                 expect(Tokens.LPAREN),
                 operatorSymbol(),
                 expect(Tokens.RPAREN)
-        ).separatedBy(WhiteSpace.maybeWhitespace()).as(Elements.OPERATOR);
+        ).separatedBy(maybeWhitespace()).as(Elements.OPERATOR);
     }
 
     private static Parser operatorSymbol() {
@@ -123,7 +123,7 @@ public class Basic {
 
     @NotNull
     private static Parser[] surroundContent(Token left, Token right, Parser contents) {
-        return new Parser[]{expect(left), padded(contents), expect(right)};
+        return new Parser[]{expect(left), maybeWhitespace(), contents, maybeWhitespace(), expect(right)};
     }
 
     public static Parser surround(Token left, Token right, Parser contents) {

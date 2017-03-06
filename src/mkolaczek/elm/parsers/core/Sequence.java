@@ -74,15 +74,6 @@ public class Sequence implements Parser {
         return startingTokens;
     }
 
-    private static boolean isOptional(Parser... parsers) {
-        for (Parser parser : parsers) {
-            if (parser.isRequired()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     @Override
     public boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens) {
         //noinspection SuspiciousMethodCalls
@@ -114,7 +105,7 @@ public class Sequence implements Parser {
 
     @Override
     public boolean isRequired() {
-        return !isOptional(parsers);
+        return Parser.anyRequired(parsers);
     }
 
     @Override

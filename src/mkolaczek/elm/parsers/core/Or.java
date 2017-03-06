@@ -31,6 +31,7 @@ public class Or implements Parser {
     }
 
     private Or(String name, Parser... parsers) {
+        Preconditions.checkArgument(Parser.allRequired(parsers), "No parser in OR should be optional");
         this.name = name;
         this.parsers = parsers;
     }

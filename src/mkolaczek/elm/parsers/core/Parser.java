@@ -6,6 +6,8 @@ import mkolaczek.elm.psi.Token;
 
 import java.util.Set;
 
+import static java.util.Arrays.stream;
+
 public interface Parser {
     boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens);
 
@@ -19,4 +21,11 @@ public interface Parser {
         return new As(this, as);
     }
 
+    static boolean anyRequired(Parser... parsers) {
+        return stream(parsers).anyMatch(Parser::isRequired);
+    }
+
+    static boolean allRequired(Parser... parsers) {
+        return stream(parsers).allMatch(Parser::isRequired);
+    }
 }
