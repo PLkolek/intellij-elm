@@ -14,3 +14,4 @@ Refactorings:
 * startingTokens() doesnt do any caching
 * sort out the distinction between startingTokens() and parse()
 * try to encoding parser naming in types
+* remove Elm prefix from classes

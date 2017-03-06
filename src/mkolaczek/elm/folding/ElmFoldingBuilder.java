@@ -11,6 +11,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.node.ElmModuleHeader;
+import mkolaczek.elm.psi.node.ElmTypeDeclaration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,8 @@ public class ElmFoldingBuilder implements FoldingBuilder {
             MULTILINE_COMMENT,
             IMPORTS,
             EXPOSING_NODE,
-            EFFECT_MODULE_SETTINGS);
+            EFFECT_MODULE_SETTINGS,
+            TYPE_DECLARATION);
 
     @NotNull
     @Override
@@ -64,6 +66,10 @@ public class ElmFoldingBuilder implements FoldingBuilder {
         }
         if (type == EFFECT_MODULE_SETTINGS) {
             return "where ...";
+        }
+        if (type == TYPE_DECLARATION) {
+            ElmTypeDeclaration decl = (ElmTypeDeclaration) node.getPsi();
+            return "type " + (decl.isAlias() ? "alias" : "") + decl.typeNameString().orElse("") + " = ...";
         }
         return null;
     }

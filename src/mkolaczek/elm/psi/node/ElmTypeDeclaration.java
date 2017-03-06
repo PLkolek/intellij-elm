@@ -4,6 +4,7 @@ package mkolaczek.elm.psi.node;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -28,5 +29,9 @@ public class ElmTypeDeclaration extends ASTWrapperPsiElement {
 
     public Collection<ElmTypeConstructor> constructors() {
         return findChildrenOfType(this, ElmTypeConstructor.class);
+    }
+
+    public boolean isAlias() {
+        return PsiTreeUtil.findChildOfType(this, ElmTypeAliasDeclNode.class) != null;
     }
 }
