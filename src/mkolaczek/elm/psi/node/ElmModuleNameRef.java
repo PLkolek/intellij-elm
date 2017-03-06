@@ -7,7 +7,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.ElmElementFactory;
-import mkolaczek.elm.psi.ElmModuleReference;
+import mkolaczek.elm.references.ElmModuleReference;
 import org.jetbrains.annotations.NotNull;
 
 public class ElmModuleNameRef extends ASTWrapperPsiElement implements PsiNamedElement {

@@ -6,7 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import mkolaczek.elm.ElmElementFactory;
-import mkolaczek.elm.psi.ElmTypeReference;
+import mkolaczek.elm.references.ElmTypeReference;
 import org.jetbrains.annotations.NotNull;
 
 public class ElmTypeNameRef extends ASTWrapperPsiElement implements PsiNamedElement {

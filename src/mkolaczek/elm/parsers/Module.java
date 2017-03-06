@@ -76,7 +76,12 @@ public class Module {
         return sequence("exported type",
                 expect(CAP_VAR).as(Elements.TYPE_NAME_REF),
                 tryP(
-                        Basic.listing("type constructors", expect(CAP_VAR).as(Elements.TYPE_CONSTRUCTOR))
+                        Basic.listing("type constructors",
+                                or(
+                                        expect(CAP_VAR),
+                                        expect(RUNE_OF_AUTOCOMPLETION)
+                                ).as(Elements.TYPE_CONSTRUCTOR_REF)
+                        )
                 )
         ).as(Elements.TYPE_EXPORT);
     }

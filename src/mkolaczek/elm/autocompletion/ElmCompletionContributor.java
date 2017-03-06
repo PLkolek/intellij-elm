@@ -101,7 +101,7 @@ public class ElmCompletionContributor extends CompletionContributor {
             assert declaration != null;
             Optional<String> typeName = declaration.typeNameString();
             Collection<String> constructors = typeName.flatMap(header.get()::typeExport)
-                                                      .map(ElmTypeExport::constructors)
+                                                      .map(ElmTypeExport::constructorNames)
                                                       .orElse(newArrayList());
             List<String> presentConstructors = declaration.constructors()
                                                           .stream()
@@ -130,7 +130,7 @@ public class ElmCompletionContributor extends CompletionContributor {
     }
 
     private static String typeDeclaration(ElmTypeExport typeExport) {
-        return typeExport.typeNameString() + " = " + Joiner.on(" | ").join(typeExport.constructors());
+        return typeExport.typeNameString() + " = " + Joiner.on(" | ").join(typeExport.constructorNames());
     }
 
     @NotNull

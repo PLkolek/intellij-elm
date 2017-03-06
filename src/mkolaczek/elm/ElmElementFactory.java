@@ -20,6 +20,16 @@ public class ElmElementFactory {
         return file.header().get().typeExport(name).get().typeName();
     }
 
+    public static PsiElement typeConstructor(Project project, String name) {
+        ElmFile file = createFile(project, String.format("type Dummy = %s)", name));
+        return file.typeDeclaration("Dummy").get().constructors().iterator().next();
+    }
+
+    public static PsiElement typeConstructorRef(Project project, String name) {
+        ElmFile file = createFile(project, String.format("module Dummy exposing (DummyType(%s))", name));
+        return file.header().get().typeExport("DummyType").get().constructors().iterator().next();
+    }
+
     public static ElmModuleName moduleName(Project project, String name) {
         ElmFile file = createFile(project, "module " + name);
         return file.header().get().moduleName();

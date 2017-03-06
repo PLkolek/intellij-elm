@@ -1,4 +1,4 @@
-package mkolaczek.elm.psi;
+package mkolaczek.elm.references;
 
 import com.google.common.collect.Sets;
 import com.intellij.openapi.util.TextRange;
@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.util.Optionals;
 import org.jetbrains.annotations.NotNull;

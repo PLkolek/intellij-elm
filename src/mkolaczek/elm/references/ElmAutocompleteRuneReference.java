@@ -1,4 +1,4 @@
-package mkolaczek.elm.psi;
+package mkolaczek.elm.references;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;

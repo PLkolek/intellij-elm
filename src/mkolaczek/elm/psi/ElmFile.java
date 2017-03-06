@@ -46,4 +46,8 @@ public class ElmFile extends PsiFileBase {
     public Collection<ElmTypeDeclaration> typeDeclarations() {
         return PsiTreeUtil.findChildrenOfType(this, ElmTypeDeclaration.class);
     }
+
+    public Optional<ElmTypeDeclaration> typeDeclaration(String typeName) {
+        return typeDeclarations().stream().filter(decl -> typeName.equals(decl.typeNameString().orElse(""))).findAny();
+    }
 }
