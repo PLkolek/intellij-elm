@@ -28,6 +28,7 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
     @Nullable
     @Override
     public PsiElement getNameIdentifier() {
+        //required for ctrl+click find usages to work
         return PsiTreeUtil.findChildOfType(this, ElmModuleName.class);
     }
 

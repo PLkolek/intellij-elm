@@ -11,9 +11,6 @@ import mkolaczek.elm.psi.node.ElmModuleName;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static mkolaczek.elm.psi.Tokens.CAP_VAR;
-import static mkolaczek.elm.psi.Tokens.DOT;
-
 public class ElmTargetElementEvaluator extends TargetElementEvaluatorEx2 {
     @Nullable
     @Override
@@ -26,8 +23,7 @@ public class ElmTargetElementEvaluator extends TargetElementEvaluatorEx2 {
     public PsiElement getNamedElement(@NotNull PsiElement element) {
         if (element instanceof LeafPsiElement) {
             LeafPsiElement leaf = (LeafPsiElement) element;
-            boolean isPartOfName = leaf.getElementType() == CAP_VAR || leaf.getElementType() == DOT;
-            if (isPartOfName && PsiTreeUtil.getParentOfType(leaf, ElmModuleName.class) != null) {
+            if (PsiTreeUtil.getParentOfType(leaf, ElmModuleName.class) != null) {
                 return PsiTreeUtil.getParentOfType(element, ElmModule.class);
             }
         }
