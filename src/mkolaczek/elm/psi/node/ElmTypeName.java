@@ -38,6 +38,6 @@ public class ElmTypeName extends ASTWrapperPsiElement implements PsiNamedElement
 
     @Override
     public ItemPresentation getPresentation() {
-        return new ItemPresentation(getName());
+        return new ItemPresentation(this);
     }
 }

@@ -37,6 +37,6 @@ public class ElmTypeConstructor extends ASTWrapperPsiElement implements PsiNamed
 
     @Override
     public ItemPresentation getPresentation() {
-        return new ItemPresentation(getName());
+        return new ItemPresentation(this);
     }
 }

@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -62,7 +63,7 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
 
     @Override
     public ItemPresentation getPresentation() {
-        return new ItemPresentation(getName());
+        return new ItemPresentation(this);
     }
 
     public boolean sameName(String name) {
@@ -124,4 +125,10 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
         return typeDeclarations().stream().filter(decl -> typeName.equals(decl.typeNameString().orElse(""))).findAny();
     }
 
+
+    @Nullable
+    @Override
+    protected Icon getElementIcon(@IconFlags int flags) {
+        return super.getElementIcon(flags);
+    }
 }
