@@ -32,6 +32,7 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
     }
 
     @Override
+    @NotNull
     public String getName() {
         PsiElement nameIdentifier = getNameIdentifier();
         return nameIdentifier != null ? nameIdentifier.getText() : "Main"; //null means no header line
@@ -81,7 +82,7 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
     }
 
     public boolean sameName(String name) {
-        return getName() != null && getName().equals(name);
+        return getName().equals(name);
     }
 
     public boolean sameName(ElmModule other) {

@@ -7,6 +7,8 @@ Features:
 * Module reference in documentation comments?
 * External documentation?
 * Smart enter
+* Types from other modules
+* Prelude libs
 
 Refactorings:
 * startingTokens() doesnt do any caching

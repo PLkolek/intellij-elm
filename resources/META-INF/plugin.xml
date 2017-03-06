@@ -33,7 +33,6 @@
         <completion.contributor language="Elm"
                                 implementationClass="mkolaczek.elm.autocompletion.ElmCompletionContributor"/>
         <lang.findUsagesProvider language="Elm" implementationClass="mkolaczek.elm.findUsages.ElmFindUsagesProvider"/>
-        <elementDescriptionProvider implementation="mkolaczek.elm.findUsages.ElmElementDescriptionProvider"/>
         <lang.refactoringSupport language="Elm" implementationClass="mkolaczek.elm.refactoring.ElmRefactoringSupportProvider"/>
         <lang.namesValidator language="Elm" implementationClass="mkolaczek.elm.refactoring.ElmNamesValidator"/>
         <targetElementEvaluator language="Elm" implementationClass="mkolaczek.elm.refactoring.ElmTargetElementEvaluator"/>
