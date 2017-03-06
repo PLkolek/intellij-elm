@@ -6,11 +6,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import mkolaczek.elm.ElmElementFactory;
-import mkolaczek.elm.references.ElmTypeReference;
+import mkolaczek.elm.references.TypeConstructorReference;
 import org.jetbrains.annotations.NotNull;
 
-public class ElmTypeNameRef extends ASTWrapperPsiElement implements PsiNamedElement {
-    public ElmTypeNameRef(ASTNode node) {
+public class TypeConstructorRef extends ASTWrapperPsiElement implements PsiNamedElement {
+    public TypeConstructorRef(ASTNode node) {
         super(node);
     }
 
@@ -22,13 +22,13 @@ public class ElmTypeNameRef extends ASTWrapperPsiElement implements PsiNamedElem
 
     @Override
     public PsiElement setName(@NotNull String newElementName) {
-        ASTNode newNode = ElmElementFactory.typeNameRef(getProject(), newElementName).getNode();
+        ASTNode newNode = ElmElementFactory.typeConstructorRef(getProject(), newElementName).getNode();
         getNode().replaceAllChildrenToChildrenOf(newNode);
         return this;
     }
 
     @Override
     public PsiReference getReference() {
-        return new ElmTypeReference(this);
+        return new TypeConstructorReference(this);
     }
 }

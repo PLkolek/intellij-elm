@@ -12,26 +12,26 @@ import java.util.Optional;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
 
-public class ElmTypeDeclaration extends ASTWrapperPsiElement {
+public class TypeDeclaration extends ASTWrapperPsiElement {
 
-    public ElmTypeDeclaration(ASTNode node) {
+    public TypeDeclaration(ASTNode node) {
         super(node);
     }
 
 
     public Optional<String> typeNameString() {
-        return Optional.ofNullable(findChildOfType(this, ElmTypeName.class)).map(PsiElement::getText);
+        return Optional.ofNullable(findChildOfType(this, TypeName.class)).map(PsiElement::getText);
     }
 
-    public Optional<ElmTypeName> typeName() {
-        return Optional.ofNullable(findChildOfType(this, ElmTypeName.class));
+    public Optional<TypeName> typeName() {
+        return Optional.ofNullable(findChildOfType(this, TypeName.class));
     }
 
-    public Collection<ElmTypeConstructor> constructors() {
-        return findChildrenOfType(this, ElmTypeConstructor.class);
+    public Collection<TypeConstructor> constructors() {
+        return findChildrenOfType(this, TypeConstructor.class);
     }
 
     public boolean isAlias() {
-        return PsiTreeUtil.findChildOfType(this, ElmTypeAliasDeclNode.class) != null;
+        return PsiTreeUtil.findChildOfType(this, TypeAliasDeclNode.class) != null;
     }
 }

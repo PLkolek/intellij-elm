@@ -7,9 +7,9 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.psi.Tokens;
 
-public class ElmDocComment extends ASTWrapperPsiElement implements PsiComment {
+public class DocComment extends ASTWrapperPsiElement implements PsiComment {
 
-    public ElmDocComment(ASTNode node) {
+    public DocComment(ASTNode node) {
         super(node);
     }
 

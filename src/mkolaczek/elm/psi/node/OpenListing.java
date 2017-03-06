@@ -4,11 +4,8 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 
-public class ElmModuleAlias extends ASTWrapperPsiElement implements PsiElement {
-
-    public ElmModuleAlias(ASTNode node) {
+public class OpenListing extends ASTWrapperPsiElement implements PsiElement {
+    public OpenListing(ASTNode node) {
         super(node);
     }
-
-
 }

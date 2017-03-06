@@ -6,7 +6,7 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.ElmFileType;
 import mkolaczek.elm.ElmLanguage;
-import mkolaczek.elm.psi.node.ElmModule;
+import mkolaczek.elm.psi.node.Module;
 import org.jetbrains.annotations.NotNull;
 
 public class ElmFile extends PsiFileBase {
@@ -25,7 +25,7 @@ public class ElmFile extends PsiFileBase {
         return "Simple File";
     }
 
-    public ElmModule module() {
-        return PsiTreeUtil.findChildOfType(this, ElmModule.class);
+    public Module module() {
+        return PsiTreeUtil.findChildOfType(this, Module.class);
     }
 }

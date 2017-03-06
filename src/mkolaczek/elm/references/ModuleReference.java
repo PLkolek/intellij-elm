@@ -6,12 +6,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ProjectUtil;
-import mkolaczek.elm.psi.node.ElmModuleNameRef;
+import mkolaczek.elm.psi.node.ModuleNameRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ElmModuleReference extends PsiReferenceBase<ElmModuleNameRef> {
-    public ElmModuleReference(ElmModuleNameRef element) {
+public class ModuleReference extends PsiReferenceBase<ModuleNameRef> {
+    public ModuleReference(ModuleNameRef element) {
         super(element, TextRange.create(0, element.getTextLength()));
     }
 

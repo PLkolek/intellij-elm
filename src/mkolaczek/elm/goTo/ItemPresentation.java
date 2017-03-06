@@ -2,9 +2,9 @@ package mkolaczek.elm.goTo;
 
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.ElmIcon;
-import mkolaczek.elm.psi.node.ElmModule;
-import mkolaczek.elm.psi.node.ElmTypeConstructor;
-import mkolaczek.elm.psi.node.ElmTypeName;
+import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.TypeConstructor;
+import mkolaczek.elm.psi.node.TypeName;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -32,11 +32,11 @@ public class ItemPresentation implements com.intellij.navigation.ItemPresentatio
     @Nullable
     @Override
     public Icon getIcon(boolean unused) {
-        if (element instanceof ElmModule) {
+        if (element instanceof Module) {
             return ElmIcon.FILE;
-        } else if (element instanceof ElmTypeName) {
+        } else if (element instanceof TypeName) {
             return ElmIcon.TYPE;
-        } else if (element instanceof ElmTypeConstructor) {
+        } else if (element instanceof TypeConstructor) {
             return ElmIcon.CONSTRUCTOR;
         }
         return null;

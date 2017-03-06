@@ -11,9 +11,9 @@ import java.util.Collection;
 
 import static java.util.stream.Collectors.toList;
 
-public class ElmModuleValueList extends ASTWrapperPsiElement {
+public class ModuleValueList extends ASTWrapperPsiElement {
 
-    public ElmModuleValueList(ASTNode node) {
+    public ModuleValueList(ASTNode node) {
         super(node);
     }
 
@@ -22,13 +22,13 @@ public class ElmModuleValueList extends ASTWrapperPsiElement {
     }
 
     public boolean isOpenListing() {
-        return PsiTreeUtil.getChildOfType(this, ElmOpenListing.class) != null;
+        return PsiTreeUtil.getChildOfType(this, OpenListing.class) != null;
     }
 
-    public Collection<ElmTypeExport> exportedTypes() {
-        return values(ElmExportedValue.class).stream()
-                                             .map(ElmExportedValue::typeExport)
-                                             .flatMap(Optionals::stream)
-                                             .collect(toList());
+    public Collection<TypeExport> exportedTypes() {
+        return values(ExportedValue.class).stream()
+                                          .map(ExportedValue::typeExport)
+                                          .flatMap(Optionals::stream)
+                                          .collect(toList());
     }
 }

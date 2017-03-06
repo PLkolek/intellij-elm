@@ -6,9 +6,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.ElmLanguage;
-import mkolaczek.elm.psi.node.ElmModule;
-import mkolaczek.elm.psi.node.ElmTypeConstructor;
-import mkolaczek.elm.psi.node.ElmTypeName;
+import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.TypeConstructor;
+import mkolaczek.elm.psi.node.TypeName;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
@@ -26,11 +26,11 @@ public class InPlaceRenamerTest {
     Editor editor;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    ElmModule module;
+    Module module;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    ElmTypeName type;
+    TypeName type;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    ElmTypeConstructor constructor;
+    TypeConstructor constructor;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     PsiElement something;

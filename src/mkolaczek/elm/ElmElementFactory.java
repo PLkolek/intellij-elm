@@ -4,8 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
 import mkolaczek.elm.psi.ElmFile;
-import mkolaczek.elm.psi.node.ElmModuleName;
-import mkolaczek.elm.psi.node.ElmModuleNameRef;
+import mkolaczek.elm.psi.node.ModuleName;
+import mkolaczek.elm.psi.node.ModuleNameRef;
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 public class ElmElementFactory {
@@ -30,12 +30,12 @@ public class ElmElementFactory {
         return file.module().header().get().typeExport("DummyType").get().constructors().iterator().next();
     }
 
-    public static ElmModuleName moduleName(Project project, String name) {
+    public static ModuleName moduleName(Project project, String name) {
         ElmFile file = createFile(project, "module " + name);
         return file.module().header().get().moduleName();
     }
 
-    public static ElmModuleNameRef moduleNameRef(Project project, String name) {
+    public static ModuleNameRef moduleNameRef(Project project, String name) {
         ElmFile file = createFile(project, "import " + name);
         return file.module().imports().iterator().next().importedModule();
     }

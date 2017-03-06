@@ -5,10 +5,10 @@ import com.google.common.collect.Lists;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import mkolaczek.elm.psi.node.ElmDocComment;
-import mkolaczek.elm.psi.node.ElmExportedValue;
-import mkolaczek.elm.psi.node.ElmModule;
-import mkolaczek.elm.psi.node.ElmModuleValueList;
+import mkolaczek.elm.psi.node.DocComment;
+import mkolaczek.elm.psi.node.ExportedValue;
+import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.ModuleValueList;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -27,8 +27,8 @@ public class ElmDocumentationProvider implements DocumentationProvider {
     }
 
     private String quickInfoText(PsiElement element) {
-        if (element instanceof ElmModule) {
-            ElmModule module = (ElmModule) element;
+        if (element instanceof Module) {
+            Module module = (Module) element;
             String settingsString = module.settingsList()
                                           .map(val -> String.format("%swhere { %s }",
                                                   NEWLINE,
@@ -42,11 +42,11 @@ public class ElmDocumentationProvider implements DocumentationProvider {
         return null;
     }
 
-    private String exposedValuesString(ElmModule module) {
-        ElmModuleValueList valueList = module.exposedValues();
+    private String exposedValuesString(Module module) {
+        ModuleValueList valueList = module.exposedValues();
         String exposedValuesStr = "..";
         if (!valueList.isOpenListing()) {
-            exposedValuesStr = concatValues(valueList.values(ElmExportedValue.class));
+            exposedValuesStr = concatValues(valueList.values(ExportedValue.class));
         }
         return exposedValuesStr;
     }
@@ -96,9 +96,9 @@ public class ElmDocumentationProvider implements DocumentationProvider {
     @Nullable
     @Override
     public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
-        if (element instanceof ElmModule) {
-            ElmModule module = (ElmModule) element;
-            ElmDocComment docComment = module.docComment();
+        if (element instanceof Module) {
+            Module module = (Module) element;
+            DocComment docComment = module.docComment();
             String docCommentText = docComment != null ? docComment.getText() : "";
             return String.format("<html><head></head><body><pre>%s</pre><p>%s</p></body></html>",
                     quickInfoText(module),

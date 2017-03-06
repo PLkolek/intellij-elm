@@ -2,7 +2,7 @@ package mkolaczek.elm.documentation;
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import mkolaczek.elm.psi.ElmFile;
-import mkolaczek.elm.psi.node.ElmModule;
+import mkolaczek.elm.psi.node.Module;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -16,7 +16,7 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
 
     public void testModuleQuickNavigateInfo() {
         myFixture.configureByFile("Test.elm");
-        ElmModule module = ((ElmFile) myFixture.getFile()).module();
+        Module module = ((ElmFile) myFixture.getFile()).module();
         String info = new ElmDocumentationProvider().getQuickNavigateInfo(module, null);
         String expected = "<html><head></head><body>" +
                 "effect module Test1.B\n" +
@@ -29,7 +29,7 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
 
     public void testModuleQuickDocumentation() {
         myFixture.configureByFile("Test.elm");
-        ElmModule module = ((ElmFile) myFixture.getFile()).module();
+        Module module = ((ElmFile) myFixture.getFile()).module();
         String doc = new ElmDocumentationProvider().generateDoc(module, null);
         String expected = "<html><head></head><body>" +
                 "<pre>effect module Test1.B\n" +

@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.TokenSet;
 import mkolaczek.elm.ElmLexerAdapter;
-import mkolaczek.elm.psi.node.ElmModule;
-import mkolaczek.elm.psi.node.ElmTypeConstructor;
-import mkolaczek.elm.psi.node.ElmTypeDeclaration;
-import mkolaczek.elm.psi.node.ElmTypeName;
+import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.TypeConstructor;
+import mkolaczek.elm.psi.node.TypeDeclaration;
+import mkolaczek.elm.psi.node.TypeName;
 import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
@@ -38,9 +38,9 @@ public class ElmFindUsagesProvider implements FindUsagesProvider {
     @NotNull
     @Override
     public String getType(@NotNull PsiElement element) {
-        if (element instanceof ElmModule) {
+        if (element instanceof Module) {
             return "module";
-        } else if (element instanceof ElmTypeName) {
+        } else if (element instanceof TypeName) {
             return "type";
         }
         return "type constructor";
@@ -50,14 +50,14 @@ public class ElmFindUsagesProvider implements FindUsagesProvider {
     @Override
     public String getDescriptiveName(@NotNull PsiElement element) {
         String prefix = "";
-        ElmModule module = element instanceof ElmModule ? (ElmModule) element : getParentOfType(element,
-                ElmModule.class);
+        Module module = element instanceof Module ? (Module) element : getParentOfType(element,
+                Module.class);
         assert module != null;
-        if (element instanceof ElmTypeName) {
+        if (element instanceof TypeName) {
             prefix = module.getName() + ".";
         }
-        if (element instanceof ElmTypeConstructor) {
-            ElmTypeDeclaration type = getParentOfType(element, ElmTypeDeclaration.class);
+        if (element instanceof TypeConstructor) {
+            TypeDeclaration type = getParentOfType(element, TypeDeclaration.class);
             assert type != null;
             prefix = module.getName() + "." + type.typeNameString().orElse("") + " ";
         }

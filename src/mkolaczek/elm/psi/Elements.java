@@ -42,41 +42,41 @@ public interface Elements {
         public static PsiElement createElement(ASTNode node) {
             IElementType type = node.getElementType();
             if (type == DECLARATION) {
-                return new ElmDeclaration(node);
+                return new Declaration(node);
             } else if (type == DECLARATIONS) {
-                return new ElmDeclarations(node);
+                return new Declarations(node);
             } else if (type == DOC_COMMENT) {
-                return new ElmDocComment(node);
+                return new DocComment(node);
             } else if (type == DOTTED_CAP_VAR) {
-                return new ElmDottedCapVar(node);
+                return new DottedCapVar(node);
             } else if (type == IMPORT_LINE) {
-                return new ElmImport2(node);
+                return new Import(node);
             } else if (type == MODULE_HEADER) {
-                return new ElmModuleHeader(node);
+                return new ModuleHeader(node);
             } else if (type == MODULE_VALUE_LIST) {
-                return new ElmModuleValueList(node);
+                return new ModuleValueList(node);
             } else if (type == MULTILINE_COMMENT) {
-                return new ElmMultilineComment(node);
+                return new MultilineComment(node);
             } else if (type == TYPE_DECLARATION) {
-                return new ElmTypeDeclaration(node);
+                return new TypeDeclaration(node);
             } else if (type == MODULE_NAME_REF) {
-                return new ElmModuleNameRef(node);
+                return new ModuleNameRef(node);
             } else if (type == MODULE_NAME) {
-                return new ElmModuleName(node);
+                return new ModuleName(node);
             } else if (type == MODULE_ALIAS) {
-                return new ElmModuleAlias(node);
+                return new ModuleAlias(node);
             } else if (type == MODULE_NODE) {
-                return new ElmModule(node);
+                return new Module(node);
             } else if (type == EXPORTED_VALUE) {
-                return new ElmExportedValue(node);
+                return new ExportedValue(node);
             } else if (type == EXPOSING_NODE) {
-                return new ElmExposingNode(node);
+                return new ExposingNode(node);
             } else if (type == OPERATOR) {
-                return new ElmOperator(node);
+                return new Operator(node);
             } else if (type == OPEN_LISTING_NODE) {
-                return new ElmOpenListing(node);
+                return new OpenListing(node);
             } else if (type == IMPORTS) {
-                return new ElmImports(node);
+                return new Imports(node);
             } else if (type == EFFECT_MODULE_SETTINGS) {
                 return new EffectModuleSettings(node);
             } else if (type == EFFECT_MODULE_SETTINGS_LIST) {
@@ -84,21 +84,21 @@ public interface Elements {
             } else if (type == EFFECT_MODULE_SETTING) {
                 return new EffectModuleSetting(node);
             } else if (type == TYPE_EXPORT) {
-                return new ElmTypeExport(node);
+                return new TypeExport(node);
             } else if (type == TYPE_CONSTRUCTOR) {
-                return new ElmTypeConstructor(node);
+                return new TypeConstructor(node);
             } else if (type == TYPE_CONSTRUCTOR_REF) {
-                return new ElmTypeConstructorRef(node);
+                return new TypeConstructorRef(node);
             } else if (type == TYPE_ALIAS_DECL_NODE) {
-                return new ElmTypeAliasDeclNode(node);
+                return new TypeAliasDeclNode(node);
             } else if (type == TYPE_DECL_NODE) {
-                return new ElmTypeDeclNode(node);
+                return new TypeDeclNode(node);
             } else if (type == TYPE_NAME) {
-                return new ElmTypeName(node);
+                return new TypeName(node);
             } else if (type == TYPE_NAME_REF) {
-                return new ElmTypeNameRef(node);
+                return new TypeNameRef(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
-                return new ElmRuneOfAutocompletion(node);
+                return new RuneOfAutocompletion(node);
             } else {
                 throw new AssertionError("Unknown element type: " + type);
             }

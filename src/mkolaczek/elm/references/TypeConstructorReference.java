@@ -6,18 +6,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import mkolaczek.elm.psi.node.ElmTypeConstructorRef;
-import mkolaczek.elm.psi.node.ElmTypeExport;
+import mkolaczek.elm.psi.node.TypeConstructorRef;
+import mkolaczek.elm.psi.node.TypeExport;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-import static mkolaczek.elm.psi.node.ElmModule.module;
+import static mkolaczek.elm.psi.node.Module.module;
 import static mkolaczek.util.Optionals.stream;
 
-public class ElmTypeConstructorReference extends PsiReferenceBase<ElmTypeConstructorRef> {
-    public ElmTypeConstructorReference(ElmTypeConstructorRef element) {
+public class TypeConstructorReference extends PsiReferenceBase<TypeConstructorRef> {
+    public TypeConstructorReference(TypeConstructorRef element) {
         super(element, TextRange.create(0, element.getTextLength()));
     }
 
@@ -35,7 +35,7 @@ public class ElmTypeConstructorReference extends PsiReferenceBase<ElmTypeConstru
     @NotNull
     @Override
     public Object[] getVariants() {
-        ElmTypeExport typeExport = PsiTreeUtil.getParentOfType(myElement, ElmTypeExport.class);
+        TypeExport typeExport = PsiTreeUtil.getParentOfType(myElement, TypeExport.class);
         assert typeExport != null;
         Set<String> excluded = Sets.newHashSet(typeExport.constructorNames());
 

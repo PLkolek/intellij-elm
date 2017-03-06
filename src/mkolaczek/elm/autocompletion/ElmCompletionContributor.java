@@ -61,15 +61,15 @@ public class ElmCompletionContributor extends CompletionContributor {
             return newArrayList(moduleName);
         });
         autocomplete(afterLeaf(Tokens.AS), parameters -> {
-            ElmImport2 importLine = getParentOfType(parameters.getPosition(), ElmImport2.class);
+            Import importLine = getParentOfType(parameters.getPosition(), Import.class);
             Preconditions.checkState(importLine != null, "As must be a child of import line");
-            ElmModuleNameRef module = importLine.importedModule();
+            ModuleNameRef module = importLine.importedModule();
             String[] words = module.getName().split("\\.");
             return Names.suggest(words);
         });
 
         autocomplete(afterLeaf(e(TYPE)), parameters -> {
-            Optional<ElmModuleHeader> header = ElmModule.module(parameters.getPosition()).header();
+            Optional<ModuleHeader> header = Module.module(parameters.getPosition()).header();
             if (!header.isPresent()) {
                 return Lists.newArrayList();
             }
@@ -81,30 +81,30 @@ public class ElmCompletionContributor extends CompletionContributor {
 
 
         autocomplete(afterLeaf(e(ALIAS)), parameters -> {
-            Optional<ElmModuleHeader> header = ElmModule.module(parameters.getPosition()).header();
+            Optional<ModuleHeader> header = Module.module(parameters.getPosition()).header();
             if (!header.isPresent()) {
                 return Lists.newArrayList();
             }
             return header.get().typeExports()
                          .stream()
-                         .filter(ElmTypeExport::withoutConstructors)
-                         .map(ElmTypeExport::typeNameString).collect(toList());
+                         .filter(TypeExport::withoutConstructors)
+                         .map(TypeExport::typeNameString).collect(toList());
         });
 
         autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)), parameters -> {
-            Optional<ElmModuleHeader> header = ElmModule.module(parameters.getPosition()).header();
+            Optional<ModuleHeader> header = Module.module(parameters.getPosition()).header();
             if (!header.isPresent()) {
                 return Lists.newArrayList();
             }
-            ElmTypeDeclaration declaration = getParentOfType(parameters.getPosition(), ElmTypeDeclaration.class);
+            TypeDeclaration declaration = getParentOfType(parameters.getPosition(), TypeDeclaration.class);
             assert declaration != null;
             Optional<String> typeName = declaration.typeNameString();
             Collection<String> constructors = typeName.flatMap(header.get()::typeExport)
-                                                      .map(ElmTypeExport::constructorNames)
+                                                      .map(TypeExport::constructorNames)
                                                       .orElse(newArrayList());
             List<String> presentConstructors = declaration.constructors()
                                                           .stream()
-                                                          .map(ElmTypeConstructor::getText)
+                                                          .map(TypeConstructor::getText)
                                                           .collect(toList());
 
             constructors.removeAll(presentConstructors);
@@ -120,7 +120,7 @@ public class ElmCompletionContributor extends CompletionContributor {
 
     }
 
-    private static Stream<String> typeCompletions(ElmTypeExport typeExport) {
+    private static Stream<String> typeCompletions(TypeExport typeExport) {
         ArrayList<String> result = Lists.newArrayList(typeExport.typeNameString());
         if (!typeExport.withoutConstructors()) {
             result.add(typeDeclaration(typeExport));
@@ -128,7 +128,7 @@ public class ElmCompletionContributor extends CompletionContributor {
         return result.stream();
     }
 
-    private static String typeDeclaration(ElmTypeExport typeExport) {
+    private static String typeDeclaration(TypeExport typeExport) {
         return typeExport.typeNameString() + " = " + Joiner.on(" | ").join(typeExport.constructorNames());
     }
 

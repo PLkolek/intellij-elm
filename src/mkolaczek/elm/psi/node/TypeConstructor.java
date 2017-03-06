@@ -10,8 +10,8 @@ import mkolaczek.elm.goTo.ItemPresentation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ElmTypeConstructor extends ASTWrapperPsiElement implements PsiNamedElement, PsiNameIdentifierOwner {
-    public ElmTypeConstructor(ASTNode node) {
+public class TypeConstructor extends ASTWrapperPsiElement implements PsiNamedElement, PsiNameIdentifierOwner {
+    public TypeConstructor(ASTNode node) {
         super(node);
     }
 

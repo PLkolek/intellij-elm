@@ -6,7 +6,7 @@ import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.ASTUtil;
 import mkolaczek.elm.psi.Elements;
-import mkolaczek.elm.psi.node.ElmExposingNode;
+import mkolaczek.elm.psi.node.ExposingNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +36,7 @@ public class ElmBlock extends AbstractBlock {
         while (child != null) {
             IElementType type = child.getElementType();
             if (type == Elements.EXPOSING_NODE) {
-                ElmExposingNode exposingNode = (ElmExposingNode) child.getPsi();
+                ExposingNode exposingNode = (ExposingNode) child.getPsi();
                 if (exposingNode.valueList().isOpenListing()) {
                     blocks.add(new ElmBlock(child, spacingBuilder, chopDown));
                 } else {

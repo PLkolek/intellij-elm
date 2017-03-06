@@ -11,13 +11,13 @@ import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
-public class ElmTypeExport extends ASTWrapperPsiElement {
-    public ElmTypeExport(ASTNode node) {
+public class TypeExport extends ASTWrapperPsiElement {
+    public TypeExport(ASTNode node) {
         super(node);
     }
 
-    public ElmTypeNameRef typeName() {
-        return findChildOfType(this, ElmTypeNameRef.class);
+    public TypeNameRef typeName() {
+        return findChildOfType(this, TypeNameRef.class);
     }
 
     public String typeNameString() {
@@ -25,15 +25,15 @@ public class ElmTypeExport extends ASTWrapperPsiElement {
     }
 
     public boolean withoutConstructors() {
-        return findChildOfType(this, ElmModuleValueList.class) == null;
+        return findChildOfType(this, ModuleValueList.class) == null;
     }
 
     public Collection<String> constructorNames() {
-        return constructors().stream().map(ElmTypeConstructorRef::getName).collect(toList());
+        return constructors().stream().map(TypeConstructorRef::getName).collect(toList());
     }
 
-    public Collection<ElmTypeConstructorRef> constructors() {
-        ElmModuleValueList valueList = findChildOfType(this, ElmModuleValueList.class);
-        return ofNullable(valueList).map(vl -> vl.values(ElmTypeConstructorRef.class)).orElse(newArrayList());
+    public Collection<TypeConstructorRef> constructors() {
+        ModuleValueList valueList = findChildOfType(this, ModuleValueList.class);
+        return ofNullable(valueList).map(vl -> vl.values(TypeConstructorRef.class)).orElse(newArrayList());
     }
 }

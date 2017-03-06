@@ -15,10 +15,10 @@ import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.stream.Collectors.toSet;
-import static mkolaczek.elm.psi.node.ElmModule.module;
+import static mkolaczek.elm.psi.node.Module.module;
 
-public class ElmTypeReference extends PsiReferenceBase<ElmTypeNameRef> {
-    public ElmTypeReference(ElmTypeNameRef element) {
+public class TypeReference extends PsiReferenceBase<TypeNameRef> {
+    public TypeReference(TypeNameRef element) {
         super(element, TextRange.create(0, element.getTextLength()));
     }
 
@@ -28,7 +28,7 @@ public class ElmTypeReference extends PsiReferenceBase<ElmTypeNameRef> {
     public PsiElement resolve() {
         return module(myElement).typeDeclarations()
                                 .stream()
-                                .map(ElmTypeDeclaration::typeName)
+                                .map(TypeDeclaration::typeName)
                                 .flatMap(Optionals::stream)
                                 .filter(type -> myElement.getText().equals(type.getText()))
                                 .findFirst().orElse(null);
@@ -48,16 +48,16 @@ public class ElmTypeReference extends PsiReferenceBase<ElmTypeNameRef> {
     public static Object[] variants(PsiElement myElement) {
         Set<String> excluded = Sets.newHashSet();
 
-        ElmTypeAliasDeclNode aliasDeclNode = PsiTreeUtil.getParentOfType(myElement, ElmTypeAliasDeclNode.class);
+        TypeAliasDeclNode aliasDeclNode = PsiTreeUtil.getParentOfType(myElement, TypeAliasDeclNode.class);
         if (aliasDeclNode != null) {
-            String aliasName = aliasDeclNode.typeDeclaration().typeName().map(ElmTypeName::getName).orElse("");
+            String aliasName = aliasDeclNode.typeDeclaration().typeName().map(TypeName::getName).orElse("");
             excluded = newHashSet(aliasName);
         } else {
-            ElmModuleValueList exposingList = PsiTreeUtil.getParentOfType(myElement, ElmModuleValueList.class);
+            ModuleValueList exposingList = PsiTreeUtil.getParentOfType(myElement, ModuleValueList.class);
             if (exposingList != null) {
                 excluded = exposingList.exportedTypes()
                                        .stream()
-                                       .map(ElmTypeExport::typeNameString)
+                                       .map(TypeExport::typeNameString)
                                        .collect(toSet());
             }
         }
@@ -65,7 +65,7 @@ public class ElmTypeReference extends PsiReferenceBase<ElmTypeNameRef> {
         Set<String> finalExcluded = excluded;
         return module(myElement).typeDeclarations()
                                 .stream()
-                                .map(ElmTypeDeclaration::typeName)
+                                .map(TypeDeclaration::typeName)
                                 .flatMap(Optionals::stream).filter(elem -> !finalExcluded.contains(elem.getName()))
                                 .toArray();
     }

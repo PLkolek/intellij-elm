@@ -22,8 +22,8 @@ import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNamedElement, PsiNameIdentifierOwner {
-    public ElmModule(@NotNull ASTNode node) {
+public class Module extends ASTWrapperPsiElement implements PsiElement, PsiNamedElement, PsiNameIdentifierOwner {
+    public Module(@NotNull ASTNode node) {
         super(node);
     }
 
@@ -31,7 +31,7 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
     @Override
     public PsiElement getNameIdentifier() {
         //required for ctrl+click find usages to work
-        return PsiTreeUtil.findChildOfType(this, ElmModuleName.class);
+        return PsiTreeUtil.findChildOfType(this, ModuleName.class);
     }
 
     @Override
@@ -70,20 +70,20 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
         return getName().equals(name);
     }
 
-    public boolean sameName(ElmModule other) {
+    public boolean sameName(Module other) {
         return sameName(other.getName());
     }
 
-    public ElmModuleValueList exposedValues() {
-        return PsiTreeUtil.findChildOfType(this, ElmModuleValueList.class);
+    public ModuleValueList exposedValues() {
+        return PsiTreeUtil.findChildOfType(this, ModuleValueList.class);
     }
 
-    public ElmDocComment docComment() {
-        return PsiTreeUtil.getChildOfType(this, ElmDocComment.class);
+    public DocComment docComment() {
+        return PsiTreeUtil.getChildOfType(this, DocComment.class);
     }
 
-    public Optional<ElmModuleHeader> header() {
-        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, ElmModuleHeader.class));
+    public Optional<ModuleHeader> header() {
+        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, ModuleHeader.class));
     }
 
     public String typeStr() {
@@ -109,19 +109,19 @@ public class ElmModule extends ASTWrapperPsiElement implements PsiElement, PsiNa
     }
 
     @NotNull
-    public static ElmModule module(PsiElement element) {
-        return checkNotNull(PsiTreeUtil.getParentOfType(element, ElmModule.class));
+    public static Module module(PsiElement element) {
+        return checkNotNull(PsiTreeUtil.getParentOfType(element, Module.class));
     }
 
-    public Collection<ElmImport2> imports() {
-        return PsiTreeUtil.findChildrenOfType(this, ElmImport2.class);
+    public Collection<Import> imports() {
+        return PsiTreeUtil.findChildrenOfType(this, Import.class);
     }
 
-    public Collection<ElmTypeDeclaration> typeDeclarations() {
-        return PsiTreeUtil.findChildrenOfType(this, ElmTypeDeclaration.class);
+    public Collection<TypeDeclaration> typeDeclarations() {
+        return PsiTreeUtil.findChildrenOfType(this, TypeDeclaration.class);
     }
 
-    public Optional<ElmTypeDeclaration> typeDeclaration(String typeName) {
+    public Optional<TypeDeclaration> typeDeclaration(String typeName) {
         return typeDeclarations().stream().filter(decl -> typeName.equals(decl.typeNameString().orElse(""))).findAny();
     }
 

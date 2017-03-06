@@ -5,9 +5,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
-import mkolaczek.elm.psi.node.ElmModule;
-import mkolaczek.elm.psi.node.ElmTypeConstructor;
-import mkolaczek.elm.psi.node.ElmTypeName;
+import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.TypeConstructor;
+import mkolaczek.elm.psi.node.TypeName;
 
 import java.util.regex.Pattern;
 
@@ -24,11 +24,11 @@ public class InplaceRenamer extends MemberInplaceRenamer {
 
     @Override
     protected boolean isIdentifier(String newName, Language language) {
-        if (elementToRename instanceof ElmModule) {
+        if (elementToRename instanceof Module) {
             return MODULE_PATTERN.matcher(newName).matches();
         }
 
-        if (elementToRename instanceof ElmTypeName || elementToRename instanceof ElmTypeConstructor) {
+        if (elementToRename instanceof TypeName || elementToRename instanceof TypeConstructor) {
             return CAP_VAR_PATTERN.matcher(newName).matches();
         }
 

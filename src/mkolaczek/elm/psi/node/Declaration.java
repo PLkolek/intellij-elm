@@ -4,9 +4,9 @@ package mkolaczek.elm.psi.node;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 
-public class ElmDeclaration extends ASTWrapperPsiElement {
+public class Declaration extends ASTWrapperPsiElement {
 
-    public ElmDeclaration(ASTNode node) {
+    public Declaration(ASTNode node) {
         super(node);
     }
 

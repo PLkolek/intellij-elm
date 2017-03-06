@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ElmTypeName extends ASTWrapperPsiElement implements PsiNamedElement, PsiNameIdentifierOwner {
-    public ElmTypeName(ASTNode node) {
+public class TypeName extends ASTWrapperPsiElement implements PsiNamedElement, PsiNameIdentifierOwner {
+    public TypeName(ASTNode node) {
         super(node);
     }
 

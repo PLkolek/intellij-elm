@@ -12,8 +12,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.CommonProcessors;
 import mkolaczek.elm.psi.ElmFile;
-import mkolaczek.elm.psi.node.ElmModule;
-import mkolaczek.elm.psi.node.ElmModuleName;
+import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.ModuleName;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +35,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
         if (!(file instanceof ElmFile)) {
             return null;
         }
-        ElmModule module = ((ElmFile) file).module();
+        Module module = ((ElmFile) file).module();
         if (module == null || Strings.isNullOrEmpty(module.getName())) {
             return null;
         }
@@ -89,7 +89,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            ((ElmModuleName) descriptor.getPsiElement()).module().delete();
+            ((ModuleName) descriptor.getPsiElement()).module().delete();
         }
     }
 }

@@ -7,7 +7,7 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
 import mkolaczek.elm.psi.ElmFile;
-import mkolaczek.elm.psi.node.ElmModule;
+import mkolaczek.elm.psi.node.Module;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 public class ProjectUtil {
-    public static Stream<ElmModule> modules(Project project) {
+    public static Stream<Module> modules(Project project) {
         return elmFiles(project).stream()
                                 .map(PsiManager.getInstance(project)::findFile)
                                 .map(ElmFile.class::cast)
