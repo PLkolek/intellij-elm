@@ -122,7 +122,7 @@ public class Module extends ASTWrapperPsiElement implements PsiElement, PsiNamed
     }
 
     public Optional<TypeDeclaration> typeDeclaration(String typeName) {
-        return typeDeclarations().stream().filter(decl -> typeName.equals(decl.typeNameString().orElse(""))).findAny();
+        return typeDeclarations().stream().filter(decl -> typeName.equals(decl.getName())).findAny();
     }
 
 

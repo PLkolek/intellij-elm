@@ -8,7 +8,7 @@ import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.ElmLanguage;
 import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.TypeConstructor;
-import mkolaczek.elm.psi.node.TypeName;
+import mkolaczek.elm.psi.node.TypeDeclaration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
@@ -28,7 +28,7 @@ public class InPlaceRenamerTest {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     Module module;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    TypeName type;
+    TypeDeclaration type;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     TypeConstructor constructor;
 

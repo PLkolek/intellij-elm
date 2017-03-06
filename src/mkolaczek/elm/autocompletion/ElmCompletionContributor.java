@@ -98,10 +98,11 @@ public class ElmCompletionContributor extends CompletionContributor {
             }
             TypeDeclaration declaration = getParentOfType(parameters.getPosition(), TypeDeclaration.class);
             assert declaration != null;
-            Optional<String> typeName = declaration.typeNameString();
-            Collection<String> constructors = typeName.flatMap(header.get()::typeExport)
-                                                      .map(TypeExport::constructorNames)
-                                                      .orElse(newArrayList());
+            String typeName = declaration.getName();
+            Collection<String> constructors = header.get()
+                                                    .typeExport(typeName)
+                                                    .map(TypeExport::constructorNames)
+                                                    .orElse(newArrayList());
             List<String> presentConstructors = declaration.constructors()
                                                           .stream()
                                                           .map(TypeConstructor::getText)

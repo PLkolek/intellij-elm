@@ -6,8 +6,6 @@ import com.intellij.openapi.project.Project;
 import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeDeclaration;
-import mkolaczek.elm.psi.node.TypeName;
-import mkolaczek.util.Optionals;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
@@ -21,8 +19,7 @@ public class GoToSymbolContributor implements ChooseByNameContributor {
                                                         .map(TypeConstructor::getName);
 
         Stream<String> types = typeDecls(project)
-                .map(TypeDeclaration::typeNameString)
-                .flatMap(Optionals::stream);
+                .map(TypeDeclaration::getName);
 
         return Stream.concat(constructors, types).toArray(String[]::new);
 
@@ -35,9 +32,7 @@ public class GoToSymbolContributor implements ChooseByNameContributor {
                                            Project project,
                                            boolean includeNonProjectItems) {
 
-        Stream<TypeName> types = typeDecls(project).map(TypeDeclaration::typeName)
-                                                   .flatMap(Optionals::stream)
-                                                   .filter(d -> name.equals(d.getName()));
+        Stream<TypeDeclaration> types = typeDecls(project).filter(d -> name.equals(d.getName()));
         Stream<TypeConstructor> constructors = typeDecls(project).flatMap(d -> d.constructors().stream())
                                                                  .filter(c -> name.equals(c.getName()));
         return Stream.concat(types, constructors)

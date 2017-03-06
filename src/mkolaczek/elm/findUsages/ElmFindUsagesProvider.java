@@ -59,7 +59,7 @@ public class ElmFindUsagesProvider implements FindUsagesProvider {
         if (element instanceof TypeConstructor) {
             TypeDeclaration type = getParentOfType(element, TypeDeclaration.class);
             assert type != null;
-            prefix = module.getName() + "." + type.typeNameString().orElse("") + " ";
+            prefix = module.getName() + "." + type.getName() + " ";
         }
 
         return prefix + getNodeText(element, true);

@@ -12,7 +12,7 @@ public class ElmElementFactory {
 
     public static PsiElement typeName(Project project, String name) {
         ElmFile file = createFile(project, String.format("type %s = A", name));
-        return file.module().typeDeclarations().iterator().next().typeName().get();
+        return file.module().typeDeclarations().iterator().next().getNameIdentifier();
     }
 
     public static PsiElement typeNameRef(Project project, String name) {

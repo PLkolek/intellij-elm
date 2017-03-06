@@ -7,7 +7,6 @@ import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.psi.node.*;
-import mkolaczek.util.Optionals;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,12 +24,10 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
 
     @Nullable
     @Override
-    public PsiElement resolve() {
+    public TypeDeclaration resolve() {
         return module(myElement).typeDeclarations()
                                 .stream()
-                                .map(TypeDeclaration::typeName)
-                                .flatMap(Optionals::stream)
-                                .filter(type -> myElement.getText().equals(type.getText()))
+                                .filter(type -> myElement.getName().equals(type.getName()))
                                 .findFirst().orElse(null);
     }
 
@@ -50,7 +47,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
 
         TypeAliasDeclNode aliasDeclNode = PsiTreeUtil.getParentOfType(myElement, TypeAliasDeclNode.class);
         if (aliasDeclNode != null) {
-            String aliasName = aliasDeclNode.typeDeclaration().typeName().map(TypeName::getName).orElse("");
+            String aliasName = aliasDeclNode.typeDeclaration().getName();
             excluded = newHashSet(aliasName);
         } else {
             ModuleValueList exposingList = PsiTreeUtil.getParentOfType(myElement, ModuleValueList.class);
@@ -65,8 +62,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
         Set<String> finalExcluded = excluded;
         return module(myElement).typeDeclarations()
                                 .stream()
-                                .map(TypeDeclaration::typeName)
-                                .flatMap(Optionals::stream).filter(elem -> !finalExcluded.contains(elem.getName()))
+                                .filter(elem -> !finalExcluded.contains(elem.getName()))
                                 .toArray();
     }
 }

@@ -69,7 +69,7 @@ public class ElmFoldingBuilder implements FoldingBuilder {
         }
         if (type == TYPE_DECLARATION) {
             TypeDeclaration decl = (TypeDeclaration) node.getPsi();
-            return "type " + (decl.isAlias() ? "alias " : "") + decl.typeNameString().orElse("") + " = ...";
+            return "type " + (decl.isAlias() ? "alias " : "") + decl.getName() + " = ...";
         }
         return null;
     }

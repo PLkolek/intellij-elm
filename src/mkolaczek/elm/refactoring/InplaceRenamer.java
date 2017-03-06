@@ -7,7 +7,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
 import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.TypeConstructor;
-import mkolaczek.elm.psi.node.TypeName;
+import mkolaczek.elm.psi.node.TypeDeclaration;
 
 import java.util.regex.Pattern;
 
@@ -28,7 +28,7 @@ public class InplaceRenamer extends MemberInplaceRenamer {
             return MODULE_PATTERN.matcher(newName).matches();
         }
 
-        if (elementToRename instanceof TypeName || elementToRename instanceof TypeConstructor) {
+        if (elementToRename instanceof TypeDeclaration || elementToRename instanceof TypeConstructor) {
             return CAP_VAR_PATTERN.matcher(newName).matches();
         }
 
