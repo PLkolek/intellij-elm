@@ -31,7 +31,8 @@ public class SafeDeleteTest extends MultiFileTestCase {
         try {
             safeDelete();
         } catch (BaseRefactoringProcessor.ConflictsInTestsException e) {
-            assertThat(e.getMessage(), is("Test2 has 2 usages that are not safe to delete.<br>Of those 1 usage is in strings, comments, non-code files or generated code."));
+            assertThat(e.getMessage(),
+                    is("module <b><code>Test2</code></b> has 2 usages that are not safe to delete.<br>Of those 1 usage is in strings, comments, non-code files or generated code."));
         }
         assertNotNull(getProject().getBaseDir().getChildren()[1].findChild("Test2.elm"));
     }

@@ -22,7 +22,7 @@ public class ElmFile extends PsiFileBase {
 
     @Override
     public String toString() {
-        return "Simple File";
+        return "Elm File";
     }
 
     public Module module() {
