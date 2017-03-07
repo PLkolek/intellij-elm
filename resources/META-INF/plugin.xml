@@ -33,8 +33,10 @@
         <completion.contributor language="Elm"
                                 implementationClass="mkolaczek.elm.autocompletion.ElmCompletionContributor"/>
         <lang.findUsagesProvider language="Elm" implementationClass="mkolaczek.elm.findUsages.ElmFindUsagesProvider"/>
-        <lang.refactoringSupport language="Elm" implementationClass="mkolaczek.elm.refactoring.ElmRefactoringSupportProvider"/>
-        <targetElementEvaluator language="Elm" implementationClass="mkolaczek.elm.refactoring.ElmTargetElementEvaluator"/>
+        <lang.refactoringSupport language="Elm"
+                                 implementationClass="mkolaczek.elm.refactoring.ElmRefactoringSupportProvider"/>
+        <targetElementEvaluator language="Elm"
+                                implementationClass="mkolaczek.elm.refactoring.ElmTargetElementEvaluator"/>
         <lang.formatter language="Elm" implementationClass="mkolaczek.elm.formatting.ElmFormattingModelBuilder"/>
         <localInspection implementationClass="mkolaczek.elm.inspections.UnusedDeclarationInspection" groupPath="Elm"
                          groupName="Declaration redundancy" enabledByDefault="true" level="WARNING"
@@ -46,9 +48,10 @@
         <gotoSymbolContributor implementation="mkolaczek.elm.goTo.GoToClassContributor"/>
         <lang.documentationProvider language="Elm"
                                     implementationClass="mkolaczek.elm.documentation.ElmDocumentationProvider"/>
-        <lang.foldingBuilder language="Elm" implementationClass="mkolaczek.elm.folding.ElmFoldingBuilder" />
-        <lang.commenter language="Elm" implementationClass="mkolaczek.elm.commenting.ElmCommenter" />
+        <lang.foldingBuilder language="Elm" implementationClass="mkolaczek.elm.folding.ElmFoldingBuilder"/>
+        <lang.commenter language="Elm" implementationClass="mkolaczek.elm.commenting.ElmCommenter"/>
         <renameHandler implementation="mkolaczek.elm.refactoring.InplaceRenameHandler"/>
+        <refactoring.safeDeleteProcessor implementation="mkolaczek.elm.refactoring.safeDelete.ElmSafeDeleteDelegate"/>
     </extensions>
 
     <actions>

@@ -1,14 +1,20 @@
 // This is a generated file. Not intended for manual editing.
 package mkolaczek.elm.psi.node;
 
+import com.google.common.collect.Lists;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import mkolaczek.elm.psi.Tokens;
 import mkolaczek.util.Optionals;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 
+import static com.intellij.psi.util.PsiTreeUtil.nextVisibleLeaf;
+import static com.intellij.psi.util.PsiTreeUtil.prevVisibleLeaf;
 import static java.util.stream.Collectors.toList;
 
 public class ModuleValueList extends ASTWrapperPsiElement {
@@ -30,5 +36,17 @@ public class ModuleValueList extends ASTWrapperPsiElement {
                                           .map(ExportedValue::typeExport)
                                           .flatMap(Optionals::stream)
                                           .collect(toList());
+    }
+
+    public void deleteChild(@NotNull PsiElement listedValue) {
+        List<? extends PsiElement> values = Lists.newArrayList(values(listedValue.getClass()));
+        int index = values.indexOf(listedValue);
+        if (values.size() > 1) {
+            PsiElement comma = index > 0 ? prevVisibleLeaf(listedValue) : nextVisibleLeaf(listedValue);
+            if (comma != null && comma.getNode().getElementType() == Tokens.COMMA) {
+                comma.delete();
+            }
+        }
+        listedValue.delete();
     }
 }

@@ -40,7 +40,7 @@ public class ElmFindUsagesProvider implements FindUsagesProvider {
     public String getType(@NotNull PsiElement element) {
         if (element instanceof Module) {
             return "module";
-        } else if (element instanceof TypeName) {
+        } else if (element instanceof TypeDeclaration) {
             return "type";
         }
         return "type constructor";
