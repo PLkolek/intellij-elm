@@ -8,7 +8,9 @@ import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
-import static mkolaczek.elm.parsers.Basic.*;
+import static mkolaczek.elm.parsers.Basic.padded;
+import static mkolaczek.elm.parsers.Basic.spacePrefix;
+import static mkolaczek.elm.parsers.SepBy.pipeSep;
 import static mkolaczek.elm.parsers.core.ConsumeRest.consumeRest;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
@@ -49,7 +51,7 @@ public class Declaration {
     private static Parser typeDeclContents() {
         return sequence("type declaration contents suffix",
                 nameArgsEquals(),
-                sepBy(Tokens.PIPE, Type.unionConstructor())
+                pipeSep(Type.unionConstructor())
         ).as(Elements.TYPE_DECL_NODE);
     }
 

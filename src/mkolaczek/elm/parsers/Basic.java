@@ -6,6 +6,7 @@ import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
+import static mkolaczek.elm.parsers.SepBy.commaSep;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
@@ -26,14 +27,7 @@ public class Basic {
     public static Parser listingContent(String name, Parser listedValue) {
         return Or.or(name,
                 expect(Tokens.OPEN_LISTING).as(Elements.OPEN_LISTING_NODE),
-                listingValues(listedValue)
-        );
-    }
-
-    public static Parser listingValues(Parser listedValue) {
-        return sequence("listing values",
-                listedValue,
-                commaSepSuffix(listedValue)
+                commaSep(listedValue)
         );
     }
 
@@ -74,35 +68,6 @@ public class Basic {
 
     private static Parser operatorSymbol() {
         return Or.or("operator symbol", expect(Tokens.SYM_OP), expect(Tokens.COMMA_OP));
-    }
-
-    public static Parser commaSep(Parser parser) {
-        return Try.tryP(
-                sequence(String.format("comma separated list of %ss", parser.name()),
-                        parser,
-                        commaSepSuffix(parser)
-                )
-        );
-    }
-
-    public static Parser sepBy(Token separator, Parser parser) {
-        return sequence(String.format("%s separated list of %ss", separator.getName(), parser.name()),
-                parser,
-                sepSuffix(separator, parser)
-        );
-    }
-
-    @NotNull
-    public static Many commaSepSuffix(Parser parser) {
-        return sepSuffix(Tokens.COMMA, parser);
-    }
-
-    @NotNull
-    private static Many sepSuffix(Token separator, Parser parser) {
-        return Many.many(String.format("more %ss", parser.name()),
-                padded(separator),
-                parser
-        );
     }
 
     public static Parser parens(String name, Parser contents) {

@@ -7,6 +7,7 @@ import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 
 import static mkolaczek.elm.parsers.Basic.dottedCapVar;
+import static mkolaczek.elm.parsers.SepBy.tryCommaSep;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Many.many;
 import static mkolaczek.elm.parsers.core.Or.or;
@@ -97,7 +98,7 @@ public class Module {
 
     private static Parser settingsList() {
         return Basic.brackets(
-                Basic.commaSep(
+                tryCommaSep(
                         sequence(
                                 expect(Tokens.LOW_VAR),
                                 Basic.padded(expect(Tokens.EQUALS)),

@@ -8,6 +8,8 @@ import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
+import static mkolaczek.elm.parsers.SepBy.commaSepSuffix;
+import static mkolaczek.elm.parsers.SepBy.tryCommaSep;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
@@ -20,7 +22,7 @@ Type {
     public static ParserBox expression = new ParserBox("type expression");
 
     private static Parser tuple =
-            parens("tuple type", tryP(commaSep(expression)));
+            parens("tuple type", tryP(tryCommaSep(expression)));
 
     private static Parser field =
             sequence("record field",
@@ -49,7 +51,7 @@ Type {
                                             sequence(
                                                     expect(Tokens.PIPE),
                                                     maybeWhitespace(),
-                                                    commaSep(field)
+                                                    tryCommaSep(field)
                                             ),
                                             sequence(
                                                     fieldSuffix(),
