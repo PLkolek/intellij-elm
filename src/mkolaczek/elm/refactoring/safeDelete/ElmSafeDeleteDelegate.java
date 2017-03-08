@@ -1,5 +1,6 @@
 package mkolaczek.elm.refactoring.safeDelete;
 
+import com.google.common.collect.Lists;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
@@ -32,22 +33,29 @@ public class ElmSafeDeleteDelegate implements SafeDeleteProcessorDelegate {
                                              @NotNull PsiElement[] allElementsToDelete,
                                              @NotNull List<UsageInfo> result) {
         if (element instanceof PsiNamedElement) {
-            ReferencesSearch.search(element).forEach(reference -> {
-                final PsiElement refElement = reference.getElement();
-                if (!isInside(refElement, allElementsToDelete)) {
-                    result.add(new SafeDeleteReferenceSimpleDeleteUsageInfo(refElement,
-                            element,
-                            PsiTreeUtil.getParentOfType(refElement,
-                                    ExposingNode.class) != null));
-                }
-                return true;
-            });
+            result.addAll(usages(element, allElementsToDelete));
         }
         return new NonCodeUsageSearchInfo(SafeDeleteProcessor.getDefaultInsideDeletedCondition(allElementsToDelete),
                 element);
     }
 
-    private boolean isInside(PsiElement refElement, PsiElement[] ancestors) {
+    public static List<UsageInfo> usages(@NotNull PsiElement element,
+                                         @NotNull PsiElement[] allElementsToDelete) {
+        List<UsageInfo> result = Lists.newArrayList();
+        ReferencesSearch.search(element).forEach(reference -> {
+            final PsiElement refElement = reference.getElement();
+            if (!isInside(refElement, allElementsToDelete)) {
+                result.add(new SafeDeleteReferenceSimpleDeleteUsageInfo(refElement,
+                        element,
+                        PsiTreeUtil.getParentOfType(refElement,
+                                ExposingNode.class) != null));
+            }
+            return true;
+        });
+        return result;
+    }
+
+    private static boolean isInside(PsiElement refElement, PsiElement[] ancestors) {
         for (PsiElement element : ancestors) {
             if (SafeDeleteProcessor.isInside(refElement, element)) {
                 return true;

@@ -42,7 +42,7 @@ public class UnusedDeclarationTest extends LightCodeInsightFixtureTestCase {
         myFixture.configureByFiles("Test.elm");
         myFixture.enableInspections(Collections.singleton(UnusedDeclarationInspection.class));
         myFixture.checkHighlighting();
-        final IntentionAction intention = myFixture.findSingleIntention("Remove module");
+        final IntentionAction intention = myFixture.findSingleIntention("Remove");
         assertNotNull(intention);
 
         myFixture.launchAction(intention);

@@ -11,11 +11,14 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.CommonProcessors;
 import mkolaczek.elm.findUsages.ElmFindUsagesProvider;
 import mkolaczek.elm.psi.ElmFile;
+import mkolaczek.elm.psi.node.ExposingNode;
 import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.refactoring.safeDelete.ElmSafeDeleteDelegate;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -94,10 +97,12 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
                 if (offset == -1) {
                     return false;
                 }
-                PsiElement element = psiFile.findElementAt(offset);
-                assert element != null;
-                boolean outsideSelf = getParentOfType(element, element.getClass()) != element;
-                return !(element instanceof PsiComment) && outsideSelf; // ignore comments
+                PsiElement usage = psiFile.findElementAt(offset);
+                assert usage != null;
+                boolean outsideSelf = getParentOfType(usage, element.getClass()) != element;
+                //same as in ElmSafeDeleteDelegate, sorry
+                boolean outsideExposing = getParentOfType(usage, ExposingNode.class) == null;
+                return !(usage instanceof PsiComment) && outsideSelf && outsideExposing; // ignore comments
             }
         };
 
@@ -127,8 +132,12 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
                     PsiNameIdentifierOwner.class,
                     false);
             assert toDelete != null;
+            for (UsageInfo usage : ElmSafeDeleteDelegate.usages(toDelete, new PsiElement[]{toDelete})) {
+                if (usage instanceof SafeDeleteReferenceUsageInfo) {
+                    ((SafeDeleteReferenceUsageInfo) usage).deleteElement();
+                }
+            }
             toDelete.delete();
-
         }
     }
 }
