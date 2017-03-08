@@ -4,8 +4,8 @@ import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.util.PsiTreeUtil;
-import mkolaczek.elm.ElmFileType;
-import mkolaczek.elm.ElmLanguage;
+import mkolaczek.elm.boilerplate.ElmFileType;
+import mkolaczek.elm.boilerplate.ElmLanguage;
 import mkolaczek.elm.psi.node.Module;
 import org.jetbrains.annotations.NotNull;
 

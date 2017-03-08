@@ -1,7 +1,7 @@
 package mkolaczek.elm.psi;
 
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.ElmLanguage;
+import mkolaczek.elm.boilerplate.ElmLanguage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 

@@ -6,6 +6,7 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
+import mkolaczek.elm.boilerplate.ElmFileType;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.Module;
 import org.jetbrains.annotations.NotNull;

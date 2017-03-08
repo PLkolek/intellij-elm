@@ -10,7 +10,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
-import mkolaczek.elm.goTo.ItemPresentation;
+import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

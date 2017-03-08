@@ -3,6 +3,7 @@ package mkolaczek.elm;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
+import mkolaczek.elm.boilerplate.ElmFileType;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.ModuleName;
 import mkolaczek.elm.psi.node.ModuleNameRef;

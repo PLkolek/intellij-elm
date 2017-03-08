@@ -3,7 +3,7 @@ package mkolaczek.elm.parsing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.testFramework.ParsingTestCase;
-import mkolaczek.elm.ElmParserDefinition;
+import mkolaczek.elm.boilerplate.ElmParserDefinition;
 import org.jetbrains.annotations.NonNls;
 
 import java.io.File;

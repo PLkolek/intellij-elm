@@ -25,35 +25,38 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileTypeFactory implementation="mkolaczek.elm.ElmFileTypeFactory"/>
-        <lang.parserDefinition language="Elm" implementationClass="mkolaczek.elm.ElmParserDefinition"/>
+        <fileTypeFactory implementation="mkolaczek.elm.boilerplate.ElmFileTypeFactory"/>
+        <lang.parserDefinition language="Elm" implementationClass="mkolaczek.elm.boilerplate.ElmParserDefinition"/>
         <lang.syntaxHighlighterFactory language="Elm"
-                                       implementationClass="mkolaczek.elm.syntaxHinglighting.ElmSyntaxHighlighterFactory"/>
-        <annotator language="Elm" implementationClass="mkolaczek.elm.syntaxHinglighting.ElmAnnotator"/>
+                                       implementationClass="mkolaczek.elm.features.syntaxHinglighting.ElmSyntaxHighlighterFactory"/>
+        <annotator language="Elm" implementationClass="mkolaczek.elm.features.syntaxHinglighting.ElmCommentAnnotator"/>
         <completion.contributor language="Elm"
-                                implementationClass="mkolaczek.elm.autocompletion.ElmCompletionContributor"/>
-        <lang.findUsagesProvider language="Elm" implementationClass="mkolaczek.elm.findUsages.ElmFindUsagesProvider"/>
+                                implementationClass="mkolaczek.elm.features.autocompletion.ElmCompletionContributor"/>
+        <lang.findUsagesProvider language="Elm" implementationClass="mkolaczek.elm.features.ElmFindUsagesProvider"/>
         <lang.refactoringSupport language="Elm"
-                                 implementationClass="mkolaczek.elm.refactoring.ElmRefactoringSupportProvider"/>
+                                 implementationClass="mkolaczek.elm.features.refactoring.ElmRefactoringSupportProvider"/>
         <targetElementEvaluator language="Elm"
-                                implementationClass="mkolaczek.elm.refactoring.ElmTargetElementEvaluator"/>
-        <lang.formatter language="Elm" implementationClass="mkolaczek.elm.formatting.ElmFormattingModelBuilder"/>
-        <localInspection implementationClass="mkolaczek.elm.inspections.UnusedDeclarationInspection" groupPath="Elm"
+                                implementationClass="mkolaczek.elm.features.refactoring.ElmTargetElementEvaluator"/>
+        <lang.formatter language="Elm"
+                        implementationClass="mkolaczek.elm.features.formatting.ElmFormattingModelBuilder"/>
+        <localInspection implementationClass="mkolaczek.elm.features.inspections.UnusedDeclarationInspection"
+                         groupPath="Elm"
                          groupName="Declaration redundancy" enabledByDefault="true" level="WARNING"
                          shortName="ElmUnusedDeclaration" displayName="Unused declaration"/>
         <lang.psiStructureViewFactory language="Elm"
-                                      implementationClass="mkolaczek.elm.structureView.ElmStructureViewBuilderFactory"/>
-        <gotoClassContributor implementation="mkolaczek.elm.goTo.GoToClassContributor"/>
-        <gotoSymbolContributor implementation="mkolaczek.elm.goTo.GoToSymbolContributor"/>
-        <gotoSymbolContributor implementation="mkolaczek.elm.goTo.GoToClassContributor"/>
+                                      implementationClass="mkolaczek.elm.features.structureView.ElmStructureViewBuilderFactory"/>
+        <gotoClassContributor implementation="mkolaczek.elm.features.goTo.GoToClassContributor"/>
+        <gotoSymbolContributor implementation="mkolaczek.elm.features.goTo.GoToSymbolContributor"/>
+        <gotoSymbolContributor implementation="mkolaczek.elm.features.goTo.GoToClassContributor"/>
         <lang.documentationProvider language="Elm"
-                                    implementationClass="mkolaczek.elm.documentation.ElmDocumentationProvider"/>
-        <lang.foldingBuilder language="Elm" implementationClass="mkolaczek.elm.folding.ElmFoldingBuilder"/>
-        <lang.commenter language="Elm" implementationClass="mkolaczek.elm.commenting.ElmCommenter"/>
-        <renameHandler implementation="mkolaczek.elm.refactoring.rename.InplaceRenameHandler"/>
-        <refactoring.safeDeleteProcessor implementation="mkolaczek.elm.refactoring.safeDelete.ElmSafeDeleteDelegate"/>
+                                    implementationClass="mkolaczek.elm.features.ElmDocumentationProvider"/>
+        <lang.foldingBuilder language="Elm" implementationClass="mkolaczek.elm.features.ElmFoldingBuilder"/>
+        <lang.commenter language="Elm" implementationClass="mkolaczek.elm.features.ElmCommenter"/>
+        <renameHandler implementation="mkolaczek.elm.features.refactoring.rename.InplaceRenameHandler"/>
+        <refactoring.safeDeleteProcessor
+                implementation="mkolaczek.elm.features.refactoring.safeDelete.ElmSafeDeleteDelegate"/>
         <annotator language="Elm"
-                   implementationClass="mkolaczek.elm.unresolvedReferences.UnresolvedReferenceAnnotator"/>
+                   implementationClass="mkolaczek.elm.features.inspections.UnresolvedReferenceAnnotator"/>
     </extensions>
 
     <actions>

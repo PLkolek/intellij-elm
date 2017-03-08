@@ -1,6 +1,7 @@
 package mkolaczek.elm.documentation;
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import mkolaczek.elm.features.ElmDocumentationProvider;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.Module;
 

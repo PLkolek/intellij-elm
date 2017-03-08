@@ -7,7 +7,7 @@ import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
-import mkolaczek.elm.goTo.ItemPresentation;
+import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.node.abstr.SeparatedList;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
