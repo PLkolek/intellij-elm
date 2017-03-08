@@ -106,7 +106,7 @@ public class Basic {
         return Many.many(String.format("space prefixed list of %ss", parser.name()),
                 Try.tryP(
                         sequence("space prefixed " + parser.name(),
-                                WhiteSpace.forcedWhitespace(),
+                                WhiteSpace.maybeWhitespace(),
                                 parser)
                 )
         );

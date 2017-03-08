@@ -52,7 +52,6 @@ public class WhiteSpace implements Parser {
         abstract boolean accepts(PsiBuilder builder);
     }
 
-    private Set<Token> nextTokens;
     private final Type type;
 
     public static WhiteSpace maybeWhitespace() {

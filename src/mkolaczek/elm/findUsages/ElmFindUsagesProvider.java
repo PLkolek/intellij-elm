@@ -38,6 +38,11 @@ public class ElmFindUsagesProvider implements FindUsagesProvider {
     @NotNull
     @Override
     public String getType(@NotNull PsiElement element) {
+        return type(element);
+    }
+
+    @NotNull
+    public static String type(@NotNull PsiElement element) {
         if (element instanceof Module) {
             return "module";
         } else if (element instanceof TypeDeclaration) {

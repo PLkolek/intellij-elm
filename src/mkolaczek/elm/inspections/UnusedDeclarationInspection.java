@@ -1,6 +1,7 @@
 package mkolaczek.elm.inspections;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.intellij.codeInspection.*;
 import com.intellij.find.findUsages.FindUsagesOptions;
 import com.intellij.find.findUsages.JavaFindUsagesHelper;
@@ -9,14 +10,20 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.CommonProcessors;
+import mkolaczek.elm.findUsages.ElmFindUsagesProvider;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.Module;
-import mkolaczek.elm.psi.node.ModuleName;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Objects;
+
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 
 public class UnusedDeclarationInspection extends LocalInspectionTool {
 
@@ -36,16 +43,51 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
             return null;
         }
         Module module = ((ElmFile) file).module();
-        if (module == null || Strings.isNullOrEmpty(module.getName())) {
+        if (module == null) {
+            return ProblemDescriptor.EMPTY_ARRAY;
+        }
+        List<PsiNameIdentifierOwner> toCheck = Lists.newArrayList(module);
+        toCheck.addAll(module.typeDeclarations());
+
+        return toCheck.stream()
+                      .map(e -> check(manager, file, e))
+                      .filter(Objects::nonNull)
+                      .toArray(ProblemDescriptor[]::new);
+    }
+
+    public ProblemDescriptor check(InspectionManager manager, PsiFile file, PsiNameIdentifierOwner element) {
+        if (element == null || Strings.isNullOrEmpty(element.getName())) {
             return null;
         }
+        CommonProcessors.CollectProcessor<UsageInfo> collector = findUsages(file, element);
+        return descriptor(manager, element, collector);
+    }
+
+    private ProblemDescriptor descriptor(@NotNull InspectionManager manager,
+                                         PsiNameIdentifierOwner element,
+                                         CommonProcessors.CollectProcessor<UsageInfo> collector) {
+        PsiElement name = element.getNameIdentifier();
+        if (collector.getResults().isEmpty() && name != null) {
+            return manager.createProblemDescriptor(name,
+                    (TextRange) null,
+                    "Unused " + ElmFindUsagesProvider.type(element),
+                    ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+                    true,
+                    new RemoveElementQuickFix());
+
+        }
+        return null;
+    }
+
+    @NotNull
+    private CommonProcessors.CollectProcessor<UsageInfo> findUsages(@NotNull final PsiFile file, PsiElement element) {
         FindUsagesOptions options = new FindUsagesOptions(file.getProject());
         options.isUsages = true;
         CommonProcessors.CollectProcessor<UsageInfo> collector = new CommonProcessors.CollectProcessor<UsageInfo>() {
             @Override
             protected boolean accept(UsageInfo info) {
                 PsiFile psiFile = info.getFile();
-                if (psiFile == file || psiFile == null) {
+                if (psiFile == null) {
                     return false; // ignore usages in currentFile
                 }
                 int offset = info.getNavigationOffset();
@@ -53,31 +95,23 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
                     return false;
                 }
                 PsiElement element = psiFile.findElementAt(offset);
-                return !(element instanceof PsiComment); // ignore comments
+                assert element != null;
+                boolean outsideSelf = getParentOfType(element, element.getClass()) != element;
+                return !(element instanceof PsiComment) && outsideSelf; // ignore comments
             }
         };
 
-        JavaFindUsagesHelper.processElementUsages(module, options, collector);
-        PsiElement name = module.getNameIdentifier();
-        if (collector.getResults().isEmpty() && name != null) {
-            return new ProblemDescriptor[]{manager.createProblemDescriptor(name,
-                    (TextRange) null,
-                    "Unused module",
-                    ProblemHighlightType.LIKE_UNUSED_SYMBOL,
-                    true,
-                    new RemoveModuleQuickFix())
-            };
-        }
-        return ProblemDescriptor.EMPTY_ARRAY;
+        JavaFindUsagesHelper.processElementUsages(element, options, collector);
+        return collector;
     }
 
-    private static class RemoveModuleQuickFix implements LocalQuickFix {
+    private static class RemoveElementQuickFix implements LocalQuickFix {
 
         @Nls
         @NotNull
         @Override
         public String getName() {
-            return "Remove module";
+            return "Remove";
         }
 
         @Nls
@@ -89,7 +123,12 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            ((ModuleName) descriptor.getPsiElement()).module().delete();
+            PsiNameIdentifierOwner toDelete = getParentOfType(descriptor.getPsiElement(),
+                    PsiNameIdentifierOwner.class,
+                    false);
+            assert toDelete != null;
+            toDelete.delete();
+
         }
     }
 }
