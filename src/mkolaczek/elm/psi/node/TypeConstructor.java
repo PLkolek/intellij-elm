@@ -4,7 +4,6 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 
-public class TypeConstructor extends ASTWrapperPsiElement implements PsiNamedElement, PsiNameIdentifierOwner {
+public class TypeConstructor extends ASTWrapperPsiElement implements PsiNameIdentifierOwner {
     public TypeConstructor(ASTNode node) {
         super(node);
     }

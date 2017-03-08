@@ -18,15 +18,19 @@ import mkolaczek.elm.findUsages.ElmFindUsagesProvider;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.ExposingNode;
 import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.TypeConstructor;
+import mkolaczek.elm.psi.node.TypeDeclaration;
 import mkolaczek.elm.refactoring.safeDelete.ElmSafeDeleteDelegate;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static java.util.stream.Collectors.toList;
 
 public class UnusedDeclarationInspection extends LocalInspectionTool {
 
@@ -49,8 +53,11 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
         if (module == null) {
             return ProblemDescriptor.EMPTY_ARRAY;
         }
+        Collection<TypeDeclaration> types = module.typeDeclarations();
         List<PsiNameIdentifierOwner> toCheck = Lists.newArrayList(module);
-        toCheck.addAll(module.typeDeclarations());
+        List<TypeConstructor> constructors = types.stream().flatMap(d -> d.constructors().stream()).collect(toList());
+        toCheck.addAll(types);
+        toCheck.addAll(constructors);
 
         return toCheck.stream()
                       .map(e -> check(manager, file, e))
