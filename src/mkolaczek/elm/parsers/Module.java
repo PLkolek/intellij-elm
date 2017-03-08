@@ -110,7 +110,6 @@ public class Module {
 
     static Parser moduleDeclaration() {
         Sequence effectSequence =
-
                 sequence("Module declaration",
                         expect(Tokens.EFFECT),
                         WhiteSpace.maybeWhitespace(),
