@@ -8,6 +8,7 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.TypeDeclaration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -60,6 +61,13 @@ public class ElmStructureViewElement implements StructureViewTreeElement, Sortab
                                      .map(ElmStructureViewElement::new)
                                      .toArray(TreeElement[]::new);
         }
+        if (element instanceof TypeDeclaration) {
+            return ((TypeDeclaration) element).constructors()
+                                              .stream()
+                                              .map(ElmStructureViewElement::new)
+                                              .toArray(TreeElement[]::new);
+        }
+
         return EMPTY_ARRAY;
     }
 }
