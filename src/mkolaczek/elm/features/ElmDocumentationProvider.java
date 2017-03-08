@@ -37,7 +37,10 @@ public class ElmDocumentationProvider implements DocumentationProvider {
                     type, module.getName(), settingsString, NEWLINE, exposedValuesString(module));
 
         }
-        if (element instanceof TypeDeclaration || element instanceof TypeConstructor) {
+        if (element instanceof TypeConstructor) {
+            return ((TypeConstructor) element).typeDeclaration().getText();
+        }
+        if (element instanceof TypeDeclaration) {
             return element.getText();
         }
         return null;
@@ -97,6 +100,9 @@ public class ElmDocumentationProvider implements DocumentationProvider {
     @Nullable
     @Override
     public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
+        if (element instanceof TypeConstructor) {
+            element = ((TypeConstructor) element).typeDeclaration();
+        }
         if (element instanceof DocCommented) {
             DocCommented module = (DocCommented) element;
             String docCommentText = module.docComment().map(PsiElement::getText).orElse("");
