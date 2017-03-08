@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -123,12 +122,5 @@ public class Module extends ASTWrapperPsiElement implements PsiElement, PsiNamed
 
     public Optional<TypeDeclaration> typeDeclaration(String typeName) {
         return typeDeclarations().stream().filter(decl -> typeName.equals(decl.getName())).findAny();
-    }
-
-
-    @Nullable
-    @Override
-    protected Icon getElementIcon(@IconFlags int flags) {
-        return super.getElementIcon(flags);
     }
 }

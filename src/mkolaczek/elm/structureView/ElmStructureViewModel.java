@@ -36,6 +36,6 @@ public class ElmStructureViewModel extends StructureViewModelBase implements
 
     @Override
     public boolean isAlwaysLeaf(StructureViewTreeElement element) {
-        return element instanceof ElmFile;
+        return false;
     }
 }
