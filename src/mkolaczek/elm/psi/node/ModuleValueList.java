@@ -38,7 +38,7 @@ public class ModuleValueList extends ASTWrapperPsiElement {
                                           .collect(toList());
     }
 
-    public void deleteChild(@NotNull PsiElement listedValue) {
+    public void deleteComma(@NotNull PsiElement listedValue) {
         List<? extends PsiElement> values = Lists.newArrayList(values(listedValue.getClass()));
         int index = values.indexOf(listedValue);
         if (values.size() > 1) {
@@ -47,6 +47,5 @@ public class ModuleValueList extends ASTWrapperPsiElement {
                 comma.delete();
             }
         }
-        listedValue.delete();
     }
 }

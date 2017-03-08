@@ -10,6 +10,8 @@ import com.intellij.refactoring.safeDelete.SafeDeleteHandler;
 import com.intellij.testFramework.PlatformTestUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+
 import static com.intellij.codeInsight.TargetElementUtil.ELEMENT_NAME_ACCEPTED;
 import static com.intellij.codeInsight.TargetElementUtil.REFERENCED_ELEMENT_ACCEPTED;
 import static org.hamcrest.core.Is.is;
@@ -30,13 +32,10 @@ public class SafeDeleteTest extends MultiFileTestCase {
     }
 
     public void testSafeDeleteUsedModule() throws Exception {
-        configureByFiles(null, "module/used/Test1.elm", "module/used/Test2.elm");
-        try {
-            safeDelete();
-        } catch (BaseRefactoringProcessor.ConflictsInTestsException e) {
-            assertThat(e.getMessage(),
-                    is("module <b><code>Test2</code></b> has 2 usages that are not safe to delete.<br>Of those 1 usage is in strings, comments, non-code files or generated code."));
-        }
+        deleteUsed(
+                "module <b><code>Test2</code></b> has 2 usages that are not safe to delete.<br>Of those 1 usage is in strings, comments, non-code files or generated code.",
+                "module/used/Test1.elm",
+                "module/used/Test2.elm");
         assertNotNull(getProject().getBaseDir().getChildren()[1].findChild("Test2.elm"));
     }
 
@@ -47,22 +46,42 @@ public class SafeDeleteTest extends MultiFileTestCase {
     }
 
     public void testSafeDeleteUsedType() throws Exception {
-        configureByFiles(null, "type/used/Test.elm");
+        deleteUsed(
+                "type <b><code>Type</code></b> has 2 usages that are not safe to delete.<br>Of those 1 usage is in strings, comments, non-code files or generated code.",
+                "type/used/Test.elm");
+    }
+
+    public void testSafeDeleteTypeUsedOnlyByItself() throws Exception {
+        deleteUnused("type/usedByItselfOnly/Test.elm", "type/usedByItselfOnly/Expected.elm");
+    }
+
+    public void testSafeDeleteUsedTypeConstructor() throws Exception {
+        deleteUsed(
+                "type constructor <b><code>Constructor</code></b> has 1 usage that is not safe to delete.<br>Of those 1 usage is in strings, comments, non-code files or generated code.",
+                "typeConstructor/used/Test.elm");
+    }
+
+    public void testSafeDeleteUnusedTypeConstructor() throws Exception {
+        deleteUnused("typeConstructor/notUsed/Test.elm", "typeConstructor/notUsed/Expected.elm");
+    }
+
+    private void deleteUnused(String file, String expected) throws IOException {
+        configureByFiles(null, file);
+        safeDelete();
+        VirtualFile fileByPath = LocalFileSystem.getInstance()
+                                                .findFileByPath(getTestDataPath() + expected);
+        //noinspection ConstantConditions
+        PlatformTestUtil.assertFilesEqual(myFile.getVirtualFile(), fileByPath);
+    }
+
+    private void deleteUsed(String error, String... files) {
+        configureByFiles(null, files);
         try {
             safeDelete();
         } catch (BaseRefactoringProcessor.ConflictsInTestsException e) {
             assertThat(e.getMessage(),
-                    is("type <b><code>Type</code></b> has 2 usages that are not safe to delete.<br>Of those 1 usage is in strings, comments, non-code files or generated code."));
+                    is(error));
         }
-    }
-
-    public void testSafeDeleteTypeUsedOnlyByItself() throws Exception {
-        configureByFiles(null, "type/usedByItselfOnly/Test.elm");
-        safeDelete();
-        VirtualFile fileByPath = LocalFileSystem.getInstance()
-                                                .findFileByPath(getTestDataPath() + "type/usedByItselfOnly/Expected.elm");
-        //noinspection ConstantConditions
-        PlatformTestUtil.assertFilesEqual(myFile.getVirtualFile(), fileByPath);
     }
 
 

@@ -9,6 +9,7 @@ Features:
 * Smart enter
 * Types from other modules
 * Prelude libs
+* Remove whole type when removing last constructor
 
 Refactorings:
 * startingTokens() doesnt do any caching
