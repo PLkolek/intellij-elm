@@ -38,11 +38,11 @@ public class TypeConstructorRef extends ASTWrapperPsiElement implements PsiNamed
 
     @Override
     public void delete() throws IncorrectOperationException {
-        this.containingListing().deleteComma(this);
+        this.containingListing().deleteSeparator(this);
         super.delete();
     }
 
-    private ModuleValueList containingListing() {
-        return checkNotNull(PsiTreeUtil.getParentOfType(this, ModuleValueList.class));
+    private CommaSeparatedList containingListing() {
+        return checkNotNull(PsiTreeUtil.getParentOfType(this, CommaSeparatedList.class));
     }
 }

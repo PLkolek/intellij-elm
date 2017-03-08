@@ -38,7 +38,7 @@ public class TypeNameRef extends ASTWrapperPsiElement implements PsiNamedElement
     public void delete() throws IncorrectOperationException {
         ExportedValue exportedValue = PsiTreeUtil.getParentOfType(this, ExportedValue.class);
         if (exportedValue != null) {
-            exportedValue.containingListing().deleteComma(exportedValue);
+            exportedValue.containingList().deleteSeparator(exportedValue);
             exportedValue.delete();
         } else {
             super.delete();

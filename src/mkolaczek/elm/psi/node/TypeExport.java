@@ -33,7 +33,7 @@ public class TypeExport extends ASTWrapperPsiElement {
     }
 
     public Collection<TypeConstructorRef> constructors() {
-        ModuleValueList valueList = findChildOfType(this, ModuleValueList.class);
+        CommaSeparatedList valueList = findChildOfType(this, CommaSeparatedList.class);
         return ofNullable(valueList).map(vl -> vl.values(TypeConstructorRef.class)).orElse(newArrayList());
     }
 }

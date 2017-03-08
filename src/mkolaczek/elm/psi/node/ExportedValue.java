@@ -21,7 +21,7 @@ public class ExportedValue extends ASTWrapperPsiElement implements PsiElement {
     }
 
     @NotNull
-    public ModuleValueList containingListing() {
-        return checkNotNull(PsiTreeUtil.getParentOfType(this, ModuleValueList.class));
+    public CommaSeparatedList containingList() {
+        return checkNotNull(PsiTreeUtil.getParentOfType(this, CommaSeparatedList.class));
     }
 }

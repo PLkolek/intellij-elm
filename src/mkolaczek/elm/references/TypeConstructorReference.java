@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 
 import static mkolaczek.elm.psi.node.Module.module;
-import static mkolaczek.util.Optionals.stream;
+import static mkolaczek.util.Streams.stream;
 
 public class TypeConstructorReference extends PsiReferenceBase<TypeConstructorRef> {
     public TypeConstructorReference(TypeConstructorRef element) {
