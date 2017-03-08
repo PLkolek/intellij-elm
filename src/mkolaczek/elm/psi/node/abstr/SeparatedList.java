@@ -6,7 +6,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.psi.Token;
-import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -32,7 +31,7 @@ public abstract class SeparatedList extends ASTWrapperPsiElement {
         int index = values.indexOf(listedValue);
         if (values.size() > 1) {
             PsiElement comma = index > 0 ? prevVisibleLeaf(listedValue) : nextVisibleLeaf(listedValue);
-            if (comma != null && comma.getNode().getElementType() == Tokens.COMMA) {
+            if (comma != null && comma.getNode().getElementType() == separator) {
                 comma.delete();
             }
         }

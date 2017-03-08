@@ -9,9 +9,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.goTo.ItemPresentation;
+import mkolaczek.elm.psi.node.abstr.SeparatedList;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 
 public class TypeConstructor extends ASTWrapperPsiElement implements PsiNamedElement, PsiNameIdentifierOwner {
     public TypeConstructor(ASTNode node) {
@@ -44,5 +47,15 @@ public class TypeConstructor extends ASTWrapperPsiElement implements PsiNamedEle
     @Override
     public ItemPresentation getPresentation() {
         return new ItemPresentation(this);
+    }
+
+    @Override
+    public void delete() throws IncorrectOperationException {
+        this.containingListing().deleteSeparator(this);
+        super.delete();
+    }
+
+    private SeparatedList containingListing() {
+        return getParentOfType(this, PipeSeparatedList.class);
     }
 }
