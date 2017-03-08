@@ -1,4 +1,4 @@
-package mkolaczek.elm.refactoring;
+package mkolaczek.elm.refactoring.rename;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.editor.Editor;

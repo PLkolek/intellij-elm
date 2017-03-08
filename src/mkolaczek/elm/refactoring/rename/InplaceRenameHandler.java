@@ -1,4 +1,4 @@
-package mkolaczek.elm.refactoring;
+package mkolaczek.elm.refactoring.rename;
 
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;

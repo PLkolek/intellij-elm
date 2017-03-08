@@ -50,7 +50,7 @@
                                     implementationClass="mkolaczek.elm.documentation.ElmDocumentationProvider"/>
         <lang.foldingBuilder language="Elm" implementationClass="mkolaczek.elm.folding.ElmFoldingBuilder"/>
         <lang.commenter language="Elm" implementationClass="mkolaczek.elm.commenting.ElmCommenter"/>
-        <renameHandler implementation="mkolaczek.elm.refactoring.InplaceRenameHandler"/>
+        <renameHandler implementation="mkolaczek.elm.refactoring.rename.InplaceRenameHandler"/>
         <refactoring.safeDeleteProcessor implementation="mkolaczek.elm.refactoring.safeDelete.ElmSafeDeleteDelegate"/>
     </extensions>
 
