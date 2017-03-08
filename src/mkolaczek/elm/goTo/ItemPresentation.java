@@ -3,7 +3,7 @@ package mkolaczek.elm.goTo;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.ElmIcon;
 import mkolaczek.elm.psi.node.Module;
-import mkolaczek.elm.psi.node.TypeConstructor;
+import mkolaczek.elm.psi.node.TypeConstructorName;
 import mkolaczek.elm.psi.node.TypeName;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +36,7 @@ public class ItemPresentation implements com.intellij.navigation.ItemPresentatio
             return ElmIcon.FILE;
         } else if (element instanceof TypeName) {
             return ElmIcon.TYPE;
-        } else if (element instanceof TypeConstructor) {
+        } else if (element instanceof TypeConstructorName) {
             return ElmIcon.CONSTRUCTOR;
         }
         return null;

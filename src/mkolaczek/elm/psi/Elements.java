@@ -30,6 +30,7 @@ public interface Elements {
     Element IMPORTS = new Element("imports");
     Element TYPE_EXPORT = new Element("TYPE_EXPORT", "type export");
     Element TYPE_CONSTRUCTOR = new Element("TYPE_CONSTRUCTOR", "type constructor");
+    Element TYPE_CONSTRUCTOR_NAME = new Element("TYPE_CONSTRUCTOR_NAME", "type constructor name");
     Element TYPE_CONSTRUCTOR_REF = new Element("TYPE_CONSTRUCTOR_REF", "type constructor");
     Element TYPE_ALIAS_DECL_NODE = new Element("TYPE_ALIAS_DECL_NODE", "type alias declaration");
     Element TYPE_DECL_NODE = new Element("TYPE_DECL_NODE", "type declaration");
@@ -86,6 +87,8 @@ public interface Elements {
                 return new TypeExport(node);
             } else if (type == TYPE_CONSTRUCTOR) {
                 return new TypeConstructor(node);
+            } else if (type == TYPE_CONSTRUCTOR_NAME) {
+                return new TypeConstructorName(node);
             } else if (type == TYPE_CONSTRUCTOR_REF) {
                 return new TypeConstructorRef(node);
             } else if (type == TYPE_ALIAS_DECL_NODE) {

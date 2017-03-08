@@ -101,9 +101,9 @@ Type {
 
     public static Parser unionConstructor() {
         return sequence("union constructor",
-                expect(Tokens.CAP_VAR).as(Elements.TYPE_CONSTRUCTOR),
+                expect(Tokens.CAP_VAR).as(Elements.TYPE_CONSTRUCTOR_NAME),
                 spacePrefix(term)
-        );
+        ).as(Elements.TYPE_CONSTRUCTOR);
     }
 
     static {

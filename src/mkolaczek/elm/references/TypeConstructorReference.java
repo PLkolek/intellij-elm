@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeConstructorRef;
 import mkolaczek.elm.psi.node.TypeExport;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,7 @@ public class TypeConstructorReference extends PsiReferenceBase<TypeConstructorRe
 
     @Nullable
     @Override
-    public PsiElement resolve() {
+    public TypeConstructor resolve() {
         return module(myElement).typeDeclarations()
                                 .stream()
                                 .flatMap(decl -> decl.constructors().stream())

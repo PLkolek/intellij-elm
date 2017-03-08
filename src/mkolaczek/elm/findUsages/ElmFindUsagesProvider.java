@@ -9,7 +9,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.TokenSet;
 import mkolaczek.elm.ElmLexerAdapter;
 import mkolaczek.elm.psi.node.Module;
-import mkolaczek.elm.psi.node.TypeConstructor;
+import mkolaczek.elm.psi.node.TypeConstructorName;
 import mkolaczek.elm.psi.node.TypeDeclaration;
 import mkolaczek.elm.psi.node.TypeName;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public class ElmFindUsagesProvider implements FindUsagesProvider {
         if (element instanceof TypeName) {
             prefix = module.getName() + ".";
         }
-        if (element instanceof TypeConstructor) {
+        if (element instanceof TypeConstructorName) {
             TypeDeclaration type = getParentOfType(element, TypeDeclaration.class);
             assert type != null;
             prefix = module.getName() + "." + type.getName() + " ";
