@@ -5,13 +5,13 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.Tokens;
+import mkolaczek.elm.psi.node.extensions.DocCommented;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,8 +20,9 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.intellij.psi.util.PsiTreeUtil.getChildOfType;
 
-public class Module extends ASTWrapperPsiElement implements PsiElement, PsiNamedElement, PsiNameIdentifierOwner {
+public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwner, DocCommented {
     public Module(@NotNull ASTNode node) {
         super(node);
     }
@@ -77,8 +78,9 @@ public class Module extends ASTWrapperPsiElement implements PsiElement, PsiNamed
         return PsiTreeUtil.findChildOfType(this, ModuleValueList.class);
     }
 
-    public DocComment docComment() {
-        return PsiTreeUtil.getChildOfType(this, DocComment.class);
+    @Override
+    public Optional<DocComment> docComment() {
+        return Optional.ofNullable(getChildOfType(this, DocComment.class));
     }
 
     public Optional<ModuleHeader> header() {
@@ -87,7 +89,7 @@ public class Module extends ASTWrapperPsiElement implements PsiElement, PsiNamed
 
     public String typeStr() {
         Optional<IElementType> type = type();
-        if (!type.isPresent()) {
+        if (!type.isPresent() || type.get() == Tokens.MODULE) {
             return "";
         }
         if (type.get() == Tokens.EFFECT) {

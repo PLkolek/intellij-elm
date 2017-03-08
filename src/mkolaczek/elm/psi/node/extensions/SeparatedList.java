@@ -1,4 +1,4 @@
-package mkolaczek.elm.psi.node.abstr;
+package mkolaczek.elm.psi.node.extensions;
 
 import com.google.common.collect.Lists;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;

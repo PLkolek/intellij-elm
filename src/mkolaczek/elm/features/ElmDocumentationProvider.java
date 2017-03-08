@@ -5,10 +5,8 @@ import com.google.common.collect.Lists;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import mkolaczek.elm.psi.node.DocComment;
-import mkolaczek.elm.psi.node.ExportedValue;
-import mkolaczek.elm.psi.node.Module;
-import mkolaczek.elm.psi.node.ModuleValueList;
+import mkolaczek.elm.psi.node.*;
+import mkolaczek.elm.psi.node.extensions.DocCommented;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -38,6 +36,9 @@ public class ElmDocumentationProvider implements DocumentationProvider {
             return String.format("%smodule %s%s%sexposing (%s)",
                     type, module.getName(), settingsString, NEWLINE, exposedValuesString(module));
 
+        }
+        if (element instanceof TypeDeclaration || element instanceof TypeConstructor) {
+            return element.getText();
         }
         return null;
     }
@@ -96,14 +97,12 @@ public class ElmDocumentationProvider implements DocumentationProvider {
     @Nullable
     @Override
     public String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
-        if (element instanceof Module) {
-            Module module = (Module) element;
-            DocComment docComment = module.docComment();
-            String docCommentText = docComment != null ? docComment.getText() : "";
+        if (element instanceof DocCommented) {
+            DocCommented module = (DocCommented) element;
+            String docCommentText = module.docComment().map(PsiElement::getText).orElse("");
             return String.format("<html><head></head><body><pre>%s</pre><p>%s</p></body></html>",
                     quickInfoText(module),
                     docCommentText);
-
         }
         return null;
     }

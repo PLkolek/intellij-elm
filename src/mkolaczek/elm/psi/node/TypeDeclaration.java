@@ -5,20 +5,22 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
+import mkolaczek.elm.psi.node.extensions.DocCommented;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
 
-public class TypeDeclaration extends ASTWrapperPsiElement implements PsiNamedElement, PsiNameIdentifierOwner {
+public class TypeDeclaration extends ASTWrapperPsiElement implements PsiNameIdentifierOwner, DocCommented {
 
     public TypeDeclaration(ASTNode node) {
         super(node);
@@ -64,5 +66,14 @@ public class TypeDeclaration extends ASTWrapperPsiElement implements PsiNamedEle
     @Override
     public ItemPresentation getPresentation() {
         return new ItemPresentation(this);
+    }
+
+    @Override
+    public Optional<DocComment> docComment() {
+        PsiElement prevSibling = getPrevSibling();
+        while (prevSibling instanceof PsiWhiteSpace) {
+            prevSibling = prevSibling.getPrevSibling();
+        }
+        return prevSibling instanceof DocComment ? Optional.of((DocComment) prevSibling) : Optional.empty();
     }
 }
