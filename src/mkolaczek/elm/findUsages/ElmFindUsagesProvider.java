@@ -8,10 +8,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.TokenSet;
 import mkolaczek.elm.ElmLexerAdapter;
-import mkolaczek.elm.psi.node.Module;
-import mkolaczek.elm.psi.node.TypeConstructorName;
-import mkolaczek.elm.psi.node.TypeDeclaration;
-import mkolaczek.elm.psi.node.TypeName;
+import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
@@ -43,9 +40,9 @@ public class ElmFindUsagesProvider implements FindUsagesProvider {
 
     @NotNull
     public static String type(@NotNull PsiElement element) {
-        if (element instanceof Module) {
+        if (element instanceof Module || element instanceof ModuleNameRef) {
             return "module";
-        } else if (element instanceof TypeDeclaration) {
+        } else if (element instanceof TypeDeclaration || element instanceof TypeNameRef) {
             return "type";
         }
         return "type constructor";

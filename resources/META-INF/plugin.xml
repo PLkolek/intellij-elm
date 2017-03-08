@@ -52,6 +52,8 @@
         <lang.commenter language="Elm" implementationClass="mkolaczek.elm.commenting.ElmCommenter"/>
         <renameHandler implementation="mkolaczek.elm.refactoring.rename.InplaceRenameHandler"/>
         <refactoring.safeDeleteProcessor implementation="mkolaczek.elm.refactoring.safeDelete.ElmSafeDeleteDelegate"/>
+        <annotator language="Elm"
+                   implementationClass="mkolaczek.elm.unresolvedReferences.UnresolvedReferenceAnnotator"/>
     </extensions>
 
     <actions>
