@@ -76,4 +76,8 @@ public class TypeDeclaration extends ASTWrapperPsiElement implements PsiNameIden
         }
         return prevSibling instanceof DocComment ? Optional.of((DocComment) prevSibling) : Optional.empty();
     }
+
+    public Optional<TypeConstructor> constructor(String name) {
+        return constructors().stream().filter(t -> name.equals(t.getName())).findAny();
+    }
 }

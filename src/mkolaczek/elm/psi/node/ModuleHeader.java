@@ -32,4 +32,8 @@ public class ModuleHeader extends ASTWrapperPsiElement {
     public Optional<TypeExport> typeExport(String typeName) {
         return typeExports().stream().filter(export -> typeName.equals(export.typeNameString())).findFirst();
     }
+
+    public Optional<ModuleValueList> exposedValues() {
+        return Optional.ofNullable(findChildOfType(this, ModuleValueList.class));
+    }
 }

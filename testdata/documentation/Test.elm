@@ -31,3 +31,6 @@ import Test2 as D
         , saj
         )
 import Test2 exposing (A, B)
+
+{-| Test type -}
+type B = Abc | Def | Ghci

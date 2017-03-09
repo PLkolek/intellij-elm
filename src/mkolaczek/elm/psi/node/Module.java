@@ -74,10 +74,6 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return sameName(other.getName());
     }
 
-    public ModuleValueList exposedValues() {
-        return PsiTreeUtil.findChildOfType(this, ModuleValueList.class);
-    }
-
     @Override
     public Optional<DocComment> docComment() {
         return Optional.ofNullable(getChildOfType(this, DocComment.class));

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ElmDocumentationProvider implements DocumentationProvider {
@@ -47,10 +48,10 @@ public class ElmDocumentationProvider implements DocumentationProvider {
     }
 
     private String exposedValuesString(Module module) {
-        ModuleValueList valueList = module.exposedValues();
+        Optional<ModuleValueList> valueList = module.header().flatMap(ModuleHeader::exposedValues);
         String exposedValuesStr = "..";
-        if (!valueList.isOpenListing()) {
-            exposedValuesStr = concatValues(valueList.values(ExportedValue.class));
+        if (valueList.isPresent() && !valueList.get().isOpenListing()) {
+            exposedValuesStr = concatValues(valueList.get().values(ExportedValue.class));
         }
         return exposedValuesStr;
     }
