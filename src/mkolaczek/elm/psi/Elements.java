@@ -38,7 +38,7 @@ public interface Elements {
     Element TYPE_NAME_REF = new Element("TYPE_NAME_REF", "name of a type");
     Element RUNE_OF_AUTOCOMPLETION_EL = new Element("RUNE_OF_AUTOCOMPLETION_EL");
     Element PIPE_SEP = new Element("PIPE_SEP", "pipe separated list");
-    Element COMMA_SEP = new Element("PIPE_SEP", "comma separated list");
+    Element COMMA_SEP = new Element("COMMA_SEP", "comma separated list");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {
