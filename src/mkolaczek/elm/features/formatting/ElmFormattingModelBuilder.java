@@ -38,8 +38,7 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .after(IMPORTS).spacing(0, 0, 2, false, 1)
 
                 //between comments
-                .before(DOC_COMMENT).spacing(0, 0, 2, false, 0)
-                .after(DOC_COMMENT).spacing(0, 0, 2, false, 0)
+                .aroundInside(DOC_COMMENT, MODULE_NODE).spacing(0, 0, 2, false, 0)
                 .between(MULTILINE_COMMENT, MULTILINE_COMMENT).spacing(0, 0, 1, false, 0)
                 .between(LINE_COMMENT, MULTILINE_COMMENT).spacing(0, 0, 1, false, 0)
                 .between(COMMENT_CONTENT, MULTILINE_COMMENT).spacing(0, 0, 1, false, 0)
@@ -55,6 +54,8 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
 
                 //module name
                 .aroundInside(DOT, MODULE_NAME).spacing(0, 0, 0, false, 0)
+
+                .afterInside(DOC_COMMENT, DECLARATIONS).spacing(0, 0, 1, false, 0)
 
                 //operators
                 .aroundInside(SYM_OP, OPERATOR).spacing(0, 0, 0, false, 0)
