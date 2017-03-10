@@ -8,9 +8,6 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.ASTUtil;
-import mkolaczek.elm.psi.Elements;
-import mkolaczek.elm.psi.Tokens;
-import mkolaczek.elm.psi.node.ExposingNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,41 +52,15 @@ public class ElmBlock extends AbstractBlock {
         return new ElmBlock(node, spacing, Wrap.createWrap(WrapType.NONE, false), chopLocations, toIndent, toFlatten);
     }
 
-
-    public static ElmBlock typeDecl(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
-        ImmutableSet<IElementType> chopLocations = ImmutableSet.of(Tokens.EQUALS, Tokens.PIPE);
-        ImmutableSet<IElementType> flatten = ImmutableSet.of(Elements.PIPE_SEP);
-        Set<IElementType> toIndent = ImmutableSet.of();
-        return complex(node, spacing, chopLocations, toIndent, flatten);
-    }
-
-    public static ElmBlock effectSettings(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
-        ImmutableSet<IElementType> chopLocations = ImmutableSet.of(Tokens.WHERE,
-                Tokens.LBRACKET,
-                Tokens.COMMA,
-                Tokens.RBRACKET);
-        ImmutableSet<IElementType> flatten = ImmutableSet.of(Elements.COMMA_SEP, Elements.EFFECT_MODULE_SETTINGS_LIST);
-        Set<IElementType> toIndent = ImmutableSet.of(Tokens.LBRACKET, Tokens.COMMA, Tokens.RBRACKET);
-        return complex(node, spacing, chopLocations, toIndent, flatten);
-    }
-
-    public static Block exposing(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
-        ImmutableSet<IElementType> chopLocations = ImmutableSet.of(Tokens.EXPOSING,
-                Tokens.LPAREN,
-                Tokens.COMMA,
-                Tokens.RPAREN);
-        ImmutableSet<IElementType> flatten = ImmutableSet.of(Elements.MODULE_VALUE_LIST, Elements.COMMA_SEP);
-        Set<IElementType> toIndent = ImmutableSet.of(Tokens.LPAREN, Tokens.COMMA, Tokens.RPAREN);
-        return complex(node, spacing, chopLocations, toIndent, flatten);
-    }
-
     @Override
     protected List<Block> buildChildren() {
         List<ASTNode> childNodes = listOfChildren(myNode);
         List<Block> blocks = Lists.newArrayList();
         int i = eatNotWrapped(childNodes, blocks);
         List<Block> wrappedBlocks = groupWrapped(childNodes, i);
-        blocks.add(SyntheticBlock.choppedItems(spacing, wrappedBlocks));
+        if (!wrappedBlocks.isEmpty()) {
+            blocks.add(SyntheticBlock.choppedItems(spacing, wrappedBlocks));
+        }
         return blocks;
     }
 
@@ -114,7 +85,7 @@ public class ElmBlock extends AbstractBlock {
         int i = 0;
 
         while (i < childNodes.size() && !isSeparator(childNodes.get(i))) {
-            blocks.add(createBlock(childNodes.get(i)));
+            blocks.add(ElmBlocks.createBlock(spacing, childNodes.get(i)));
             i++;
         }
         return i;
@@ -136,32 +107,13 @@ public class ElmBlock extends AbstractBlock {
 
 
     private Pair<Integer, List<Block>> scanSubBlock(List<ASTNode> nodes, int i) {
-        List<Block> children = Lists.newArrayList(createBlock(nodes.get(i)));
+        List<Block> children = Lists.newArrayList(ElmBlocks.createBlock(spacing, nodes.get(i)));
         i++;
         while (i < nodes.size() && !isSeparator(nodes.get(i))) {
-            children.add(createBlock(nodes.get(i)));
+            children.add(ElmBlocks.createBlock(spacing, nodes.get(i)));
             i++;
         }
         return Pair.pair(i, children);
-    }
-
-    @NotNull
-    private Block createBlock(ASTNode child) {
-        IElementType type = child.getElementType();
-        if (type == Elements.EXPOSING_NODE) {
-            ExposingNode exposingNode = (ExposingNode) child.getPsi();
-            if (exposingNode.valueList() == null || exposingNode.valueList().isOpenListing()) {
-                return ElmBlock.simple(child, spacing, Wrap.createWrap(WrapType.NORMAL, true));
-            } else {
-                return ElmBlock.exposing(child, spacing);
-            }
-        } else if (type == Elements.EFFECT_MODULE_SETTINGS) {
-            return ElmBlock.effectSettings(child, spacing);
-        } else if (type == Elements.TYPE_DECL_NODE) {
-            return ElmBlock.typeDecl(child, spacing);
-        }
-
-        return ElmBlock.simple(child, spacing);
     }
 
     private boolean isSeparator(ASTNode child) {
