@@ -22,15 +22,18 @@ import static mkolaczek.elm.psi.Tokens.*;
 public class ElmChoppedBlock extends AbstractBlock {
     private final SpacingBuilder spacingBuilder;
 
+    private final Wrap chopDown;
     private final Set<IElementType> choppedElements;
     private final Set<IElementType> flattenedElements;
 
     private ElmChoppedBlock(ASTNode node,
                             SpacingBuilder spacingBuilder,
+                            Wrap myWrap,
                             Wrap chopDown, Set<IElementType> choppedElements,
                             Set<IElementType> flattenedElements) {
-        super(node, chopDown, Alignment.createAlignment());
+        super(node, myWrap, Alignment.createAlignment());
         this.spacingBuilder = spacingBuilder;
+        this.chopDown = chopDown;
         this.choppedElements = choppedElements;
         this.flattenedElements = flattenedElements;
     }
@@ -41,6 +44,7 @@ public class ElmChoppedBlock extends AbstractBlock {
         return new ElmChoppedBlock(node,
                 spacingBuilder,
                 chopDown,
+                chopDown,
                 ImmutableSet.of(COMMA, RPAREN, LPAREN, EXPOSING),
                 Sets.newHashSet(Elements.MODULE_VALUE_LIST, Elements.COMMA_SEP));
     }
@@ -48,8 +52,21 @@ public class ElmChoppedBlock extends AbstractBlock {
     public static ElmChoppedBlock effectProperties(ASTNode node, SpacingBuilder spacingBuilder, Wrap chopDown) {
         return new ElmChoppedBlock(node,
                 spacingBuilder,
-                chopDown, ImmutableSet.of(COMMA, LBRACKET, RBRACKET, EXPOSING),
+                chopDown,
+                chopDown,
+                ImmutableSet.of(COMMA, LBRACKET, RBRACKET, EXPOSING),
                 Sets.newHashSet(Elements.EFFECT_MODULE_SETTINGS_LIST, Elements.COMMA_SEP));
+    }
+
+    public static Block type(ASTNode node, SpacingBuilder spacingBuilder) {
+        return new ElmChoppedBlock(
+                node,
+                spacingBuilder,
+                Wrap.createWrap(WrapType.NONE, false),
+                Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true),
+                ImmutableSet.of(EQUALS, PIPE),
+                ImmutableSet.of()
+        );
     }
 
     @Override
@@ -66,7 +83,7 @@ public class ElmChoppedBlock extends AbstractBlock {
             if (flattenedElements.contains(type)) {
                 buildList(blocks, child);
             } else {
-                ElmBlock block = createBlock(child, getWrap());
+                ElmBlock block = createBlock(child);
                 blocks.add(block);
             }
             child = ASTUtil.nextSignificant(child);
@@ -74,10 +91,10 @@ public class ElmChoppedBlock extends AbstractBlock {
     }
 
     @NotNull
-    private ElmBlock createBlock(ASTNode child, Wrap chopDownWrap) {
+    private ElmBlock createBlock(ASTNode child) {
         IElementType type = child.getElementType();
         if (choppedElements.contains(type)) {
-            return new ElmBlock(child, spacingBuilder, chopDownWrap);
+            return new ElmBlock(child, spacingBuilder, chopDown);
         } else {
             return new ElmBlock(child, spacingBuilder);
         }

@@ -44,6 +44,8 @@ public class ElmBlock extends AbstractBlock {
                 }
             } else if (type == Elements.EFFECT_MODULE_SETTINGS) {
                 blocks.add(ElmChoppedBlock.effectProperties(child, spacingBuilder, chopDown));
+            } else if (type == Elements.TYPE_DECL_NODE) {
+                blocks.add(new TypeDeclBlock(child, spacingBuilder));
             } else {
                 blocks.add(new ElmBlock(child, spacingBuilder));
             }
