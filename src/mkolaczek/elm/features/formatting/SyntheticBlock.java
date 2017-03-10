@@ -34,6 +34,12 @@ public class SyntheticBlock implements Block {
     }
 
     @NotNull
+    static SyntheticBlock choppedItems(SpacingBuilder spacing, List<Block> children) {
+        Wrap wrap = Wrap.createWrap(WrapType.ALWAYS, true);
+        return new SyntheticBlock(wrap, null, Indent.getNormalIndent(), spacing, children);
+    }
+
+    @NotNull
     @Override
     public TextRange getTextRange() {
         int start = childBlocks.get(0).getTextRange().getStartOffset();

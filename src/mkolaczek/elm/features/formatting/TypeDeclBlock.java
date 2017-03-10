@@ -33,24 +33,33 @@ public class TypeDeclBlock extends AbstractBlock {
     protected List<Block> buildChildren() {
         List<ASTNode> childNodes = listOfChildren(myNode);
         List<Block> blocks = Lists.newArrayList();
-        Wrap chopDown = Wrap.createWrap(WrapType.ALWAYS, true);
+        int i = eatNotWrapped(childNodes, blocks);
+        List<Block> wrappedBlocks = groupWrapped(childNodes, i);
+        blocks.add(SyntheticBlock.choppedItems(spacing, wrappedBlocks));
+        return blocks;
+    }
+
+    @NotNull
+    private List<Block> groupWrapped(List<ASTNode> childNodes, int i) {
+        List<Block> wrappedBlocks = Lists.newArrayList();
+        Alignment alignment = Alignment.createAlignment();
+        Wrap wrap = Wrap.createWrap(WrapType.ALWAYS, true);
+        while (i < childNodes.size()) {
+            Pair<Integer, List<Block>> nextChildAndBlocks = scanSubBlock(childNodes, i);
+            wrappedBlocks.add(SyntheticBlock.chopped(spacing, alignment, wrap, nextChildAndBlocks.getSecond()));
+            i = nextChildAndBlocks.getFirst();
+        }
+        return wrappedBlocks;
+    }
+
+    private int eatNotWrapped(List<ASTNode> childNodes, List<Block> blocks) {
         int i = 0;
 
         while (i < childNodes.size() && !isSeparator(childNodes.get(i))) {
             blocks.add(simpleBlock(childNodes.get(i)));
             i++;
         }
-        List<Block> wrappedBlocks = Lists.newArrayList();
-        Alignment alignment = Alignment.createAlignment();
-        while (i < childNodes.size()) {
-            Pair<Integer, List<Block>> nextChildAndBlocks = scanSubBlock(childNodes, i);
-            wrappedBlocks.add(SyntheticBlock.chopped(spacing, alignment, chopDown, nextChildAndBlocks.getSecond()));
-            i = nextChildAndBlocks.getFirst();
-        }
-        blocks.add(new SyntheticBlock(Wrap.createWrap(WrapType.ALWAYS, true), Alignment.createAlignment(),
-                Indent.getNormalIndent()
-                , spacing, wrappedBlocks));
-        return blocks;
+        return i;
     }
 
     private List<ASTNode> listOfChildren(ASTNode node) {
