@@ -59,7 +59,7 @@ public class ElmBlock extends AbstractBlock {
         int i = eatNotWrapped(childNodes, blocks);
         List<Block> wrappedBlocks = groupWrapped(childNodes, i);
         if (!wrappedBlocks.isEmpty()) {
-            blocks.add(SyntheticBlock.choppedItems(spacing, wrappedBlocks));
+            blocks.add(SyntheticBlock.choppedItems(this, spacing, wrappedBlocks));
         }
         return blocks;
     }
@@ -75,7 +75,12 @@ public class ElmBlock extends AbstractBlock {
             Indent indent = isIndented ? Indent.getNormalIndent() : Indent.getNoneIndent();
             Alignment align = isIndented ? indentedAlignment : alignment;
             Pair<Integer, List<Block>> nextChildAndBlocks = scanSubBlock(childNodes, i);
-            wrappedBlocks.add(SyntheticBlock.chopped(spacing, align, wrap, indent, nextChildAndBlocks.getSecond()));
+            wrappedBlocks.add(SyntheticBlock.chopped(this,
+                    spacing,
+                    align,
+                    wrap,
+                    indent,
+                    nextChildAndBlocks.getSecond()));
             i = nextChildAndBlocks.getFirst();
         }
         return wrappedBlocks;

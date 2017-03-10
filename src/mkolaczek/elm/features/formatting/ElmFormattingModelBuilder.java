@@ -34,6 +34,7 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .after(MODULE).spacing(1, 1, 0, false, 0)
                 .after(IMPORT).spacing(1, 1, 0, false, 0)
                 .around(EQUALS).spacing(1, 1, 0, false, 0)
+                .around(PIPE).spacing(1, 1, 0, false, 0)
                 .after(MODULE_HEADER).spacing(0, 0, 2, false, 1)
                 .after(IMPORTS).spacing(0, 0, 3, false, 2)
 

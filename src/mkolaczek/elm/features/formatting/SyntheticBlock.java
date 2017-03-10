@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SyntheticBlock implements Block {
+    private final ASTBlock parent;
     @Nullable
     private final Wrap wrap;
     @Nullable
@@ -16,11 +17,13 @@ public class SyntheticBlock implements Block {
     private final Indent indent;
     private final List<Block> childBlocks;
 
-    protected SyntheticBlock(@Nullable Wrap wrap,
+    protected SyntheticBlock(ASTBlock parent,
+                             @Nullable Wrap wrap,
                              @Nullable Alignment alignment,
                              Indent indent,
                              SpacingBuilder spacing,
                              List<Block> childBlocks) {
+        this.parent = parent; //required for spacing builder to work :(
         this.wrap = wrap;
         this.alignment = alignment;
         this.spacing = spacing;
@@ -29,18 +32,19 @@ public class SyntheticBlock implements Block {
     }
 
     @NotNull
-    static SyntheticBlock chopped(SpacingBuilder spacing,
+    static SyntheticBlock chopped(ASTBlock parent,
+                                  SpacingBuilder spacing,
                                   Alignment alignment,
                                   Wrap chopDown,
                                   Indent indent,
                                   List<Block> children) {
-        return new SyntheticBlock(chopDown, alignment, indent, spacing, children);
+        return new SyntheticBlock(parent, chopDown, alignment, indent, spacing, children);
     }
 
     @NotNull
-    static SyntheticBlock choppedItems(SpacingBuilder spacing, List<Block> children) {
+    static SyntheticBlock choppedItems(ASTBlock parent, SpacingBuilder spacing, List<Block> children) {
         Wrap wrap = Wrap.createWrap(WrapType.ALWAYS, true);
-        return new SyntheticBlock(wrap, null, Indent.getNormalIndent(), spacing, children);
+        return new SyntheticBlock(parent, wrap, null, Indent.getNormalIndent(), spacing, children);
     }
 
     @NotNull
@@ -78,7 +82,7 @@ public class SyntheticBlock implements Block {
     @Nullable
     @Override
     public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
-        return spacing.getSpacing(this, child1, child2);
+        return spacing.getSpacing(parent, child1, child2);
     }
 
     @NotNull
