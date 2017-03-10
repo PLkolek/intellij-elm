@@ -18,15 +18,48 @@ import java.util.Set;
 
 public class TypeDeclBlock extends AbstractBlock {
 
-    private final Set<IElementType> separators = ImmutableSet.of(Tokens.EQUALS, Tokens.PIPE);
-    private final Set<IElementType> toFlatten = ImmutableSet.of(Elements.PIPE_SEP);
+    private final Set<IElementType> chopLocations;
+    private final Set<IElementType> toIndent;
+    private final Set<IElementType> toFlatten;
     private final SpacingBuilder spacing;
 
-    TypeDeclBlock(@NotNull ASTNode node, SpacingBuilder spacing) {
+    TypeDeclBlock(@NotNull ASTNode node,
+                  SpacingBuilder spacing,
+                  Set<IElementType> chopLocations, Set<IElementType> toIndent, Set<IElementType> toFlatten) {
         super(node,
                 Wrap.createWrap(WrapType.NONE, false),
                 null); //alignment must be null, otherwise wrapped blocks align to beginning of this one
         this.spacing = spacing;
+        this.chopLocations = chopLocations;
+        this.toIndent = toIndent;
+        this.toFlatten = toFlatten;
+    }
+
+    public static TypeDeclBlock typeDecl(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
+        ImmutableSet<IElementType> chopLocations = ImmutableSet.of(Tokens.EQUALS, Tokens.PIPE);
+        ImmutableSet<IElementType> flatten = ImmutableSet.of(Elements.PIPE_SEP);
+        Set<IElementType> toIndent = ImmutableSet.of();
+        return new TypeDeclBlock(node, spacing, chopLocations, toIndent, flatten);
+    }
+
+    public static TypeDeclBlock effectSettings(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
+        ImmutableSet<IElementType> chopLocations = ImmutableSet.of(Tokens.WHERE,
+                Tokens.LBRACKET,
+                Tokens.COMMA,
+                Tokens.RBRACKET);
+        ImmutableSet<IElementType> flatten = ImmutableSet.of(Elements.COMMA_SEP, Elements.EFFECT_MODULE_SETTINGS_LIST);
+        Set<IElementType> toIndent = ImmutableSet.of(Tokens.LBRACKET, Tokens.COMMA, Tokens.RBRACKET);
+        return new TypeDeclBlock(node, spacing, chopLocations, toIndent, flatten);
+    }
+
+    public static Block exposing(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
+        ImmutableSet<IElementType> chopLocations = ImmutableSet.of(Tokens.EXPOSING,
+                Tokens.LPAREN,
+                Tokens.COMMA,
+                Tokens.RPAREN);
+        ImmutableSet<IElementType> flatten = ImmutableSet.of(Elements.MODULE_VALUE_LIST, Elements.COMMA_SEP);
+        Set<IElementType> toIndent = ImmutableSet.of(Tokens.LPAREN, Tokens.COMMA, Tokens.RPAREN);
+        return new TypeDeclBlock(node, spacing, chopLocations, toIndent, flatten);
     }
 
     @Override
@@ -43,10 +76,14 @@ public class TypeDeclBlock extends AbstractBlock {
     private List<Block> groupWrapped(List<ASTNode> childNodes, int i) {
         List<Block> wrappedBlocks = Lists.newArrayList();
         Alignment alignment = Alignment.createAlignment();
+        Alignment indentedAlignment = Alignment.createAlignment();
         Wrap wrap = Wrap.createWrap(WrapType.ALWAYS, true);
         while (i < childNodes.size()) {
+            boolean isIndented = toIndent.contains(childNodes.get(i).getElementType());
+            Indent indent = isIndented ? Indent.getNormalIndent() : Indent.getNoneIndent();
+            Alignment align = isIndented ? indentedAlignment : alignment;
             Pair<Integer, List<Block>> nextChildAndBlocks = scanSubBlock(childNodes, i);
-            wrappedBlocks.add(SyntheticBlock.chopped(spacing, alignment, wrap, nextChildAndBlocks.getSecond()));
+            wrappedBlocks.add(SyntheticBlock.chopped(spacing, align, wrap, indent, nextChildAndBlocks.getSecond()));
             i = nextChildAndBlocks.getFirst();
         }
         return wrappedBlocks;
@@ -86,15 +123,15 @@ public class TypeDeclBlock extends AbstractBlock {
         return Pair.pair(i, children);
     }
 
+
     @NotNull
     private ElmBlock simpleBlock(ASTNode child) {
         return new ElmBlock(child, spacing);
     }
 
     private boolean isSeparator(ASTNode child) {
-        return separators.contains(child.getElementType());
+        return chopLocations.contains(child.getElementType());
     }
-
 
     @Nullable
     @Override

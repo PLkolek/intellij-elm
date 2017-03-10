@@ -19,8 +19,8 @@ public class ElmBlock extends AbstractBlock {
     private final SpacingBuilder spacingBuilder;
 
     ElmBlock(@NotNull ASTNode node, SpacingBuilder spacingBuilder, Wrap wrap) {
-        super(node, wrap, Alignment.createAlignment());
-        this.indent = ElmIndentFactory.createIndent(node.getElementType());
+        super(node, wrap, null);
+        this.indent = Indent.getNoneIndent();
         this.spacingBuilder = spacingBuilder;
     }
 
@@ -37,15 +37,15 @@ public class ElmBlock extends AbstractBlock {
             IElementType type = child.getElementType();
             if (type == Elements.EXPOSING_NODE) {
                 ExposingNode exposingNode = (ExposingNode) child.getPsi();
-                if (exposingNode.valueList().isOpenListing()) {
+                if (exposingNode.valueList() == null || exposingNode.valueList().isOpenListing()) {
                     blocks.add(new ElmBlock(child, spacingBuilder, chopDown));
                 } else {
-                    blocks.add(ElmChoppedBlock.exposing(child, spacingBuilder, chopDown));
+                    blocks.add(TypeDeclBlock.exposing(child, spacingBuilder));
                 }
             } else if (type == Elements.EFFECT_MODULE_SETTINGS) {
-                blocks.add(ElmChoppedBlock.effectProperties(child, spacingBuilder, chopDown));
+                blocks.add(TypeDeclBlock.effectSettings(child, spacingBuilder));
             } else if (type == Elements.TYPE_DECL_NODE) {
-                blocks.add(new TypeDeclBlock(child, spacingBuilder));
+                blocks.add(TypeDeclBlock.typeDecl(child, spacingBuilder));
             } else {
                 blocks.add(new ElmBlock(child, spacingBuilder));
             }

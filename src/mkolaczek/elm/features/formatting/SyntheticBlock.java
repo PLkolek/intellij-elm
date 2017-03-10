@@ -29,8 +29,12 @@ public class SyntheticBlock implements Block {
     }
 
     @NotNull
-    static SyntheticBlock chopped(SpacingBuilder spacing, Alignment alignment, Wrap chopDown, List<Block> children) {
-        return new SyntheticBlock(chopDown, alignment, Indent.getNoneIndent(), spacing, children);
+    static SyntheticBlock chopped(SpacingBuilder spacing,
+                                  Alignment alignment,
+                                  Wrap chopDown,
+                                  Indent indent,
+                                  List<Block> children) {
+        return new SyntheticBlock(chopDown, alignment, indent, spacing, children);
     }
 
     @NotNull
