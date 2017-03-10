@@ -2,7 +2,6 @@ package mkolaczek.elm.features.formatting;
 
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
-import com.intellij.formatting.FormattingModelProvider;
 import com.intellij.formatting.SpacingBuilder;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
@@ -13,6 +12,7 @@ import mkolaczek.elm.boilerplate.ElmLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.intellij.formatting.FormattingModelProvider.createFormattingModelForPsiFile;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
 
@@ -20,8 +20,8 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
     @NotNull
     @Override
     public FormattingModel createModel(PsiElement element, CodeStyleSettings settings) {
-        return FormattingModelProvider.createFormattingModelForPsiFile(element.getContainingFile(),
-                new ElmBlock(element.getNode(), createSpaceBuilder(settings)), settings);
+        ElmBlock block = ElmBlock.simple(element.getNode(), createSpaceBuilder(settings));
+        return createFormattingModelForPsiFile(element.getContainingFile(), block, settings);
     }
 
     private static SpacingBuilder createSpaceBuilder(CodeStyleSettings settings) {
