@@ -1,4 +1,4 @@
-module Module exposing(Type( C2))
+module Module exposing (Type( C2))
 
 type Type = C2
 

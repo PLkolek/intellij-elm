@@ -1,3 +1,3 @@
-module Module exposing(Alias)
+module Module exposing (Alias)
 
 type alias Alias = Int

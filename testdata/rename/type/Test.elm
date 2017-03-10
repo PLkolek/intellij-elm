@@ -1,5 +1,7 @@
-module Test exposing(SomeType)
+module Test exposing (SomeType)
 
-type SomeT<caret>ype = A | B
+type SomeT<caret>ype
+    = A
+    | B
 
 type alias Alias = SomeType

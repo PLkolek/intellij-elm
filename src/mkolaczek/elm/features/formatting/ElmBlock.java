@@ -16,6 +16,7 @@ import java.util.Set;
 
 public class ElmBlock extends AbstractBlock {
 
+    private final Wrap childrenWrap;
     private final Set<IElementType> chopLocations;
     private final Set<IElementType> toIndent;
     private final Set<IElementType> toFlatten;
@@ -24,11 +25,13 @@ public class ElmBlock extends AbstractBlock {
     ElmBlock(@NotNull ASTNode node,
              SpacingBuilder spacing,
              Wrap wrap,
+             Wrap childrenWrap,
              Set<IElementType> chopLocations, Set<IElementType> toIndent, Set<IElementType> toFlatten) {
         super(node,
                 wrap,
                 null); //alignment must be null, otherwise wrapped blocks align to beginning of this one
         this.spacing = spacing;
+        this.childrenWrap = childrenWrap;
         this.chopLocations = chopLocations;
         this.toIndent = toIndent;
         this.toFlatten = toFlatten;
@@ -40,16 +43,37 @@ public class ElmBlock extends AbstractBlock {
     }
 
     public static ElmBlock simple(ASTNode node, SpacingBuilder spacing, Wrap wrap) {
-        return new ElmBlock(node, spacing, wrap, ImmutableSet.of(), ImmutableSet.of(), ImmutableSet.of());
+        return new ElmBlock(node,
+                spacing,
+                wrap,
+                Wrap.createWrap(WrapType.NONE, false),
+                ImmutableSet.of(),
+                ImmutableSet.of(),
+                ImmutableSet.of());
     }
 
     public static ElmBlock complex(@NotNull ASTNode node,
                                    SpacingBuilder spacing,
+                                   Wrap childrenWrap,
                                    Set<IElementType> chopLocations,
                                    Set<IElementType> toIndent,
                                    Set<IElementType> toFlatten) {
 
-        return new ElmBlock(node, spacing, Wrap.createWrap(WrapType.NONE, false), chopLocations, toIndent, toFlatten);
+        return new ElmBlock(node,
+                spacing,
+                childrenWrap,
+                //consider                 |
+                //import A exposing (A, B, C)
+                //                         |
+                //when intellij finds out, that the line exceeds the margin and has be wrapped (on the right parenthesis)
+                //it goes back to to the "wrap candidate" ???, which is the exposing node. There, a stack of all wraps from the
+                //block is gathered, from the most general to most specific, and it takes the FIRST WRAP and wraps the line
+                //even if it is NO_WRAP!!! To force chopping the line, the most general wrap must be the same chop down wrap
+                //as for all the child elements. Sorry
+                childrenWrap,
+                chopLocations,
+                toIndent,
+                toFlatten);
     }
 
     @Override
@@ -69,7 +93,6 @@ public class ElmBlock extends AbstractBlock {
         List<Block> wrappedBlocks = Lists.newArrayList();
         Alignment alignment = Alignment.createAlignment();
         Alignment indentedAlignment = Alignment.createAlignment();
-        Wrap wrap = Wrap.createWrap(WrapType.ALWAYS, true);
         while (i < childNodes.size()) {
             boolean isIndented = toIndent.contains(childNodes.get(i).getElementType());
             Indent indent = isIndented ? Indent.getNormalIndent() : Indent.getNoneIndent();
@@ -78,7 +101,7 @@ public class ElmBlock extends AbstractBlock {
             wrappedBlocks.add(SyntheticBlock.chopped(this,
                     spacing,
                     align,
-                    wrap,
+                    childrenWrap,
                     indent,
                     nextChildAndBlocks.getSecond()));
             i = nextChildAndBlocks.getFirst();
@@ -128,6 +151,8 @@ public class ElmBlock extends AbstractBlock {
     @Nullable
     @Override
     public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
+        child2 = SyntheticBlock.leftAstBlock(child2);
+        child1 = SyntheticBlock.rightAstBlock(child1);
         return spacing.getSpacing(this, child1, child2);
     }
 
