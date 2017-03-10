@@ -5,7 +5,6 @@ import com.intellij.openapi.util.TextRange;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class SyntheticBlock implements Block {
@@ -21,17 +20,17 @@ public class SyntheticBlock implements Block {
                              @Nullable Alignment alignment,
                              Indent indent,
                              SpacingBuilder spacing,
-                             Block... childBlocks) {
+                             List<Block> childBlocks) {
         this.wrap = wrap;
         this.alignment = alignment;
         this.spacing = spacing;
         this.indent = indent;
-        this.childBlocks = Arrays.asList(childBlocks);
+        this.childBlocks = childBlocks;
     }
 
     @NotNull
-    static SyntheticBlock chopped(SpacingBuilder spacing, Wrap chopDown, Block[] children) {
-        return new SyntheticBlock(chopDown, Alignment.createAlignment(), Indent.getNormalIndent(), spacing, children);
+    static SyntheticBlock chopped(SpacingBuilder spacing, Alignment alignment, Wrap chopDown, List<Block> children) {
+        return new SyntheticBlock(chopDown, alignment, Indent.getNoneIndent(), spacing, children);
     }
 
     @NotNull

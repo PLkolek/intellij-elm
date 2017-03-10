@@ -23,7 +23,9 @@ public class TypeDeclBlock extends AbstractBlock {
     private final SpacingBuilder spacing;
 
     TypeDeclBlock(@NotNull ASTNode node, SpacingBuilder spacing) {
-        super(node, Wrap.createWrap(WrapType.NONE, false), Alignment.createAlignment());
+        super(node,
+                Wrap.createWrap(WrapType.NONE, false),
+                null); //alignment must be null, otherwise wrapped blocks align to beginning of this one
         this.spacing = spacing;
     }
 
@@ -38,11 +40,16 @@ public class TypeDeclBlock extends AbstractBlock {
             blocks.add(simpleBlock(childNodes.get(i)));
             i++;
         }
+        List<Block> wrappedBlocks = Lists.newArrayList();
+        Alignment alignment = Alignment.createAlignment();
         while (i < childNodes.size()) {
-            Pair<Integer, Block[]> nextChildAndBlocks = scanSubBlock(childNodes, i);
-            blocks.add(SyntheticBlock.chopped(spacing, chopDown, nextChildAndBlocks.getSecond()));
+            Pair<Integer, List<Block>> nextChildAndBlocks = scanSubBlock(childNodes, i);
+            wrappedBlocks.add(SyntheticBlock.chopped(spacing, alignment, chopDown, nextChildAndBlocks.getSecond()));
             i = nextChildAndBlocks.getFirst();
         }
+        blocks.add(new SyntheticBlock(Wrap.createWrap(WrapType.ALWAYS, true), Alignment.createAlignment(),
+                Indent.getNormalIndent()
+                , spacing, wrappedBlocks));
         return blocks;
     }
 
@@ -60,14 +67,14 @@ public class TypeDeclBlock extends AbstractBlock {
         return result;
     }
 
-    private Pair<Integer, Block[]> scanSubBlock(List<ASTNode> nodes, int i) {
+    private Pair<Integer, List<Block>> scanSubBlock(List<ASTNode> nodes, int i) {
         List<Block> children = Lists.newArrayList(simpleBlock(nodes.get(i)));
         i++;
         while (i < nodes.size() && !isSeparator(nodes.get(i))) {
             children.add(simpleBlock(nodes.get(i)));
             i++;
         }
-        return Pair.pair(i, children.toArray(new Block[children.size()]));
+        return Pair.pair(i, children);
     }
 
     @NotNull
