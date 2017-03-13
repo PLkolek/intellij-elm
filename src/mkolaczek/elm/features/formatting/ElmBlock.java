@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.Pair;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.ASTUtil;
@@ -56,33 +55,8 @@ public class ElmBlock extends AbstractBlock {
     protected List<Block> buildChildren() {
         List<ASTNode> childNodes = listOfChildren(myNode);
         List<Block> blocks = Lists.newArrayList();
-        int i = eatNotWrapped(childNodes, blocks);
-        List<Block> wrappedBlocks = groupWrapped(childNodes, i);
-        if (!wrappedBlocks.isEmpty()) {
-            blocks.add(SyntheticBlock.choppedItems(this, spacing, wrappedBlocks));
-        }
+        eatNotWrapped(childNodes, blocks);
         return blocks;
-    }
-
-    @NotNull
-    private List<Block> groupWrapped(List<ASTNode> childNodes, int i) {
-        List<Block> wrappedBlocks = Lists.newArrayList();
-        Alignment alignment = Alignment.createAlignment();
-        Alignment indentedAlignment = Alignment.createAlignment();
-        while (i < childNodes.size()) {
-            boolean isIndented = toIndent.contains(childNodes.get(i).getElementType());
-            Indent indent = isIndented ? Indent.getNormalIndent() : Indent.getNoneIndent();
-            Alignment align = isIndented ? indentedAlignment : alignment;
-            Pair<Integer, List<Block>> nextChildAndBlocks = scanSubBlock(childNodes, i);
-            wrappedBlocks.add(SyntheticBlock.chopped(this,
-                    spacing,
-                    align,
-                    childrenWrap,
-                    indent,
-                    nextChildAndBlocks.getSecond()));
-            i = nextChildAndBlocks.getFirst();
-        }
-        return wrappedBlocks;
     }
 
     private int eatNotWrapped(List<ASTNode> childNodes, List<Block> blocks) {
@@ -109,16 +83,6 @@ public class ElmBlock extends AbstractBlock {
         return result;
     }
 
-
-    private Pair<Integer, List<Block>> scanSubBlock(List<ASTNode> nodes, int i) {
-        List<Block> children = Lists.newArrayList(ElmBlocks.createBlock(spacing, nodes.get(i)));
-        i++;
-        while (i < nodes.size() && !isSeparator(nodes.get(i))) {
-            children.add(ElmBlocks.createBlock(spacing, nodes.get(i)));
-            i++;
-        }
-        return Pair.pair(i, children);
-    }
 
     private boolean isSeparator(ASTNode child) {
         return chopLocations.contains(child.getElementType());
