@@ -1,6 +1,5 @@
 package mkolaczek.elm.features.formatting;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
@@ -37,17 +36,6 @@ public class ElmChoppedBlock extends AbstractBlock {
         this.toFlatten = toFlatten;
     }
 
-
-    public static ElmBlock simple(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
-        return simple(node, spacing, Wrap.createWrap(WrapType.NONE, false));
-    }
-
-    public static ElmBlock simple(ASTNode node, SpacingBuilder spacing, Wrap wrap) {
-        return new ElmBlock(node,
-                spacing,
-                wrap,
-                ImmutableSet.of());
-    }
 
     public static ElmChoppedBlock complex(@NotNull ASTNode node,
                                           SpacingBuilder spacing,
