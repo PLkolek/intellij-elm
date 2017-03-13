@@ -1,10 +1,7 @@
 package mkolaczek.elm.features.formatting;
 
 import com.google.common.collect.Lists;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.SpacingBuilder;
-import com.intellij.formatting.Wrap;
-import com.intellij.formatting.WrapType;
+import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import mkolaczek.elm.ASTUtil;
 import org.jetbrains.annotations.NotNull;
@@ -41,5 +38,10 @@ public class ElmBlock extends ElmAbstractBlock {
             child = ASTUtil.nextSignificant(child);
         }
         return blocks;
+    }
+
+    @Override
+    public Indent getIndent() {
+        return Indent.getNoneIndent();
     }
 }

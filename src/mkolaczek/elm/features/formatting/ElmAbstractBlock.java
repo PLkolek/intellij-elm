@@ -1,6 +1,9 @@
 package mkolaczek.elm.features.formatting;
 
-import com.intellij.formatting.*;
+import com.intellij.formatting.Block;
+import com.intellij.formatting.Spacing;
+import com.intellij.formatting.SpacingBuilder;
+import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import org.jetbrains.annotations.NotNull;
@@ -28,10 +31,5 @@ public abstract class ElmAbstractBlock extends AbstractBlock {
     @Override
     public boolean isLeaf() {
         return myNode.getFirstChildNode() == null;
-    }
-
-    @Override
-    public Indent getIndent() {
-        return Indent.getNoneIndent();
     }
 }

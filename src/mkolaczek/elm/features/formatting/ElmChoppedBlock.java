@@ -35,13 +35,7 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
 
     @Override
     protected List<Block> buildChildren() {
-        List<ASTNode> childNodes = listOfChildren(myNode);
-        List<Block> blocks = Lists.newArrayList();
-        List<Block> wrappedBlocks = groupWrapped(childNodes);
-        if (!wrappedBlocks.isEmpty()) {
-            blocks.add(SyntheticBlock.choppedItems(this, spacing, wrappedBlocks));
-        }
-        return blocks;
+        return groupWrapped(listOfChildren(myNode));
     }
 
     @NotNull
@@ -91,4 +85,8 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
         return children;
     }
 
+    @Override
+    public Indent getIndent() {
+        return Indent.getNormalIndent();
+    }
 }
