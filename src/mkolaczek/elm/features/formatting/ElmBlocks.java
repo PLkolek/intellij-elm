@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import static java.util.Optional.ofNullable;
 import static mkolaczek.elm.ASTUtil.prevSignificant;
 import static mkolaczek.elm.features.formatting.ChopDefinition.chopOn;
 import static mkolaczek.elm.psi.Elements.*;
@@ -64,8 +63,9 @@ public class ElmBlocks {
         ChopDefinition chopDef = chopOn(lparen, COMMA, rparen).flatten(COMMA_SEP).done();
         ASTNode parent = node.getTreeParent();
         assert parent.getElementType() == Elements.TYPE_TERM;
-        IElementType prevType = ofNullable(prevSignificant(parent)).map(ASTNode::getElementType).orElse(null);
-        Wrap wrap = Wrap.createWrap(chopDownIfLong, prevType != Tokens.COMMA);
+        ASTNode prev = prevSignificant(parent) != null ? prevSignificant(parent) : prevSignificant(parent.getTreeParent());
+        IElementType prevType = prev.getElementType();
+        Wrap wrap = Wrap.createWrap(chopDownIfLong, prevType != Tokens.COMMA && prevType != Tokens.LPAREN);
 
         return new ElmChoppedBlock(node, spacing, wrap, chopDef);
     }
