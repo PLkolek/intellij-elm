@@ -6,18 +6,20 @@ import com.intellij.formatting.SpacingBuilder;
 import com.intellij.formatting.Wrap;
 import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
+import mkolaczek.elm.psi.node.CommaSeparatedList;
 import mkolaczek.elm.psi.node.ExposingNode;
+import mkolaczek.elm.psi.node.TypeTerm;
 import mkolaczek.elm.psi.node.extensions.Surrounded;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import static mkolaczek.elm.ASTUtil.prevSignificant;
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static mkolaczek.elm.features.formatting.ChopDefinition.chopOn;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
@@ -63,12 +65,9 @@ public class ElmBlocks {
             return ElmBlock.simple(node, spacing);
         }
         ChopDefinition chopDef = chopOn(lparen, COMMA, rparen).flatten(COMMA_SEP, SURROUND_CONTENTS).done();
-        ASTNode parent = node.getTreeParent();
-        assert parent.getElementType() == Elements.TYPE_TERM;
-        ASTNode prev = prevSignificant(parent) != null ? prevSignificant(parent) : prevSignificant(parent.getTreeParent());
-        IElementType prevType = prev.getElementType();
-        Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, prevType != Tokens.COMMA && prevType != Tokens.LPAREN);
-
+        PsiElement term = getParentOfType(node.getPsi(), TypeTerm.class);
+        assert term != null;
+        Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, !(term.getParent() instanceof CommaSeparatedList));
         return new ElmChoppedBlock(node, spacing, wrap, chopDef);
     }
 
