@@ -40,30 +40,13 @@ public class ElmBlock extends AbstractBlock {
 
     @Override
     protected List<Block> buildChildren() {
-        List<ASTNode> childNodes = listOfChildren(myNode);
         List<Block> blocks = Lists.newArrayList();
-        eatNotWrapped(childNodes, blocks);
-        return blocks;
-    }
-
-    private int eatNotWrapped(List<ASTNode> childNodes, List<Block> blocks) {
-        int i = 0;
-
-        while (i < childNodes.size()) {
-            blocks.add(ElmBlocks.createBlock(spacing, childNodes.get(i)));
-            i++;
-        }
-        return i;
-    }
-
-    private List<ASTNode> listOfChildren(ASTNode node) {
-        List<ASTNode> result = Lists.newArrayList();
-        ASTNode child = ASTUtil.firstSignificantChild(node);
+        ASTNode child = ASTUtil.firstSignificantChild(myNode);
         while (child != null) {
-            result.add(child);
+            blocks.add(ElmBlocks.createBlock(spacing, child));
             child = ASTUtil.nextSignificant(child);
         }
-        return result;
+        return blocks;
     }
 
     @Nullable
