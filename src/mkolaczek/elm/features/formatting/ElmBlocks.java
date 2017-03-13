@@ -41,11 +41,11 @@ public class ElmBlocks {
     }
 
     private static Block recordType(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
-        return wrappedType(node, spacing, LBRACKET, RBRACKET, WrapType.ALWAYS);
+        return wrappedType(node, spacing, LBRACKET, RBRACKET);
     }
 
     private static Block tupleType(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
-        return wrappedType(node, spacing, LPAREN, RPAREN, WrapType.CHOP_DOWN_IF_LONG);
+        return wrappedType(node, spacing, LPAREN, RPAREN);
     }
 
     private static Block typeConstructorArgs(ASTNode node, SpacingBuilder spacing) {
@@ -58,14 +58,13 @@ public class ElmBlocks {
     private static Block wrappedType(@NotNull ASTNode node,
                                      @NotNull SpacingBuilder spacing,
                                      Token lparen,
-                                     Token rparen,
-                                     WrapType chopDownIfLong) {
+                                     Token rparen) {
         ChopDefinition chopDef = chopOn(lparen, COMMA, rparen).flatten(COMMA_SEP).done();
         ASTNode parent = node.getTreeParent();
         assert parent.getElementType() == Elements.TYPE_TERM;
         ASTNode prev = prevSignificant(parent) != null ? prevSignificant(parent) : prevSignificant(parent.getTreeParent());
         IElementType prevType = prev.getElementType();
-        Wrap wrap = Wrap.createWrap(chopDownIfLong, prevType != Tokens.COMMA && prevType != Tokens.LPAREN);
+        Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, prevType != Tokens.COMMA && prevType != Tokens.LPAREN);
 
         return new ElmChoppedBlock(node, spacing, wrap, chopDef);
     }
