@@ -10,15 +10,15 @@ public interface Elements {
 
     Element DECLARATION = new Element("declaration");
     Element DECLARATIONS = new Element("declarations");
-    Element DOC_COMMENT = new Element("DOC_COMMENT", "doc comment");
-    Element IMPORT_LINE = new Element("IMPORT_LINE", "import line");
-    Element MODULE_HEADER = new Element("MODULE_HEADER", "module header");
+    Element DOC_COMMENT = new Element("doc comment");
+    Element IMPORT_LINE = new Element("import line");
+    Element MODULE_HEADER = new Element("module header");
     Element MODULE_VALUE_LIST = new Element("MODULE_VALUE_LIST", "exposed values");
-    Element MULTILINE_COMMENT = new Element("MULTILINE_COMMENT", "multiline comment");
-    Element TYPE_DECLARATION = new Element("TYPE_DECLARATION", "type declaration");
-    Element MODULE_NAME = new Element("MODULE_NAME", "module name");
+    Element MULTILINE_COMMENT = new Element("multiline comment");
+    Element TYPE_DECLARATION = new Element("type declaration");
+    Element MODULE_NAME = new Element("module name");
     Element MODULE_NAME_REF = new Element("MODULE_NAME_REF", "module name");
-    Element MODULE_ALIAS = new Element("MODULE_ALIAS", "module alias");
+    Element MODULE_ALIAS = new Element("module alias");
     Element MODULE_NODE = new Element("MODULE_NODE", "module");
     Element EXPORTED_VALUE = new Element("EXPORTED_VALUE", "exposed value");
     Element EXPOSING_NODE = new Element("EXPOSING_NODE", "exposing");
@@ -28,9 +28,9 @@ public interface Elements {
     Element OPERATOR = new Element("operator");
     Element OPEN_LISTING_NODE = new Element("OPEN_LISTING_NODE", "open listing");
     Element IMPORTS = new Element("imports");
-    Element TYPE_EXPORT = new Element("TYPE_EXPORT", "type export");
-    Element TYPE_CONSTRUCTOR = new Element("TYPE_CONSTRUCTOR", "type constructor");
-    Element TYPE_CONSTRUCTOR_NAME = new Element("TYPE_CONSTRUCTOR_NAME", "type constructor name");
+    Element TYPE_EXPORT = new Element("type export");
+    Element TYPE_CONSTRUCTOR = new Element("type constructor");
+    Element TYPE_CONSTRUCTOR_NAME = new Element("type constructor name");
     Element TYPE_CONSTRUCTOR_REF = new Element("TYPE_CONSTRUCTOR_REF", "type constructor");
     Element TYPE_ALIAS_DECL_NODE = new Element("TYPE_ALIAS_DECL_NODE", "type alias declaration");
     Element TYPE_DECL_NODE = new Element("TYPE_DECL_NODE", "type declaration");
@@ -40,8 +40,9 @@ public interface Elements {
     Element PIPE_SEP = new Element("PIPE_SEP", "pipe separated list");
     Element COMMA_SEP = new Element("COMMA_SEP", "comma separated list");
     Element TYPE_DECL_DEF_NODE = new Element("TYPE_DECL_FED_NODE", "type definition");
-    Element RECORD_TYPE = new Element("RECORD_TYPE", "record type");
-    Element TUPLE_TYPE = new Element("TUPLE_TYPE", "tuple type");
+    Element RECORD_TYPE = new Element("record type");
+    Element TUPLE_TYPE = new Element("tuple type");
+    Element TYPE_TERM = new Element("type term");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {

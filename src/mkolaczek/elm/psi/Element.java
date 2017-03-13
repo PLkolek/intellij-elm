@@ -5,12 +5,19 @@ import mkolaczek.elm.boilerplate.ElmLanguage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
+
 public class Element extends IElementType {
 
     private final String name;
 
     public Element(String name) {
-        this(name, name);
+        this(debugName(name), name);
+    }
+
+    private static String debugName(String name) {
+        return stream(name.split("\\s+")).map(String::toUpperCase).collect(joining("_"));
     }
 
     public Element(@NotNull @NonNls String debugName, String name) {
