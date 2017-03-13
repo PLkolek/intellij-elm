@@ -11,6 +11,7 @@ import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.ExposingNode;
+import mkolaczek.elm.psi.node.extensions.Surrounded;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -50,7 +51,6 @@ public class ElmBlocks {
 
     private static Block typeConstructorArgs(ASTNode node, SpacingBuilder spacing) {
         Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
-
         return new ElmChoppedBlock(node, spacing, wrap, chopOn(TYPE_TERM).done());
     }
 
@@ -59,7 +59,10 @@ public class ElmBlocks {
                                      @NotNull SpacingBuilder spacing,
                                      Token lparen,
                                      Token rparen) {
-        ChopDefinition chopDef = chopOn(lparen, COMMA, rparen).flatten(COMMA_SEP).done();
+        if (((Surrounded) node.getPsi()).isEmpty()) {
+            return ElmBlock.simple(node, spacing);
+        }
+        ChopDefinition chopDef = chopOn(lparen, COMMA, rparen).flatten(COMMA_SEP, SURROUND_CONTENTS).done();
         ASTNode parent = node.getTreeParent();
         assert parent.getElementType() == Elements.TYPE_TERM;
         ASTNode prev = prevSignificant(parent) != null ? prevSignificant(parent) : prevSignificant(parent.getTreeParent());

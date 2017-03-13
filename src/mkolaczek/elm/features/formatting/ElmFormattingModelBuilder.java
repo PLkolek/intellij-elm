@@ -71,8 +71,6 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .around(OPEN_LISTING_NODE).spacing(0, 0, 0, false, 0)
                 .between(IMPORT_LINE, IMPORT_LINE).spacing(0, 0, 1, false, 0)
                 .around(AS).spacing(1, 1, 0, false, 0)
-                .after(LBRACKET).spacing(1, 1, 0, false, 0)
-                .before(RBRACKET).spacing(1, 1, 0, false, 0)
 
 
                 //remove all spacing to determine if the line should be wrapped

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static mkolaczek.elm.psi.Tokens.LBRACKET;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
 
 public class SyntheticBlock implements Block {
@@ -44,16 +45,6 @@ public class SyntheticBlock implements Block {
                                   Indent indent,
                                   List<Block> children) {
         return new SyntheticBlock(parent, wrap, alignment, indent, spacing, children);
-    }
-
-    @NotNull
-    static SyntheticBlock choppedItems(ASTBlock parent, SpacingBuilder spacing, List<Block> children) {
-        return new SyntheticBlock(parent,
-                Wrap.createWrap(WrapType.NONE, false),
-                null,
-                Indent.getNormalIndent(),
-                spacing,
-                children);
     }
 
     static Block leftAstBlock(@NotNull Block child2) {
@@ -108,7 +99,7 @@ public class SyntheticBlock implements Block {
         c2 = SyntheticBlock.leftAstBlock(c2);
         c1 = SyntheticBlock.rightAstBlock(c1);
         IElementType type = c1 instanceof AbstractBlock ? ((AbstractBlock) c1).getNode().getElementType() : null;
-        if (type == LPAREN) {
+        if (type == LPAREN || type == LBRACKET) {
             TextRange textRange = parent.getTextRange();
             return new ElmAfterLParenDependantSpacing(textRange);
         }

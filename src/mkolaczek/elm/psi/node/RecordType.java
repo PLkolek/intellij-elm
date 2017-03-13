@@ -1,9 +1,9 @@
 package mkolaczek.elm.psi.node;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import mkolaczek.elm.psi.node.extensions.Surrounded;
 
-public class RecordType extends ASTWrapperPsiElement {
+public class RecordType extends Surrounded {
     public RecordType(ASTNode node) {
         super(node);
     }

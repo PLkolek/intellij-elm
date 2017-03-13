@@ -41,11 +41,13 @@ public interface Elements {
     Element COMMA_SEP = new Element("COMMA_SEP", "comma separated list");
     Element TYPE_DECL_DEF_NODE = new Element("TYPE_DECL_FED_NODE", "type definition");
     Element RECORD_TYPE = new Element("record type");
+    Element SURROUND_CONTENTS = new Element("surround contents");
     Element TUPLE_TYPE = new Element("tuple type");
     Element TYPE_TERM = new Element("type term");
-    Element TYPE_CONSTRUCTOR_ARGS = new Element("type constructor arguments");
 
+    Element TYPE_CONSTRUCTOR_ARGS = new Element("type constructor arguments");
     class Factory {
+
         public static PsiElement createElement(ASTNode node) {
             IElementType type = node.getElementType();
             if (type == DECLARATION) {
@@ -112,6 +114,8 @@ public interface Elements {
                 return new PipeSeparatedList(node);
             } else if (type == RECORD_TYPE) {
                 return new RecordType(node);
+            } else if (type == SURROUND_CONTENTS) {
+                return new SurroundContents(node);
             } else if (type == TUPLE_TYPE) {
                 return new TupleType(node);
             } else if (type == TYPE_TERM) {
