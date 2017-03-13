@@ -65,8 +65,7 @@ public class ElmChoppedBlock extends AbstractBlock {
     protected List<Block> buildChildren() {
         List<ASTNode> childNodes = listOfChildren(myNode);
         List<Block> blocks = Lists.newArrayList();
-        int i = eatNotWrapped(childNodes, blocks);
-        List<Block> wrappedBlocks = groupWrapped(childNodes, i);
+        List<Block> wrappedBlocks = groupWrapped(childNodes, 0);
         if (!wrappedBlocks.isEmpty()) {
             blocks.add(SyntheticBlock.choppedItems(this, spacing, wrappedBlocks));
         }
@@ -92,16 +91,6 @@ public class ElmChoppedBlock extends AbstractBlock {
             i = nextChildAndBlocks.getFirst();
         }
         return wrappedBlocks;
-    }
-
-    private int eatNotWrapped(List<ASTNode> childNodes, List<Block> blocks) {
-        int i = 0;
-
-        while (i < childNodes.size() && !isSeparator(childNodes.get(i))) {
-            blocks.add(ElmBlocks.createBlock(spacing, childNodes.get(i)));
-            i++;
-        }
-        return i;
     }
 
     private List<ASTNode> listOfChildren(ASTNode node) {
