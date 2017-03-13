@@ -27,7 +27,8 @@ public class ElmBlocks {
     public static Block typeDecl(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
         ChopDefinition chopDef = chopOn(EQUALS, PIPE).flatten(PIPE_SEP).done();
         Wrap wrap = Wrap.createWrap(WrapType.ALWAYS, true);
-        return ElmChoppedBlock.complex(node, spacing, wrap, chopDef);
+
+        return new ElmChoppedBlock(node, spacing, wrap, chopDef);
     }
 
     public static Block effectSettings(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
@@ -36,7 +37,8 @@ public class ElmBlocks {
                 .indent(LBRACKET, COMMA, RBRACKET)
                 .done();
         Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
-        return ElmChoppedBlock.complex(node, spacing, wrap, chopDef);
+
+        return new ElmChoppedBlock(node, spacing, wrap, chopDef);
     }
 
     private static Block recordType(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
@@ -49,7 +51,8 @@ public class ElmBlocks {
 
     private static Block typeConstructorArgs(ASTNode node, SpacingBuilder spacing) {
         Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
-        return ElmChoppedBlock.complex(node, spacing, wrap, chopOn(TYPE_TERM).done());
+
+        return new ElmChoppedBlock(node, spacing, wrap, chopOn(TYPE_TERM).done());
     }
 
     @NotNull
@@ -63,7 +66,8 @@ public class ElmBlocks {
         assert parent.getElementType() == Elements.TYPE_TERM;
         IElementType prevType = ofNullable(prevSignificant(parent)).map(ASTNode::getElementType).orElse(null);
         Wrap wrap = Wrap.createWrap(chopDownIfLong, prevType != Tokens.COMMA);
-        return ElmChoppedBlock.complex(node, spacing, wrap, chopDef);
+
+        return new ElmChoppedBlock(node, spacing, wrap, chopDef);
     }
 
 
@@ -78,7 +82,8 @@ public class ElmBlocks {
                 .indent(LPAREN, COMMA, RPAREN)
                 .done();
         Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
-        return ElmChoppedBlock.complex(node, spacing, wrap, chopDef);
+
+        return new ElmChoppedBlock(node, spacing, wrap, chopDef);
     }
 
     @NotNull

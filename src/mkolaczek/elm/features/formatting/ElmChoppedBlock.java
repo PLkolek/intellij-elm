@@ -15,23 +15,10 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
 
     ElmChoppedBlock(@NotNull ASTNode node,
                     SpacingBuilder spacing,
-                    Wrap wrap,
                     Wrap childrenWrap,
                     ChopDefinition chopDefinition) {
-        super(node, spacing, wrap);
-        this.childrenWrap = childrenWrap;
-        this.chopDefinition = chopDefinition;
-    }
-
-
-    public static ElmChoppedBlock complex(@NotNull ASTNode node,
-                                          SpacingBuilder spacing,
-                                          Wrap childrenWrap,
-                                          ChopDefinition chopDefinition) {
-
-        return new ElmChoppedBlock(node,
+        super(node,
                 spacing,
-                childrenWrap,
                 //consider                 |
                 //import A exposing (A, B, C)
                 //                         |
@@ -40,9 +27,11 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
                 //block is gathered, from the most general to most specific, and it takes the FIRST WRAP and wraps the line
                 //even if it is NO_WRAP!!! To force chopping the line, the most general wrap must be the same chop down wrap
                 //as for all the child elements. Sorry
-                childrenWrap,
-                chopDefinition);
+                childrenWrap);
+        this.childrenWrap = childrenWrap;
+        this.chopDefinition = chopDefinition;
     }
+
 
     @Override
     protected List<Block> buildChildren() {
