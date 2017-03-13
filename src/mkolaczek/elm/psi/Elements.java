@@ -41,6 +41,7 @@ public interface Elements {
     Element COMMA_SEP = new Element("COMMA_SEP", "comma separated list");
     Element TYPE_DECL_DEF_NODE = new Element("TYPE_DECL_FED_NODE", "type definition");
     Element RECORD_TYPE = new Element("RECORD_TYPE", "record type");
+    Element TUPLE_TYPE = new Element("TUPLE_TYPE", "tuple type");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {
@@ -109,6 +110,8 @@ public interface Elements {
                 return new PipeSeparatedList(node);
             } else if (type == RECORD_TYPE) {
                 return new RecordType(node);
+            } else if (type == TUPLE_TYPE) {
+                return new TupleType(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {

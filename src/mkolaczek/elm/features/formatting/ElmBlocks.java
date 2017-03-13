@@ -8,6 +8,8 @@ import com.intellij.formatting.Wrap;
 import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.ASTUtil;
+import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.ExposingNode;
 import org.jetbrains.annotations.NotNull;
@@ -38,10 +40,23 @@ public class ElmBlocks {
     }
 
     private static Block recordType(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
-        Set<IElementType> chopLocations = ImmutableSet.of(LBRACKET, COMMA, RBRACKET);
+        return wrappedType(node, spacing, LBRACKET, RBRACKET, WrapType.ALWAYS);
+    }
+
+    private static Block tupleType(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
+        return wrappedType(node, spacing, LPAREN, RPAREN, WrapType.CHOP_DOWN_IF_LONG);
+    }
+
+    @NotNull
+    private static Block wrappedType(@NotNull ASTNode node,
+                                     @NotNull SpacingBuilder spacing,
+                                     Token lparen,
+                                     Token rparen,
+                                     WrapType chopDownIfLong) {
+        Set<IElementType> chopLocations = ImmutableSet.of(lparen, COMMA, rparen);
         Set<IElementType> flatten = ImmutableSet.of(COMMA_SEP);
         Set<IElementType> toIndent = ImmutableSet.of();
-        Wrap wrap = Wrap.createWrap(WrapType.ALWAYS, true);
+        Wrap wrap = Wrap.createWrap(chopDownIfLong, ASTUtil.prevSignificant(node).getElementType() != Tokens.COMMA);
         return ElmBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
     }
 
@@ -65,6 +80,7 @@ public class ElmBlocks {
         map.put(EFFECT_MODULE_SETTINGS, ElmBlocks::effectSettings);
         map.put(TYPE_DECL_DEF_NODE, ElmBlocks::typeDecl);
         map.put(RECORD_TYPE, ElmBlocks::recordType);
+        map.put(TUPLE_TYPE, ElmBlocks::tupleType);
 
         if (map.containsKey(child.getElementType())) {
             return map.get(child.getElementType()).apply(child, spacing);

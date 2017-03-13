@@ -22,7 +22,7 @@ Type {
     public static ParserBox expression = new ParserBox("type expression");
 
     private static Parser tuple =
-            parens("tuple type", tryP(tryCommaSep(expression)));
+            parens("tuple type", tryP(tryCommaSep(expression))).as(Elements.TUPLE_TYPE);
 
     private static Parser field =
             sequence("record field",

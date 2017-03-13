@@ -8,6 +8,14 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 
 public class ASTUtil {
 
+    public static ASTNode prevSignificant(ASTNode node) {
+        node = node.getTreePrev();
+        while (!isSignificant(node)) {
+            node = node.getTreePrev();
+        }
+        return node;
+    }
+
     public static ASTNode nextSignificant(ASTNode node) {
         node = node.getTreeNext();
         while (!isSignificant(node)) {
