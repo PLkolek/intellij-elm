@@ -1,6 +1,5 @@
 package mkolaczek.elm.features.formatting;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.intellij.formatting.Block;
 import com.intellij.formatting.SpacingBuilder;
@@ -15,30 +14,29 @@ import mkolaczek.elm.psi.node.ExposingNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiFunction;
 
 import static java.util.Optional.ofNullable;
 import static mkolaczek.elm.ASTUtil.prevSignificant;
+import static mkolaczek.elm.features.formatting.ChopDefinition.chopOn;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class ElmBlocks {
 
     public static Block typeDecl(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
-        Set<IElementType> chopLocations = ImmutableSet.of(Tokens.EQUALS, Tokens.PIPE);
-        Set<IElementType> flatten = ImmutableSet.of(PIPE_SEP);
-        Set<IElementType> toIndent = ImmutableSet.of();
+        ChopDefinition chopDef = chopOn(EQUALS, PIPE).flatten(PIPE_SEP).done();
         Wrap wrap = Wrap.createWrap(WrapType.ALWAYS, true);
-        return ElmChoppedBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
+        return ElmChoppedBlock.complex(node, spacing, wrap, chopDef);
     }
 
     public static Block effectSettings(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
-        Set<IElementType> chopLocations = ImmutableSet.of(WHERE, LBRACKET, COMMA, RBRACKET);
-        Set<IElementType> flatten = ImmutableSet.of(COMMA_SEP, EFFECT_MODULE_SETTINGS_LIST);
-        Set<IElementType> toIndent = ImmutableSet.of(LBRACKET, COMMA, RBRACKET);
+        ChopDefinition chopDef = chopOn(WHERE, LBRACKET, COMMA, RBRACKET)
+                .flatten(COMMA_SEP, EFFECT_MODULE_SETTINGS_LIST)
+                .indent(LBRACKET, COMMA, RBRACKET)
+                .done();
         Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
-        return ElmChoppedBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
+        return ElmChoppedBlock.complex(node, spacing, wrap, chopDef);
     }
 
     private static Block recordType(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
@@ -50,11 +48,8 @@ public class ElmBlocks {
     }
 
     private static Block typeConstructorArgs(ASTNode node, SpacingBuilder spacing) {
-        Set<IElementType> chopLocations = ImmutableSet.of(TYPE_TERM);
-        Set<IElementType> flatten = ImmutableSet.of();
-        Set<IElementType> toIndent = ImmutableSet.of();
         Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
-        return ElmChoppedBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
+        return ElmChoppedBlock.complex(node, spacing, wrap, chopOn(TYPE_TERM).done());
     }
 
     @NotNull
@@ -63,14 +58,12 @@ public class ElmBlocks {
                                      Token lparen,
                                      Token rparen,
                                      WrapType chopDownIfLong) {
-        Set<IElementType> chopLocations = ImmutableSet.of(lparen, COMMA, rparen);
-        Set<IElementType> flatten = ImmutableSet.of(COMMA_SEP);
-        Set<IElementType> toIndent = ImmutableSet.of();
+        ChopDefinition chopDef = chopOn(lparen, COMMA, rparen).flatten(COMMA_SEP).done();
         ASTNode parent = node.getTreeParent();
         assert parent.getElementType() == Elements.TYPE_TERM;
         IElementType prevType = ofNullable(prevSignificant(parent)).map(ASTNode::getElementType).orElse(null);
         Wrap wrap = Wrap.createWrap(chopDownIfLong, prevType != Tokens.COMMA);
-        return ElmChoppedBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
+        return ElmChoppedBlock.complex(node, spacing, wrap, chopDef);
     }
 
 
@@ -80,11 +73,12 @@ public class ElmBlocks {
             return ElmBlock.simple(node, spacing, Wrap.createWrap(WrapType.NORMAL, true));
         }
 
-        Set<IElementType> chopLocations = ImmutableSet.of(Tokens.EXPOSING, LPAREN, COMMA, RPAREN);
-        Set<IElementType> flatten = ImmutableSet.of(MODULE_VALUE_LIST, COMMA_SEP);
-        Set<IElementType> toIndent = ImmutableSet.of(LPAREN, COMMA, RPAREN);
+        ChopDefinition chopDef = chopOn(Tokens.EXPOSING, LPAREN, COMMA, RPAREN)
+                .flatten(MODULE_VALUE_LIST, COMMA_SEP)
+                .indent(LPAREN, COMMA, RPAREN)
+                .done();
         Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
-        return ElmChoppedBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
+        return ElmChoppedBlock.complex(node, spacing, wrap, chopDef);
     }
 
     @NotNull

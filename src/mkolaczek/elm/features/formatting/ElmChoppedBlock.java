@@ -3,39 +3,31 @@ package mkolaczek.elm.features.formatting;
 import com.google.common.collect.Lists;
 import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.ASTUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Set;
 
 public class ElmChoppedBlock extends ElmAbstractBlock {
 
     private final Wrap childrenWrap;
-    private final Set<IElementType> chopLocations;
-    private final Set<IElementType> toIndent;
-    private final Set<IElementType> toFlatten;
+    private final ChopDefinition chopDefinition;
 
     ElmChoppedBlock(@NotNull ASTNode node,
                     SpacingBuilder spacing,
                     Wrap wrap,
                     Wrap childrenWrap,
-                    Set<IElementType> chopLocations, Set<IElementType> toIndent, Set<IElementType> toFlatten) {
+                    ChopDefinition chopDefinition) {
         super(node, spacing, wrap);
         this.childrenWrap = childrenWrap;
-        this.chopLocations = chopLocations;
-        this.toIndent = toIndent;
-        this.toFlatten = toFlatten;
+        this.chopDefinition = chopDefinition;
     }
 
 
     public static ElmChoppedBlock complex(@NotNull ASTNode node,
                                           SpacingBuilder spacing,
                                           Wrap childrenWrap,
-                                          Set<IElementType> chopLocations,
-                                          Set<IElementType> toIndent,
-                                          Set<IElementType> toFlatten) {
+                                          ChopDefinition chopDefinition) {
 
         return new ElmChoppedBlock(node,
                 spacing,
@@ -49,9 +41,7 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
                 //even if it is NO_WRAP!!! To force chopping the line, the most general wrap must be the same chop down wrap
                 //as for all the child elements. Sorry
                 childrenWrap,
-                chopLocations,
-                toIndent,
-                toFlatten);
+                chopDefinition);
     }
 
     @Override
@@ -72,7 +62,7 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
         Alignment indentedAlignment = Alignment.createAlignment();
         int i = 0;
         while (i < childNodes.size()) {
-            boolean isIndented = toIndent.contains(childNodes.get(i).getElementType());
+            boolean isIndented = chopDefinition.shouldIndent(childNodes.get(i));
             Indent indent = isIndented ? Indent.getNormalIndent() : Indent.getNoneIndent();
             Alignment align = isIndented ? indentedAlignment : alignment;
             List<Block> blocks = scanSubBlock(childNodes, i);
@@ -91,7 +81,7 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
         List<ASTNode> result = Lists.newArrayList();
         ASTNode child = ASTUtil.firstSignificantChild(node);
         while (child != null) {
-            if (toFlatten.contains(child.getElementType())) {
+            if (chopDefinition.shouldFlatten(child)) {
                 result.addAll(listOfChildren(child));
             } else {
                 result.add(child);
@@ -105,14 +95,11 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
     private List<Block> scanSubBlock(List<ASTNode> nodes, int i) {
         List<Block> children = Lists.newArrayList(ElmBlocks.createBlock(spacing, nodes.get(i)));
         i++;
-        while (i < nodes.size() && !isSeparator(nodes.get(i))) {
+        while (i < nodes.size() && !chopDefinition.shouldWrap(nodes.get(i))) {
             children.add(ElmBlocks.createBlock(spacing, nodes.get(i)));
             i++;
         }
         return children;
     }
 
-    private boolean isSeparator(ASTNode child) {
-        return chopLocations.contains(child.getElementType());
-    }
 }
