@@ -3,7 +3,6 @@ package mkolaczek.elm.features.formatting;
 import com.google.common.collect.Lists;
 import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.Pair;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.ASTUtil;
@@ -82,14 +81,14 @@ public class ElmChoppedBlock extends AbstractBlock {
             boolean isIndented = toIndent.contains(childNodes.get(i).getElementType());
             Indent indent = isIndented ? Indent.getNormalIndent() : Indent.getNoneIndent();
             Alignment align = isIndented ? indentedAlignment : alignment;
-            Pair<Integer, List<Block>> nextChildAndBlocks = scanSubBlock(childNodes, i);
+            List<Block> blocks = scanSubBlock(childNodes, i);
             wrappedBlocks.add(SyntheticBlock.chopped(this,
                     spacing,
                     align,
                     childrenWrap,
                     indent,
-                    nextChildAndBlocks.getSecond()));
-            i = nextChildAndBlocks.getFirst();
+                    blocks));
+            i += blocks.size();
         }
         return wrappedBlocks;
     }
@@ -109,14 +108,14 @@ public class ElmChoppedBlock extends AbstractBlock {
     }
 
 
-    private Pair<Integer, List<Block>> scanSubBlock(List<ASTNode> nodes, int i) {
+    private List<Block> scanSubBlock(List<ASTNode> nodes, int i) {
         List<Block> children = Lists.newArrayList(ElmBlocks.createBlock(spacing, nodes.get(i)));
         i++;
         while (i < nodes.size() && !isSeparator(nodes.get(i))) {
             children.add(ElmBlocks.createBlock(spacing, nodes.get(i)));
             i++;
         }
-        return Pair.pair(i, children);
+        return children;
     }
 
     private boolean isSeparator(ASTNode child) {
