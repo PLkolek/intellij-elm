@@ -33,6 +33,8 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .after(EFFECT).spacing(1, 1, 0, false, 0)
                 .after(MODULE).spacing(1, 1, 0, false, 0)
                 .after(IMPORT).spacing(1, 1, 0, false, 0)
+                .after(TYPE).spacing(1, 1, 0, false, 0)
+                .after(ALIAS).spacing(1, 1, 0, false, 0)
                 .around(EQUALS).spacing(1, 1, 0, false, 0)
                 .around(PIPE).spacing(1, 1, 0, false, 0)
                 .after(MODULE_HEADER).spacing(0, 0, 2, false, 1)
@@ -67,6 +69,7 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .around(AS).spacing(1, 1, 0, false, 0)
                 .after(LBRACKET).spacing(1, 1, 0, false, 0)
                 .before(RBRACKET).spacing(1, 1, 0, false, 0)
+
 
                 //remove all spacing to determine if the line should be wrapped
                 .before(EXPOSING_NODE).spacing(1, 1, 0, false, 0)

@@ -39,6 +39,7 @@ public interface Elements {
     Element RUNE_OF_AUTOCOMPLETION_EL = new Element("RUNE_OF_AUTOCOMPLETION_EL");
     Element PIPE_SEP = new Element("PIPE_SEP", "pipe separated list");
     Element COMMA_SEP = new Element("COMMA_SEP", "comma separated list");
+    Element TYPE_DECL_DEF_NODE = new Element("TYPE_DECL_FED_NODE", "type definition");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {
@@ -95,6 +96,8 @@ public interface Elements {
                 return new TypeAliasDeclNode(node);
             } else if (type == TYPE_DECL_NODE) {
                 return new TypeDeclNode(node);
+            } else if (type == TYPE_DECL_DEF_NODE) {
+                return new TypeDeclDefNode(node);
             } else if (type == TYPE_NAME) {
                 return new TypeName(node);
             } else if (type == TYPE_NAME_REF) {

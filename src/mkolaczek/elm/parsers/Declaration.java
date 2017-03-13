@@ -16,7 +16,6 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.forcedWhitespace;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
 public class Declaration {
 
@@ -50,8 +49,11 @@ public class Declaration {
 
     private static Parser typeDeclContents() {
         return sequence("type declaration contents suffix",
-                nameArgsEquals(),
-                pipeSep(Type.unionConstructor())
+                nameArgs(),
+                sequence(
+                        padded(Tokens.EQUALS),
+                        pipeSep(Type.unionConstructor())
+                ).as(Elements.TYPE_DECL_DEF_NODE)
         ).as(Elements.TYPE_DECL_NODE);
     }
 
@@ -59,18 +61,17 @@ public class Declaration {
         return sequence("type alias declaration",
                 expect(Tokens.ALIAS),
                 forcedWhitespace(),
-                nameArgsEquals(),
+                nameArgs(),
+                padded(Tokens.EQUALS),
                 Type.expression
         ).as(Elements.TYPE_ALIAS_DECL_NODE);
     }
 
     @NotNull
-    private static Sequence nameArgsEquals() {
+    private static Sequence nameArgs() {
         return sequence("type and equals",
                 expect(Tokens.CAP_VAR).as(Elements.TYPE_NAME),
-                spacePrefix(expect(Tokens.LOW_VAR)),
-                padded(Tokens.EQUALS),
-                maybeWhitespace()
+                spacePrefix(expect(Tokens.LOW_VAR))
         );
     }
 

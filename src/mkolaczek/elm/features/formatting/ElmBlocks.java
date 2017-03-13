@@ -55,7 +55,7 @@ public class ElmBlocks {
         Map<IElementType, BiFunction<ASTNode, SpacingBuilder, Block>> map = Maps.newHashMap();
         map.put(EXPOSING_NODE, ElmBlocks::exposing);
         map.put(EFFECT_MODULE_SETTINGS, ElmBlocks::effectSettings);
-        map.put(TYPE_DECL_NODE, ElmBlocks::typeDecl);
+        map.put(TYPE_DECL_DEF_NODE, ElmBlocks::typeDecl);
 
         if (map.containsKey(child.getElementType())) {
             return map.get(child.getElementType()).apply(child, spacing);
