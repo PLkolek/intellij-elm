@@ -14,25 +14,17 @@ import java.util.List;
 import java.util.Set;
 
 public class ElmBlock extends AbstractBlock {
-
-    private final Wrap childrenWrap;
-    private final Set<IElementType> chopLocations;
-    private final Set<IElementType> toIndent;
     private final Set<IElementType> toFlatten;
     private final SpacingBuilder spacing;
 
     ElmBlock(@NotNull ASTNode node,
              SpacingBuilder spacing,
              Wrap wrap,
-             Wrap childrenWrap,
-             Set<IElementType> chopLocations, Set<IElementType> toIndent, Set<IElementType> toFlatten) {
+             Set<IElementType> toFlatten) {
         super(node,
                 wrap,
                 null); //alignment must be null, otherwise wrapped blocks align to beginning of this one
         this.spacing = spacing;
-        this.childrenWrap = childrenWrap;
-        this.chopLocations = chopLocations;
-        this.toIndent = toIndent;
         this.toFlatten = toFlatten;
     }
 
@@ -45,9 +37,6 @@ public class ElmBlock extends AbstractBlock {
         return new ElmBlock(node,
                 spacing,
                 wrap,
-                Wrap.createWrap(WrapType.NONE, false),
-                ImmutableSet.of(),
-                ImmutableSet.of(),
                 ImmutableSet.of());
     }
 
@@ -62,7 +51,7 @@ public class ElmBlock extends AbstractBlock {
     private int eatNotWrapped(List<ASTNode> childNodes, List<Block> blocks) {
         int i = 0;
 
-        while (i < childNodes.size() && !isSeparator(childNodes.get(i))) {
+        while (i < childNodes.size()) {
             blocks.add(ElmBlocks.createBlock(spacing, childNodes.get(i)));
             i++;
         }
@@ -81,11 +70,6 @@ public class ElmBlock extends AbstractBlock {
             child = ASTUtil.nextSignificant(child);
         }
         return result;
-    }
-
-
-    private boolean isSeparator(ASTNode child) {
-        return chopLocations.contains(child.getElementType());
     }
 
     @Nullable

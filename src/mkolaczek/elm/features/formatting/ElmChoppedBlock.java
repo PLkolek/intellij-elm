@@ -46,9 +46,6 @@ public class ElmChoppedBlock extends AbstractBlock {
         return new ElmBlock(node,
                 spacing,
                 wrap,
-                Wrap.createWrap(WrapType.NONE, false),
-                ImmutableSet.of(),
-                ImmutableSet.of(),
                 ImmutableSet.of());
     }
 
