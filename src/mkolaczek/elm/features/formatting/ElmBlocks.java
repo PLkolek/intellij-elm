@@ -41,7 +41,7 @@ public class ElmBlocks {
         Set<IElementType> chopLocations = ImmutableSet.of(LBRACKET, COMMA, RBRACKET);
         Set<IElementType> flatten = ImmutableSet.of(COMMA_SEP);
         Set<IElementType> toIndent = ImmutableSet.of();
-        Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
+        Wrap wrap = Wrap.createWrap(WrapType.ALWAYS, true);
         return ElmBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
     }
 
