@@ -80,7 +80,8 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .before(EFFECT_MODULE_SETTINGS_LIST).spacing(0, 0, 0, false, 0)
                 .before(LBRACKET).spacing(0, 0, 0, false, 0)
                 .before(RBRACKET).spacing(0, 0, 0, false, 0)
-                .before(COMMA).spacing(0, 0, 0, false, 0);
+                .before(COMMA).spacing(0, 0, 0, false, 0)
+                .before(RECORD_TYPE).spacing(0, 0, 0, false, 0);
 
     }
 

@@ -37,6 +37,14 @@ public class ElmBlocks {
         return ElmBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
     }
 
+    private static Block recordType(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
+        Set<IElementType> chopLocations = ImmutableSet.of(LBRACKET, COMMA, RBRACKET);
+        Set<IElementType> flatten = ImmutableSet.of(COMMA_SEP);
+        Set<IElementType> toIndent = ImmutableSet.of();
+        Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
+        return ElmBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
+    }
+
     public static Block exposing(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
         ExposingNode exposingNode = (ExposingNode) node.getPsi();
         if (exposingNode.valueList() == null || exposingNode.valueList().isOpenListing()) {
@@ -56,6 +64,7 @@ public class ElmBlocks {
         map.put(EXPOSING_NODE, ElmBlocks::exposing);
         map.put(EFFECT_MODULE_SETTINGS, ElmBlocks::effectSettings);
         map.put(TYPE_DECL_DEF_NODE, ElmBlocks::typeDecl);
+        map.put(RECORD_TYPE, ElmBlocks::recordType);
 
         if (map.containsKey(child.getElementType())) {
             return map.get(child.getElementType()).apply(child, spacing);
