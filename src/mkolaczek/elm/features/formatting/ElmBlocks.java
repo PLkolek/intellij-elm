@@ -8,7 +8,7 @@ import com.intellij.formatting.Wrap;
 import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.ASTUtil;
+import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.ExposingNode;
@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import static java.util.Optional.ofNullable;
+import static mkolaczek.elm.ASTUtil.prevSignificant;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
 
@@ -47,6 +49,14 @@ public class ElmBlocks {
         return wrappedType(node, spacing, LPAREN, RPAREN, WrapType.CHOP_DOWN_IF_LONG);
     }
 
+    private static Block typeConstructorArgs(ASTNode node, SpacingBuilder spacing) {
+        Set<IElementType> chopLocations = ImmutableSet.of(TYPE_TERM);
+        Set<IElementType> flatten = ImmutableSet.of();
+        Set<IElementType> toIndent = ImmutableSet.of();
+        Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
+        return ElmBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
+    }
+
     @NotNull
     private static Block wrappedType(@NotNull ASTNode node,
                                      @NotNull SpacingBuilder spacing,
@@ -56,9 +66,13 @@ public class ElmBlocks {
         Set<IElementType> chopLocations = ImmutableSet.of(lparen, COMMA, rparen);
         Set<IElementType> flatten = ImmutableSet.of(COMMA_SEP);
         Set<IElementType> toIndent = ImmutableSet.of();
-        Wrap wrap = Wrap.createWrap(chopDownIfLong, ASTUtil.prevSignificant(node).getElementType() != Tokens.COMMA);
+        ASTNode parent = node.getTreeParent();
+        assert parent.getElementType() == Elements.TYPE_TERM;
+        IElementType prevType = ofNullable(prevSignificant(parent)).map(ASTNode::getElementType).orElse(null);
+        Wrap wrap = Wrap.createWrap(chopDownIfLong, prevType != Tokens.COMMA);
         return ElmBlock.complex(node, spacing, wrap, chopLocations, toIndent, flatten);
     }
+
 
     public static Block exposing(@NotNull ASTNode node, @NotNull SpacingBuilder spacing) {
         ExposingNode exposingNode = (ExposingNode) node.getPsi();
@@ -81,6 +95,7 @@ public class ElmBlocks {
         map.put(TYPE_DECL_DEF_NODE, ElmBlocks::typeDecl);
         map.put(RECORD_TYPE, ElmBlocks::recordType);
         map.put(TUPLE_TYPE, ElmBlocks::tupleType);
+        map.put(TYPE_CONSTRUCTOR_ARGS, ElmBlocks::typeConstructorArgs);
 
         if (map.containsKey(child.getElementType())) {
             return map.get(child.getElementType()).apply(child, spacing);

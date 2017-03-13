@@ -43,6 +43,7 @@ public interface Elements {
     Element RECORD_TYPE = new Element("record type");
     Element TUPLE_TYPE = new Element("tuple type");
     Element TYPE_TERM = new Element("type term");
+    Element TYPE_CONSTRUCTOR_ARGS = new Element("type constructor arguments");
 
     class Factory {
         public static PsiElement createElement(ASTNode node) {
@@ -113,6 +114,10 @@ public interface Elements {
                 return new RecordType(node);
             } else if (type == TUPLE_TYPE) {
                 return new TupleType(node);
+            } else if (type == TYPE_TERM) {
+                return new TypeTerm(node);
+            } else if (type == TYPE_CONSTRUCTOR_ARGS) {
+                return new TypeConstructorArgs(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {

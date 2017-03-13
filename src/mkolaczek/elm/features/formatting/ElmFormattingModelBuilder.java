@@ -41,6 +41,8 @@ public class ElmFormattingModelBuilder implements FormattingModelBuilder {
                 .after(IMPORTS).spacing(0, 0, 3, false, 2)
                 .before(RECORD_TYPE).spacing(1, 1, 0, false, 0)
                 .before(TUPLE_TYPE).spacing(1, 1, 0, false, 0)
+                .before(TYPE_TERM).spacing(1, 1, 0, false, 0)
+                .before(TYPE_CONSTRUCTOR_ARGS).spacing(1, 1, 0, false, 0)
 
                 //between comments
                 .aroundInside(DOC_COMMENT, MODULE_NODE).spacing(0, 0, 2, false, 0)

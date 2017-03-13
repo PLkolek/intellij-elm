@@ -68,7 +68,7 @@ Type {
                     expect(Tokens.LOW_VAR),
                     tuple,
                     record
-            );
+            ).as(Elements.TYPE_TERM);
 
     private static Parser app =
             sequence("type application",
@@ -102,7 +102,7 @@ Type {
     public static Parser unionConstructor() {
         return sequence("union constructor",
                 expect(Tokens.CAP_VAR).as(Elements.TYPE_CONSTRUCTOR_NAME),
-                spacePrefix(term)
+                spacePrefix(term).as(Elements.TYPE_CONSTRUCTOR_ARGS)
         ).as(Elements.TYPE_CONSTRUCTOR);
     }
 
