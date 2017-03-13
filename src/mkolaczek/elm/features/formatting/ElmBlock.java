@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 
 public class ElmBlock extends AbstractBlock {
-    private final Set<IElementType> toFlatten;
     private final SpacingBuilder spacing;
 
     ElmBlock(@NotNull ASTNode node,
@@ -25,7 +24,6 @@ public class ElmBlock extends AbstractBlock {
                 wrap,
                 null); //alignment must be null, otherwise wrapped blocks align to beginning of this one
         this.spacing = spacing;
-        this.toFlatten = toFlatten;
     }
 
 
@@ -62,11 +60,7 @@ public class ElmBlock extends AbstractBlock {
         List<ASTNode> result = Lists.newArrayList();
         ASTNode child = ASTUtil.firstSignificantChild(node);
         while (child != null) {
-            if (toFlatten.contains(child.getElementType())) {
-                result.addAll(listOfChildren(child));
-            } else {
-                result.add(child);
-            }
+            result.add(child);
             child = ASTUtil.nextSignificant(child);
         }
         return result;
