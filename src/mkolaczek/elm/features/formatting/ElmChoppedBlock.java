@@ -65,7 +65,7 @@ public class ElmChoppedBlock extends AbstractBlock {
     protected List<Block> buildChildren() {
         List<ASTNode> childNodes = listOfChildren(myNode);
         List<Block> blocks = Lists.newArrayList();
-        List<Block> wrappedBlocks = groupWrapped(childNodes, 0);
+        List<Block> wrappedBlocks = groupWrapped(childNodes);
         if (!wrappedBlocks.isEmpty()) {
             blocks.add(SyntheticBlock.choppedItems(this, spacing, wrappedBlocks));
         }
@@ -73,10 +73,11 @@ public class ElmChoppedBlock extends AbstractBlock {
     }
 
     @NotNull
-    private List<Block> groupWrapped(List<ASTNode> childNodes, int i) {
+    private List<Block> groupWrapped(List<ASTNode> childNodes) {
         List<Block> wrappedBlocks = Lists.newArrayList();
         Alignment alignment = Alignment.createAlignment();
         Alignment indentedAlignment = Alignment.createAlignment();
+        int i = 0;
         while (i < childNodes.size()) {
             boolean isIndented = toIndent.contains(childNodes.get(i).getElementType());
             Indent indent = isIndented ? Indent.getNormalIndent() : Indent.getNoneIndent();
