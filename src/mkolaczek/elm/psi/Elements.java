@@ -36,6 +36,7 @@ public interface Elements {
     Element TYPE_DECL_NODE = new Element("TYPE_DECL_NODE", "type declaration");
     Element TYPE_NAME = new Element("TYPE_NAME", "name of a type");
     Element TYPE_NAME_REF = new Element("TYPE_NAME_REF", "name of a type");
+    Element QUALIFIED_TYPE_NAME_REF = new Element("QUALIFIED_TYPE_NAME_REF", "qualified name of a type");
     Element RUNE_OF_AUTOCOMPLETION_EL = new Element("RUNE_OF_AUTOCOMPLETION_EL");
     Element PIPE_SEP = new Element("PIPE_SEP", "pipe separated list");
     Element COMMA_SEP = new Element("COMMA_SEP", "comma separated list");
@@ -107,6 +108,8 @@ public interface Elements {
                 return new TypeName(node);
             } else if (type == TYPE_NAME_REF) {
                 return new TypeNameRef(node);
+            } else if (type == QUALIFIED_TYPE_NAME_REF) {
+                return new QualifiedTypeNameRef(node);
             } else if (type == COMMA_SEP) {
                 return new CommaSeparatedList(node);
             } else if (type == PIPE_SEP) {

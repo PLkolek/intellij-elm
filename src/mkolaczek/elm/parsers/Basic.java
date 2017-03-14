@@ -14,7 +14,8 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
-import static mkolaczek.elm.psi.Tokens.*;
+import static mkolaczek.elm.psi.Tokens.LPAREN;
+import static mkolaczek.elm.psi.Tokens.RPAREN;
 
 public class Basic {
 
@@ -44,17 +45,6 @@ public class Basic {
                 paddedValue,
                 maybeWhitespace()
         );
-    }
-
-    public static Parser dottedCapVar(String name) {
-        return sequence(name,
-                or(expect(Tokens.CAP_VAR), expect(RUNE_OF_AUTOCOMPLETION)),
-                Many.many(name + " parts",
-                        WhiteSpace.noWhitespace(),
-                        expect(Tokens.DOT),
-                        WhiteSpace.noWhitespace(),
-                        or(expect(Tokens.CAP_VAR), expect(RUNE_OF_AUTOCOMPLETION))
-                ));
     }
 
     public static Parser operator() {

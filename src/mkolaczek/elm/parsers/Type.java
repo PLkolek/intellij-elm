@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
 import static mkolaczek.elm.parsers.SepBy.*;
+import static mkolaczek.elm.parsers.core.DottedCapVar.dottedCapVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
@@ -78,7 +79,10 @@ Type {
             );
 
     private static Parser typeRef() {
-        return dottedCapVar("type name").as(Elements.TYPE_NAME_REF);
+        return dottedCapVar("type name",
+                Elements.MODULE_NAME_REF,
+                Elements.TYPE_NAME_REF
+        ).as(Elements.QUALIFIED_TYPE_NAME_REF);
     }
 
     private static Parser expression2 =

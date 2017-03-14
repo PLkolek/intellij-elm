@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.psi.node.*;
@@ -16,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.psi.node.Module.module;
 
@@ -47,8 +47,8 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
     public static Object[] variants(PsiElement myElement) {
         Set<String> excluded = Sets.newHashSet();
 
-        TypeAliasDeclNode aliasDeclNode = PsiTreeUtil.getParentOfType(myElement, TypeAliasDeclNode.class);
-        ModuleValueList exposingList = PsiTreeUtil.getParentOfType(myElement, ModuleValueList.class);
+        TypeAliasDeclNode aliasDeclNode = getParentOfType(myElement, TypeAliasDeclNode.class);
+        ModuleValueList exposingList = getParentOfType(myElement, ModuleValueList.class);
         if (aliasDeclNode != null) {
             String aliasName = aliasDeclNode.typeDeclaration().getName();
             excluded = newHashSet(aliasName);
@@ -67,6 +67,15 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
     }
 
     private static Stream<TypeDeclaration> typeDeclarations(PsiElement myElement, boolean includeImported) {
+        QualifiedTypeNameRef qualifiedName = getParentOfType(myElement, QualifiedTypeNameRef.class);
+        if (qualifiedName != null && qualifiedName.moduleName() != null) {
+            return module(myElement).imports()
+                                    .stream()
+                                    .filter(i -> i.importedModule() != null)
+                                    .filter(i -> i.importedAs(qualifiedName.moduleName().getName()))
+                                    .flatMap(TypeReference::moduleDecls);
+        }
+
         Stream<TypeDeclaration> typeDecls = module(myElement).typeDeclarations()
                                                              .stream();
         if (includeImported) {
@@ -83,10 +92,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
             return Stream.empty();
         }
 
-        Stream<TypeDeclaration> decls = ProjectUtil.modules(i.getProject())
-                                                   .filter(m -> m.getName()
-                                                                 .equals(i.importedModule().getName()))
-                                                   .flatMap(m -> m.typeDeclarations().stream());
+        Stream<TypeDeclaration> decls = moduleDecls(i);
         if (i.exposingList().isPresent() && i.exposingList().get().isOpenListing()) {
             return decls;
         }
@@ -95,6 +101,13 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
                                    .map(TypeExport::typeNameString)
                                    .collect(Collectors.toSet());
         return decls.filter(d -> typeExports.contains(d.getName()));
+    }
+
+    private static Stream<TypeDeclaration> moduleDecls(Import i) {
+        return ProjectUtil.modules(i.getProject())
+                          .filter(m -> m.getName()
+                                        .equals(i.importedModule().getName()))
+                          .flatMap(m -> m.typeDeclarations().stream());
     }
 
 

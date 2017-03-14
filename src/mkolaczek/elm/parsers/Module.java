@@ -6,8 +6,8 @@ import mkolaczek.elm.parsers.core.WhiteSpace;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 
-import static mkolaczek.elm.parsers.Basic.dottedCapVar;
 import static mkolaczek.elm.parsers.SepBy.tryCommaSep;
+import static mkolaczek.elm.parsers.core.DottedCapVar.dottedCapVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Many.many;
 import static mkolaczek.elm.parsers.core.Or.or;
