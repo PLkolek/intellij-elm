@@ -37,8 +37,6 @@
                                  implementationClass="mkolaczek.elm.features.refactoring.ElmRefactoringSupportProvider"/>
         <targetElementEvaluator language="Elm"
                                 implementationClass="mkolaczek.elm.features.refactoring.ElmTargetElementEvaluator"/>
-        <lang.formatter language="Elm"
-                        implementationClass="mkolaczek.elm.features.formatting.ElmFormattingModelBuilder"/>
         <localInspection implementationClass="mkolaczek.elm.features.inspections.UnusedDeclarationInspection"
                          groupPath="Elm"
                          groupName="Declaration redundancy" enabledByDefault="true" level="WARNING"
