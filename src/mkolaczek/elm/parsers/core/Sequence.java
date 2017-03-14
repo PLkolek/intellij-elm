@@ -92,6 +92,9 @@ public class Sequence implements Parser {
             Parser parser = parsers[i];
             Set<Token> parserNextTokens = childrenNextTokens.get(i);
             if (!parser.parse(psiBuilder, parserNextTokens)) {
+                if (parser instanceof WhiteSpace && ((WhiteSpace) parser).getType() == WhiteSpace.Type.NO) {
+                    return;
+                }
                 SkipUntil.skipUntil(parser.name(), parserNextTokens, psiBuilder);
                 parser.parse(psiBuilder, parserNextTokens);
             }

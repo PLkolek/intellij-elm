@@ -1,6 +1,9 @@
 package mkolaczek.elm.parsers;
 
-import mkolaczek.elm.parsers.core.*;
+import mkolaczek.elm.parsers.core.Many;
+import mkolaczek.elm.parsers.core.Parser;
+import mkolaczek.elm.parsers.core.Try;
+import mkolaczek.elm.parsers.core.WhiteSpace;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
@@ -8,10 +11,10 @@ import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.SepBy.commaSep;
 import static mkolaczek.elm.parsers.core.Expect.expect;
+import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
-import static mkolaczek.elm.psi.Tokens.LPAREN;
-import static mkolaczek.elm.psi.Tokens.RPAREN;
+import static mkolaczek.elm.psi.Tokens.*;
 
 public class Basic {
 
@@ -25,7 +28,7 @@ public class Basic {
     }
 
     public static Parser listingContent(String name, Parser listedValue) {
-        return Or.or(name,
+        return or(name,
                 expect(Tokens.OPEN_LISTING).as(Elements.OPEN_LISTING_NODE),
                 commaSep(listedValue)
         );
@@ -44,18 +47,14 @@ public class Basic {
     }
 
     public static Parser dottedCapVar(String name) {
-        return sequence(name, dottedCapVarBody(name));
-    }
-
-    @NotNull
-    private static Parser[] dottedCapVarBody(String name) {
-        return new Parser[]{expect(Tokens.CAP_VAR),
+        return sequence(name,
+                or(expect(Tokens.CAP_VAR), expect(RUNE_OF_AUTOCOMPLETION)),
                 Many.many(name + " parts",
                         WhiteSpace.noWhitespace(),
                         expect(Tokens.DOT),
                         WhiteSpace.noWhitespace(),
-                        expect(Tokens.CAP_VAR)
-                )};
+                        or(expect(Tokens.CAP_VAR), expect(RUNE_OF_AUTOCOMPLETION))
+                ));
     }
 
     public static Parser operator() {
@@ -67,7 +66,7 @@ public class Basic {
     }
 
     private static Parser operatorSymbol() {
-        return Or.or("operator symbol", expect(Tokens.SYM_OP), expect(Tokens.COMMA_OP));
+        return or("operator symbol", expect(Tokens.SYM_OP), expect(Tokens.COMMA_OP));
     }
 
     public static Parser parens(String name, Parser contents) {

@@ -14,7 +14,6 @@ import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
 import static mkolaczek.elm.psi.Elements.MODULE_ALIAS;
-import static mkolaczek.elm.psi.Elements.MODULE_NAME_REF;
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
 import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
 
@@ -34,8 +33,7 @@ public class Module {
                 expect(Tokens.IMPORT),
                 WhiteSpace.maybeWhitespace(),
                 or(
-                        dottedCapVar("module name").as(Elements.MODULE_NAME_REF),
-                        expect(RUNE_OF_AUTOCOMPLETION).as(MODULE_NAME_REF)
+                        dottedCapVar("module name").as(Elements.MODULE_NAME_REF)
                 ),
                 tryP(
                         sequence("as clause",
@@ -66,10 +64,10 @@ public class Module {
 
     private static Parser exportValue() {
         return or(
+                expect(Tokens.RUNE_OF_AUTOCOMPLETION).as(Elements.RUNE_OF_AUTOCOMPLETION_EL),
                 expect(Tokens.LOW_VAR),
                 Basic.operator(),
-                typeExport(),
-                expect(Tokens.RUNE_OF_AUTOCOMPLETION).as(Elements.RUNE_OF_AUTOCOMPLETION_EL)
+                typeExport()
         ).as(Elements.EXPORTED_VALUE);
     }
 
