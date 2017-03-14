@@ -69,7 +69,7 @@ Type {
                     expect(Tokens.LOW_VAR),
                     tuple,
                     record
-            ).as(Elements.TYPE_TERM);
+            );
 
     private static Parser app =
             sequence("type application",

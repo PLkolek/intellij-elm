@@ -23,28 +23,18 @@ public class SyntheticBlock implements Block {
     private final Indent indent;
     private final List<Block> childBlocks;
 
-    protected SyntheticBlock(ASTBlock parent,
-                             @Nullable Wrap wrap,
-                             @Nullable Alignment alignment,
-                             Indent indent,
-                             SpacingBuilder spacing,
-                             List<Block> childBlocks) {
+    public SyntheticBlock(ASTBlock parent,
+                          @Nullable Wrap wrap,
+                          @Nullable Alignment alignment,
+                          Indent indent,
+                          SpacingBuilder spacing,
+                          List<Block> childBlocks) {
         this.parent = parent; //required for spacing builder to work :(
         this.wrap = wrap;
         this.alignment = alignment;
         this.spacing = spacing;
         this.indent = indent;
         this.childBlocks = ImmutableList.copyOf(childBlocks);
-    }
-
-    @NotNull
-    static SyntheticBlock chopped(ASTBlock parent,
-                                  SpacingBuilder spacing,
-                                  Alignment alignment,
-                                  Wrap wrap,
-                                  Indent indent,
-                                  List<Block> children) {
-        return new SyntheticBlock(parent, wrap, alignment, indent, spacing, children);
     }
 
     static Block leftAstBlock(@NotNull Block child2) {

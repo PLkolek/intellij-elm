@@ -3,6 +3,10 @@ package mkolaczek.elm.features.formatting;
 import com.google.common.collect.ImmutableSet;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.psi.Token;
+
+import static mkolaczek.elm.psi.Elements.*;
+import static mkolaczek.elm.psi.Tokens.*;
 
 public class ChopDefinition {
     private final ImmutableSet<IElementType> chopLocations;
@@ -20,6 +24,20 @@ public class ChopDefinition {
 
     public static Builder chopOn(IElementType... elements) {
         return new Builder(ImmutableSet.copyOf(elements));
+    }
+
+    public static ChopDefinition surrounded(IElementType elementType) {
+        if (elementType == RECORD_TYPE) {
+            return surrounded(LBRACKET, RBRACKET);
+        }
+        if (elementType == TUPLE_TYPE) {
+            return surrounded(LPAREN, RPAREN);
+        }
+        throw new IllegalArgumentException("Unsupported type " + elementType);
+    }
+
+    public static ChopDefinition surrounded(Token lparen, Token rparen) {
+        return chopOn(lparen, COMMA, rparen).flatten(COMMA_SEP, SURROUND_CONTENTS).done();
     }
 
     public boolean shouldIndent(ASTNode node) {

@@ -13,10 +13,10 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
     private final Wrap childrenWrap;
     private final ChopDefinition chopDefinition;
 
-    ElmChoppedBlock(@NotNull ASTNode node,
-                    SpacingBuilder spacing,
-                    Wrap childrenWrap,
-                    ChopDefinition chopDefinition) {
+    protected ElmChoppedBlock(@NotNull ASTNode node,
+                              SpacingBuilder spacing,
+                              Wrap childrenWrap,
+                              ChopDefinition chopDefinition) {
         super(node,
                 spacing,
                 //consider                 |
@@ -49,15 +49,15 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
             Indent indent = isIndented ? Indent.getNormalIndent() : Indent.getNoneIndent();
             Alignment align = isIndented ? indentedAlignment : alignment;
             List<Block> blocks = scanSubBlock(childNodes, i);
-            wrappedBlocks.add(SyntheticBlock.chopped(this,
-                    spacing,
-                    align,
-                    childrenWrap,
-                    indent,
-                    blocks));
+            wrappedBlocks.add(syntheticBlock(indent, align, blocks, wrappedBlocks.size()));
             i += blocks.size();
         }
         return wrappedBlocks;
+    }
+
+    @NotNull
+    protected SyntheticBlock syntheticBlock(Indent indent, Alignment align, List<Block> blocks, int size) {
+        return new SyntheticBlock(this, childrenWrap, align, indent, spacing, blocks);
     }
 
     private List<ASTNode> listOfChildren(ASTNode node) {
@@ -76,13 +76,18 @@ public class ElmChoppedBlock extends ElmAbstractBlock {
 
 
     private List<Block> scanSubBlock(List<ASTNode> nodes, int i) {
-        List<Block> children = Lists.newArrayList(ElmBlocks.createBlock(spacing, nodes.get(i)));
+        List<Block> children = Lists.newArrayList(createBlock(nodes.get(i), i));
         i++;
         while (i < nodes.size() && !chopDefinition.shouldWrap(nodes.get(i))) {
-            children.add(ElmBlocks.createBlock(spacing, nodes.get(i)));
+            children.add(createBlock(nodes.get(i), i));
             i++;
         }
         return children;
+    }
+
+    @NotNull
+    protected Block createBlock(ASTNode node, int i) {
+        return ElmBlocks.createBlock(spacing, node);
     }
 
     @Override

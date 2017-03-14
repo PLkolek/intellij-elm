@@ -6,20 +6,17 @@ import com.intellij.formatting.SpacingBuilder;
 import com.intellij.formatting.Wrap;
 import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.features.formatting.custom.TypeConstructorArgsBlock;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
-import mkolaczek.elm.psi.node.CommaSeparatedList;
 import mkolaczek.elm.psi.node.ExposingNode;
-import mkolaczek.elm.psi.node.TypeTerm;
 import mkolaczek.elm.psi.node.extensions.Surrounded;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static mkolaczek.elm.features.formatting.ChopDefinition.chopOn;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
@@ -51,11 +48,6 @@ public class ElmBlocks {
         return wrappedType(node, spacing, LPAREN, RPAREN);
     }
 
-    private static Block typeConstructorArgs(ASTNode node, SpacingBuilder spacing) {
-        Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
-        return new ElmChoppedBlock(node, spacing, wrap, chopOn(TYPE_TERM).done());
-    }
-
     @NotNull
     private static Block wrappedType(@NotNull ASTNode node,
                                      @NotNull SpacingBuilder spacing,
@@ -64,10 +56,8 @@ public class ElmBlocks {
         if (((Surrounded) node.getPsi()).isEmpty()) {
             return ElmBlock.simple(node, spacing);
         }
-        ChopDefinition chopDef = chopOn(lparen, COMMA, rparen).flatten(COMMA_SEP, SURROUND_CONTENTS).done();
-        PsiElement term = getParentOfType(node.getPsi(), TypeTerm.class);
-        assert term != null;
-        Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, !(term.getParent() instanceof CommaSeparatedList));
+        ChopDefinition chopDef = ChopDefinition.surrounded(lparen, rparen);
+        Wrap wrap = Wrap.createWrap(WrapType.CHOP_DOWN_IF_LONG, true);
         return new ElmChoppedBlock(node, spacing, wrap, chopDef);
     }
 
@@ -95,7 +85,7 @@ public class ElmBlocks {
         map.put(TYPE_DECL_DEF_NODE, ElmBlocks::typeDecl);
         map.put(RECORD_TYPE, ElmBlocks::recordType);
         map.put(TUPLE_TYPE, ElmBlocks::tupleType);
-        map.put(TYPE_CONSTRUCTOR_ARGS, ElmBlocks::typeConstructorArgs);
+        map.put(TYPE_CONSTRUCTOR_ARGS, TypeConstructorArgsBlock::new);
 
         if (map.containsKey(child.getElementType())) {
             return map.get(child.getElementType()).apply(child, spacing);
