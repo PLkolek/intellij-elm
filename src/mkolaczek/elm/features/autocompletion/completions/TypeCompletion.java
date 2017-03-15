@@ -36,7 +36,7 @@ public class TypeCompletion {
         c.autocomplete(afterLeaf(e(TYPE)),                                  TypeCompletion::exposedTypes);
         c.autocomplete(afterLeaf(e(ALIAS)),                                 TypeCompletion::exposedConstructorlessTypes);
         c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),   TypeCompletion::exposedTypeConstructors);
-        c.autocomplete(afterLeaf(DOT).inside(e(QUALIFIED_TYPE_NAME_REF)),   TypeCompletion::typesFromModule);
+        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),   TypeCompletion::typesFromModule);
         //@formatter:on
     }
 
