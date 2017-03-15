@@ -29,9 +29,11 @@ import static mkolaczek.elm.psi.node.Module.module;
 
 public class TypeCompletion {
     public static void types(ElmCompletionContributor c) {
-        c.autocomplete(afterLeaf(e(TYPE)), TypeCompletion::exposedTypes);
-        c.autocomplete(afterLeaf(e(ALIAS)), TypeCompletion::exposedConstructorlessTypes);
-        c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)), TypeCompletion::exposedTypeConstructors);
+        //@formatter:off
+        c.autocomplete(afterLeaf(e(TYPE)),                                  TypeCompletion::exposedTypes);
+        c.autocomplete(afterLeaf(e(ALIAS)),                                 TypeCompletion::exposedConstructorlessTypes);
+        c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),   TypeCompletion::exposedTypeConstructors);
+        //@formatter:on
     }
 
     private static Collection<String> exposedConstructorlessTypes(CompletionParameters parameters) {
