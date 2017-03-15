@@ -1,5 +1,6 @@
 package mkolaczek.elm.psi.node;
 
+import com.google.common.base.Joiner;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -35,5 +36,11 @@ public class TypeExport extends ASTWrapperPsiElement {
     public Collection<TypeConstructorRef> constructors() {
         CommaSeparatedList valueList = findChildOfType(this, CommaSeparatedList.class);
         return ofNullable(valueList).map(vl -> vl.values(TypeConstructorRef.class)).orElse(newArrayList());
+    }
+
+
+    //WEIRD STUFF
+    public static String declarationString(TypeExport typeExport) {
+        return typeExport.typeNameString() + " = " + Joiner.on(" | ").join(typeExport.constructorNames());
     }
 }
