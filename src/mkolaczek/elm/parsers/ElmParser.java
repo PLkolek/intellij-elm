@@ -40,10 +40,4 @@ public class ElmParser implements PsiParser {
         );
         parser.parse2(builder, Sets.newHashSet());
     }
-
-    private void consumeRest(PsiBuilder builder) {
-        while (!builder.eof()) {
-            builder.advanceLexer();
-        }
-    }
 }
