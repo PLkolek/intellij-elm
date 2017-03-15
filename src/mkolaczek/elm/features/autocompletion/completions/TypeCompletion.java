@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
-import mkolaczek.elm.features.autocompletion.Patterns;
 import mkolaczek.elm.psi.node.ModuleHeader;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeDeclaration;
@@ -22,18 +21,17 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static mkolaczek.elm.features.autocompletion.Patterns.afterLeaf;
+import static mkolaczek.elm.features.autocompletion.Patterns.e;
 import static mkolaczek.elm.psi.Elements.TYPE_DECL_NODE;
 import static mkolaczek.elm.psi.Tokens.*;
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class TypeCompletion {
     public static void types(ElmCompletionContributor c) {
-        c.autocomplete(Patterns.afterLeaf(Patterns.e(TYPE)), TypeCompletion::exposedTypes);
-        c.autocomplete(Patterns.afterLeaf(Patterns.e(ALIAS)), TypeCompletion::exposedConstructorlessTypes);
-
-
-        c.autocomplete(Patterns.afterLeaf(EQUALS, PIPE).inside(Patterns.e(TYPE_DECL_NODE)),
-                TypeCompletion::exposedTypeConstructors);
+        c.autocomplete(afterLeaf(e(TYPE)), TypeCompletion::exposedTypes);
+        c.autocomplete(afterLeaf(e(ALIAS)), TypeCompletion::exposedConstructorlessTypes);
+        c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)), TypeCompletion::exposedTypeConstructors);
     }
 
     private static Collection<String> exposedConstructorlessTypes(CompletionParameters parameters) {

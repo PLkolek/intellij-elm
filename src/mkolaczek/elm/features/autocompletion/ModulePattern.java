@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import static java.util.function.Predicate.isEqual;
 
 public class ModulePattern extends PsiElementPattern<Module, ModulePattern> {
-    protected ModulePattern() {
+    private ModulePattern() {
         super(Module.class);
     }
 
