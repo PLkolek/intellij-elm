@@ -4,8 +4,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
-import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
@@ -13,12 +11,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.patterns.PsiElementPattern.Capture;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.util.ProcessingContext;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -27,6 +23,7 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.stream.Collectors.toList;
+import static mkolaczek.elm.features.autocompletion.ElmParenthesesInsertHandler.parentheses;
 import static mkolaczek.elm.features.autocompletion.ModulePattern.module;
 import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
@@ -185,32 +182,7 @@ public class ElmCompletionContributor extends CompletionContributor {
 
     @NotNull
     private LookupElementBuilder exposingCompletion() {
-        return LookupElementBuilder.create("exposing")
-                                   .withInsertHandler(new ParenthesesInsertHandler<LookupElement>(true,
-                                           false,
-                                           true,
-                                           true) {
-                                       @Override
-                                       protected boolean placeCaretInsideParentheses(InsertionContext context,
-                                                                                     LookupElement item) {
-                                           return true;
-                                       }
-
-                                       @Nullable
-                                       @Override
-                                       protected PsiElement findNextToken(@NotNull InsertionContext context) {
-                                           PsiFile file = context.getFile();
-                                           PsiElement element = file.findElementAt(context.getTailOffset());
-                                           if (element != null && isWhitespace(element)) {
-                                               element = file.findElementAt(element.getTextRange().getEndOffset());
-                                           }
-                                           return element;
-                                       }
-
-                                       private boolean isWhitespace(PsiElement element) {
-                                           return element.getNode().getElementType() == Tokens.NEW_LINE;
-                                       }
-                                   });
+        return LookupElementBuilder.create("exposing").withInsertHandler(parentheses());
     }
 
     @Override
@@ -222,4 +194,5 @@ public class ElmCompletionContributor extends CompletionContributor {
     public void beforeCompletion(@NotNull CompletionInitializationContext context) {
         context.setDummyIdentifier("\u16DC");
     }
+
 }
