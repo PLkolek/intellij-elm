@@ -18,9 +18,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.intellij.psi.util.PsiTreeUtil.getChildOfType;
+import static java.util.stream.Collectors.toList;
 
 public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwner, DocCommented {
     public Module(@NotNull ASTNode node) {
@@ -112,6 +114,14 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
 
     public Collection<Import> imports() {
         return PsiTreeUtil.findChildrenOfType(this, Import.class);
+    }
+
+    public Stream<Import> imports(String name) {
+        return imports().stream().filter(i -> i.importedAs(name));
+    }
+
+    public Collection<Import> aliasedImports(String name) {
+        return imports(name).filter(Import::isAliased).collect(toList());
     }
 
     public Collection<TypeDeclaration> typeDeclarations() {

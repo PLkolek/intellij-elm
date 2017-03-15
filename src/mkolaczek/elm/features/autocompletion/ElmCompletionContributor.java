@@ -63,7 +63,7 @@ public class ElmCompletionContributor extends CompletionContributor {
         autocomplete(afterLeaf(Tokens.AS), parameters -> {
             Import importLine = getParentOfType(parameters.getPosition(), Import.class);
             Preconditions.checkState(importLine != null, "As must be a child of import line");
-            ModuleNameRef module = importLine.importedModule();
+            ModuleNameRef module = importLine.importedModuleName();
             String[] words = module.getName().split("\\.");
             return Names.suggest(words);
         });
@@ -140,7 +140,7 @@ public class ElmCompletionContributor extends CompletionContributor {
         return LookupElementBuilder.create(item).withInsertHandler(AddSpaceInsertHandler.INSTANCE);
     }
 
-    private void autocomplete(Capture<PsiElement> pattern, final LookupElementBuilder... completions) {
+    private void autocomplete(Capture<PsiElement> pattern, LookupElementBuilder... completions) {
         autocomplete2(pattern, parameters -> Arrays.asList(completions));
     }
 
@@ -199,7 +199,7 @@ public class ElmCompletionContributor extends CompletionContributor {
                                        @Nullable
                                        @Override
                                        protected PsiElement findNextToken(@NotNull InsertionContext context) {
-                                           final PsiFile file = context.getFile();
+                                           PsiFile file = context.getFile();
                                            PsiElement element = file.findElementAt(context.getTailOffset());
                                            if (element != null && isWhitespace(element)) {
                                                element = file.findElementAt(element.getTextRange().getEndOffset());

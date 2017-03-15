@@ -1,42 +1,39 @@
 package mkolaczek.elm.references;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.ResolveResult;
 import com.intellij.util.IncorrectOperationException;
-import mkolaczek.elm.ProjectUtil;
+import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.ModuleNameRef;
+import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static mkolaczek.elm.psi.node.Module.module;
 
-public class ModuleReference extends PsiReferenceBase<ModuleNameRef> {
+public class ModuleReference extends PsiReferenceBase.Poly<ModuleNameRef> {
     public ModuleReference(ModuleNameRef element) {
-        super(element, TextRange.create(0, element.getTextLength()));
+        super(element, TextRange.create(0, element.getTextLength()), false);
     }
 
-    @Nullable
+    @NotNull
     @Override
-    public PsiElement resolve() {
-        Project project = myElement.getProject();
-
-        return ProjectUtil.modules(project)
-                          .filter(module -> module.sameName(myElement.getName()))
-                          .findFirst().orElse(null);
+    public ResolveResult[] multiResolve(boolean incompleteCode) {
+        return module(myElement)
+                .aliasedImports(myElement.getName())
+                .stream()
+                .map(Import::alias)
+                .flatMap(Streams::stream)
+                .map(PsiElementResolveResult::new)
+                .toArray(ResolveResult[]::new);
     }
 
     @NotNull
     @Override
     public Object[] getVariants() {
-        return variants(myElement);
-    }
-
-    public static Object[] variants(PsiElement myElement) {
-        return ProjectUtil.modules(myElement.getProject())
-                          .filter(module -> !module(myElement).sameName(module))
-                          .toArray();
+        return new Object[0];
     }
 
     @Override

@@ -30,6 +30,6 @@ public class QualifiedTypeReference extends PsiReferenceBase<TypeNameRef> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        return ArrayUtils.addAll(TypeReference.variants(myElement), ModuleReference.variants(myElement));
+        return ArrayUtils.addAll(TypeReference.variants(myElement), ImportModuleReference.variants(myElement));
     }
 }

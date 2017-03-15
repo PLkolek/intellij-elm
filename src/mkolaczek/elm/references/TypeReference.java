@@ -5,7 +5,6 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.IncorrectOperationException;
-import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,10 +68,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
     private static Stream<TypeDeclaration> typeDeclarations(PsiElement myElement, boolean includeImported) {
         QualifiedTypeNameRef qualifiedName = getParentOfType(myElement, QualifiedTypeNameRef.class);
         if (qualifiedName != null && qualifiedName.moduleName() != null) {
-            return module(myElement).imports()
-                                    .stream()
-                                    .filter(i -> i.importedModule() != null)
-                                    .filter(i -> i.importedAs(qualifiedName.moduleName().getName()))
+            return module(myElement).imports(qualifiedName.moduleName().getName())
                                     .flatMap(TypeReference::moduleDecls);
         }
 
@@ -88,7 +84,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
     }
 
     private static Stream<TypeDeclaration> importedTypes(Import i) {
-        if (i.importedModule() == null) {
+        if (i.importedModuleName() == null) {
             return Stream.empty();
         }
 
@@ -104,10 +100,8 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
     }
 
     private static Stream<TypeDeclaration> moduleDecls(Import i) {
-        return ProjectUtil.modules(i.getProject())
-                          .filter(m -> m.getName()
-                                        .equals(i.importedModule().getName()))
-                          .flatMap(m -> m.typeDeclarations().stream());
+        return i.importedModule()
+                .flatMap(m -> m.typeDeclarations().stream());
     }
 
 
