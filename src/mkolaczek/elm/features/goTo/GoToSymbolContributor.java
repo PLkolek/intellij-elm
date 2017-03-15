@@ -15,7 +15,7 @@ public class GoToSymbolContributor implements ChooseByNameContributor {
     @Override
     public String[] getNames(Project project, boolean includeNonProjectItems) {
 
-        Stream<String> constructors = typeDecls(project).flatMap(d -> d.constructors().stream())
+        Stream<String> constructors = typeDecls(project).flatMap(TypeDeclaration::constructors)
                                                         .map(TypeConstructor::getName);
 
         Stream<String> types = typeDecls(project)
@@ -33,7 +33,7 @@ public class GoToSymbolContributor implements ChooseByNameContributor {
                                            boolean includeNonProjectItems) {
 
         Stream<TypeDeclaration> types = typeDecls(project).filter(d -> name.equals(d.getName()));
-        Stream<TypeConstructor> constructors = typeDecls(project).flatMap(d -> d.constructors().stream())
+        Stream<TypeConstructor> constructors = typeDecls(project).flatMap(TypeDeclaration::constructors)
                                                                  .filter(c -> name.equals(c.getName()));
         return Stream.concat(types, constructors)
                      .toArray(NavigationItem[]::new);

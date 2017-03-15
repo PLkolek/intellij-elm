@@ -19,12 +19,12 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.afterLeaf;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
 import static mkolaczek.elm.psi.Elements.TYPE_DECL_NODE;
 import static mkolaczek.elm.psi.Tokens.*;
 import static mkolaczek.elm.psi.node.Module.module;
-import static mkolaczek.util.Streams.stream;
 
 
 public class ElmCompletionContributor extends CompletionContributor {
@@ -44,21 +44,17 @@ public class ElmCompletionContributor extends CompletionContributor {
     }
 
     private static Collection<String> exposedTypeConstructors(CompletionParameters parameters) {
-        Optional<ModuleHeader> header = module(parameters.getPosition()).header();
-        if (!header.isPresent()) {
-            return Lists.newArrayList();
-        }
         TypeDeclaration declaration = getParentOfType(parameters.getPosition(), TypeDeclaration.class);
         assert declaration != null;
         String typeName = declaration.getName();
-        Collection<String> constructors = header.get()
-                                                .typeExport(typeName)
+
+        Optional<ModuleHeader> header = module(parameters.getPosition()).header();
+        Collection<String> constructors = header.flatMap(h -> h.typeExport(typeName))
                                                 .map(TypeExport::constructorNames)
                                                 .orElse(newArrayList());
-        List<String> presentConstructors = declaration.constructors()
-                                                      .stream()
-                                                      .map(TypeConstructor::getText)
-                                                      .collect(toList());
+        Set<String> presentConstructors = declaration.constructors()
+                                                     .map(TypeConstructor::getText)
+                                                     .collect(toSet());
 
         constructors.removeAll(presentConstructors);
         if (constructors.size() > 1) {
@@ -68,16 +64,16 @@ public class ElmCompletionContributor extends CompletionContributor {
     }
 
     private static Collection<String> exposedConstructorlessTypes(CompletionParameters parameters) {
-        return stream(module(parameters.getPosition()).header())
-                .flatMap(ModuleHeader::typeExports)
+        return module(parameters.getPosition())
+                .typeExports()
                 .filter(TypeExport::withoutConstructors)
                 .map(TypeExport::typeNameString)
                 .collect(toList());
     }
 
     private static Collection<String> exposedTypes(CompletionParameters parameters) {
-        return stream(module(parameters.getPosition()).header())
-                .flatMap(ModuleHeader::typeExports)
+        return module(parameters.getPosition())
+                .typeExports()
                 .flatMap(ElmCompletionContributor::typeCompletions)
                 .collect(toList());
     }

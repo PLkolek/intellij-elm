@@ -63,7 +63,6 @@ public class ElmStructureViewElement implements StructureViewTreeElement, Sortab
         }
         if (element instanceof TypeDeclaration) {
             return ((TypeDeclaration) element).constructors()
-                                              .stream()
                                               .map(ElmStructureViewElement::new)
                                               .toArray(TreeElement[]::new);
         }

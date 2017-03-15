@@ -55,7 +55,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
         }
         Collection<TypeDeclaration> types = module.typeDeclarations();
         List<PsiNameIdentifierOwner> toCheck = Lists.newArrayList(module);
-        List<TypeConstructor> constructors = types.stream().flatMap(d -> d.constructors().stream()).collect(toList());
+        List<TypeConstructor> constructors = types.stream().flatMap(TypeDeclaration::constructors).collect(toList());
         toCheck.addAll(types);
         toCheck.addAll(constructors);
 
@@ -90,7 +90,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
     }
 
     @NotNull
-    private CommonProcessors.CollectProcessor<UsageInfo> findUsages(@NotNull final PsiFile file, PsiElement element) {
+    private CommonProcessors.CollectProcessor<UsageInfo> findUsages(@NotNull PsiFile file, PsiElement element) {
         FindUsagesOptions options = new FindUsagesOptions(file.getProject());
         options.isUsages = true;
         CommonProcessors.CollectProcessor<UsageInfo> collector = new CommonProcessors.CollectProcessor<UsageInfo>() {

@@ -8,6 +8,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeConstructorRef;
+import mkolaczek.elm.psi.node.TypeDeclaration;
 import mkolaczek.elm.psi.node.TypeExport;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +29,7 @@ public class TypeConstructorReference extends PsiReferenceBase<TypeConstructorRe
     public TypeConstructor resolve() {
         return module(myElement).typeDeclarations()
                                 .stream()
-                                .flatMap(decl -> decl.constructors().stream())
+                                .flatMap(TypeDeclaration::constructors)
                                 .filter(constructor -> myElement.getName().equals(constructor.getName()))
                                 .findFirst().orElse(null);
     }
@@ -41,7 +42,7 @@ public class TypeConstructorReference extends PsiReferenceBase<TypeConstructorRe
         Set<String> excluded = Sets.newHashSet(typeExport.constructorNames());
 
         return stream(module(myElement).typeDeclaration(typeExport.typeNameString()))
-                .flatMap(decl -> decl.constructors().stream())
+                .flatMap(TypeDeclaration::constructors)
                 .filter(elem -> !excluded.contains(elem.getName()))
                 .toArray();
     }

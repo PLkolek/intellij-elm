@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.intellij.psi.util.PsiTreeUtil.getChildOfType;
+import static mkolaczek.util.Streams.stream;
 
 public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwner, DocCommented {
     public Module(@NotNull ASTNode node) {
@@ -133,5 +134,11 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
 
     public Optional<TypeDeclaration> typeDeclaration(String typeName) {
         return typeDeclarations().stream().filter(decl -> typeName.equals(decl.getName())).findAny();
+    }
+
+
+    //SHORTCUTS
+    public Stream<TypeExport> typeExports() {
+        return stream(header()).flatMap(ModuleHeader::typeExports);
     }
 }

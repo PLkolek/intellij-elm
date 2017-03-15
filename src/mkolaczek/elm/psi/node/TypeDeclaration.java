@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
 
@@ -26,8 +26,8 @@ public class TypeDeclaration extends ASTWrapperPsiElement implements PsiNameIden
         super(node);
     }
 
-    public Collection<TypeConstructor> constructors() {
-        return findChildrenOfType(this, TypeConstructor.class);
+    public Stream<TypeConstructor> constructors() {
+        return findChildrenOfType(this, TypeConstructor.class).stream();
     }
 
     public boolean isAlias() {
@@ -78,6 +78,6 @@ public class TypeDeclaration extends ASTWrapperPsiElement implements PsiNameIden
     }
 
     public Optional<TypeConstructor> constructor(String name) {
-        return constructors().stream().filter(t -> name.equals(t.getName())).findAny();
+        return constructors().filter(t -> name.equals(t.getName())).findAny();
     }
 }
