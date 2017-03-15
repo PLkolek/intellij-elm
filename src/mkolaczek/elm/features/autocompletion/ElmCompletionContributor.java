@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.*;
+import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -29,29 +30,10 @@ public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
         KeywordCompletion.keywords(this);
 
-        autocomplete(afterLeaf(Tokens.MODULE), parameters -> {
-            String fileName = parameters.getOriginalFile().getName();
-            String moduleName = fileName.substring(0, fileName.length() - 4);//cut out .elm
-            return newArrayList(moduleName);
-        });
-        autocomplete(afterLeaf(Tokens.AS), parameters -> {
-            Import importLine = getParentOfType(parameters.getPosition(), Import.class);
-            Preconditions.checkState(importLine != null, "As must be a child of import line");
-            ModuleNameRef module = importLine.importedModuleName();
-            String[] words = module.getName().split("\\.");
-            return Names.suggest(words);
-        });
+        autocomplete(afterLeaf(Tokens.MODULE), ElmCompletionContributor::fileName);
+        autocomplete(afterLeaf(Tokens.AS), ElmCompletionContributor::moduleNameParts);
 
-        autocomplete(afterLeaf(e(TYPE)), parameters -> {
-            Optional<ModuleHeader> header = Module.module(parameters.getPosition()).header();
-            if (!header.isPresent()) {
-                return Lists.newArrayList();
-            }
-            return header.get().typeExports()
-                         .stream()
-                         .flatMap(ElmCompletionContributor::typeCompletions)
-                         .collect(toList());
-        });
+        autocomplete(afterLeaf(e(TYPE)), ElmCompletionContributor::exposedTypes);
 
 
         autocomplete(afterLeaf(e(ALIAS)), parameters -> {
@@ -60,7 +42,6 @@ public class ElmCompletionContributor extends CompletionContributor {
                 return Lists.newArrayList();
             }
             return header.get().typeExports()
-                         .stream()
                          .filter(TypeExport::withoutConstructors)
                          .map(TypeExport::typeNameString).collect(toList());
         });
@@ -90,8 +71,29 @@ public class ElmCompletionContributor extends CompletionContributor {
         });
 
 
+    }
 
+    private static Collection<String> exposedTypes(CompletionParameters parameters) {
+        return Streams.stream(Module.module(parameters.getPosition()).header())
+                      .flatMap(ModuleHeader::typeExports)
+                      .flatMap(ElmCompletionContributor::typeCompletions)
+                      .collect(toList());
+    }
 
+    @NotNull
+    private static Collection<String> moduleNameParts(CompletionParameters parameters) {
+        Import importLine = getParentOfType(parameters.getPosition(), Import.class);
+        Preconditions.checkState(importLine != null, "As must be a child of import line");
+        ModuleNameRef module = importLine.importedModuleName();
+        String[] words = module.getName().split("\\.");
+        return Names.suggest(words);
+    }
+
+    @NotNull
+    private static Collection<String> fileName(CompletionParameters parameters) {
+        String fileName = parameters.getOriginalFile().getName();
+        String moduleName = fileName.substring(0, fileName.length() - 4);//cut out .elm
+        return newArrayList(moduleName);
     }
 
     private static Stream<String> typeCompletions(TypeExport typeExport) {

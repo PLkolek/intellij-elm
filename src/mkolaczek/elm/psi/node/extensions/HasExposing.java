@@ -6,12 +6,12 @@ import com.intellij.lang.ASTNode;
 import mkolaczek.elm.psi.node.ExposingNode;
 import mkolaczek.elm.psi.node.ModuleValueList;
 import mkolaczek.elm.psi.node.TypeExport;
+import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 
 public abstract class HasExposing extends ASTWrapperPsiElement {
@@ -25,12 +25,12 @@ public abstract class HasExposing extends ASTWrapperPsiElement {
         return Optional.ofNullable(exposingNode).map(ExposingNode::valueList);
     }
 
-    public Collection<TypeExport> typeExports() {
-        return exposingList().map(ModuleValueList::exportedTypes).orElse(newArrayList());
+    public Stream<TypeExport> typeExports() {
+        return Streams.stream(exposingList()).flatMap(ModuleValueList::exportedTypes);
     }
 
 
     public Optional<TypeExport> typeExport(String typeName) {
-        return typeExports().stream().filter(export -> typeName.equals(export.typeNameString())).findFirst();
+        return typeExports().filter(export -> typeName.equals(export.typeNameString())).findFirst();
     }
 }

@@ -10,6 +10,7 @@ import mkolaczek.util.Streams;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.getChildOfType;
 import static java.util.stream.Collectors.toList;
@@ -29,11 +30,10 @@ public class ModuleValueList extends ASTWrapperPsiElement {
         return Optional.ofNullable(getChildOfType(this, CommaSeparatedList.class));
     }
 
-    public Collection<TypeExport> exportedTypes() {
+    public Stream<TypeExport> exportedTypes() {
         return values(ExportedValue.class).stream()
                                           .map(ExportedValue::typeExport)
-                                          .flatMap(Streams::stream)
-                                          .collect(toList());
+                                          .flatMap(Streams::stream);
     }
 
     public <T extends PsiElement> Collection<T> values(Class<T> nodeType) {
