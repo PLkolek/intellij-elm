@@ -5,11 +5,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.project.Project;
 import com.intellij.patterns.PsiElementPattern.Capture;
-import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import mkolaczek.elm.psi.Tokens;
@@ -23,35 +19,16 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.stream.Collectors.toList;
-import static mkolaczek.elm.features.autocompletion.ElmParenthesesInsertHandler.parentheses;
-import static mkolaczek.elm.features.autocompletion.ModulePattern.module;
-import static mkolaczek.elm.features.autocompletion.Patterns.*;
-import static mkolaczek.elm.psi.Elements.*;
+import static mkolaczek.elm.features.autocompletion.Patterns.afterLeaf;
+import static mkolaczek.elm.features.autocompletion.Patterns.e;
+import static mkolaczek.elm.psi.Elements.TYPE_DECL_NODE;
 import static mkolaczek.elm.psi.Tokens.*;
 
 
 public class ElmCompletionContributor extends CompletionContributor {
     public ElmCompletionContributor() {
-        autocomplete(afterWhitespace("\n").and(inBlock(IMPORTS, DECLARATIONS)),
-                keyword("import"));
-        autocomplete(afterLeaf(childOf(MODULE_NAME_REF)).andNot(afterWhitespace("\n")),
-                keyword("as"),
-                exposingCompletion());
-        Capture<PsiElement> insideEffectModule = e().inside(module().effectModule());
-        autocomplete(afterLeaf(childOf(MODULE_NAME))
-                .andNot(insideEffectModule), exposingCompletion());
-        autocomplete(afterLeaf(childOf(MODULE_NAME))
-                        .andOr(insideEffectModule, afterLeaf(insideEffectModule)),
-                whereCompletion());
-        autocomplete(afterLeaf(RBRACKET).inside(module().effectModule()), exposingCompletion());
-        autocomplete(afterLeaf(childOf(MODULE_ALIAS)), exposingCompletion());
-        autocomplete(e().afterLeaf(e().isNull()),
-                keyword("module"),
-                keyword("port module"),
-                keyword("effect module")
-        );
-        autocomplete(afterLeaf(Tokens.PORT), keyword("module"));
-        autocomplete(afterLeaf(EFFECT), keyword("module"));
+        KeywordCompletion.keywords(this);
+
         autocomplete(afterLeaf(Tokens.MODULE), parameters -> {
             String fileName = parameters.getOriginalFile().getName();
             String moduleName = fileName.substring(0, fileName.length() - 4);//cut out .elm
@@ -113,9 +90,6 @@ public class ElmCompletionContributor extends CompletionContributor {
         });
 
 
-        autocomplete(afterWhitespace("\n").and(after(IMPORTS)),
-                keyword("type"));
-        autocomplete(afterLeaf(TYPE), keyword("alias"));
 
 
     }
@@ -132,17 +106,12 @@ public class ElmCompletionContributor extends CompletionContributor {
         return typeExport.typeNameString() + " = " + Joiner.on(" | ").join(typeExport.constructorNames());
     }
 
-    @NotNull
-    private LookupElementBuilder keyword(String item) {
-        return LookupElementBuilder.create(item).withInsertHandler(AddSpaceInsertHandler.INSTANCE);
-    }
-
-    private void autocomplete(Capture<PsiElement> pattern, LookupElementBuilder... completions) {
+    void autocomplete(Capture<PsiElement> pattern, LookupElementBuilder... completions) {
         autocomplete2(pattern, parameters -> Arrays.asList(completions));
     }
 
-    private void autocomplete(Capture<PsiElement> pattern,
-                              Function<CompletionParameters, Collection<String>> autocompletion) {
+    void autocomplete(Capture<PsiElement> pattern,
+                      Function<CompletionParameters, Collection<String>> autocompletion) {
         Function<Collection<String>, Collection<LookupElementBuilder>> wrapper = strings -> strings.stream()
                                                                                                    .map(LookupElementBuilder::create)
                                                                                                    .collect(toList());
@@ -162,27 +131,6 @@ public class ElmCompletionContributor extends CompletionContributor {
                     }
                 }
         );
-    }
-
-    private LookupElementBuilder whereCompletion() {
-        return LookupElementBuilder.create("where")
-                                   .withInsertHandler((context, item) -> {
-                                       Editor editor = context.getEditor();
-                                       Project project = editor.getProject();
-                                       if (project != null) {
-                                           EditorModificationUtil.insertStringAtCaret(editor, " {}");
-                                           editor.getCaretModel()
-                                                 .moveToOffset(editor.getCaretModel().getOffset() - 1);
-                                           PsiDocumentManager.getInstance(project)
-                                                             .commitDocument(editor.getDocument());
-                                       }
-                                   });
-    }
-
-
-    @NotNull
-    private LookupElementBuilder exposingCompletion() {
-        return LookupElementBuilder.create("exposing").withInsertHandler(parentheses());
     }
 
     @Override

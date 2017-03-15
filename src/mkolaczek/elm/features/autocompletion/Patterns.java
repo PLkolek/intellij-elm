@@ -57,9 +57,9 @@ public class Patterns {
         return psiElement();
     }
 
-    static PsiElementPattern.Capture<PsiElement> afterWhitespace(String wsChar) {
+    static PsiElementPattern.Capture<PsiElement> onFreshLine() {
         return e().afterLeafSkipping(e(PsiErrorElement.class),
-                e().withText(StandardPatterns.string().endsWith(wsChar)));
+                e().withText(StandardPatterns.string().endsWith("\n")));
     }
 
     static PsiElementPattern.Capture<PsiElement> inside(Element element) {
