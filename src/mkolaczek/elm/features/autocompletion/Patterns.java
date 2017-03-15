@@ -16,7 +16,7 @@ import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static com.intellij.patterns.StandardPatterns.or;
 
 public class Patterns {
-    static PsiElementPattern.Capture<PsiElement> afterLeaf(PsiElementPattern.Capture<PsiElement> pattern) {
+    public static PsiElementPattern.Capture<PsiElement> afterLeaf(PsiElementPattern.Capture<PsiElement> pattern) {
         return psiElement().afterLeafSkipping(whitespaceOrError(), pattern);
     }
 
@@ -25,56 +25,56 @@ public class Patterns {
         return or(psiElement(TokenType.WHITE_SPACE), psiElement(PsiErrorElement.class));
     }
 
-    static PsiElementPattern.Capture<PsiElement> justAfterLeaf(IElementType elementType) {
+    public static PsiElementPattern.Capture<PsiElement> justAfterLeaf(IElementType elementType) {
         return psiElement().afterLeaf(psiElement(elementType));
     }
 
-    static PsiElementPattern.Capture<PsiElement> childOf(IElementType elementType) {
+    public static PsiElementPattern.Capture<PsiElement> childOf(IElementType elementType) {
         return psiElement().withParent(psiElement(elementType));
     }
 
-    static PsiElementPattern.Capture<PsiElement> e(IElementType... types) {
+    public static PsiElementPattern.Capture<PsiElement> e(IElementType... types) {
         ElementPattern[] patterns = Arrays.stream(types).map(Patterns::e).toArray(ElementPattern[]::new);
         return e().andOr(patterns);
     }
 
     @NotNull
-    static PsiElementPattern.Capture<? extends PsiElement> e(Class<? extends PsiElement> tClass) {
+    public static PsiElementPattern.Capture<? extends PsiElement> e(Class<? extends PsiElement> tClass) {
         return psiElement(tClass);
     }
 
     @NotNull
-    static PsiElementPattern.Capture<PsiElement> e(IElementType type) {
+    public static PsiElementPattern.Capture<PsiElement> e(IElementType type) {
         return psiElement(type);
     }
 
-    static PsiElementPattern.Capture<PsiElement> afterLeaf(IElementType... elementType) {
+    public static PsiElementPattern.Capture<PsiElement> afterLeaf(IElementType... elementType) {
         return afterLeaf(e(elementType));
     }
 
     @NotNull
-    static PsiElementPattern.Capture<PsiElement> e() {
+    public static PsiElementPattern.Capture<PsiElement> e() {
         return psiElement();
     }
 
-    static PsiElementPattern.Capture<PsiElement> onFreshLine() {
+    public static PsiElementPattern.Capture<PsiElement> onFreshLine() {
         return e().afterLeafSkipping(e(PsiErrorElement.class),
                 e().withText(StandardPatterns.string().endsWith("\n")));
     }
 
-    static PsiElementPattern.Capture<PsiElement> inside(Element element) {
+    public static PsiElementPattern.Capture<PsiElement> inside(Element element) {
         return e().inside(e(element));
     }
 
-    static PsiElementPattern.Capture<PsiElement> after(Element element) {
+    public static PsiElementPattern.Capture<PsiElement> after(Element element) {
         return e().inside(e().afterSibling(e(element)));
     }
 
-    static PsiElementPattern.Capture<PsiElement> inBlock(Element block) {
+    public static PsiElementPattern.Capture<PsiElement> inBlock(Element block) {
         return e().andOr(inside(block), after(block));
     }
 
-    static PsiElementPattern.Capture<PsiElement> inBlock(Element block, Element nextBlock) {
+    public static PsiElementPattern.Capture<PsiElement> inBlock(Element block, Element nextBlock) {
         return inBlock(block).andNot(inside(nextBlock));
     }
 }

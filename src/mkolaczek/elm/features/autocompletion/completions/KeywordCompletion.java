@@ -1,9 +1,10 @@
-package mkolaczek.elm.features.autocompletion;
+package mkolaczek.elm.features.autocompletion.completions;
 
 import com.intellij.codeInsight.completion.AddSpaceInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
+import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.features.autocompletion.insertHandlers.BracesInsertHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +15,7 @@ import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class KeywordCompletion {
-    static void keywords(ElmCompletionContributor c) {
+    public static void keywords(ElmCompletionContributor c) {
         PsiElementPattern.Capture<PsiElement> inEffectModule = e().inside(module().effectModule());
         //@formatter:off
         c.autocomplete(onFreshLine().and(inBlock(IMPORTS, DECLARATIONS)),       keyword("import"));

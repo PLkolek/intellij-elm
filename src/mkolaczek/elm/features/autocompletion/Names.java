@@ -21,7 +21,7 @@ public class Names {
     }
 
     @NotNull
-    static List<String> suggest(String[] words) {
+    public static List<String> suggest(String[] words) {
         List<String> res = Lists.newArrayList();
         if (words.length > 1) {
             for (int numWords = 1; numWords < words.length; numWords++) {
