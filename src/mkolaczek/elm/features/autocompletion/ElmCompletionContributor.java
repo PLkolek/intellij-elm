@@ -10,7 +10,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.*;
-import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -24,6 +23,8 @@ import static mkolaczek.elm.features.autocompletion.Patterns.afterLeaf;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
 import static mkolaczek.elm.psi.Elements.TYPE_DECL_NODE;
 import static mkolaczek.elm.psi.Tokens.*;
+import static mkolaczek.elm.psi.node.Module.module;
+import static mkolaczek.util.Streams.stream;
 
 
 public class ElmCompletionContributor extends CompletionContributor {
@@ -32,52 +33,53 @@ public class ElmCompletionContributor extends CompletionContributor {
 
         autocomplete(afterLeaf(Tokens.MODULE), ElmCompletionContributor::fileName);
         autocomplete(afterLeaf(Tokens.AS), ElmCompletionContributor::moduleNameParts);
-
         autocomplete(afterLeaf(e(TYPE)), ElmCompletionContributor::exposedTypes);
+        autocomplete(afterLeaf(e(ALIAS)), ElmCompletionContributor::exposedConstructorlessTypes);
 
 
-        autocomplete(afterLeaf(e(ALIAS)), parameters -> {
-            Optional<ModuleHeader> header = Module.module(parameters.getPosition()).header();
-            if (!header.isPresent()) {
-                return Lists.newArrayList();
-            }
-            return header.get().typeExports()
-                         .filter(TypeExport::withoutConstructors)
-                         .map(TypeExport::typeNameString).collect(toList());
-        });
-
-        autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)), parameters -> {
-            Optional<ModuleHeader> header = Module.module(parameters.getPosition()).header();
-            if (!header.isPresent()) {
-                return Lists.newArrayList();
-            }
-            TypeDeclaration declaration = getParentOfType(parameters.getPosition(), TypeDeclaration.class);
-            assert declaration != null;
-            String typeName = declaration.getName();
-            Collection<String> constructors = header.get()
-                                                    .typeExport(typeName)
-                                                    .map(TypeExport::constructorNames)
-                                                    .orElse(newArrayList());
-            List<String> presentConstructors = declaration.constructors()
-                                                          .stream()
-                                                          .map(TypeConstructor::getText)
-                                                          .collect(toList());
-
-            constructors.removeAll(presentConstructors);
-            if (constructors.size() > 1) {
-                constructors.add(Joiner.on(" | ").join(constructors));
-            }
-            return constructors;
-        });
+        autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),
+                ElmCompletionContributor::exposedTypeConstructors);
 
 
     }
 
+    private static Collection<String> exposedTypeConstructors(CompletionParameters parameters) {
+        Optional<ModuleHeader> header = module(parameters.getPosition()).header();
+        if (!header.isPresent()) {
+            return Lists.newArrayList();
+        }
+        TypeDeclaration declaration = getParentOfType(parameters.getPosition(), TypeDeclaration.class);
+        assert declaration != null;
+        String typeName = declaration.getName();
+        Collection<String> constructors = header.get()
+                                                .typeExport(typeName)
+                                                .map(TypeExport::constructorNames)
+                                                .orElse(newArrayList());
+        List<String> presentConstructors = declaration.constructors()
+                                                      .stream()
+                                                      .map(TypeConstructor::getText)
+                                                      .collect(toList());
+
+        constructors.removeAll(presentConstructors);
+        if (constructors.size() > 1) {
+            constructors.add(Joiner.on(" | ").join(constructors));
+        }
+        return constructors;
+    }
+
+    private static Collection<String> exposedConstructorlessTypes(CompletionParameters parameters) {
+        return stream(module(parameters.getPosition()).header())
+                .flatMap(ModuleHeader::typeExports)
+                .filter(TypeExport::withoutConstructors)
+                .map(TypeExport::typeNameString)
+                .collect(toList());
+    }
+
     private static Collection<String> exposedTypes(CompletionParameters parameters) {
-        return Streams.stream(Module.module(parameters.getPosition()).header())
-                      .flatMap(ModuleHeader::typeExports)
-                      .flatMap(ElmCompletionContributor::typeCompletions)
-                      .collect(toList());
+        return stream(module(parameters.getPosition()).header())
+                .flatMap(ModuleHeader::typeExports)
+                .flatMap(ElmCompletionContributor::typeCompletions)
+                .collect(toList());
     }
 
     @NotNull
