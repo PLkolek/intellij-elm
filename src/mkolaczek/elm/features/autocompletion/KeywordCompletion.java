@@ -14,43 +14,26 @@ import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class KeywordCompletion {
-    static void keywords(ElmCompletionContributor contributor) {
-        PsiElementPattern.Capture<PsiElement> insideEffectModule = e().inside(module().effectModule());
+    static void keywords(ElmCompletionContributor c) {
+        PsiElementPattern.Capture<PsiElement> inEffectModule = e().inside(module().effectModule());
+        //@formatter:off
+        c.autocomplete(onFreshLine().and(inBlock(IMPORTS, DECLARATIONS)),       keyword("import"));
+        c.autocomplete(afterLeaf(childOf(MODULE_NAME)).andNot(inEffectModule),  exposingCompletion());
+        c.autocomplete(afterLeaf(RBRACKET).and(inEffectModule),                 exposingCompletion());
+        c.autocomplete(afterLeaf(childOf(MODULE_NAME)).and(inEffectModule),     whereCompletion());
+        c.autocomplete(afterLeaf(childOf(MODULE_ALIAS)),                        exposingCompletion());
+        c.autocomplete(afterLeaf(PORT),                                         keyword("module"));
+        c.autocomplete(afterLeaf(EFFECT),                                       keyword("module"));
+        c.autocomplete(afterLeaf(TYPE),                                         keyword("alias"));
+        c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("type"));
+        //@formatter:on
 
-        contributor.autocomplete(
-                onFreshLine().and(inBlock(IMPORTS, DECLARATIONS)),
-                keyword("import")
-        );
-        contributor.autocomplete(
-                afterLeaf(childOf(MODULE_NAME_REF)).andNot(onFreshLine()),
+        c.autocomplete(afterLeaf(childOf(MODULE_NAME_REF)).andNot(onFreshLine()),
                 keyword("as"), exposingCompletion()
         );
-        contributor.autocomplete(
-                afterLeaf(childOf(MODULE_NAME)).andNot(insideEffectModule),
-                exposingCompletion()
-        );
-        contributor.autocomplete(
-                afterLeaf(childOf(MODULE_NAME)).andOr(insideEffectModule, afterLeaf(insideEffectModule)),
-                whereCompletion()
-        );
-        contributor.autocomplete(
-                afterLeaf(RBRACKET).inside(module().effectModule()),
-                exposingCompletion()
-        );
-        contributor.autocomplete(
-                afterLeaf(childOf(MODULE_ALIAS)),
-                exposingCompletion()
-        );
-        contributor.autocomplete(
+        c.autocomplete(
                 e().afterLeaf(e().isNull()),
                 keyword("module"), keyword("port module"), keyword("effect module")
-        );
-        contributor.autocomplete(afterLeaf(PORT), keyword("module"));
-        contributor.autocomplete(afterLeaf(EFFECT), keyword("module"));
-        contributor.autocomplete(afterLeaf(TYPE), keyword("alias"));
-        contributor.autocomplete(
-                onFreshLine().and(after(IMPORTS)),
-                keyword("type")
         );
     }
 
