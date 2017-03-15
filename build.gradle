@@ -4,6 +4,7 @@ plugins {
 
 version = "${version}.$buildNumber"
 allprojects {
+
     apply plugin: 'java'
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
@@ -45,6 +46,8 @@ repositories {
 dependencies {
 }
 
+lexerTask(project, 'ElmLexer', 'mkolaczek.elm.lexer')
+
 apply plugin: 'idea'
 idea {
     project {
@@ -53,5 +56,23 @@ idea {
     }
     module {
         generatedSourceDirs += file('gen')
+    }
+}
+
+def lexerTask(project, lexerName, pkg) {
+    return tasks.create("generate${lexerName}", JavaExec) {
+        def src = "$project.projectDir/src/${pkg}/${lexerName}.flex"
+        def dst = "$project.projectDir/gen/$pkg"
+
+        main = 'jflex.Main'
+        classpath = files('lib/jflex/jflex-1.7.0-SNAPSHOT.jar')
+
+        args = ['--skel', 'lib/jflex/idea-flex.skeleton',
+                '-d', dst,
+                src
+        ]
+
+        inputs.file file(src)
+        outputs.dir file("$dst/${lexerName}.java")
     }
 }
