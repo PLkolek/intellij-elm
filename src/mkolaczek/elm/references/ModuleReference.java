@@ -11,6 +11,8 @@ import mkolaczek.elm.psi.node.ModuleNameRef;
 import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.stream.Stream;
+
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class ModuleReference extends PsiReferenceBase.Poly<ModuleNameRef> {
@@ -21,13 +23,16 @@ public class ModuleReference extends PsiReferenceBase.Poly<ModuleNameRef> {
     @NotNull
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
-        return module(myElement)
-                .aliasedImports(myElement.getName())
-                .stream()
-                .map(Import::alias)
-                .flatMap(Streams::stream)
-                .map(PsiElementResolveResult::new)
-                .toArray(ResolveResult[]::new);
+        return Stream.concat(
+                module(myElement)
+                        .notAliasedImports(myElement.getName())
+                        .flatMap(Import::importedModule),
+                module(myElement)
+                        .aliasedImports(myElement.getName())
+                        .map(Import::alias)
+                        .flatMap(Streams::stream)
+        ).map(PsiElementResolveResult::new)
+                     .toArray(ResolveResult[]::new);
     }
 
     @NotNull

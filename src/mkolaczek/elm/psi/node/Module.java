@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.intellij.psi.util.PsiTreeUtil.getChildOfType;
-import static java.util.stream.Collectors.toList;
 
 public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwner, DocCommented {
     public Module(@NotNull ASTNode node) {
@@ -120,8 +119,12 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return imports().stream().filter(i -> i.importedAs(name));
     }
 
-    public Collection<Import> aliasedImports(String name) {
-        return imports(name).filter(Import::isAliased).collect(toList());
+    public Stream<Import> aliasedImports(String name) {
+        return imports(name).filter(Import::isAliased);
+    }
+
+    public Stream<Import> notAliasedImports(String name) {
+        return imports(name).filter(i -> !i.isAliased());
     }
 
     public Collection<TypeDeclaration> typeDeclarations() {
