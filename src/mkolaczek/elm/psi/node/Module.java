@@ -119,12 +119,12 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return imports().stream().filter(i -> i.importedAs(name));
     }
 
-    public Stream<Import> aliasedImports(String name) {
-        return imports(name).filter(Import::isAliased);
+    public Stream<Import> aliasedImports() {
+        return imports().stream().filter(Import::isAliased);
     }
 
-    public Stream<Import> notAliasedImports(String name) {
-        return imports(name).filter(i -> !i.isAliased());
+    public Stream<Import> notAliasedImports() {
+        return imports().stream().filter(i -> !i.isAliased());
     }
 
     public Collection<TypeDeclaration> typeDeclarations() {

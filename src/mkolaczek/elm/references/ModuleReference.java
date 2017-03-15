@@ -1,5 +1,6 @@
 package mkolaczek.elm.references;
 
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementResolveResult;
@@ -11,6 +12,7 @@ import mkolaczek.elm.psi.node.ModuleNameRef;
 import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static mkolaczek.elm.psi.node.Module.module;
@@ -23,22 +25,28 @@ public class ModuleReference extends PsiReferenceBase.Poly<ModuleNameRef> {
     @NotNull
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
+        return modules()
+                .filter(e -> Objects.equals(e.getName(), myElement.getName()))
+                .map(PsiElementResolveResult::new)
+                .toArray(ResolveResult[]::new);
+    }
+
+    private Stream<? extends ASTWrapperPsiElement> modules() {
         return Stream.concat(
                 module(myElement)
-                        .notAliasedImports(myElement.getName())
+                        .notAliasedImports()
                         .flatMap(Import::importedModule),
                 module(myElement)
-                        .aliasedImports(myElement.getName())
+                        .aliasedImports()
                         .map(Import::alias)
                         .flatMap(Streams::stream)
-        ).map(PsiElementResolveResult::new)
-                     .toArray(ResolveResult[]::new);
+        );
     }
 
     @NotNull
     @Override
     public Object[] getVariants() {
-        return new Object[0];
+        return modules().toArray(Object[]::new);
     }
 
     @Override
