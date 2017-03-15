@@ -34,6 +34,12 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
         performTest("moduleExposing/Test.elm", "moduleExposing/expected.elm", "exposing");
     }
 
+    public void testModuleExposingExistingParenthesesCompletion() {
+        performTest("moduleExposingExistingParentheses/Test.elm",
+                "moduleExposingExistingParentheses/expected.elm",
+                "exposing");
+    }
+
     public void testEffectModuleWhereCompletion() {
         performTest("effectModuleWhere/Test.elm", "effectModuleWhere/expected.elm", "where");
     }
