@@ -43,7 +43,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
         return myElement.setName(newElementName);
     }
 
-    public static Object[] variants(PsiElement myElement) {
+    public static TypeDeclaration[] variants(PsiElement myElement) {
         Set<String> excluded = Sets.newHashSet();
 
         TypeAliasDeclNode aliasDeclNode = getParentOfType(myElement, TypeAliasDeclNode.class);
@@ -61,7 +61,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
 
         return typeDeclarations(myElement, exposingList == null)
                 .filter(elem -> !finalExcluded.contains(elem.getName()))
-                .toArray();
+                .toArray(TypeDeclaration[]::new);
     }
 
     private static Stream<TypeDeclaration> typeDeclarations(PsiElement myElement, boolean includeImported) {

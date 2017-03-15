@@ -5,7 +5,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.psi.node.TypeNameRef;
-import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +29,6 @@ public class QualifiedTypeReference extends PsiReferenceBase<TypeNameRef> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        return ArrayUtils.addAll(TypeReference.variants(myElement), ImportModuleReference.variants(myElement));
+        return ImportModuleReference.variants(myElement);
     }
 }

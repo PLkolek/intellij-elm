@@ -9,6 +9,7 @@ import mkolaczek.elm.psi.node.ModuleHeader;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeDeclaration;
 import mkolaczek.elm.psi.node.TypeExport;
+import mkolaczek.elm.references.TypeReference;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,10 +20,12 @@ import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.afterLeaf;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
+import static mkolaczek.elm.psi.Elements.QUALIFIED_TYPE_NAME_REF;
 import static mkolaczek.elm.psi.Elements.TYPE_DECL_NODE;
 import static mkolaczek.elm.psi.Tokens.*;
 import static mkolaczek.elm.psi.node.Module.module;
@@ -33,7 +36,12 @@ public class TypeCompletion {
         c.autocomplete(afterLeaf(e(TYPE)),                                  TypeCompletion::exposedTypes);
         c.autocomplete(afterLeaf(e(ALIAS)),                                 TypeCompletion::exposedConstructorlessTypes);
         c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),   TypeCompletion::exposedTypeConstructors);
+        c.autocomplete(afterLeaf(DOT).inside(e(QUALIFIED_TYPE_NAME_REF)),   TypeCompletion::typesFromModule);
         //@formatter:on
+    }
+
+    private static Collection<String> typesFromModule(CompletionParameters parameters) {
+        return stream(TypeReference.variants(parameters.getPosition())).map(TypeDeclaration::getName).collect(toList());
     }
 
     private static Collection<String> exposedConstructorlessTypes(CompletionParameters parameters) {

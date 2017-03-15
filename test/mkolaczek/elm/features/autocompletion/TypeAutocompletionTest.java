@@ -23,6 +23,11 @@ public class TypeAutocompletionTest extends LightCodeInsightFixtureTestCase {
         autocomplete("Type1", "Type2", "alias");
     }
 
+    public void testQualifiedTypeNameCompletion() {
+        myFixture.configureByFiles("qualifiedTypeName/Test.elm", "qualifiedTypeName/Test2.elm");
+        autocomplete("SomeType");
+    }
+
     public void testAliasNameCompletion() {
         myFixture.configureByFiles("aliasName/Test.elm");
         myFixture.complete(CompletionType.BASIC, 1);
