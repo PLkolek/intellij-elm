@@ -10,6 +10,8 @@ import mkolaczek.elm.psi.node.ModuleNameRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static mkolaczek.elm.psi.node.Module.module;
+
 public class ModuleReference extends PsiReferenceBase<ModuleNameRef> {
     public ModuleReference(ModuleNameRef element) {
         super(element, TextRange.create(0, element.getTextLength()));
@@ -28,7 +30,13 @@ public class ModuleReference extends PsiReferenceBase<ModuleNameRef> {
     @NotNull
     @Override
     public Object[] getVariants() {
-        return ProjectUtil.modules(myElement.getProject()).filter(module -> !myElement.getContaingModule().sameName(module)).toArray();
+        return variants(myElement);
+    }
+
+    public static Object[] variants(PsiElement myElement) {
+        return ProjectUtil.modules(myElement.getProject())
+                          .filter(module -> !module(myElement).sameName(module))
+                          .toArray();
     }
 
     @Override

@@ -5,11 +5,13 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
+import mkolaczek.elm.references.QualifiedTypeReference;
 import mkolaczek.elm.references.TypeReference;
 import org.jetbrains.annotations.NotNull;
+
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 
 public class TypeNameRef extends ASTWrapperPsiElement implements PsiNamedElement {
     public TypeNameRef(ASTNode node) {
@@ -31,17 +33,24 @@ public class TypeNameRef extends ASTWrapperPsiElement implements PsiNamedElement
 
     @Override
     public PsiReference getReference() {
+        if (isQualified()) {
+            return new QualifiedTypeReference(this);
+        }
         return new TypeReference(this);
     }
 
     @Override
     public void delete() throws IncorrectOperationException {
-        ExportedValue exportedValue = PsiTreeUtil.getParentOfType(this, ExportedValue.class);
+        ExportedValue exportedValue = getParentOfType(this, ExportedValue.class);
         if (exportedValue != null) {
             exportedValue.containingList().deleteSeparator(exportedValue);
             exportedValue.delete();
         } else {
             super.delete();
         }
+    }
+
+    public boolean isQualified() {
+        return getParentOfType(this, QualifiedTypeNameRef.class) != null;
     }
 }
