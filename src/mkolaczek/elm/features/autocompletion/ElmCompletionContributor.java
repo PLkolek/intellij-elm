@@ -28,8 +28,6 @@ public class ElmCompletionContributor extends CompletionContributor {
         TypeCompletion.types(this);
         ModuleCompletion.modules(this);
         ValueCompletion.values(this);
-
-
     }
 
     public static <T extends PsiElement> T location(CompletionParameters parameters, Class<T> parentType) {

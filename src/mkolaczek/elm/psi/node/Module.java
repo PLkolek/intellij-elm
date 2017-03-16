@@ -12,6 +12,7 @@ import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.extensions.DocCommented;
+import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -141,6 +142,10 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return typeDeclarations().stream().filter(decl -> typeName.equals(decl.getName())).findAny();
     }
 
+    public Stream<InfixOperatorDeclaration> operatorDeclarations() {
+        return PsiTreeUtil.findChildrenOfType(this, InfixOperatorDeclaration.class).stream();
+    }
+
     public Optional<Declarations> declarationsNode() {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
     }
@@ -151,7 +156,9 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return stream(header()).flatMap(ModuleHeader::typeExports);
     }
 
-    public Stream<Operator> operatorExports() {
-        return stream(header()).flatMap(ModuleHeader::operatorExports);
+    public Stream<OperatorSymbol> operatorSymbolExports() {
+        return stream(header()).flatMap(ModuleHeader::operatorExports)
+                               .map(Operator::symbol)
+                               .flatMap(Streams::stream);
     }
 }

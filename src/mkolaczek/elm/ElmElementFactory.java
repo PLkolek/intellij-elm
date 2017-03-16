@@ -73,6 +73,11 @@ public class ElmElementFactory {
         return (PsiWhiteSpace) file.getChildren()[1];
     }
 
+    public static PsiElement operatorName(Project project, String name) {
+        ElmFile file = createFile(project, "infix 3 " + name);
+        return file.module().operatorDeclarations().findAny().get().getNameIdentifier();
+    }
+
     private static ElmFile createFile(Project project, String text) {
         String name = "dummy.elm";
         return (ElmFile) PsiFileFactory.getInstance(project).
