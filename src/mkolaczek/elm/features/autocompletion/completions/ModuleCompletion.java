@@ -38,10 +38,10 @@ public class ModuleCompletion {
 
     @NotNull
     private static Stream<String> moduleNameParts(CompletionParameters parameters) {
-        Import importLine = location(parameters, Import.class);
-        ModuleNameRef module = importLine.importedModuleName();
-        String[] words = module.getName().split("\\.");
-        return Names.suggest(words).stream();
+        return location(parameters, Import.class).importedModuleName()
+                                                 .map(m -> m.getName().split("\\."))
+                                                 .map(Names::suggest)
+                                                 .orElse(Stream.empty());
     }
 
     @NotNull

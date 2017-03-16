@@ -18,12 +18,11 @@ public class Import extends HasExposing {
 
     public Stream<Module> importedModule() {
         return ProjectUtil.modules(getProject())
-                          .filter(m -> m.getName()
-                                        .equals(importedModuleName().getName()));
+                          .filter(m -> nameEquals(m.getName()));
     }
 
-    public ModuleNameRef importedModuleName() {
-        return findChildOfType(this, ModuleNameRef.class);
+    public Optional<ModuleNameRef> importedModuleName() {
+        return Optional.ofNullable(findChildOfType(this, ModuleNameRef.class));
     }
 
     public boolean isAliased() {
@@ -42,6 +41,10 @@ public class Import extends HasExposing {
         if (aliasName().isPresent()) {
             return aliasName().get().equals(name);
         }
-        return importedModuleName() != null && importedModuleName().getName().equals(name);
+        return nameEquals(name);
+    }
+
+    private boolean nameEquals(String name) {
+        return importedModuleName().isPresent() && importedModuleName().get().getName().equals(name);
     }
 }

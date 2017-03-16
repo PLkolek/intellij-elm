@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Names {
     @NotNull
@@ -21,7 +22,7 @@ public class Names {
     }
 
     @NotNull
-    public static List<String> suggest(String[] words) {
+    public static Stream<String> suggest(String[] words) {
         List<String> res = Lists.newArrayList();
         if (words.length > 1) {
             for (int numWords = 1; numWords < words.length; numWords++) {
@@ -31,7 +32,7 @@ public class Names {
 
         List<String> previousWords = Arrays.asList(words).subList(0, words.length - 1);
         res.addAll(previousWords);
-        return res;
+        return res.stream();
     }
 
     public static String suffix(String name, String prefix) {

@@ -38,7 +38,7 @@ public class ElmElementFactory {
 
     public static ModuleNameRef moduleNameRef(Project project, String name) {
         ElmFile file = createFile(project, "import " + name);
-        return file.module().imports().iterator().next().importedModuleName();
+        return file.module().imports().iterator().next().importedModuleName().get();
     }
 
     public static PsiElement moduleAlias(Project project, String name) {
