@@ -3,10 +3,13 @@ package mkolaczek.elm.features.inspections;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.AbstractIntentionAction;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.psi.ElmFile;
@@ -43,29 +46,40 @@ public class AddImportIntentionAction extends AbstractIntentionAction {
         if (modules.size() == 0) {
             HintManager.getInstance().showErrorHint(editor, "No module called'" + moduleNameToImport + "' found");
         } else if (modules.size() == 1) {
-            addImport(project, file, modules.get(0).getName());
+            executeCommand(project, file, modules.get(0).getName());
         } else {
-
+            showPopupAndImport(project, editor, file, modules);
         }
     }
 
-    private void addImport(Project project, PsiFile file, String importedModuleName) {
-        ApplicationManager.getApplication().runWriteAction(() -> {
-            Module importingModule = ((ElmFile) file).module();
-            Optional<Imports> imports = importingModule.importsNode();
-            if (imports.isPresent()) {
-                addImportToImports(project, imports.get(), importedModuleName);
-            } else {
-                Optional<Declarations> declarations = importingModule.declarationsNode();
-                Imports newImports = ElmElementFactory.imports(project, importedModuleName);
-                if (declarations.isPresent()) {
-                    addImportsBeforeDeclarations(project, importingModule, declarations.get(), newImports);
-                } else {
-                    addImportsToEmptyFile(project, importingModule, newImports);
-                }
-            }
+    private void showPopupAndImport(Project project, Editor editor, PsiFile file, List<Module> modules) {
+        BaseListPopupStep<Module> step = new ModulePopupStep(this, modules, project, file);
+        ListPopupImpl popup = new ListPopupImpl(step);
+        popup.showInBestPositionFor(editor);
+    }
 
-        });
+    void executeCommand(Project project, PsiFile file, String importedModuleName) {
+        CommandProcessor.getInstance().executeCommand(project, () ->
+                        ApplicationManager.getApplication().runWriteAction(
+                                () -> addImport(project, (ElmFile) file, importedModuleName)
+                        ),
+                "Add import", null);
+    }
+
+    private void addImport(Project project, ElmFile file, String importedModuleName) {
+        Module importingModule = file.module();
+        Optional<Imports> imports = importingModule.importsNode();
+        if (imports.isPresent()) {
+            addImportToImports(project, imports.get(), importedModuleName);
+        } else {
+            Optional<Declarations> declarations = importingModule.declarationsNode();
+            Imports newImports = ElmElementFactory.imports(project, importedModuleName);
+            if (declarations.isPresent()) {
+                addImportsBeforeDeclarations(project, importingModule, declarations.get(), newImports);
+            } else {
+                addImportsToEmptyFile(project, importingModule, newImports);
+            }
+        }
     }
 
     private void addImportsToEmptyFile(Project project, Module importingModule, Imports newImports) {
