@@ -19,7 +19,8 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
     }
 
     public void testAfterImportsCompletion() {
-        performTest("import/Test.elm", "import/expected.elm", "import", "type");
+        performTest("import/Test.elm", "import/expected.elm",
+                "import", "type", "infixr", "infixl", "infix");
     }
 
     public void testAfterImportedModuleNameCompletion() {

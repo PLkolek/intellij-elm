@@ -27,6 +27,9 @@ public class KeywordCompletion {
         c.autocomplete(afterLeaf(EFFECT),                                       keyword("module"));
         c.autocomplete(afterLeaf(TYPE),                                         keyword("alias"));
         c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("type"));
+        c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("infixr"));
+        c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("infixl"));
+        c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("infix"));
         //@formatter:on
 
         c.autocomplete(afterLeaf(childOf(MODULE_NAME_REF)).andNot(onFreshLine()),
