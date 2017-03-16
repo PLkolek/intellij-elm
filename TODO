@@ -1,8 +1,6 @@
 Current:
-* autocomplete type constructors
 
 Features:
-* Module types
 * bundles
 * Module reference in documentation comments?
 * External documentation?
@@ -10,6 +8,7 @@ Features:
 * Types from other modules
 * Prelude libs
 * Remove whole type when removing last constructor
+* import type quick fix
 
 Refactorings:
 * startingTokens() doesnt do any caching
