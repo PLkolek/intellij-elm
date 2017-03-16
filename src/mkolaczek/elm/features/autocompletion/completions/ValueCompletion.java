@@ -21,7 +21,7 @@ public class ValueCompletion {
                 ValueCompletion::exposedOperators
         );
         c.autocomplete(
-                e().andOr(childOf(OPERATOR), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
+                e().andOr(e().inside(e(OPERATOR)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
                 ValueCompletion::moduleOperators
         );
 
