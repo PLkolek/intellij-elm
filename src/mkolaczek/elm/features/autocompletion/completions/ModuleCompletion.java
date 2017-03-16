@@ -1,17 +1,19 @@
 package mkolaczek.elm.features.autocompletion.completions;
 
-import com.google.common.collect.Lists;
 import com.intellij.codeInsight.completion.CompletionParameters;
+import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.features.autocompletion.Names;
 import mkolaczek.elm.features.autocompletion.Patterns;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.Import;
+import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.ModuleNameRef;
 import mkolaczek.elm.psi.node.QualifiedTypeNameRef;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static mkolaczek.elm.features.autocompletion.ElmCompletionContributor.location;
@@ -27,12 +29,14 @@ public class ModuleCompletion {
 
     private static Collection<String> modules(CompletionParameters parameters) {
         QualifiedTypeNameRef qualifiedType = location(parameters, QualifiedTypeNameRef.class);
-        return Lists.newArrayList();
-        /*ProjectUtil.modules(position.getProject())
-                   .map(Module::getName)
-                   .
+        String prefix = qualifiedType.moduleName().map(ModuleNameRef::getName).orElse("");
 
-        return stream(ImportModuleReference.variants(position)).map(TypeDeclaration::getName).collect(toList());*/
+        return ProjectUtil.modules(qualifiedType.getProject())
+                          .map(Module::getName)
+                          .filter(n -> n.startsWith(prefix))
+                          .map(n -> Names.suffix(n, prefix))
+                          .filter(n -> !n.isEmpty())
+                          .collect(Collectors.toList());
     }
 
     @NotNull

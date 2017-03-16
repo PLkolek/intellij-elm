@@ -33,4 +33,8 @@ public class Names {
         res.addAll(previousWords);
         return res;
     }
+
+    public static String suffix(String name, String prefix) {
+        return name.substring(prefix.length()).replaceAll("^\\.+", "");
+    }
 }

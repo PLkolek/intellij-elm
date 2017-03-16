@@ -66,8 +66,8 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
 
     private static Stream<TypeDeclaration> typeDeclarations(PsiElement myElement, boolean includeImported) {
         QualifiedTypeNameRef qualifiedName = getParentOfType(myElement, QualifiedTypeNameRef.class);
-        if (qualifiedName != null && qualifiedName.moduleName() != null) {
-            return module(myElement).imports(qualifiedName.moduleName().getName())
+        if (qualifiedName != null && qualifiedName.moduleName().isPresent()) {
+            return module(myElement).imports(qualifiedName.moduleName().get().getName())
                                     .flatMap(TypeReference::moduleDecls);
         }
 
