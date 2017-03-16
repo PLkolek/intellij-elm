@@ -4,4 +4,4 @@ import <error descr="Unresolved module">BadModule</error>
 
 type alias Alias = <error descr="Unresolved type">BadType</error>
 
-type Type = Cons
+type Type = Cons <error descr="Unresolved module">ModuleToImport<caret></error>.<EOLError descr="Uppercase identifier expected"></EOLError>
