@@ -8,6 +8,8 @@ import mkolaczek.elm.psi.node.Operator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static mkolaczek.elm.psi.node.Module.module;
+
 public class OperatorReference extends PsiReferenceBase<Operator> {
     public OperatorReference(Operator element) {
         super(element, TextRange.create(0, element.getTextLength()));
@@ -16,7 +18,9 @@ public class OperatorReference extends PsiReferenceBase<Operator> {
     @Nullable
     @Override
     public PsiElement resolve() {
-        return null;
+        return module(myElement).operatorDeclarations()
+                                .filter(d -> d.sameName(myElement.getName()))
+                                .findAny().orElse(null);
     }
 
     @NotNull

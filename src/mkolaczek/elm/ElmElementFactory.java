@@ -78,6 +78,11 @@ public class ElmElementFactory {
         return file.module().operatorDeclarations().findAny().get().getNameIdentifier();
     }
 
+    public static PsiElement operatorSymbol(Project project, String newElementName) {
+        ElmFile file = createFile(project, "module A exposing ((" + newElementName + "))");
+        return file.module().operatorSymbolExports().findFirst().get();
+    }
+
     private static ElmFile createFile(Project project, String text) {
         String name = "dummy.elm";
         return (ElmFile) PsiFileFactory.getInstance(project).

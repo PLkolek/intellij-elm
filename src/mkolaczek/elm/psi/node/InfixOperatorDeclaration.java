@@ -27,9 +27,9 @@ public class InfixOperatorDeclaration extends ASTWrapperPsiElement implements Ps
     }
 
     @Override
-    @NotNull
+    @Nullable
     public String getName() {
-        return name().orElse("");
+        return name().orElse(null);
     }
 
     public Optional<String> parensName() {
@@ -63,6 +63,10 @@ public class InfixOperatorDeclaration extends ASTWrapperPsiElement implements Ps
     @Override
     public ItemPresentation getPresentation() {
         return new ItemPresentation(this);
+    }
+
+    public boolean sameName(String name) {
+        return getName() != null && getName().equals(name);
     }
 
     public boolean sameParensName(String name) {
