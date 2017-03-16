@@ -53,7 +53,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
         if (module == null) {
             return ProblemDescriptor.EMPTY_ARRAY;
         }
-        Collection<TypeDeclaration> types = module.typeDeclarations();
+        Collection<TypeDeclaration> types = module.typeDeclarations().collect(toList());
         List<PsiNameIdentifierOwner> toCheck = Lists.newArrayList(module);
         List<TypeConstructor> constructors = types.stream().flatMap(TypeDeclaration::constructors).collect(toList());
         toCheck.addAll(types);

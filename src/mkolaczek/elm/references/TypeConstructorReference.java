@@ -28,7 +28,6 @@ public class TypeConstructorReference extends PsiReferenceBase<TypeConstructorRe
     @Override
     public TypeConstructor resolve() {
         return module(myElement).typeDeclarations()
-                                .stream()
                                 .flatMap(TypeDeclaration::constructors)
                                 .filter(constructor -> myElement.getName().equals(constructor.getName()))
                                 .findFirst().orElse(null);

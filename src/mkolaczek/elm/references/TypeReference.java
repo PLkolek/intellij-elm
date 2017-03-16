@@ -71,8 +71,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
                                     .flatMap(TypeReference::moduleDecls);
         }
 
-        Stream<TypeDeclaration> typeDecls = module(myElement).typeDeclarations()
-                                                             .stream();
+        Stream<TypeDeclaration> typeDecls = module(myElement).typeDeclarations();
         if (includeImported) {
             Stream<TypeDeclaration> imported = module(myElement).imports()
                                                                 .stream()
@@ -99,7 +98,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
 
     private static Stream<TypeDeclaration> moduleDecls(Import i) {
         return i.importedModule()
-                .flatMap(m -> m.typeDeclarations().stream());
+                .flatMap(Module::typeDeclarations);
     }
 
 

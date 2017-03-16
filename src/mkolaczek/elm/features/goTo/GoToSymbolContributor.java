@@ -4,6 +4,7 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import mkolaczek.elm.ProjectUtil;
+import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeDeclaration;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +41,6 @@ public class GoToSymbolContributor implements ChooseByNameContributor {
     }
 
     private Stream<TypeDeclaration> typeDecls(Project project) {
-        return ProjectUtil.modules(project)
-                          .flatMap(m -> m.typeDeclarations().stream());
+        return ProjectUtil.modules(project).flatMap(Module::typeDeclarations);
     }
 }
