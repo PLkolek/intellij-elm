@@ -21,8 +21,8 @@ public class ValueCompletion {
                 afterLeaf(e(DIGIT).inside(e(INFIX_OPERATOR_DECLARATION))),
                 ValueCompletion::exposedOperators
         );
-        c.autocompletePlain(
-                e().inside(e(OPERATOR_SYMBOL)).inside(e(MODULE_HEADER)),
+        c.autocomplete(
+                e().inside(e(OPERATOR)).inside(e(MODULE_HEADER)),
                 ValueCompletion::moduleOperators
         );
 
@@ -33,7 +33,8 @@ public class ValueCompletion {
         return module(parameters.getPosition())
                 .operatorDeclarations()
                 .map(PsiNamedElement::getName)
-                .filter(o -> !excluded.contains(o));
+                .filter(o -> !excluded.contains(o))
+                .map(n -> "(" + n + ")");
     }
 
     private static Stream<String> exposedOperators(CompletionParameters parameters) {

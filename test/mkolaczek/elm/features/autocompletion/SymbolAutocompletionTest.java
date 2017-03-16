@@ -32,6 +32,6 @@ public class SymbolAutocompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testSymbolCompletionInExposing() {
         myFixture.configureByFiles("exposing/Test.elm");
-        autocomplete("***");
+        autocomplete("(***)");
     }
 }
