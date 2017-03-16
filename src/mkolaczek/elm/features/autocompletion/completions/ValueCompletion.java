@@ -9,8 +9,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
-import static mkolaczek.elm.features.autocompletion.Patterns.afterLeaf;
-import static mkolaczek.elm.features.autocompletion.Patterns.e;
+import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.DIGIT;
 import static mkolaczek.elm.psi.node.Module.module;
@@ -22,7 +21,7 @@ public class ValueCompletion {
                 ValueCompletion::exposedOperators
         );
         c.autocomplete(
-                e().inside(e(OPERATOR)).inside(e(MODULE_HEADER)),
+                e().andOr(childOf(OPERATOR), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
                 ValueCompletion::moduleOperators
         );
 
