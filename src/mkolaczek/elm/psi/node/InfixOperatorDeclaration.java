@@ -29,7 +29,20 @@ public class InfixOperatorDeclaration extends ASTWrapperPsiElement implements Ps
     @Override
     @NotNull
     public String getName() {
-        return Optional.ofNullable(getNameIdentifier()).map(PsiElement::getText).orElse("");
+        return name().orElse("");
+    }
+
+    public Optional<String> parensName() {
+        return name().map(InfixOperatorDeclaration::parens);
+    }
+
+    @NotNull
+    public static String parens(String n) {
+        return "(" + n + ")";
+    }
+
+    private Optional<String> name() {
+        return Optional.ofNullable(getNameIdentifier()).map(PsiElement::getText);
     }
 
     @Override
@@ -52,4 +65,7 @@ public class InfixOperatorDeclaration extends ASTWrapperPsiElement implements Ps
         return new ItemPresentation(this);
     }
 
+    public boolean sameParensName(String name) {
+        return name.equals(parensName().orElse(null));
+    }
 }
