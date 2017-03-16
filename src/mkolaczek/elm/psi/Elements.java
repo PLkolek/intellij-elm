@@ -46,6 +46,8 @@ public interface Elements {
     Element TUPLE_TYPE = new Element("tuple type");
 
     Element TYPE_CONSTRUCTOR_ARGS = new Element("type constructor arguments");
+    Element INFIX_OPERATOR_DECLARATION = new Element("infix operator declaration");
+
     class Factory {
 
         public static PsiElement createElement(ASTNode node) {
@@ -122,6 +124,8 @@ public interface Elements {
                 return new TupleType(node);
             } else if (type == TYPE_CONSTRUCTOR_ARGS) {
                 return new TypeConstructorArgs(node);
+            } else if (type == INFIX_OPERATOR_DECLARATION) {
+                return new InfixOperatorDeclaration(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {

@@ -8,14 +8,14 @@ import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
-import static mkolaczek.elm.parsers.Basic.padded;
-import static mkolaczek.elm.parsers.Basic.spacePrefix;
+import static mkolaczek.elm.parsers.Basic.*;
 import static mkolaczek.elm.parsers.SepBy.pipeSep;
 import static mkolaczek.elm.parsers.core.ConsumeRest.consumeRest;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.forcedWhitespace;
+import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
 public class Declaration {
 
@@ -33,7 +33,18 @@ public class Declaration {
 
 
     private static Parser declaration() {
-        return or("declaration", Basic.docComment(), typeDecl());
+        return or("declaration", Basic.docComment(), typeDecl(), infixDecl());
+    }
+
+    private static Parser infixDecl() {
+        return sequence("infix operator declaration",
+                or(expect(Tokens.INFIXL), expect(Tokens.INFIXR), expect(Tokens.INFIX)),
+                maybeWhitespace(),
+                expect(Tokens.DIGIT),
+                maybeWhitespace(),
+                operatorSymbol()
+        ).as(Elements.INFIX_OPERATOR_DECLARATION);
+
     }
 
     private static Parser typeDecl() {

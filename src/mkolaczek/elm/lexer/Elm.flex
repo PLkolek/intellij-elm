@@ -36,6 +36,7 @@ import com.intellij.psi.tree.IElementType;
 CLRF="\r"|"\n"|"\r\n"|[\ \f\t]
 LINE_WS=[\ \f\t]
 WS={CLRF}|{LINE_WS}
+DIGIT=[0-9]
 CAP_VAR=[A-Z][a-zA-Z0-9ᛜ]*
 LOW_VAR=[a-z][a-zA-Z0-9ᛜ]*
 SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
@@ -60,6 +61,9 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   "exposing"        { return EXPOSING; }
   "type"            { return TYPE; }
   "alias"           { return ALIAS; }
+  "infixl"          { return INFIXL; }
+  "infixr"          { return INFIXR; }
+  "infix"           { return INFIX; }
   "("               { return LPAREN; }
   ")"               { return RPAREN; }
   "{"               { return LBRACKET; }
@@ -79,6 +83,7 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   {LOW_VAR}         { return LOW_VAR; }
   ","+              { return COMMA_OP; }
   {SYMBOL}+         { return SYM_OP; }
+  {DIGIT}           { return DIGIT; }
   "ᛜ"               { return RUNE_OF_AUTOCOMPLETION; }
   [^]               { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }

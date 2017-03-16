@@ -55,7 +55,7 @@ public class Basic {
         ).separatedBy(maybeWhitespace()).as(Elements.OPERATOR);
     }
 
-    private static Parser operatorSymbol() {
+    public static Parser operatorSymbol() {
         return or("operator symbol", expect(Tokens.SYM_OP), expect(Tokens.COMMA_OP));
     }
 
