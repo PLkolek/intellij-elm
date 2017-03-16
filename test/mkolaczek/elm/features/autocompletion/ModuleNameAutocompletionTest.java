@@ -34,6 +34,12 @@ public class ModuleNameAutocompletionTest extends LightCodeInsightFixtureTestCas
         autocomplete("A", "B", "C", "BC");
     }
 
+    public void testInQualifiedTypeAutocompletion() {
+        myFixture.configureByFiles("inQualifiedType/Test.elm", "inQualifiedType/PrefixSuffix.elm");
+        autocomplete("Suffix");
+    }
+
+
     private void autocomplete(String... suggestions) {
         myFixture.complete(CompletionType.BASIC, 1);
         List<String> strings = myFixture.getLookupElementStrings();
