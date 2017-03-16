@@ -28,11 +28,12 @@ public class ModuleCompletion {
     private static Stream<String> modules(CompletionParameters parameters) {
         QualifiedTypeNameRef qualifiedType = location(parameters, QualifiedTypeNameRef.class);
         String prefix = qualifiedType.moduleName().map(ModuleNameRef::getName).orElse("");
+        String finalPrefix = prefix.length() > 0 ? prefix + "." : "";
 
         return ProjectUtil.modules(qualifiedType.getProject())
                           .map(Module::getName)
-                          .filter(n -> n.startsWith(prefix))
-                          .map(n -> Names.suffix(n, prefix))
+                          .filter(n -> n.startsWith(finalPrefix))
+                          .map(n -> Names.suffix(n, finalPrefix))
                           .filter(n -> !n.isEmpty());
     }
 

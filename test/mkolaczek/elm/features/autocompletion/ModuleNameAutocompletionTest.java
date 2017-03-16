@@ -35,8 +35,14 @@ public class ModuleNameAutocompletionTest extends LightCodeInsightFixtureTestCas
     }
 
     public void testInQualifiedTypeAutocompletion() {
-        myFixture.configureByFiles("inQualifiedType/Test.elm", "inQualifiedType/PrefixSuffix.elm");
+        myFixture.configureByFiles("inQualifiedType/matches/Test.elm", "inQualifiedType/matches/PrefixSuffix.elm");
         autocomplete("Suffix");
+    }
+
+    public void testInQualifiedTypeDoesntMatchAutocompletion() {
+        myFixture.configureByFiles("inQualifiedType/doesntMatch/Test.elm",
+                "inQualifiedType/doesntMatch/PrefixSuffix.elm");
+        autocomplete();
     }
 
 
