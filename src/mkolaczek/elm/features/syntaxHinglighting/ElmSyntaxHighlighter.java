@@ -25,7 +25,10 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
             Tokens.EFFECT,
             Tokens.WHERE,
             Tokens.TYPE,
-            Tokens.ALIAS
+            Tokens.ALIAS,
+            Tokens.INFIXL,
+            Tokens.INFIXR,
+            Tokens.INFIX
             );
 
     public static final TextAttributesKey KEY =
