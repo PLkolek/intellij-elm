@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -36,7 +35,7 @@ public class TypeCompletion {
         c.autocomplete(afterLeaf(e(TYPE)),                                  TypeCompletion::exposedTypes);
         c.autocomplete(afterLeaf(e(ALIAS)),                                 TypeCompletion::exposedConstructorlessTypes);
         c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),   TypeCompletion::exposedTypeConstructors);
-        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),   TypeCompletion::typesFromModule);
+        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),              TypeCompletion::typesFromModule);
         //@formatter:on
     }
 
@@ -68,8 +67,7 @@ public class TypeCompletion {
     }
 
     private static Collection<String> exposedTypeConstructors(CompletionParameters parameters) {
-        PsiElement position = parameters.getPosition();
-        Collection<String> constructors = undeclaredConstructors(position);
+        Collection<String> constructors = undeclaredConstructors(parameters.getPosition());
         if (constructors.size() > 1) {
             constructors.add(Joiner.on(" | ").join(constructors));
         }
@@ -78,8 +76,7 @@ public class TypeCompletion {
 
     @NotNull
     private static Collection<String> undeclaredConstructors(PsiElement position) {
-        TypeDeclaration declaration = getParentOfType(position, TypeDeclaration.class);
-        assert declaration != null;
+        TypeDeclaration declaration = ElmCompletionContributor.location(position, TypeDeclaration.class);
         String typeName = declaration.getName();
 
         Optional<ModuleHeader> header = module(position).header();
