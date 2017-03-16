@@ -8,6 +8,8 @@ import mkolaczek.elm.features.autocompletion.completions.KeywordCompletion;
 import mkolaczek.elm.features.autocompletion.completions.ModuleCompletion;
 import mkolaczek.elm.features.autocompletion.completions.TypeCompletion;
 import mkolaczek.elm.features.autocompletion.completions.ValueCompletion;
+import mkolaczek.elm.features.autocompletion.providers.LambdaBasedCompletionProvider;
+import mkolaczek.elm.features.autocompletion.providers.PlainMatchingCompletionProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -48,6 +50,15 @@ public class ElmCompletionContributor extends CompletionContributor {
     public void autocomplete(Capture<PsiElement> pattern,
                              Function<CompletionParameters, Stream<String>> autocompletion) {
         extend(CompletionType.BASIC, pattern, LambdaBasedCompletionProvider.forStrings(autocompletion));
+    }
+
+    public void autocompletePlain(Capture<PsiElement> pattern,
+                                  Function<CompletionParameters, Stream<String>> autocompletion) {
+        extend(CompletionType.BASIC, pattern,
+                new PlainMatchingCompletionProvider(
+                        LambdaBasedCompletionProvider.forStrings(autocompletion)
+                )
+        );
     }
 
     @Override

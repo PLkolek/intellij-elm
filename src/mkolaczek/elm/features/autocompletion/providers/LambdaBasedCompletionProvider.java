@@ -1,4 +1,4 @@
-package mkolaczek.elm.features.autocompletion;
+package mkolaczek.elm.features.autocompletion.providers;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
-class LambdaBasedCompletionProvider extends CompletionProvider<CompletionParameters> {
+public class LambdaBasedCompletionProvider extends CompletionProvider<CompletionParameters> {
     private final Function<CompletionParameters, Collection<LookupElementBuilder>> autocompletion;
 
     public LambdaBasedCompletionProvider(Function<CompletionParameters, Collection<LookupElementBuilder>> autocompletion) {
