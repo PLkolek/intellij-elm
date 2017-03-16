@@ -43,20 +43,25 @@ public class DottedCapVar implements Parser {
         PsiBuilder.Marker prefix = builder.mark();
         PsiBuilder.Marker prefixEnd = builder.mark();
         PsiBuilder.Marker suffix = builder.mark();
+        int suffixStart = builder.getCurrentOffset();
         builder.advanceLexer();
         int start = builder.getCurrentOffset();
-        while (nextPartCorrect(builder)) {
+        while (builder.getTokenType() == Tokens.DOT && WhiteSpace.Type.NO.accepts(builder)) {
             prefixEnd = replace(builder, prefixEnd);
             builder.advanceLexer();
             suffix = replace(builder, suffix);
+            suffixStart = builder.getCurrentOffset();
+            if (!isCapVar(builder) && WhiteSpace.Type.NO.accepts(builder)) {
+                break;
+            }
             builder.advanceLexer();
         }
-        if (suffixType != null) {
+        if (isValid(builder, suffixType, suffixStart)) {
             suffix.done(suffixType);
         } else {
             suffix.drop();
         }
-        if (start != builder.getCurrentOffset() && prefixType != null) {
+        if (isValid(builder, prefixType, start)) {
             prefix.doneBefore(prefixType, prefixEnd);
         } else {
             prefix.drop();
@@ -65,24 +70,15 @@ public class DottedCapVar implements Parser {
         return true;
     }
 
+    private boolean isValid(PsiBuilder builder, Element type, int suffixStart) {
+        return type != null && suffixStart != builder.getCurrentOffset();
+    }
+
     @NotNull
     private PsiBuilder.Marker replace(PsiBuilder builder, PsiBuilder.Marker prefixEnd) {
         prefixEnd.drop();
         prefixEnd = builder.mark();
         return prefixEnd;
-    }
-
-    private boolean nextPartCorrect(PsiBuilder builder) {
-        PsiBuilder.Marker start = builder.mark();
-        boolean result = false;
-        if (builder.getTokenType() == Tokens.DOT && WhiteSpace.Type.NO.accepts(builder)) {
-            builder.advanceLexer();
-            if (isCapVar(builder) && WhiteSpace.Type.NO.accepts(builder)) {
-                result = true;
-            }
-        }
-        start.rollbackTo();
-        return result;
     }
 
     private boolean isCapVar(PsiBuilder builder) {
