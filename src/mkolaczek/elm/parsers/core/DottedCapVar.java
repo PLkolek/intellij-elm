@@ -51,7 +51,8 @@ public class DottedCapVar implements Parser {
             builder.advanceLexer();
             suffix = replace(builder, suffix);
             suffixStart = builder.getCurrentOffset();
-            if (!isCapVar(builder) && WhiteSpace.Type.NO.accepts(builder)) {
+            if (!isCapVar(builder) || !WhiteSpace.Type.NO.accepts(builder)) {
+                builder.error("Uppercase identifier expected");
                 break;
             }
             builder.advanceLexer();
