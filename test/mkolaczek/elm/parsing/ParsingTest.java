@@ -18,6 +18,10 @@ public class ParsingTest extends ParsingTestCase {
         doTest(true);
     }
 
+    public void testBetterSkippingOfErrors() {
+        doTest(true);
+    }
+
     @Override
     protected String getTestDataPath() {
         return "testdata/parsing";

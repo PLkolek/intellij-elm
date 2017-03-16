@@ -51,13 +51,11 @@ public class Sequence implements Parser {
     }
 
     private List<Set<Token>> nextTokens2(Set<Token> myNextTokens) {
-        //if a parser fails, we might either skip tokens until it succeeds, or until the next parser succeeds
-        //hence, next tokes for each parser contain next parsers' tokens and its starting tokens
         List<Set<Token>> result = Lists.newArrayList();
         Set<Token> nextTokens = Sets.newHashSet(myNextTokens);
         for (int i = parsers.length - 1; i >= 0; i--) {
-            nextTokens.addAll(parsers[i].startingTokens());
             result.add(Sets.newHashSet(nextTokens));
+            nextTokens.addAll(parsers[i].startingTokens());
         }
         return Lists.reverse(result);
     }
@@ -95,7 +93,7 @@ public class Sequence implements Parser {
                 if (parser instanceof WhiteSpace && ((WhiteSpace) parser).getType() == WhiteSpace.Type.NO) {
                     return;
                 }
-                SkipUntil.skipUntil(parser.name(), parserNextTokens, psiBuilder);
+                SkipUntil.skipUntil(parser.name(), Sets.union(parserNextTokens, parser.startingTokens()), psiBuilder);
                 parser.parse(psiBuilder, parserNextTokens);
             }
         }
