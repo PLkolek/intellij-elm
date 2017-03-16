@@ -12,10 +12,8 @@ import mkolaczek.elm.psi.node.ModuleNameRef;
 import mkolaczek.elm.psi.node.QualifiedTypeNameRef;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static mkolaczek.elm.features.autocompletion.ElmCompletionContributor.location;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
 import static mkolaczek.elm.psi.Elements.QUALIFIED_TYPE_NAME_REF;
@@ -27,7 +25,7 @@ public class ModuleCompletion {
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)), ModuleCompletion::modules);
     }
 
-    private static Collection<String> modules(CompletionParameters parameters) {
+    private static Stream<String> modules(CompletionParameters parameters) {
         QualifiedTypeNameRef qualifiedType = location(parameters, QualifiedTypeNameRef.class);
         String prefix = qualifiedType.moduleName().map(ModuleNameRef::getName).orElse("");
 
@@ -35,22 +33,21 @@ public class ModuleCompletion {
                           .map(Module::getName)
                           .filter(n -> n.startsWith(prefix))
                           .map(n -> Names.suffix(n, prefix))
-                          .filter(n -> !n.isEmpty())
-                          .collect(Collectors.toList());
+                          .filter(n -> !n.isEmpty());
     }
 
     @NotNull
-    private static Collection<String> moduleNameParts(CompletionParameters parameters) {
+    private static Stream<String> moduleNameParts(CompletionParameters parameters) {
         Import importLine = location(parameters, Import.class);
         ModuleNameRef module = importLine.importedModuleName();
         String[] words = module.getName().split("\\.");
-        return Names.suggest(words);
+        return Names.suggest(words).stream();
     }
 
     @NotNull
-    private static Collection<String> fileName(CompletionParameters parameters) {
+    private static Stream<String> fileName(CompletionParameters parameters) {
         String fileName = parameters.getOriginalFile().getName();
         String moduleName = fileName.substring(0, fileName.length() - 4);//cut out .elm
-        return newArrayList(moduleName);
+        return Stream.of(moduleName);
     }
 }

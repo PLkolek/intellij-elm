@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.afterLeaf;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
@@ -39,23 +38,21 @@ public class TypeCompletion {
         //@formatter:on
     }
 
-    private static Collection<String> typesFromModule(CompletionParameters parameters) {
-        return stream(TypeReference.variants(parameters.getPosition())).map(TypeDeclaration::getName).collect(toList());
+    private static Stream<String> typesFromModule(CompletionParameters parameters) {
+        return stream(TypeReference.variants(parameters.getPosition())).map(TypeDeclaration::getName);
     }
 
-    private static Collection<String> exposedConstructorlessTypes(CompletionParameters parameters) {
+    private static Stream<String> exposedConstructorlessTypes(CompletionParameters parameters) {
         return module(parameters.getPosition())
                 .typeExports()
                 .filter(TypeExport::withoutConstructors)
-                .map(TypeExport::typeNameString)
-                .collect(toList());
+                .map(TypeExport::typeNameString);
     }
 
-    private static Collection<String> exposedTypes(CompletionParameters parameters) {
+    private static Stream<String> exposedTypes(CompletionParameters parameters) {
         return module(parameters.getPosition())
                 .typeExports()
-                .flatMap(TypeCompletion::typeCompletions)
-                .collect(toList());
+                .flatMap(TypeCompletion::typeCompletions);
     }
 
     private static Stream<String> typeCompletions(TypeExport typeExport) {
@@ -66,12 +63,12 @@ public class TypeCompletion {
         return result.stream();
     }
 
-    private static Collection<String> exposedTypeConstructors(CompletionParameters parameters) {
+    private static Stream<String> exposedTypeConstructors(CompletionParameters parameters) {
         Collection<String> constructors = undeclaredConstructors(parameters.getPosition());
         if (constructors.size() > 1) {
             constructors.add(Joiner.on(" | ").join(constructors));
         }
-        return constructors;
+        return constructors.stream();
     }
 
     @NotNull

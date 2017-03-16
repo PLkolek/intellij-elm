@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -19,10 +20,9 @@ class LambdaBasedCompletionProvider extends CompletionProvider<CompletionParamet
         this.autocompletion = autocompletion;
     }
 
-    public static LambdaBasedCompletionProvider forStrings(Function<CompletionParameters, Collection<String>> autocompletion) {
-        Function<Collection<String>, Collection<LookupElementBuilder>> wrapper = strings -> strings.stream()
-                                                                                                   .map(LookupElementBuilder::create)
-                                                                                                   .collect(toList());
+    public static LambdaBasedCompletionProvider forStrings(Function<CompletionParameters, Stream<String>> autocompletion) {
+        Function<Stream<String>, Collection<LookupElementBuilder>> wrapper =
+                strings -> strings.map(LookupElementBuilder::create).collect(toList());
         return new LambdaBasedCompletionProvider(wrapper.compose(autocompletion));
     }
 
