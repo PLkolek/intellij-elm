@@ -30,4 +30,8 @@ public class ProjectUtil {
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
         return FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, ElmFileType.INSTANCE, scope);
     }
+
+    public static Stream<Module> modules(Project project, String searchedModuleName) {
+        return modules(project).filter(module -> module.sameName(searchedModuleName));
+    }
 }

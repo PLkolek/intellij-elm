@@ -21,9 +21,7 @@ public class ImportModuleReference extends PsiReferenceBase<ModuleNameRef> {
     @Override
     public PsiElement resolve() {
         Project project = myElement.getProject();
-
-        return ProjectUtil.modules(project)
-                          .filter(module -> module.sameName(myElement.getName()))
+        return ProjectUtil.modules(project, myElement.getName())
                           .findFirst().orElse(null);
     }
 

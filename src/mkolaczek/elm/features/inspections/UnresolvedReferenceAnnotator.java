@@ -1,11 +1,13 @@
 package mkolaczek.elm.features.inspections;
 
+import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiReference;
 import mkolaczek.elm.features.ElmFindUsagesProvider;
+import mkolaczek.elm.psi.node.ModuleNameRef;
 import org.jetbrains.annotations.NotNull;
 
 public class UnresolvedReferenceAnnotator implements Annotator {
@@ -13,7 +15,12 @@ public class UnresolvedReferenceAnnotator implements Annotator {
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         PsiReference ref = element.getReference();
         if (!resolves(ref)) {
-            holder.createErrorAnnotation(element, "Unresolved " + ElmFindUsagesProvider.type(element));
+            String message = "Unresolved " + ElmFindUsagesProvider.type(element);
+            Annotation annotation = holder.createErrorAnnotation(element, message);
+            if (element instanceof ModuleNameRef) {
+                String moduleNameToImport = ((ModuleNameRef) element).getName();
+                annotation.registerFix(new AddImportIntentionAction(moduleNameToImport));
+            }
         }
     }
 

@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getChildOfType;
 import static mkolaczek.util.Streams.stream;
 
@@ -33,7 +34,7 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
     @Override
     public PsiElement getNameIdentifier() {
         //required for ctrl+click find usages to work
-        return PsiTreeUtil.findChildOfType(this, ModuleName.class);
+        return findChildOfType(this, ModuleName.class);
     }
 
     @Override
@@ -82,7 +83,7 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
     }
 
     public Optional<ModuleHeader> header() {
-        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, ModuleHeader.class));
+        return Optional.ofNullable(findChildOfType(this, ModuleHeader.class));
     }
 
     public String typeStr() {
@@ -104,7 +105,7 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
     }
 
     public Optional<EffectModuleSettingsList> settingsList() {
-        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, EffectModuleSettingsList.class));
+        return Optional.ofNullable(findChildOfType(this, EffectModuleSettingsList.class));
     }
 
     @NotNull
@@ -114,6 +115,10 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
 
     public Collection<Import> imports() {
         return PsiTreeUtil.findChildrenOfType(this, Import.class);
+    }
+
+    public Optional<Imports> importsNode() {
+        return Optional.ofNullable(findChildOfType(this, Imports.class));
     }
 
     public Stream<Import> imports(String name) {
@@ -136,9 +141,14 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return typeDeclarations().stream().filter(decl -> typeName.equals(decl.getName())).findAny();
     }
 
+    public Optional<Declarations> declarationsNode() {
+        return Optional.ofNullable(getChildOfType(this, Declarations.class));
+    }
+
 
     //SHORTCUTS
     public Stream<TypeExport> typeExports() {
         return stream(header()).flatMap(ModuleHeader::typeExports);
     }
+
 }

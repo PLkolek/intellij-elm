@@ -22,7 +22,7 @@ public class Module {
     public static Parser moduleHeader() {
         return sequence("Module Header",
                 WhiteSpace.freshLine(),
-                moduleDeclaration(),
+                tryP(moduleDeclaration()),
                 tryP(sequence("Doc comment", Basic.docComment(), WhiteSpace.freshLine())),
                 many(Module.importLine()).as(Elements.IMPORTS)
         );
@@ -137,6 +137,6 @@ public class Module {
                         exposing(),
                         WhiteSpace.freshLine()
                 );
-        return tryP(or(effectSequence, sequence).as(Elements.MODULE_HEADER));
+        return or(effectSequence, sequence).as(Elements.MODULE_HEADER);
     }
 }
