@@ -2,6 +2,8 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
@@ -46,7 +48,7 @@ public class DottedCapVar implements Parser {
         int suffixStart = builder.getCurrentOffset();
         builder.advanceLexer();
         int start = builder.getCurrentOffset();
-        while (builder.getTokenType() == Tokens.DOT && WhiteSpace.Type.NO.accepts(builder)) {
+        while (isDot(builder) && WhiteSpace.Type.NO.accepts(builder)) {
             prefixEnd = replace(builder, prefixEnd);
             builder.advanceLexer();
             suffix = replace(builder, suffix);
@@ -69,6 +71,12 @@ public class DottedCapVar implements Parser {
         }
         prefixEnd.drop();
         return true;
+    }
+
+    private boolean isDot(PsiBuilder builder) {
+        IElementType type = builder.getTokenType();
+        String dotAndRune = "." + ElmCompletionContributor.AUTOCOMPLETION_RUNE_SYMBOL;
+        return type == Tokens.DOT || type == Tokens.SYM_OP && dotAndRune.equals(builder.getTokenText());
     }
 
     private boolean isValid(PsiBuilder builder, Element type, int suffixStart) {

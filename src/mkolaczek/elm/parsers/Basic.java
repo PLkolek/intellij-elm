@@ -57,10 +57,17 @@ public class Basic {
 
     public static Parser operatorSymbol() {
         return or("operator symbol",
-                expect(Tokens.SYM_OP),
-                expect(Tokens.COMMA_OP),
-                expect(Tokens.RUNE_OF_AUTOCOMPLETION)
+                expect(Tokens.RUNE_OF_AUTOCOMPLETION),
+                actualOperatorSymbol()
         ).as(Elements.OPERATOR_SYMBOL);
+    }
+
+    private static Parser actualOperatorSymbol() {
+        return or(
+
+                expect(Tokens.SYM_OP),
+                expect(Tokens.COMMA_OP)
+        );
     }
 
     public static Parser parens(String name, Parser contents) {

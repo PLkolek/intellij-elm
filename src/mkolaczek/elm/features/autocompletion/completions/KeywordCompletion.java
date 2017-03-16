@@ -32,7 +32,7 @@ public class KeywordCompletion {
         c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("infix"));
         //@formatter:on
 
-        c.autocomplete(afterLeaf(childOf(MODULE_NAME_REF)).andNot(onFreshLine()),
+        c.autocomplete(afterLeaf(childOf(MODULE_NAME_REF).inside(e(IMPORT_LINE))).andNot(onFreshLine()),
                 keyword("as"), exposingCompletion()
         );
         c.autocomplete(

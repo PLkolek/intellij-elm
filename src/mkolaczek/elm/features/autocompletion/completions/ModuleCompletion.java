@@ -31,6 +31,7 @@ public class ModuleCompletion {
         String finalPrefix = prefix.length() > 0 ? prefix + "." : "";
 
         return ProjectUtil.otherModuleNames(qualifiedType.getProject(), module(qualifiedType))
+                          .filter(n -> n.startsWith(finalPrefix))
                           .map(n -> Names.suffix(n, finalPrefix))
                           .filter(n -> !n.isEmpty());
     }
