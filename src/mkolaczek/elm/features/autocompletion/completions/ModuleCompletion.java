@@ -7,7 +7,6 @@ import mkolaczek.elm.features.autocompletion.Names;
 import mkolaczek.elm.features.autocompletion.Patterns;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.Import;
-import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.ModuleNameRef;
 import mkolaczek.elm.psi.node.QualifiedTypeNameRef;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +16,7 @@ import java.util.stream.Stream;
 import static mkolaczek.elm.features.autocompletion.ElmCompletionContributor.location;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
 import static mkolaczek.elm.psi.Elements.QUALIFIED_TYPE_NAME_REF;
+import static mkolaczek.elm.psi.node.Module.module;
 
 public class ModuleCompletion {
     public static void modules(ElmCompletionContributor c) {
@@ -30,9 +30,7 @@ public class ModuleCompletion {
         String prefix = qualifiedType.moduleName().map(ModuleNameRef::getName).orElse("");
         String finalPrefix = prefix.length() > 0 ? prefix + "." : "";
 
-        return ProjectUtil.modules(qualifiedType.getProject())
-                          .map(Module::getName)
-                          .filter(n -> n.startsWith(finalPrefix))
+        return ProjectUtil.otherModuleNames(qualifiedType.getProject(), module(qualifiedType))
                           .map(n -> Names.suffix(n, finalPrefix))
                           .filter(n -> !n.isEmpty());
     }

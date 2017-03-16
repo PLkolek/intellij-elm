@@ -11,8 +11,11 @@ import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.Module;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class ProjectUtil {
     public static Stream<Module> modules(Project project) {
@@ -37,5 +40,15 @@ public class ProjectUtil {
 
     public static Stream<Module> modules(Project project, String searchedModuleName) {
         return modules(project).filter(module -> module.sameName(searchedModuleName));
+    }
+
+    public static Stream<String> otherModuleNames(Project project, Module module) {
+        String currentModuleName = module.getName();
+        List<String> moduleNames = modules(project).map(Module::getName).collect(toList());
+        long modulesWithSameName = moduleNames.stream().filter(m -> m.equals(currentModuleName)).count();
+        if (modulesWithSameName <= 1) {
+            return moduleNames.stream().filter(n -> !n.equals(currentModuleName));
+        }
+        return moduleNames.stream();
     }
 }
