@@ -56,7 +56,7 @@ public class Basic {
     }
 
     public static Parser operatorSymbol() {
-        return or("operator symbol", expect(Tokens.SYM_OP), expect(Tokens.COMMA_OP));
+        return or("operator symbol", expect(Tokens.SYM_OP), expect(Tokens.COMMA_OP)).as(Elements.OPERATOR_SYMBOL);
     }
 
     public static Parser parens(String name, Parser contents) {

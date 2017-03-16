@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.completions.KeywordCompletion;
 import mkolaczek.elm.features.autocompletion.completions.ModuleCompletion;
 import mkolaczek.elm.features.autocompletion.completions.TypeCompletion;
+import mkolaczek.elm.features.autocompletion.completions.ValueCompletion;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -17,11 +18,14 @@ import static java.util.Arrays.asList;
 
 
 public class ElmCompletionContributor extends CompletionContributor {
+
+    public static final String AUTOCOMPLETION_RUNE_SYMBOL = "\u16DC";
+
     public ElmCompletionContributor() {
         KeywordCompletion.keywords(this);
         TypeCompletion.types(this);
-
         ModuleCompletion.modules(this);
+        ValueCompletion.values(this);
 
 
     }
@@ -53,6 +57,6 @@ public class ElmCompletionContributor extends CompletionContributor {
 
     @Override
     public void beforeCompletion(@NotNull CompletionInitializationContext context) {
-        context.setDummyIdentifier("\u16DC");
+        context.setDummyIdentifier(AUTOCOMPLETION_RUNE_SYMBOL);
     }
 }

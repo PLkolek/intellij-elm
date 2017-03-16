@@ -14,4 +14,5 @@ public class ModuleHeader extends HasExposing {
     public ModuleName moduleName() {
         return findChildOfType(this, ModuleName.class);
     }
+
 }

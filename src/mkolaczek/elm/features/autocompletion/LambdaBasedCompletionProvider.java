@@ -26,7 +26,6 @@ class LambdaBasedCompletionProvider extends CompletionProvider<CompletionParamet
         return new LambdaBasedCompletionProvider(wrapper.compose(autocompletion));
     }
 
-
     @Override
     public void addCompletions(@NotNull CompletionParameters parameters,
                                ProcessingContext context,

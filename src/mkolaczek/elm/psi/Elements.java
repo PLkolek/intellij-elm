@@ -26,6 +26,7 @@ public interface Elements {
     Element EFFECT_MODULE_SETTINGS_LIST = new Element("EFFECT_MODULE_SETTINGS_LIST", "module settings list");
     Element EFFECT_MODULE_SETTING = new Element("EFFECT_MODULE_SETTING", "module setting");
     Element OPERATOR = new Element("operator");
+    Element OPERATOR_SYMBOL = new Element("operator symbol");
     Element OPEN_LISTING_NODE = new Element("OPEN_LISTING_NODE", "open listing");
     Element IMPORTS = new Element("imports");
     Element TYPE_EXPORT = new Element("type export");
@@ -82,6 +83,8 @@ public interface Elements {
                 return new ExposingNode(node);
             } else if (type == OPERATOR) {
                 return new Operator(node);
+            } else if (type == OPERATOR_SYMBOL) {
+                return new OperatorSymbol(node);
             } else if (type == OPEN_LISTING_NODE) {
                 return new OpenListing(node);
             } else if (type == IMPORTS) {

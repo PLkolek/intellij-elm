@@ -151,4 +151,7 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return stream(header()).flatMap(ModuleHeader::typeExports);
     }
 
+    public Stream<Operator> operatorExports() {
+        return stream(header()).flatMap(ModuleHeader::operatorExports);
+    }
 }

@@ -45,6 +45,7 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
         | \p{General_Category:ModifierSymbol}
         | \p{General_Category:OtherSymbol}
         ) | "`" )
+SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
 
 %state INCOMMENT
 %state DOCCOMMENT
@@ -82,7 +83,7 @@ SYMBOL= ! ( !( [+-/*=.$<>:&|\^?%#@~!,]
   {CAP_VAR}         { return CAP_VAR; }
   {LOW_VAR}         { return LOW_VAR; }
   ","+              { return COMMA_OP; }
-  {SYMBOL}+         { return SYM_OP; }
+  {SYMBOL_OP}       { return SYM_OP; }
   {DIGIT}           { return DIGIT; }
   "ᛜ"               { return RUNE_OF_AUTOCOMPLETION; }
   [^]               { return com.intellij.psi.TokenType.BAD_CHARACTER; }

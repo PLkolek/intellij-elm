@@ -36,6 +36,10 @@ public class ModuleValueList extends ASTWrapperPsiElement {
                                           .flatMap(Streams::stream);
     }
 
+    public Stream<Operator> exportedOperators() {
+        return values(ExportedValue.class).stream().map(ExportedValue::operatorExport).flatMap(Streams::stream);
+    }
+
     public <T extends PsiElement> Collection<T> values(Class<T> nodeType) {
         return stream(valuesList()).flatMap(l -> l.values(nodeType).stream()).collect(toList());
     }

@@ -5,6 +5,7 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import mkolaczek.elm.psi.node.ExposingNode;
 import mkolaczek.elm.psi.node.ModuleValueList;
+import mkolaczek.elm.psi.node.Operator;
 import mkolaczek.elm.psi.node.TypeExport;
 import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +30,9 @@ public abstract class HasExposing extends ASTWrapperPsiElement {
         return Streams.stream(exposingList()).flatMap(ModuleValueList::exportedTypes);
     }
 
+    public Stream<Operator> operatorExports() {
+        return Streams.stream(exposingList()).flatMap(ModuleValueList::exportedOperators);
+    }
 
     public Optional<TypeExport> typeExport(String typeName) {
         return typeExports().filter(export -> typeName.equals(export.typeNameString())).findFirst();
