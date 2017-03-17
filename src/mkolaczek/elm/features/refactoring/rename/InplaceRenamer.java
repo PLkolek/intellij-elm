@@ -5,7 +5,9 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
+import mkolaczek.elm.lexer.ElmLexerAdapter;
 import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.OperatorDeclaration;
 import mkolaczek.elm.psi.node.TypeConstructorName;
 import mkolaczek.elm.psi.node.TypeDeclaration;
 
@@ -32,6 +34,11 @@ public class InplaceRenamer extends MemberInplaceRenamer {
             return CAP_VAR_PATTERN.matcher(newName).matches();
         }
 
+        if (elementToRename instanceof OperatorDeclaration) {
+            return !newName.isEmpty() && ElmLexerAdapter.isSymbol(newName);
+        }
+
         return super.isIdentifier(newName, language);
     }
+
 }

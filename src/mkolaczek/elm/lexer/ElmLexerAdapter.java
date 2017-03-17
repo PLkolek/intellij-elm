@@ -9,7 +9,13 @@ public class ElmLexerAdapter extends FlexAdapter {
         super(new ElmLexer(null));
     }
 
-    public static boolean isSymbol(char c) {
+    public static boolean isSymbol(int c) {
         return "+-/*=.<>:&|^?%#~!".indexOf(c) != -1;
+    }
+
+    public static boolean isSymbol(String newName) {
+        return newName.chars()
+                      .mapToObj(ElmLexerAdapter::isSymbol)
+                      .reduce(true, Boolean::logicalAnd);
     }
 }
