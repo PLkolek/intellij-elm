@@ -22,7 +22,7 @@ public class SafeDeleteTest extends MultiFileTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return TestUtil.testDataPath(getClass());
+        return TestUtil.testDataPath(getClass(), "");
     }
 
 
