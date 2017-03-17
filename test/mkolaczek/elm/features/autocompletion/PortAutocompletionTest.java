@@ -18,8 +18,13 @@ public class PortAutocompletionTest extends LightCodeInsightFixtureTestCase {
         return TestUtil.testDataPath(getClass(), "port");
     }
 
-    public void testSymbolDeclarationCompletion() {
+    public void testPortDeclarationCompletion() {
         myFixture.configureByFiles("declaration/Test.elm");
+        autocomplete("somePort");
+    }
+
+    public void testPortExposingCompletion() {
+        myFixture.configureByFiles("exposing/Test.elm");
         autocomplete("somePort");
     }
 

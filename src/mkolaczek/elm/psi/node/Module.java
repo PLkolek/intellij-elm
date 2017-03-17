@@ -120,11 +120,11 @@ public class Module extends ElmNamedElement implements DocCommented {
         return imports().stream().filter(i -> !i.isAliased());
     }
 
-    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T> typeOfDeclaration) {
+    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration) {
         return findChildrenOfType(this, typeOfDeclaration.psiClass()).stream();
     }
 
-    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T> typeOfDeclaration, String name) {
+    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration, String name) {
         return findChildrenOfType(this, typeOfDeclaration.psiClass())
                 .stream()
                 .filter(decl -> name.equals(decl.getName()));

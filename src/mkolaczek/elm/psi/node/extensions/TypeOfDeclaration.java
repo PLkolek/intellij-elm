@@ -1,16 +1,50 @@
 package mkolaczek.elm.psi.node.extensions;
 
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
-import mkolaczek.elm.psi.node.OperatorDeclaration;
-import mkolaczek.elm.psi.node.PortDeclaration;
-import mkolaczek.elm.psi.node.TypeDeclaration;
+import mkolaczek.elm.psi.node.*;
 
-public interface TypeOfDeclaration<T extends PsiNamedElement> {
+public interface TypeOfDeclaration<T extends PsiNamedElement, S extends PsiElement> {
 
     Class<T> psiClass();
 
-    TypeOfDeclaration<TypeDeclaration> TYPE = () -> TypeDeclaration.class;
-    TypeOfDeclaration<OperatorDeclaration> OPERATOR = () -> OperatorDeclaration.class;
-    TypeOfDeclaration<PortDeclaration> PORT = () -> PortDeclaration.class;
+    TypeOfExport<S> exportedAs();
+
+    TypeOfDeclaration<TypeDeclaration, TypeExport> TYPE = new TypeOfDeclaration<TypeDeclaration, TypeExport>() {
+        @Override
+        public Class<TypeDeclaration> psiClass() {
+            return TypeDeclaration.class;
+        }
+
+        @Override
+        public TypeOfExport<TypeExport> exportedAs() {
+            return TypeOfExport.TYPE;
+        }
+    };
+
+    TypeOfDeclaration<OperatorDeclaration, OperatorSymbolRef> OPERATOR
+            = new TypeOfDeclaration<OperatorDeclaration, OperatorSymbolRef>() {
+        @Override
+        public Class<OperatorDeclaration> psiClass() {
+            return OperatorDeclaration.class;
+        }
+
+        @Override
+        public TypeOfExport<OperatorSymbolRef> exportedAs() {
+            return TypeOfExport.OPERATOR;
+        }
+    };
+
+    TypeOfDeclaration<PortDeclaration, ValueExport> PORT = new TypeOfDeclaration<PortDeclaration, ValueExport>() {
+        @Override
+        public Class<PortDeclaration> psiClass() {
+            return PortDeclaration.class;
+        }
+
+        @Override
+        public TypeOfExport<ValueExport> exportedAs() {
+            return TypeOfExport.VALUE;
+        }
+    };
 }
 
