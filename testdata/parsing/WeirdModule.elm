@@ -7,7 +7,7 @@ port module Test1.B exposing ( aaaaaaa
                         , aaaaaaaaa
                         , abbjaaal
                         , (**)
-                        , (,,)
+                        , (<<<)
                         , A(..)
                         , B(Abc, Def, Ghci)
                         , C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv)

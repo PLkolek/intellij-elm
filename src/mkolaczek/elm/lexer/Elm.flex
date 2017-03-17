@@ -39,7 +39,7 @@ WS={CLRF}|{LINE_WS}
 DIGIT=[0-9]
 CAP_VAR=[A-Z][a-zA-Z0-9ᛜ]*
 LOW_VAR=[a-z][a-zA-Z0-9ᛜ]*
-SYMBOL= [+-/*=.<>:&|\^?%#~!]
+SYMBOL= [\+\-\/\*=\.<>:&\|\^\?%#~\!]
 SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
 
 %state INCOMMENT

@@ -8,7 +8,7 @@ effect module Test1.B where { a = A }
 
 
               )
-        , (,,)
+        , (<:)
         , A(
            ..     )
         , B(Abc, Def, Ghci)
