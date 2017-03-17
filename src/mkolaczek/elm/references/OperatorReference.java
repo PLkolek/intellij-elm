@@ -4,14 +4,14 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceBase;
-import mkolaczek.elm.psi.node.Operator;
+import mkolaczek.elm.psi.node.OperatorSymbolRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static mkolaczek.elm.psi.node.Module.module;
 
-public class OperatorReference extends PsiReferenceBase<Operator> {
-    public OperatorReference(Operator element) {
+public class OperatorReference extends PsiReferenceBase<OperatorSymbolRef> {
+    public OperatorReference(OperatorSymbolRef element) {
         super(element, TextRange.create(0, element.getTextLength()));
     }
 

@@ -4,3 +4,4 @@ JavaClassReference - reference to class?
 com.intellij.openapi.fileEditor.impl.text.TextEditorPsiDataProvider.getPsiElementIn
 com.intellij.codeInsight.JavaTargetElementEvaluator.getNamedElement !!!
 com.intellij.formatting.engine.WrapProcessor.processWrap
+SingleTargetRequestResultProcessor.java:42

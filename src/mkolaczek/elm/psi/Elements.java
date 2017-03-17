@@ -25,8 +25,6 @@ public interface Elements {
     Element EFFECT_MODULE_SETTINGS = new Element("EFFECT_MODULE_SETTINGS", "module settings");
     Element EFFECT_MODULE_SETTINGS_LIST = new Element("EFFECT_MODULE_SETTINGS_LIST", "module settings list");
     Element EFFECT_MODULE_SETTING = new Element("EFFECT_MODULE_SETTING", "module setting");
-    Element OPERATOR = new Element("operator");
-    Element OPERATOR_SYMBOL = new Element("operator symbol");
     Element OPEN_LISTING_NODE = new Element("OPEN_LISTING_NODE", "open listing");
     Element IMPORTS = new Element("imports");
     Element TYPE_EXPORT = new Element("type export");
@@ -45,8 +43,11 @@ public interface Elements {
     Element RECORD_TYPE = new Element("record type");
     Element SURROUND_CONTENTS = new Element("surround contents");
     Element TUPLE_TYPE = new Element("tuple type");
-
     Element TYPE_CONSTRUCTOR_ARGS = new Element("type constructor arguments");
+
+    Element OPERATOR = new Element("operator");
+    Element OPERATOR_SYMBOL = new Element("operator symbol");
+    Element OPERATOR_SYMBOL_REF = new Element("operator symbol");
     Element INFIX_OPERATOR_DECLARATION = new Element("infix operator declaration");
 
     class Factory {
@@ -85,6 +86,8 @@ public interface Elements {
                 return new Operator(node);
             } else if (type == OPERATOR_SYMBOL) {
                 return new OperatorSymbol(node);
+            } else if (type == OPERATOR_SYMBOL_REF) {
+                return new OperatorSymbolRef(node);
             } else if (type == OPEN_LISTING_NODE) {
                 return new OpenListing(node);
             } else if (type == IMPORTS) {

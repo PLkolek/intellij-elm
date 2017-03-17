@@ -9,4 +9,6 @@ public class OperatorSymbol extends ASTWrapperPsiElement {
     public OperatorSymbol(@NotNull ASTNode node) {
         super(node);
     }
+
+
 }

@@ -42,7 +42,7 @@ public class Declaration {
                 maybeWhitespace(),
                 expect(Tokens.DIGIT),
                 maybeWhitespace(),
-                operatorSymbol()
+                operatorSymbol(Elements.OPERATOR_SYMBOL)
         ).as(Elements.INFIX_OPERATOR_DECLARATION);
 
     }

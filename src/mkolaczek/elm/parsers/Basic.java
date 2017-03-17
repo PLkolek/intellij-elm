@@ -4,6 +4,7 @@ import mkolaczek.elm.parsers.core.Many;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.Try;
 import mkolaczek.elm.parsers.core.WhiteSpace;
+import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
@@ -50,16 +51,16 @@ public class Basic {
     public static Parser operator() {
         return sequence(
                 expect(Tokens.LPAREN),
-                operatorSymbol(),
+                operatorSymbol(Elements.OPERATOR_SYMBOL_REF),
                 expect(Tokens.RPAREN)
         ).separatedBy(maybeWhitespace()).as(Elements.OPERATOR);
     }
 
-    public static Parser operatorSymbol() {
+    public static Parser operatorSymbol(Element as) {
         return or("operator symbol",
                 expect(Tokens.RUNE_OF_AUTOCOMPLETION),
                 actualOperatorSymbol()
-        ).as(Elements.OPERATOR_SYMBOL);
+        ).as(as);
     }
 
     private static Parser actualOperatorSymbol() {

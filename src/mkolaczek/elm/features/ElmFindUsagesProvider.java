@@ -1,12 +1,12 @@
 package mkolaczek.elm.features;
 
 import com.google.common.base.Strings;
-import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.TokenSet;
+import mkolaczek.elm.hacks.ElmWordsScanner;
 import mkolaczek.elm.lexer.ElmLexerAdapter;
 import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ public class ElmFindUsagesProvider implements FindUsagesProvider {
 
     @Override
     public WordsScanner getWordsScanner() {
-        return new DefaultWordsScanner(new ElmLexerAdapter(), KEY_TOKENS, COMMENT_TOKENS, TokenSet.EMPTY);
+        return new ElmWordsScanner(new ElmLexerAdapter(), KEY_TOKENS, COMMENT_TOKENS, TokenSet.EMPTY);
     }
 
     @Override
