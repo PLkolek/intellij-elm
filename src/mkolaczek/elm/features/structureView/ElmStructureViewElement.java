@@ -12,6 +12,7 @@ import mkolaczek.elm.psi.node.TypeDeclaration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class ElmStructureViewElement implements StructureViewTreeElement, SortableTreeElement {
     private final NavigatablePsiElement element;
@@ -56,9 +57,10 @@ public class ElmStructureViewElement implements StructureViewTreeElement, Sortab
     @Override
     public TreeElement[] getChildren() {
         if (element instanceof Module) {
-            return ((Module) element).typeDeclarations()
-                                     .map(ElmStructureViewElement::new)
-                                     .toArray(TreeElement[]::new);
+            Module module = (Module) this.element;
+            return Stream.concat(module.typeDeclarations(), module.operatorDeclarations())
+                         .map(ElmStructureViewElement::new)
+                         .toArray(TreeElement[]::new);
         }
         if (element instanceof TypeDeclaration) {
             return ((TypeDeclaration) element).constructors()
