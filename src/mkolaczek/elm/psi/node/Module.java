@@ -13,6 +13,7 @@ import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.extensions.DocCommented;
+import mkolaczek.elm.psi.node.extensions.HasExposing;
 import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -151,15 +152,19 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return operatorDeclarations().filter(o -> o.sameName(symbol));
     }
 
-
     public Optional<Declarations> declarationsNode() {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
     }
 
     public Stream<OperatorDeclaration> exposedOperatorDeclaration(String symbol) {
         boolean isExposed = operatorSymbolExports().map(PsiNamedElement::getName).filter(symbol::equals).count() > 0;
-        return isExposed ? operatorDeclarations(symbol) : Stream.empty();
 
+        return isExposed || exposesEverything() ? operatorDeclarations(symbol) : Stream.empty();
+
+    }
+
+    public boolean exposesEverything() {
+        return header().flatMap(HasExposing::exposingList).map(ModuleValueList::isOpenListing).orElse(true);
     }
 
     //SHORTCUTS
