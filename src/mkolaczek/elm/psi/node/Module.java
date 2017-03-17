@@ -142,8 +142,8 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return typeDeclarations().filter(decl -> typeName.equals(decl.getName())).findAny();
     }
 
-    public Stream<InfixOperatorDeclaration> operatorDeclarations() {
-        return PsiTreeUtil.findChildrenOfType(this, InfixOperatorDeclaration.class).stream();
+    public Stream<OperatorDeclaration> operatorDeclarations() {
+        return PsiTreeUtil.findChildrenOfType(this, OperatorDeclaration.class).stream();
     }
 
     public Optional<Declarations> declarationsNode() {

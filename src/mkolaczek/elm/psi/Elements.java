@@ -131,7 +131,7 @@ public interface Elements {
             } else if (type == TYPE_CONSTRUCTOR_ARGS) {
                 return new TypeConstructorArgs(node);
             } else if (type == INFIX_OPERATOR_DECLARATION) {
-                return new InfixOperatorDeclaration(node);
+                return new OperatorDeclaration(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {

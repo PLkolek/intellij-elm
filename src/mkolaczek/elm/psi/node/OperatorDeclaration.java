@@ -14,8 +14,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class InfixOperatorDeclaration extends ASTWrapperPsiElement implements PsiNameIdentifierOwner {
-    public InfixOperatorDeclaration(ASTNode node) {
+public class OperatorDeclaration extends ASTWrapperPsiElement implements PsiNameIdentifierOwner {
+    public OperatorDeclaration(ASTNode node) {
         super(node);
     }
 
@@ -33,7 +33,7 @@ public class InfixOperatorDeclaration extends ASTWrapperPsiElement implements Ps
     }
 
     public Optional<String> parensName() {
-        return name().map(InfixOperatorDeclaration::parens);
+        return name().map(OperatorDeclaration::parens);
     }
 
     @NotNull

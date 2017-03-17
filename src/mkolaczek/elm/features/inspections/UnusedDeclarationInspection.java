@@ -1,36 +1,31 @@
 package mkolaczek.elm.features.inspections;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.InspectionManager;
+import com.intellij.codeInspection.LocalInspectionTool;
+import com.intellij.codeInspection.ProblemDescriptor;
+import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.find.findUsages.FindUsagesOptions;
 import com.intellij.find.findUsages.JavaFindUsagesHelper;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.CommonProcessors;
 import mkolaczek.elm.features.ElmFindUsagesProvider;
-import mkolaczek.elm.features.refactoring.safeDelete.ElmSafeDeleteDelegate;
 import mkolaczek.elm.psi.ElmFile;
-import mkolaczek.elm.psi.node.ExposingNode;
-import mkolaczek.elm.psi.node.Module;
-import mkolaczek.elm.psi.node.TypeConstructor;
-import mkolaczek.elm.psi.node.TypeDeclaration;
+import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static java.util.stream.Collectors.toList;
+import static java.util.function.Function.identity;
 
 public class UnusedDeclarationInspection extends LocalInspectionTool {
 
@@ -38,7 +33,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
     @NotNull
     @Override
     public String getDisplayName() {
-        return "Unused module";
+        return "Unused declaration";
     }
 
     @Nullable
@@ -53,24 +48,20 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
         if (module == null) {
             return ProblemDescriptor.EMPTY_ARRAY;
         }
-        Collection<TypeDeclaration> types = module.typeDeclarations().collect(toList());
-        List<PsiNameIdentifierOwner> toCheck = Lists.newArrayList(module);
-        List<TypeConstructor> constructors = types.stream().flatMap(TypeDeclaration::constructors).collect(toList());
-        toCheck.addAll(types);
-        toCheck.addAll(constructors);
-
-        return toCheck.stream()
-                      .map(e -> check(manager, file, e))
-                      .filter(Objects::nonNull)
-                      .toArray(ProblemDescriptor[]::new);
+        Stream<TypeDeclaration> types = module.typeDeclarations();
+        Stream<TypeConstructor> constructors = module.typeDeclarations().flatMap(TypeDeclaration::constructors);
+        Stream<OperatorDeclaration> operators = module.operatorDeclarations();
+        Stream<PsiNameIdentifierOwner> toCheck = Stream.of(Stream.of(module), types, constructors, operators)
+                                                       .flatMap(identity());
+        return toCheck
+                .filter(e -> !isNullOrEmpty(e.getName()))
+                .map(e -> check(manager, file, e))
+                .filter(Objects::nonNull)
+                .toArray(ProblemDescriptor[]::new);
     }
 
     public ProblemDescriptor check(InspectionManager manager, PsiFile file, PsiNameIdentifierOwner element) {
-        if (element == null || Strings.isNullOrEmpty(element.getName())) {
-            return null;
-        }
-        CommonProcessors.CollectProcessor<UsageInfo> collector = findUsages(file, element);
-        return descriptor(manager, element, collector);
+        return descriptor(manager, element, findUsages(file, element));
     }
 
     private ProblemDescriptor descriptor(@NotNull InspectionManager manager,
@@ -117,34 +108,4 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
         return collector;
     }
 
-    private static class RemoveElementQuickFix implements LocalQuickFix {
-
-        @Nls
-        @NotNull
-        @Override
-        public String getName() {
-            return "Remove";
-        }
-
-        @Nls
-        @NotNull
-        @Override
-        public String getFamilyName() {
-            return getName();
-        }
-
-        @Override
-        public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            PsiNameIdentifierOwner toDelete = getParentOfType(descriptor.getPsiElement(),
-                    PsiNameIdentifierOwner.class,
-                    false);
-            assert toDelete != null;
-            for (UsageInfo usage : ElmSafeDeleteDelegate.usages(toDelete, new PsiElement[]{toDelete})) {
-                if (usage instanceof SafeDeleteReferenceUsageInfo) {
-                    ((SafeDeleteReferenceUsageInfo) usage).deleteElement();
-                }
-            }
-            toDelete.delete();
-        }
-    }
 }

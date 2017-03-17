@@ -3,7 +3,7 @@ package mkolaczek.elm.features.autocompletion.completions;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
-import mkolaczek.elm.psi.node.InfixOperatorDeclaration;
+import mkolaczek.elm.psi.node.OperatorDeclaration;
 import mkolaczek.util.Streams;
 
 import java.util.Set;
@@ -29,10 +29,10 @@ public class ValueCompletion {
     }
 
     private static Stream<String> moduleOperators(CompletionParameters parameters) {
-        Set<String> excluded = exposedOperators(parameters).map(InfixOperatorDeclaration::parens).collect(toSet());
+        Set<String> excluded = exposedOperators(parameters).map(OperatorDeclaration::parens).collect(toSet());
         return module(parameters.getPosition())
                 .operatorDeclarations()
-                .map(InfixOperatorDeclaration::parensName)
+                .map(OperatorDeclaration::parensName)
                 .flatMap(Streams::stream)
                 .filter(o -> !excluded.contains(o));
     }
