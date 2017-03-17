@@ -18,7 +18,11 @@ public interface Parser {
     String name();
 
     default Parser as(Element as) {
-        return new As(this, as);
+        return new As(this, as, As.Mode.SKIP_EMPTY);
+    }
+
+    default Parser as(Element as, As.Mode mode) {
+        return new As(this, as, mode);
     }
 
     static boolean anyRequired(Parser... parsers) {

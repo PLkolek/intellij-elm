@@ -8,13 +8,16 @@ import java.util.Set;
 
 public class As implements Parser {
 
+    public enum Mode {SKIP_EMPTY, MARK_ALWAYS}
 
     private final Parser content;
     private final Element as;
+    private final Mode mode;
 
-    public As(Parser content, Element as) {
+    public As(Parser content, Element as, Mode mode) {
         this.content = content;
         this.as = as;
+        this.mode = mode;
     }
 
     @Override
@@ -22,7 +25,7 @@ public class As implements Parser {
         int startingOffset = psiBuilder.getCurrentOffset();
         PsiBuilder.Marker marker = psiBuilder.mark();
         boolean result = content.parse(psiBuilder, nextTokens);
-        if (startingOffset != psiBuilder.getCurrentOffset()) {
+        if (mode == Mode.MARK_ALWAYS || startingOffset != psiBuilder.getCurrentOffset()) {
             marker.done(as);
         } else {
             marker.drop();

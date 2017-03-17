@@ -1,5 +1,6 @@
 package mkolaczek.elm.parsers;
 
+import mkolaczek.elm.parsers.core.As;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.Sequence;
 import mkolaczek.elm.parsers.core.WhiteSpace;
@@ -24,7 +25,7 @@ public class Module {
                 WhiteSpace.freshLine(),
                 tryP(moduleDeclaration()),
                 tryP(sequence("Doc comment", Basic.docComment(), WhiteSpace.freshLine())),
-                many(Module.importLine()).as(Elements.IMPORTS)
+                many(Module.importLine()).as(Elements.IMPORTS, As.Mode.MARK_ALWAYS)
         );
     }
 
