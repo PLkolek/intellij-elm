@@ -77,7 +77,6 @@ SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
   {WS}+             { return TokenType.WHITE_SPACE; }
   {CAP_VAR}         { return CAP_VAR; }
   {LOW_VAR}         { return LOW_VAR; }
-  ","+              { return COMMA_OP; }
   {SYMBOL_OP}       { return SYM_OP; }
   {DIGIT}           { return DIGIT; }
   "ᛜ"               { return RUNE_OF_AUTOCOMPLETION; }

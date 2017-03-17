@@ -41,11 +41,7 @@ public class TypeNameRef extends ASTWrapperPsiElement implements PsiNamedElement
 
     @Override
     public void delete() throws IncorrectOperationException {
-        ExportedValue exportedValue = getParentOfType(this, ExportedValue.class);
-        if (exportedValue != null) {
-            exportedValue.containingList().deleteSeparator(exportedValue);
-            exportedValue.delete();
-        } else {
+        if (!ModuleValueList.maybeDeleteChild(this)) {
             super.delete();
         }
     }

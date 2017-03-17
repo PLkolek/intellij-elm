@@ -46,7 +46,6 @@ public class Tokens {
     public static final Token LOW_VAR = new Token("LOW_VAR", "lowercase identifier");
     public static final Token COLON = new Token("COLON", ":");
     public static final Token COMMA = new Token("COMMA", ",");
-    public static final Token COMMA_OP = new Token("COMMA_OP", "operator consisting of commas");
     public static final Token DOT = new Token("DOT", ".");
     public static final Token SYM_OP = new Token("SYM_OP", "operator consisting of symbols");
     public static final Token DIGIT = new Token("digit");
