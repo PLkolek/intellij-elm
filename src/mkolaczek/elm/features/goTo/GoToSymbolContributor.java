@@ -4,10 +4,10 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiNamedElement;
-import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeDeclaration;
+import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,10 +48,10 @@ public class GoToSymbolContributor implements ChooseByNameContributor {
     }
 
     private Stream<TypeDeclaration> typeDecls(Project project) {
-        return modules(project).flatMap(Module::typeDeclarations);
+        return modules(project).flatMap((module) -> module.declarations(TypeOfDeclaration.TYPE));
     }
 
     private Stream<OperatorDeclaration> operators(Project project) {
-        return modules(project).flatMap(Module::operatorDeclarations);
+        return modules(project).flatMap((module) -> module.declarations(TypeOfDeclaration.OPERATOR));
     }
 }

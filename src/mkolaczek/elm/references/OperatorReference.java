@@ -4,6 +4,7 @@ import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.ResolveResult;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
 import mkolaczek.elm.psi.node.OperatorSymbolRef;
+import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
@@ -27,7 +28,7 @@ public class OperatorReference extends ElmReference {
     private Stream<OperatorDeclaration> multiResolve() {
         Stream<OperatorDeclaration> resolved;
         if (insideModuleHeader(myElement)) {
-            resolved = module(myElement).operatorDeclarations()
+            resolved = module(myElement).declarations(TypeOfDeclaration.OPERATOR)
                                         .filter(d -> d.sameName(myElement.getName()));
         } else if (insideImport(myElement)) {
             resolved = containingImport(myElement).importedModule()

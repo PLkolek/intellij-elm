@@ -10,6 +10,7 @@ import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.Imports;
 import mkolaczek.elm.psi.node.ModuleName;
 import mkolaczek.elm.psi.node.ModuleNameRef;
+import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ public class ElmElementFactory {
 
     public static PsiElement typeName(Project project, String name) {
         ElmFile file = createFile(project, String.format("type %s = A", name));
-        return file.module().typeDeclarations().iterator().next().getNameIdentifier();
+        return file.module().declarations(TypeOfDeclaration.TYPE).iterator().next().getNameIdentifier();
     }
 
     public static PsiElement typeNameRef(Project project, String name) {
@@ -29,7 +30,13 @@ public class ElmElementFactory {
 
     public static PsiElement typeConstructor(Project project, String name) {
         ElmFile file = createFile(project, String.format("type Dummy = %s)", name));
-        return file.module().typeDeclaration("Dummy").get().constructors().iterator().next();
+        return file.module()
+                   .declarations(TypeOfDeclaration.TYPE, "Dummy")
+                   .findAny()
+                   .get()
+                   .constructors()
+                   .iterator()
+                   .next();
     }
 
     public static PsiElement typeConstructorRef(Project project, String name) {
@@ -76,7 +83,7 @@ public class ElmElementFactory {
 
     public static PsiElement operatorName(Project project, String name) {
         ElmFile file = createFile(project, "infix 3 " + name);
-        return file.module().operatorDeclarations().findAny().get().getNameIdentifier();
+        return file.module().declarations(TypeOfDeclaration.OPERATOR).findAny().get().getNameIdentifier();
     }
 
     public static PsiElement operatorSymbol(Project project, String newElementName) {
@@ -86,7 +93,7 @@ public class ElmElementFactory {
 
     public static PsiElement portName(Project project, String name) {
         ElmFile file = createFile(project, "port " + name);
-        return file.module().portDeclarations().findFirst().get().getNameIdentifier();
+        return file.module().declarations(TypeOfDeclaration.PORT).findFirst().get().getNameIdentifier();
     }
 
     private static ElmFile createFile(Project project, String text) {

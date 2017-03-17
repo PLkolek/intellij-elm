@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.psi.node.*;
+import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,7 +73,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
                                     .flatMap(TypeReference::moduleDecls);
         }
 
-        Stream<TypeDeclaration> typeDecls = module(myElement).typeDeclarations();
+        Stream<TypeDeclaration> typeDecls = module(myElement).declarations(TypeOfDeclaration.TYPE);
         if (includeImported) {
             Stream<TypeDeclaration> imported = module(myElement).imports()
                                                                 .stream()
@@ -99,7 +100,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
 
     private static Stream<TypeDeclaration> moduleDecls(Import i) {
         return i.importedModule()
-                .flatMap(Module::typeDeclarations);
+                .flatMap((module) -> module.declarations(TypeOfDeclaration.TYPE));
     }
 
 

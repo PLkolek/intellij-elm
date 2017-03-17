@@ -16,6 +16,7 @@ import com.intellij.util.CommonProcessors;
 import mkolaczek.elm.features.ElmFindUsagesProvider;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.*;
+import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,9 +49,10 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
         if (module == null) {
             return ProblemDescriptor.EMPTY_ARRAY;
         }
-        Stream<TypeDeclaration> types = module.typeDeclarations();
-        Stream<TypeConstructor> constructors = module.typeDeclarations().flatMap(TypeDeclaration::constructors);
-        Stream<OperatorDeclaration> operators = module.operatorDeclarations();
+        Stream<TypeDeclaration> types = module.declarations(TypeOfDeclaration.TYPE);
+        Stream<TypeConstructor> constructors = module.declarations(TypeOfDeclaration.TYPE)
+                                                     .flatMap(TypeDeclaration::constructors);
+        Stream<OperatorDeclaration> operators = module.declarations(TypeOfDeclaration.OPERATOR);
         Stream<PsiNameIdentifierOwner> toCheck = Stream.of(Stream.of(module), types, constructors, operators)
                                                        .flatMap(identity());
         return toCheck

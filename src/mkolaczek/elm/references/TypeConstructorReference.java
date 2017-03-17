@@ -10,13 +10,13 @@ import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeConstructorRef;
 import mkolaczek.elm.psi.node.TypeDeclaration;
 import mkolaczek.elm.psi.node.TypeExport;
+import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
 import static mkolaczek.elm.psi.node.Module.module;
-import static mkolaczek.util.Streams.stream;
 
 public class TypeConstructorReference extends PsiReferenceBase<TypeConstructorRef> {
     public TypeConstructorReference(TypeConstructorRef element) {
@@ -27,7 +27,7 @@ public class TypeConstructorReference extends PsiReferenceBase<TypeConstructorRe
     @Nullable
     @Override
     public TypeConstructor resolve() {
-        return module(myElement).typeDeclarations()
+        return module(myElement).declarations(TypeOfDeclaration.TYPE)
                                 .flatMap(TypeDeclaration::constructors)
                                 .filter(constructor -> myElement.getName().equals(constructor.getName()))
                                 .findFirst().orElse(null);
@@ -40,10 +40,10 @@ public class TypeConstructorReference extends PsiReferenceBase<TypeConstructorRe
         assert typeExport != null;
         Set<String> excluded = Sets.newHashSet(typeExport.constructorNames());
 
-        return stream(module(myElement).typeDeclaration(typeExport.typeNameString()))
-                .flatMap(TypeDeclaration::constructors)
-                .filter(elem -> !excluded.contains(elem.getName()))
-                .toArray();
+        return module(myElement).declarations(TypeOfDeclaration.TYPE, typeExport.typeNameString())
+                                .flatMap(TypeDeclaration::constructors)
+                                .filter(elem -> !excluded.contains(elem.getName()))
+                                .toArray();
     }
 
     @Override

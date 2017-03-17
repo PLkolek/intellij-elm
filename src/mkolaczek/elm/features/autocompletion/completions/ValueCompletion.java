@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
+import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import mkolaczek.util.Streams;
 
@@ -31,7 +32,7 @@ public class ValueCompletion {
 
         c.autocomplete(
                 e().andOr(e().inside(e(VALUE_EXPORT)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
-                params -> exposed(params, TypeOfExport.VALUE)
+                ValueCompletion::moduleValues
         );
 
         c.autocomplete(afterLeaf(e(PORT).inside(e(PORT_DECLARATION))), params -> exposed(params, TypeOfExport.VALUE));
@@ -41,20 +42,19 @@ public class ValueCompletion {
     private static Stream<String> moduleOperators(CompletionParameters parameters) {
         Set<String> excluded = exposed(parameters, TypeOfExport.OPERATOR).map(OperatorDeclaration::parens)
                                                                          .collect(toSet());
-        return module(parameters.getPosition())
-                .operatorDeclarations()
-                .map(OperatorDeclaration::parensName)
-                .flatMap(Streams::stream)
-                .filter(o -> !excluded.contains(o));
+        return module(parameters.getPosition()).declarations(TypeOfDeclaration.OPERATOR)
+                                               .map(PsiNamedElement::getName)
+                                               .flatMap(Streams::stream)
+                                               .map(OperatorDeclaration::parens)
+                                               .filter(o -> !excluded.contains(o));
     }
 
     private static Stream<String> moduleValues(CompletionParameters parameters) {
         Set<String> excluded = exposed(parameters, TypeOfExport.VALUE).collect(toSet());
-        return module(parameters.getPosition())
-                .portDeclarations()
-                .map(PsiNamedElement::getName)
-                .flatMap(Streams::stream)
-                .filter(o -> !excluded.contains(o));
+        return module(parameters.getPosition()).declarations(TypeOfDeclaration.PORT)
+                                               .map(PsiNamedElement::getName)
+                                               .flatMap(Streams::stream)
+                                               .filter(o -> !excluded.contains(o));
     }
 
     private static Stream<String> exposed(CompletionParameters parameters,

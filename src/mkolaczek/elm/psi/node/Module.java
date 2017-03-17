@@ -10,10 +10,7 @@ import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.Tokens;
-import mkolaczek.elm.psi.node.extensions.DocCommented;
-import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
-import mkolaczek.elm.psi.node.extensions.HasExposing;
-import mkolaczek.elm.psi.node.extensions.TypeOfExport;
+import mkolaczek.elm.psi.node.extensions.*;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -123,24 +120,14 @@ public class Module extends ElmNamedElement implements DocCommented {
         return imports().stream().filter(i -> !i.isAliased());
     }
 
-    public Stream<TypeDeclaration> typeDeclarations() {
-        return findChildrenOfType(this, TypeDeclaration.class).stream();
+    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T> typeOfDeclaration) {
+        return findChildrenOfType(this, typeOfDeclaration.psiClass()).stream();
     }
 
-    public Optional<TypeDeclaration> typeDeclaration(String typeName) {
-        return typeDeclarations().filter(decl -> typeName.equals(decl.getName())).findAny();
-    }
-
-    public Stream<OperatorDeclaration> operatorDeclarations() {
-        return findChildrenOfType(this, OperatorDeclaration.class).stream();
-    }
-
-    public Stream<OperatorDeclaration> operatorDeclarations(String symbol) {
-        return operatorDeclarations().filter(o -> o.sameName(symbol));
-    }
-
-    public Stream<PortDeclaration> portDeclarations() {
-        return findChildrenOfType(this, PortDeclaration.class).stream();
+    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T> typeOfDeclaration, String name) {
+        return findChildrenOfType(this, typeOfDeclaration.psiClass())
+                .stream()
+                .filter(decl -> name.equals(decl.getName()));
     }
 
     public Optional<Declarations> declarationsNode() {
@@ -152,7 +139,7 @@ public class Module extends ElmNamedElement implements DocCommented {
                                                           .filter(symbol::equals)
                                                           .count() > 0;
 
-        return isExposed || exposesEverything() ? operatorDeclarations(symbol) : Stream.empty();
+        return isExposed || exposesEverything() ? declarations(TypeOfDeclaration.OPERATOR, symbol) : Stream.empty();
 
     }
 

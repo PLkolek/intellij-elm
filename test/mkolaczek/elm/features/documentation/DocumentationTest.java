@@ -5,6 +5,7 @@ import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import mkolaczek.elm.TestUtil;
 import mkolaczek.elm.features.ElmDocumentationProvider;
 import mkolaczek.elm.psi.ElmFile;
+import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -43,15 +44,15 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
 
     public void testTypeQuickNavigateInfo() {
         String expected = "type B = Abc | Def | Ghci";
-        quickNavigateTest(expected, file -> file.module()
-                                                .typeDeclaration("B")
+        quickNavigateTest(expected, file -> file.module().declarations(TypeOfDeclaration.TYPE, "B")
+                                                .findAny()
                                                 .get());
     }
 
     public void testTypeQuickDocumentation() {
         docTest("<pre>type B = Abc | Def | Ghci</pre><p>{-| Test type -}</p>",
-                file -> file.module()
-                            .typeDeclaration("B")
+                file -> file.module().declarations(TypeOfDeclaration.TYPE, "B")
+                            .findAny()
                             .get()
         );
 
@@ -59,8 +60,8 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
 
     public void testTypeConstructorQuickNavigateInfo() {
         String expected = "type B = Abc | Def | Ghci";
-        quickNavigateTest(expected, file -> file.module()
-                                                .typeDeclaration("B")
+        quickNavigateTest(expected, file -> file.module().declarations(TypeOfDeclaration.TYPE, "B")
+                                                .findAny()
                                                 .get()
                                                 .constructor("Ghci")
                                                 .get());
@@ -69,8 +70,8 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
     public void testTypeConstructorDocumentation() {
         docTest(
                 "<pre>type B = Abc | Def | Ghci</pre><p>{-| Test type -}</p>",
-                file -> file.module()
-                            .typeDeclaration("B")
+                file -> file.module().declarations(TypeOfDeclaration.TYPE, "B")
+                            .findAny()
                             .get()
                             .constructor("Ghci")
                             .get()
@@ -79,16 +80,14 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
 
     public void testOperatorQuickNavigateInfo() {
         String expected = "infix 3 &lt;:";
-        quickNavigateTest(expected, file -> file.module()
-                                                .operatorDeclarations("<:")
+        quickNavigateTest(expected, file -> file.module().declarations(TypeOfDeclaration.OPERATOR, "<:")
                                                 .findFirst().get());
     }
 
     public void testOperatorDocumentation() {
         docTest(
                 "<pre>infix 3 &lt;:</pre><p>{-| Test operator -}</p>",
-                file -> file.module()
-                            .operatorDeclarations("<:")
+                file -> file.module().declarations(TypeOfDeclaration.OPERATOR, "<:")
                             .findFirst().get()
         );
     }
