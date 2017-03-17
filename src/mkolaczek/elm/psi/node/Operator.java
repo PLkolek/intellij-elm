@@ -13,7 +13,7 @@ public class Operator extends ASTWrapperPsiElement {
         super(node);
     }
 
-    public Optional<OperatorSymbol> symbol() {
-        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, OperatorSymbol.class));
+    public Optional<OperatorSymbolRef> symbol() {
+        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, OperatorSymbolRef.class));
     }
 }
