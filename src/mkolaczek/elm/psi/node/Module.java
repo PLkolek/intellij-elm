@@ -13,7 +13,7 @@ import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.extensions.DocCommented;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
 import mkolaczek.elm.psi.node.extensions.HasExposing;
-import mkolaczek.util.Streams;
+import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -148,7 +148,9 @@ public class Module extends ElmNamedElement implements DocCommented {
     }
 
     public Stream<OperatorDeclaration> exposedOperatorDeclaration(String symbol) {
-        boolean isExposed = operatorSymbolExports().map(PsiNamedElement::getName).filter(symbol::equals).count() > 0;
+        boolean isExposed = exports(TypeOfExport.OPERATOR).map(PsiNamedElement::getName)
+                                                          .filter(symbol::equals)
+                                                          .count() > 0;
 
         return isExposed || exposesEverything() ? operatorDeclarations(symbol) : Stream.empty();
 
@@ -159,17 +161,8 @@ public class Module extends ElmNamedElement implements DocCommented {
     }
 
     //SHORTCUTS
-    public Stream<TypeExport> typeExports() {
-        return stream(header()).flatMap(ModuleHeader::typeExports);
+    public <T extends PsiElement> Stream<T> exports(TypeOfExport<T> exposedElementsType) {
+        return stream(header()).flatMap(h -> h.exports(exposedElementsType));
     }
 
-    public Stream<ValueExport> valueExports() {
-        return stream(header()).flatMap(ModuleHeader::valueExports);
-    }
-
-    public Stream<OperatorSymbolRef> operatorSymbolExports() {
-        return stream(header()).flatMap(ModuleHeader::operatorExports)
-                               .map(Operator::symbol)
-                               .flatMap(Streams::stream);
-    }
 }

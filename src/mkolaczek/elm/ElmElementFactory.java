@@ -10,6 +10,7 @@ import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.Imports;
 import mkolaczek.elm.psi.node.ModuleName;
 import mkolaczek.elm.psi.node.ModuleNameRef;
+import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -80,7 +81,7 @@ public class ElmElementFactory {
 
     public static PsiElement operatorSymbol(Project project, String newElementName) {
         ElmFile file = createFile(project, "module A exposing ((" + newElementName + "))");
-        return file.module().operatorSymbolExports().findFirst().get();
+        return file.module().exports(TypeOfExport.OPERATOR).findFirst().get();
     }
 
     public static PsiElement portName(Project project, String name) {

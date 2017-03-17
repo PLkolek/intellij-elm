@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
+import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import mkolaczek.util.Streams;
 
 import java.util.Set;
@@ -21,7 +22,7 @@ public class ValueCompletion {
     public static void values(ElmCompletionContributor c) {
         c.autocompletePlain(
                 afterLeaf(e(DIGIT).inside(e(INFIX_OPERATOR_DECLARATION))),
-                ValueCompletion::exposedOperators
+                parameters -> exposed(parameters, TypeOfExport.OPERATOR)
         );
         c.autocomplete(
                 e().andOr(e().inside(e(OPERATOR)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
@@ -30,15 +31,16 @@ public class ValueCompletion {
 
         c.autocomplete(
                 e().andOr(e().inside(e(VALUE_EXPORT)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
-                ValueCompletion::moduleValues
+                params -> exposed(params, TypeOfExport.VALUE)
         );
 
-        c.autocomplete(afterLeaf(e(PORT).inside(e(PORT_DECLARATION))), ValueCompletion::exposedValues);
+        c.autocomplete(afterLeaf(e(PORT).inside(e(PORT_DECLARATION))), params -> exposed(params, TypeOfExport.VALUE));
 
     }
 
     private static Stream<String> moduleOperators(CompletionParameters parameters) {
-        Set<String> excluded = exposedOperators(parameters).map(OperatorDeclaration::parens).collect(toSet());
+        Set<String> excluded = exposed(parameters, TypeOfExport.OPERATOR).map(OperatorDeclaration::parens)
+                                                                         .collect(toSet());
         return module(parameters.getPosition())
                 .operatorDeclarations()
                 .map(OperatorDeclaration::parensName)
@@ -47,7 +49,7 @@ public class ValueCompletion {
     }
 
     private static Stream<String> moduleValues(CompletionParameters parameters) {
-        Set<String> excluded = exposedValues(parameters).collect(toSet());
+        Set<String> excluded = exposed(parameters, TypeOfExport.VALUE).collect(toSet());
         return module(parameters.getPosition())
                 .portDeclarations()
                 .map(PsiNamedElement::getName)
@@ -55,16 +57,10 @@ public class ValueCompletion {
                 .filter(o -> !excluded.contains(o));
     }
 
-    private static Stream<String> exposedValues(CompletionParameters parameters) {
+    private static Stream<String> exposed(CompletionParameters parameters,
+                                          TypeOfExport<? extends PsiElement> exposedElementsType) {
         return module(parameters.getPosition())
-                .valueExports()
+                .exports(exposedElementsType)
                 .map(PsiElement::getText);
     }
-
-    private static Stream<String> exposedOperators(CompletionParameters parameters) {
-        return module(parameters.getPosition())
-                .operatorSymbolExports()
-                .map(PsiElement::getText);
-    }
-
 }

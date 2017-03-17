@@ -2,12 +2,15 @@ package mkolaczek.elm.psi.node;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 
 
 public class ExportedValue extends ASTWrapperPsiElement {
@@ -15,16 +18,8 @@ public class ExportedValue extends ASTWrapperPsiElement {
         super(node);
     }
 
-    public Optional<TypeExport> typeExport() {
-        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, TypeExport.class));
-    }
-
-    public Optional<ValueExport> valueExport() {
-        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, ValueExport.class));
-    }
-
-    public Optional<Operator> operatorExport() {
-        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, Operator.class));
+    public <T extends PsiElement> Optional<T> export(TypeOfExport<T> exposedElementsType) {
+        return Optional.ofNullable(findChildOfType(this, exposedElementsType.psiClass()));
     }
 
     @NotNull

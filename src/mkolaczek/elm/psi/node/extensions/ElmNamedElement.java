@@ -44,4 +44,6 @@ public abstract class ElmNamedElement extends ASTWrapperPsiElement implements Ps
         PsiElement nameIdentifier = getNameIdentifier();
         return nameIdentifier != null ? nameIdentifier.getTextOffset() : super.getTextOffset();
     }
+
+
 }

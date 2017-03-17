@@ -2,7 +2,9 @@ package mkolaczek.elm.psi.node.extensions;
 
 
 import com.intellij.psi.PsiElement;
-import mkolaczek.elm.psi.node.*;
+import mkolaczek.elm.psi.node.ExposingNode;
+import mkolaczek.elm.psi.node.ModuleValueList;
+import mkolaczek.elm.psi.node.TypeExport;
 import mkolaczek.util.Streams;
 
 import java.util.Optional;
@@ -17,19 +19,13 @@ public interface HasExposing extends PsiElement {
         return Optional.ofNullable(exposingNode).map(ExposingNode::valueList);
     }
 
-    default Stream<TypeExport> typeExports() {
-        return Streams.stream(exposingList()).flatMap(ModuleValueList::exportedTypes);
-    }
-
-    default Stream<Operator> operatorExports() {
-        return Streams.stream(exposingList()).flatMap(ModuleValueList::exportedOperators);
-    }
-
-    default Stream<ValueExport> valueExports() {
-        return Streams.stream(exposingList()).flatMap(ModuleValueList::exportedValues);
-    }
-
     default Optional<TypeExport> typeExport(String typeName) {
-        return typeExports().filter(export -> typeName.equals(export.typeNameString())).findFirst();
+        return Streams.stream(exposingList())
+                      .flatMap(l -> l.exported(TypeOfExport.TYPE))
+                      .filter(export -> typeName.equals(export.typeNameString())).findFirst();
+    }
+
+    default <T extends PsiElement> Stream<T> exports(TypeOfExport<T> exposedElementsType) {
+        return Streams.stream(exposingList()).flatMap(l -> l.exported(exposedElementsType));
     }
 }

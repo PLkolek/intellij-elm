@@ -9,6 +9,7 @@ import mkolaczek.elm.psi.node.ModuleHeader;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeDeclaration;
 import mkolaczek.elm.psi.node.TypeExport;
+import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import mkolaczek.elm.references.TypeReference;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,14 +45,14 @@ public class TypeCompletion {
 
     private static Stream<String> exposedConstructorlessTypes(CompletionParameters parameters) {
         return module(parameters.getPosition())
-                .typeExports()
+                .exports(TypeOfExport.TYPE)
                 .filter(TypeExport::withoutConstructors)
                 .map(TypeExport::typeNameString);
     }
 
     private static Stream<String> exposedTypes(CompletionParameters parameters) {
         return module(parameters.getPosition())
-                .typeExports()
+                .exports(TypeOfExport.TYPE)
                 .flatMap(TypeCompletion::typeCompletions);
     }
 

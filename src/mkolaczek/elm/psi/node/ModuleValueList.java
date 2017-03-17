@@ -6,6 +6,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import mkolaczek.util.Streams;
 
 import java.util.Collection;
@@ -31,18 +32,10 @@ public class ModuleValueList extends ASTWrapperPsiElement {
         return Optional.ofNullable(getChildOfType(this, CommaSeparatedList.class));
     }
 
-    public Stream<TypeExport> exportedTypes() {
+    public <T extends PsiElement> Stream<T> exported(TypeOfExport<T> exposedElementsType) {
         return values(ExportedValue.class).stream()
-                                          .map(ExportedValue::typeExport)
+                                          .map(e -> e.export(exposedElementsType))
                                           .flatMap(Streams::stream);
-    }
-
-    public Stream<ValueExport> exportedValues() {
-        return values(ExportedValue.class).stream().map(ExportedValue::valueExport).flatMap(Streams::stream);
-    }
-
-    public Stream<Operator> exportedOperators() {
-        return values(ExportedValue.class).stream().map(ExportedValue::operatorExport).flatMap(Streams::stream);
     }
 
     public <T extends PsiElement> Collection<T> values(Class<T> nodeType) {
@@ -61,5 +54,4 @@ public class ModuleValueList extends ASTWrapperPsiElement {
         }
         return exportedValue != null;
     }
-
 }
