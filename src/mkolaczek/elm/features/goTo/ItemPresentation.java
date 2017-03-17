@@ -2,10 +2,7 @@ package mkolaczek.elm.features.goTo;
 
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.boilerplate.ElmIcon;
-import mkolaczek.elm.psi.node.Module;
-import mkolaczek.elm.psi.node.OperatorDeclaration;
-import mkolaczek.elm.psi.node.TypeConstructor;
-import mkolaczek.elm.psi.node.TypeDeclaration;
+import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -41,6 +38,8 @@ public class ItemPresentation implements com.intellij.navigation.ItemPresentatio
             return ElmIcon.CONSTRUCTOR;
         } else if (element instanceof OperatorDeclaration) {
             return ElmIcon.OPERATOR;
+        } else if (element instanceof PortDeclaration) {
+            return ElmIcon.PORT;
         }
         return null;
     }

@@ -43,7 +43,6 @@ public class TypeDeclaration extends ElmNamedElement implements DocCommented {
         return ElmElementFactory.typeName(getProject(), name);
     }
 
-
     @Override
     public ItemPresentation getPresentation() {
         return new ItemPresentation(this);
