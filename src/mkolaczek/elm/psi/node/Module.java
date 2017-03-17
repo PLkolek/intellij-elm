@@ -5,6 +5,7 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
@@ -146,10 +147,20 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return PsiTreeUtil.findChildrenOfType(this, OperatorDeclaration.class).stream();
     }
 
+    private Stream<OperatorDeclaration> operatorDeclarations(String symbol) {
+        return operatorDeclarations().filter(o -> o.sameName(symbol));
+    }
+
+
     public Optional<Declarations> declarationsNode() {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
     }
 
+    public Stream<OperatorDeclaration> exposedOperatorDeclaration(String symbol) {
+        boolean isExposed = operatorSymbolExports().map(PsiNamedElement::getName).filter(symbol::equals).count() > 0;
+        return isExposed ? operatorDeclarations(symbol) : Stream.empty();
+
+    }
 
     //SHORTCUTS
     public Stream<TypeExport> typeExports() {
