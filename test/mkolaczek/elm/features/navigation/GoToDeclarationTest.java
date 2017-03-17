@@ -1,4 +1,4 @@
-package mkolaczek.elm.navigation;
+package mkolaczek.elm.features.navigation;
 
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationAction;
 import com.intellij.openapi.editor.Editor;

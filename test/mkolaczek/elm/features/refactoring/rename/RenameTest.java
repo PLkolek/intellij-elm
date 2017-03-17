@@ -1,4 +1,4 @@
-package mkolaczek.elm.rename;
+package mkolaczek.elm.features.refactoring.rename;
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 

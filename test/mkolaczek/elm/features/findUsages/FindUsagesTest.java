@@ -1,4 +1,4 @@
-package mkolaczek.elm.findUsages;
+package mkolaczek.elm.features.findUsages;
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import com.intellij.usageView.UsageInfo;

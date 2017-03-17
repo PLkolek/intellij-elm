@@ -1,4 +1,4 @@
-package mkolaczek.elm.safeDelete;
+package mkolaczek.elm.features.safeDelete;
 
 import com.intellij.codeInsight.TargetElementUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -86,7 +86,7 @@ public class SafeDeleteTest extends MultiFileTestCase {
 
 
     private void safeDelete() {
-        final PsiElement psiElement = TargetElementUtil.findTargetElement(myEditor,
+        PsiElement psiElement = TargetElementUtil.findTargetElement(myEditor,
                 ELEMENT_NAME_ACCEPTED | REFERENCED_ELEMENT_ACCEPTED);
         assertNotNull("No element found in text:\n" + getFile().getText(), psiElement);
         SafeDeleteHandler.invoke(getProject(), new PsiElement[]{psiElement}, true);

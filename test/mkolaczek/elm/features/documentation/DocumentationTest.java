@@ -1,4 +1,4 @@
-package mkolaczek.elm.documentation;
+package mkolaczek.elm.features.documentation;
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import mkolaczek.elm.features.ElmDocumentationProvider;

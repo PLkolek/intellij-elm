@@ -1,4 +1,4 @@
-package mkolaczek.elm.folding;
+package mkolaczek.elm.features.folding;
 
 import com.intellij.codeInsight.folding.impl.CodeFoldingManagerImpl;
 import com.intellij.openapi.editor.FoldRegion;
