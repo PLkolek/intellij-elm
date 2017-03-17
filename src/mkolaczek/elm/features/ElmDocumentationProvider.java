@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+
 public class ElmDocumentationProvider implements DocumentationProvider {
 
     public static final String NEWLINE = "\n&nbsp&nbsp&nbsp&nbsp ";
@@ -41,7 +43,7 @@ public class ElmDocumentationProvider implements DocumentationProvider {
         if (element instanceof TypeConstructor) {
             return ((TypeConstructor) element).typeDeclaration().getText();
         }
-        if (element instanceof TypeDeclaration) {
+        if (element instanceof TypeDeclaration || element instanceof OperatorDeclaration) {
             return element.getText();
         }
         return null;
@@ -88,8 +90,8 @@ public class ElmDocumentationProvider implements DocumentationProvider {
                     .collect(Collectors.joining("," + NEWLINE));
     }
 
-    private String wrapInHtmlTags(String aa) {
-        return String.format("<html><head></head><body>" + aa + "</body></html>", aa);
+    private String wrapInHtmlTags(String text) {
+        return String.format("<html><head></head><body>%s</body></html>", escapeHtml(text));
     }
 
     @Nullable
@@ -108,8 +110,8 @@ public class ElmDocumentationProvider implements DocumentationProvider {
             DocCommented module = (DocCommented) element;
             String docCommentText = module.docComment().map(PsiElement::getText).orElse("");
             return String.format("<html><head></head><body><pre>%s</pre><p>%s</p></body></html>",
-                    quickInfoText(module),
-                    docCommentText);
+                    escapeHtml(quickInfoText(module)),
+                    escapeHtml(docCommentText));
         }
         return null;
     }

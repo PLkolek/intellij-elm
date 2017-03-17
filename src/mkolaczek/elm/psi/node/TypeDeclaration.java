@@ -5,7 +5,6 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
@@ -68,14 +67,6 @@ public class TypeDeclaration extends ASTWrapperPsiElement implements PsiNameIden
         return new ItemPresentation(this);
     }
 
-    @Override
-    public Optional<DocComment> docComment() {
-        PsiElement prevSibling = getPrevSibling();
-        while (prevSibling instanceof PsiWhiteSpace) {
-            prevSibling = prevSibling.getPrevSibling();
-        }
-        return prevSibling instanceof DocComment ? Optional.of((DocComment) prevSibling) : Optional.empty();
-    }
 
     public Optional<TypeConstructor> constructor(String name) {
         return constructors().filter(t -> name.equals(t.getName())).findAny();

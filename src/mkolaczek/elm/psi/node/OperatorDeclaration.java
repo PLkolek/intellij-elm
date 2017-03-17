@@ -8,13 +8,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
+import mkolaczek.elm.psi.node.extensions.DocCommented;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class OperatorDeclaration extends ASTWrapperPsiElement implements PsiNameIdentifierOwner {
+public class OperatorDeclaration extends ASTWrapperPsiElement implements PsiNameIdentifierOwner, DocCommented {
     public OperatorDeclaration(ASTNode node) {
         super(node);
     }

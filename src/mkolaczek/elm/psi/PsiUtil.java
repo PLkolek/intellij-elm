@@ -18,4 +18,5 @@ public class PsiUtil {
     public static boolean insideImport(PsiElement target) {
         return containingImport(target) != null;
     }
+
 }
