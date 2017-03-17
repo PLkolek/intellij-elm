@@ -30,6 +30,7 @@ public class KeywordCompletion {
         c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("infixr"));
         c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("infixl"));
         c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("infix"));
+        c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("port"));
         //@formatter:on
 
         c.autocomplete(afterLeaf(childOf(MODULE_NAME_REF).inside(e(IMPORT_LINE))).andNot(onFreshLine()),

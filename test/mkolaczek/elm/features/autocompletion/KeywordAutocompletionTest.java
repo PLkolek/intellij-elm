@@ -21,7 +21,7 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
 
     public void testAfterImportsCompletion() {
         performTest("import/Test.elm", "import/expected.elm",
-                "import", "type", "infixr", "infixl", "infix");
+                "import", "type", "infixr", "infixl", "infix", "port");
     }
 
     public void testAfterImportedModuleNameCompletion() {
@@ -52,6 +52,10 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
 
     public void testAliasCompletion() {
         performTest("alias/Test.elm", "alias/expected.elm", "alias");
+    }
+
+    public void testPortCompletion() {
+        performTest("port/Test.elm", "port/expected.elm", "type", "infixr", "infixl", "infix", "port", "import");
     }
 
     private void performTest(String beforeFile, String afterFile, String... suggestions) {
