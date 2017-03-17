@@ -7,14 +7,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.DocCommented;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 public class ElmDocumentationProvider implements DocumentationProvider {
 
@@ -44,7 +43,7 @@ public class ElmDocumentationProvider implements DocumentationProvider {
             return ((TypeConstructor) element).typeDeclaration().getText();
         }
         if (element instanceof TypeDeclaration || element instanceof OperatorDeclaration) {
-            return element.getText();
+            return StringEscapeUtils.escapeHtml(element.getText());
         }
         return null;
     }
@@ -91,7 +90,7 @@ public class ElmDocumentationProvider implements DocumentationProvider {
     }
 
     private String wrapInHtmlTags(String text) {
-        return String.format("<html><head></head><body>%s</body></html>", escapeHtml(text));
+        return String.format("<html><head></head><body>%s</body></html>", text);
     }
 
     @Nullable
@@ -110,8 +109,8 @@ public class ElmDocumentationProvider implements DocumentationProvider {
             DocCommented module = (DocCommented) element;
             String docCommentText = module.docComment().map(PsiElement::getText).orElse("");
             return String.format("<html><head></head><body><pre>%s</pre><p>%s</p></body></html>",
-                    escapeHtml(quickInfoText(module)),
-                    escapeHtml(docCommentText));
+                    quickInfoText(module),
+                    docCommentText);
         }
         return null;
     }

@@ -148,7 +148,7 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
         return PsiTreeUtil.findChildrenOfType(this, OperatorDeclaration.class).stream();
     }
 
-    private Stream<OperatorDeclaration> operatorDeclarations(String symbol) {
+    public Stream<OperatorDeclaration> operatorDeclarations(String symbol) {
         return operatorDeclarations().filter(o -> o.sameName(symbol));
     }
 
