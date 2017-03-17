@@ -13,6 +13,7 @@ import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.DIGIT;
+import static mkolaczek.elm.psi.Tokens.PORT;
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class ValueCompletion {
@@ -26,6 +27,8 @@ public class ValueCompletion {
                 ValueCompletion::moduleOperators
         );
 
+        c.autocomplete(afterLeaf(e(PORT).inside(e(PORT_DECLARATION))), ValueCompletion::exposedValues);
+
     }
 
     private static Stream<String> moduleOperators(CompletionParameters parameters) {
@@ -35,6 +38,12 @@ public class ValueCompletion {
                 .map(OperatorDeclaration::parensName)
                 .flatMap(Streams::stream)
                 .filter(o -> !excluded.contains(o));
+    }
+
+    private static Stream<String> exposedValues(CompletionParameters parameters) {
+        return module(parameters.getPosition())
+                .valueExports()
+                .map(PsiElement::getText);
     }
 
     private static Stream<String> exposedOperators(CompletionParameters parameters) {

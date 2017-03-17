@@ -19,6 +19,10 @@ public class ExportedValue extends ASTWrapperPsiElement {
         return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, TypeExport.class));
     }
 
+    public Optional<ValueExport> valueExport() {
+        return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, ValueExport.class));
+    }
+
     public Optional<Operator> operatorExport() {
         return Optional.ofNullable(PsiTreeUtil.findChildOfType(this, Operator.class));
     }

@@ -23,7 +23,7 @@ public class KeywordCompletion {
         c.autocomplete(afterLeaf(RBRACKET).and(inEffectModule),                 exposingCompletion());
         c.autocomplete(afterLeaf(childOf(MODULE_NAME)).and(inEffectModule),     whereCompletion());
         c.autocomplete(afterLeaf(childOf(MODULE_ALIAS)),                        exposingCompletion());
-        c.autocomplete(afterLeaf(PORT),                                         keyword("module"));
+        c.autocomplete(afterLeaf(PORT).inside(e(MODULE_HEADER)),                keyword("module"));
         c.autocomplete(afterLeaf(EFFECT),                                       keyword("module"));
         c.autocomplete(afterLeaf(TYPE),                                         keyword("alias"));
         c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("type"));

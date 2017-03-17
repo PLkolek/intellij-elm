@@ -28,6 +28,7 @@ public interface Elements {
     Element OPEN_LISTING_NODE = new Element("OPEN_LISTING_NODE", "open listing");
     Element IMPORTS = new Element("imports");
     Element TYPE_EXPORT = new Element("type export");
+    Element VALUE_EXPORT = new Element("value export");
     Element TYPE_CONSTRUCTOR = new Element("type constructor");
     Element TYPE_CONSTRUCTOR_NAME = new Element("type constructor name");
     Element TYPE_CONSTRUCTOR_REF = new Element("TYPE_CONSTRUCTOR_REF", "type constructor");
@@ -43,13 +44,13 @@ public interface Elements {
     Element RECORD_TYPE = new Element("record type");
     Element SURROUND_CONTENTS = new Element("surround contents");
     Element TUPLE_TYPE = new Element("tuple type");
-    Element TYPE_CONSTRUCTOR_ARGS = new Element("type constructor arguments");
 
+    Element TYPE_CONSTRUCTOR_ARGS = new Element("type constructor arguments");
     Element OPERATOR = new Element("operator");
     Element OPERATOR_SYMBOL = new Element("operator symbol");
     Element OPERATOR_SYMBOL_REF = new Element("operator symbol");
-    Element INFIX_OPERATOR_DECLARATION = new Element("infix operator declaration");
 
+    Element INFIX_OPERATOR_DECLARATION = new Element("infix operator declaration");
     Element PORT_DECLARATION = new Element("port declaration");
     Element PORT_NAME = new Element("port name");
 
@@ -103,6 +104,8 @@ public interface Elements {
                 return new EffectModuleSetting(node);
             } else if (type == TYPE_EXPORT) {
                 return new TypeExport(node);
+            } else if (type == VALUE_EXPORT) {
+                return new ValueExport(node);
             } else if (type == TYPE_CONSTRUCTOR) {
                 return new TypeConstructor(node);
             } else if (type == TYPE_CONSTRUCTOR_NAME) {

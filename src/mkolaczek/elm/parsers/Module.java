@@ -65,7 +65,7 @@ public class Module {
     private static Parser exportValue() {
         return or(
                 expect(Tokens.RUNE_OF_AUTOCOMPLETION).as(Elements.RUNE_OF_AUTOCOMPLETION_EL),
-                expect(Tokens.LOW_VAR),
+                expect(Tokens.LOW_VAR).as(Elements.VALUE_EXPORT),
                 Basic.operator(),
                 typeExport()
         ).as(Elements.EXPORTED_VALUE);
