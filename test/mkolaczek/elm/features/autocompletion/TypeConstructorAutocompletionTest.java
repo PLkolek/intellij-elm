@@ -3,6 +3,7 @@ package mkolaczek.elm.features.autocompletion;
 
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import mkolaczek.elm.TestUtil;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class TypeConstructorAutocompletionTest extends LightCodeInsightFixtureTe
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/autocompletion/typeConstructor";
+        return TestUtil.testDataPath(getClass(), "typeConstructor");
     }
 
     public void testTypeConstructorNameCompletion() {

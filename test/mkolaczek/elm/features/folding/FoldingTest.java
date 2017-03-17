@@ -4,6 +4,7 @@ import com.intellij.codeInsight.folding.impl.CodeFoldingManagerImpl;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.editor.ex.FoldingModelEx;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import mkolaczek.elm.TestUtil;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -12,7 +13,7 @@ public class FoldingTest extends LightCodeInsightFixtureTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/folding";
+        return TestUtil.testDataPath(getClass());
     }
 
     public void testModuleQuickNavigateInfo() {

@@ -2,12 +2,13 @@ package mkolaczek.elm.features.inspections.unresolvedReference;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import mkolaczek.elm.TestUtil;
 
 public class UnresolvedReferenceTest extends LightCodeInsightFixtureTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/inspections/unresolvedReference/";
+        return TestUtil.testDataPath(getClass());
     }
 
     public void testUnresolved() {

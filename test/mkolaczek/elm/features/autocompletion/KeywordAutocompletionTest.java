@@ -2,6 +2,7 @@ package mkolaczek.elm.features.autocompletion;
 
 
 import com.intellij.codeInsight.completion.LightFixtureCompletionTestCase;
+import mkolaczek.elm.TestUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/autocompletion/keyword";
+        return TestUtil.testDataPath(getClass(), "keyword");
     }
 
     public void testAfterImportsCompletion() {

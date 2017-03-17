@@ -2,6 +2,7 @@ package mkolaczek.elm.features.autocompletion;
 
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import mkolaczek.elm.TestUtil;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class SymbolAutocompletionTest extends LightCodeInsightFixtureTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/autocompletion/symbol";
+        return TestUtil.testDataPath(getClass(), "symbol");
     }
 
     private void autocomplete(String... suggestions) {

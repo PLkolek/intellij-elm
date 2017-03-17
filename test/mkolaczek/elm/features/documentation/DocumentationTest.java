@@ -1,6 +1,7 @@
 package mkolaczek.elm.features.documentation;
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import mkolaczek.elm.TestUtil;
 import mkolaczek.elm.features.ElmDocumentationProvider;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.Module;
@@ -16,7 +17,7 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/documentation";
+        return TestUtil.testDataPath(getClass());
     }
 
     public void testModuleQuickNavigateInfo() {

@@ -1,11 +1,12 @@
 package mkolaczek.elm.features.refactoring.rename;
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import mkolaczek.elm.TestUtil;
 
 public class RenameTest extends LightCodeInsightFixtureTestCase {
     @Override
     protected String getTestDataPath() {
-        return "testdata/rename";
+        return TestUtil.testDataPath(getClass());
     }
 
     public void testRenameModule() {

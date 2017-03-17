@@ -8,6 +8,7 @@ import com.intellij.refactoring.BaseRefactoringProcessor;
 import com.intellij.refactoring.MultiFileTestCase;
 import com.intellij.refactoring.safeDelete.SafeDeleteHandler;
 import com.intellij.testFramework.PlatformTestUtil;
+import mkolaczek.elm.TestUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class SafeDeleteTest extends MultiFileTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/safeDelete/";
+        return TestUtil.testDataPath(getClass());
     }
 
 

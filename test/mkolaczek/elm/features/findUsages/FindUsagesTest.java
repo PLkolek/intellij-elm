@@ -2,6 +2,7 @@ package mkolaczek.elm.features.findUsages;
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import com.intellij.usageView.UsageInfo;
+import mkolaczek.elm.TestUtil;
 
 import java.util.Collection;
 
@@ -12,7 +13,7 @@ public class FindUsagesTest extends LightCodeInsightFixtureTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/findUsages";
+        return TestUtil.testDataPath(getClass());
     }
 
     public void testFindModuleUsages() {

@@ -6,6 +6,7 @@ import com.intellij.openapi.roots.CollectingContentIterator;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import mkolaczek.elm.TestUtil;
 import mkolaczek.elm.features.inspections.UnusedDeclarationInspection;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,14 +36,14 @@ public class UnusedDeclarationTest extends LightCodeInsightFixtureTestCase {
 
     @Override
     protected String getTestDataPath() {
-        return "testdata/inspections/unusedDeclaration";
+        return TestUtil.testDataPath(getClass());
     }
 
     public void testUnusedModule() {
         myFixture.configureByFiles("Test.elm");
         myFixture.enableInspections(Collections.singleton(UnusedDeclarationInspection.class));
         myFixture.checkHighlighting();
-        final IntentionAction intention = myFixture.findSingleIntention("Remove");
+        IntentionAction intention = myFixture.findSingleIntention("Remove");
         assertNotNull(intention);
 
         myFixture.launchAction(intention);
