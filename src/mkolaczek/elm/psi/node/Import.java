@@ -1,6 +1,7 @@
 // This is a generated file. Not intended for manual editing.
 package mkolaczek.elm.psi.node;
 
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.psi.node.extensions.HasExposing;
@@ -10,7 +11,7 @@ import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 
-public class Import extends HasExposing {
+public class Import extends ASTWrapperPsiElement implements HasExposing {
 
     public Import(ASTNode node) {
         super(node);

@@ -2,9 +2,11 @@ package mkolaczek.elm.features.autocompletion;
 
 
 import com.intellij.codeInsight.completion.LightFixtureCompletionTestCase;
+import com.intellij.codeInsight.lookup.LookupElement;
 import mkolaczek.elm.TestUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -47,7 +49,7 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
     }
 
     public void testModuleCompletion() {
-        performTest("module/Test.elm", "module/expected.elm", "module", "effect module", "port module");
+        performTest("module/Test.elm", "module/expected.elm", "effect module", "module", "port module");
     }
 
     public void testAliasCompletion() {
@@ -55,7 +57,7 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
     }
 
     public void testPortCompletion() {
-        performTest("port/Test.elm", "port/expected.elm", "type", "infixr", "infixl", "infix", "port", "import");
+        performTest("port/Test.elm", "port/expected.elm", "port", "type", "infixr", "infixl", "infix", "import");
     }
 
     private void performTest(String beforeFile, String afterFile, String... suggestions) {
@@ -64,7 +66,12 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
         assertThat(strings, hasItems(suggestions));
         assertThat(strings.size(), is(suggestions.length));
         if (suggestions.length > 0) {
-            selectItem(myItems[0]);
+            @SuppressWarnings("OptionalGetWithoutIsPresent")
+            LookupElement item = Arrays.stream(myItems)
+                                       .filter(i -> i.getLookupString().equals(suggestions[0]))
+                                       .findFirst()
+                                       .get();
+            selectItem(item);
         }
         checkResultByFile(afterFile);
     }

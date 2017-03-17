@@ -1,15 +1,13 @@
 // This is a generated file. Not intended for manual editing.
 package mkolaczek.elm.psi.node;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.node.extensions.DocCommented;
+import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +17,7 @@ import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
 
-public class TypeDeclaration extends ASTWrapperPsiElement implements PsiNameIdentifierOwner, DocCommented {
+public class TypeDeclaration extends ElmNamedElement implements DocCommented {
 
     public TypeDeclaration(ASTNode node) {
         super(node);
@@ -41,32 +39,15 @@ public class TypeDeclaration extends ASTWrapperPsiElement implements PsiNameIden
     }
 
     @Override
-    @NotNull
-    public String getName() {
-        PsiElement nameIdentifier = getNameIdentifier();
-        return nameIdentifier != null ? nameIdentifier.getText() : "";
+    public PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
+        return ElmElementFactory.typeName(getProject(), name);
     }
 
-    @Override
-    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-        PsiElement nameIdentifier = getNameIdentifier();
-        if (nameIdentifier != null) {
-            return nameIdentifier.replace(ElmElementFactory.typeName(getProject(), name));
-        }
-        return this;
-    }
-
-    @Override
-    public int getTextOffset() {
-        PsiElement nameIdentifier = getNameIdentifier();
-        return nameIdentifier != null ? nameIdentifier.getTextOffset() : super.getTextOffset();
-    }
 
     @Override
     public ItemPresentation getPresentation() {
         return new ItemPresentation(this);
     }
-
 
     public Optional<TypeConstructor> constructor(String name) {
         return constructors().filter(t -> name.equals(t.getName())).findAny();

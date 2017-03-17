@@ -1,41 +1,35 @@
 package mkolaczek.elm.psi.node.extensions;
 
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.util.Streams;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 
-public abstract class HasExposing extends ASTWrapperPsiElement {
+public interface HasExposing extends PsiElement {
 
-    public HasExposing(@NotNull ASTNode node) {
-        super(node);
-    }
-
-    public Optional<ModuleValueList> exposingList() {
+    default Optional<ModuleValueList> exposingList() {
         ExposingNode exposingNode = findChildOfType(this, ExposingNode.class);
         return Optional.ofNullable(exposingNode).map(ExposingNode::valueList);
     }
 
-    public Stream<TypeExport> typeExports() {
+    default Stream<TypeExport> typeExports() {
         return Streams.stream(exposingList()).flatMap(ModuleValueList::exportedTypes);
     }
 
-    public Stream<Operator> operatorExports() {
+    default Stream<Operator> operatorExports() {
         return Streams.stream(exposingList()).flatMap(ModuleValueList::exportedOperators);
     }
 
-    public Stream<ValueExport> valueExports() {
+    default Stream<ValueExport> valueExports() {
         return Streams.stream(exposingList()).flatMap(ModuleValueList::exportedValues);
     }
 
-    public Optional<TypeExport> typeExport(String typeName) {
+    default Optional<TypeExport> typeExport(String typeName) {
         return typeExports().filter(export -> typeName.equals(export.typeNameString())).findFirst();
     }
 }

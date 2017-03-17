@@ -1,10 +1,8 @@
 package mkolaczek.elm.psi.node;
 
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -13,6 +11,7 @@ import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.extensions.DocCommented;
+import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
 import mkolaczek.elm.psi.node.extensions.HasExposing;
 import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NonNls;
@@ -24,11 +23,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
-import static com.intellij.psi.util.PsiTreeUtil.getChildOfType;
+import static com.intellij.psi.util.PsiTreeUtil.*;
 import static mkolaczek.util.Streams.stream;
 
-public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwner, DocCommented {
+public class Module extends ElmNamedElement implements DocCommented {
     public Module(@NotNull ASTNode node) {
         super(node);
     }
@@ -43,28 +41,17 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
     @Override
     @NotNull
     public String getName() {
-        PsiElement nameIdentifier = getNameIdentifier();
-        return nameIdentifier != null ? nameIdentifier.getText() : "Main"; //null means no header line
+        return super.getName() != null ? super.getName() : "Main";
     }
 
     @Override
-    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-        PsiElement nameIdentifier = getNameIdentifier();
-        if (nameIdentifier != null) {
-            return nameIdentifier.replace(ElmElementFactory.moduleName(getProject(), name));
-        }
-        return this;
+    public PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
+        return ElmElementFactory.moduleName(getProject(), name);
     }
 
     @Override
     public void delete() throws IncorrectOperationException {
         getContainingFile().delete();
-    }
-
-    @Override
-    public int getTextOffset() {
-        PsiElement nameIdentifier = getNameIdentifier();
-        return nameIdentifier != null ? nameIdentifier.getTextOffset() : super.getTextOffset();
     }
 
     @Override
@@ -117,7 +104,7 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
     }
 
     public Collection<Import> imports() {
-        return PsiTreeUtil.findChildrenOfType(this, Import.class);
+        return findChildrenOfType(this, Import.class);
     }
 
     public Optional<Imports> importsNode() {
@@ -137,7 +124,7 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
     }
 
     public Stream<TypeDeclaration> typeDeclarations() {
-        return PsiTreeUtil.findChildrenOfType(this, TypeDeclaration.class).stream();
+        return findChildrenOfType(this, TypeDeclaration.class).stream();
     }
 
     public Optional<TypeDeclaration> typeDeclaration(String typeName) {
@@ -145,11 +132,15 @@ public class Module extends ASTWrapperPsiElement implements PsiNameIdentifierOwn
     }
 
     public Stream<OperatorDeclaration> operatorDeclarations() {
-        return PsiTreeUtil.findChildrenOfType(this, OperatorDeclaration.class).stream();
+        return findChildrenOfType(this, OperatorDeclaration.class).stream();
     }
 
     public Stream<OperatorDeclaration> operatorDeclarations(String symbol) {
         return operatorDeclarations().filter(o -> o.sameName(symbol));
+    }
+
+    public Stream<PortDeclaration> portDeclarations() {
+        return findChildrenOfType(this, PortDeclaration.class).stream();
     }
 
     public Optional<Declarations> declarationsNode() {

@@ -83,6 +83,11 @@ public class ElmElementFactory {
         return file.module().operatorSymbolExports().findFirst().get();
     }
 
+    public static PsiElement portName(Project project, String name) {
+        ElmFile file = createFile(project, "port " + name);
+        return file.module().portDeclarations().findFirst().get().getNameIdentifier();
+    }
+
     private static ElmFile createFile(Project project, String text) {
         String name = "dummy.elm";
         return (ElmFile) PsiFileFactory.getInstance(project).
