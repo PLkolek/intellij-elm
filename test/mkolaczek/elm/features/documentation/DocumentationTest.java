@@ -26,7 +26,7 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
         String info = new ElmDocumentationProvider().getQuickNavigateInfo(module, null);
         String expected = "effect module Test1.B\n" +
                 "&nbsp&nbsp&nbsp&nbsp where { a = A }\n" +
-                "&nbsp&nbsp&nbsp&nbsp exposing (aaaaaaa, bbbbbbb, aaaaaaaaa, abbjaaal, ( ** ), (,,), A( .. ), B(Abc, Def, Ghci),\n" +
+                "&nbsp&nbsp&nbsp&nbsp exposing (aaaaaaa, bbbbbbb, aaaaaaaaa, abbjaaal, ( ** ), (<:), A( .. ), B(Abc, Def, Ghci),\n" +
                 "&nbsp&nbsp&nbsp&nbsp C(Abc, Def, Ghci, Xxxxxx, Aaaaa, Bvvvvvvvvvvvvvvvvv))";
         assertThat(info, is(wrapinHtml(expected)));
     }
