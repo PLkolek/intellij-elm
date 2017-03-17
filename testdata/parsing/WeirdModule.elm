@@ -33,3 +33,5 @@ import Test as D
 import Test2 exposing (A, B)
 
 type alias X = A
+
+port abcde : String Fee

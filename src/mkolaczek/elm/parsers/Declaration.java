@@ -33,7 +33,16 @@ public class Declaration {
 
 
     private static Parser declaration() {
-        return or("declaration", Basic.docComment(), typeDecl(), infixDecl());
+        return or("declaration", Basic.docComment(), typeDecl(), infixDecl(), portDecl());
+    }
+
+    private static Parser portDecl() {
+        return sequence("port declaration",
+                expect(Tokens.PORT),
+                expect(Tokens.LOW_VAR).as(Elements.PORT_NAME),
+                expect(Tokens.COLON),
+                Type.expression
+        ).separatedBy(maybeWhitespace()).as(Elements.PORT_DECLARATION);
     }
 
     private static Parser infixDecl() {

@@ -50,6 +50,9 @@ public interface Elements {
     Element OPERATOR_SYMBOL_REF = new Element("operator symbol");
     Element INFIX_OPERATOR_DECLARATION = new Element("infix operator declaration");
 
+    Element PORT_DECLARATION = new Element("port declaration");
+    Element PORT_NAME = new Element("port name");
+
     class Factory {
 
         public static PsiElement createElement(ASTNode node) {
@@ -132,6 +135,10 @@ public interface Elements {
                 return new TypeConstructorArgs(node);
             } else if (type == INFIX_OPERATOR_DECLARATION) {
                 return new OperatorDeclaration(node);
+            } else if (type == PORT_DECLARATION) {
+                return new PortDeclaration(node);
+            } else if (type == PORT_NAME) {
+                return new PortName(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {
