@@ -28,4 +28,10 @@ public class RenameTest extends LightCodeInsightFixtureTestCase {
         myFixture.checkResultByFile("typeConstructor/Test.elm", "typeConstructor/Test.expected.elm", false);
     }
 
+    public void testRenameOperator() {
+        myFixture.configureByFiles("operator/Test.elm");
+        myFixture.renameElementAtCaret("<->");
+        myFixture.checkResultByFile("operator/Test.elm", "operator/Test.expected.elm", false);
+    }
+
 }
