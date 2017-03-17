@@ -66,6 +66,10 @@ public class SafeDeleteTest extends MultiFileTestCase {
         deleteUnused("typeConstructor/notUsed/Test.elm", "typeConstructor/notUsed/Expected.elm");
     }
 
+    public void testSafeDeleteUnusedOperator() throws Exception {
+        deleteUnused("operator/notUsed/Test.elm", "operator/notUsed/Expected.elm");
+    }
+
     private void deleteUnused(String file, String expected) throws IOException {
         configureByFiles(null, file);
         safeDelete();
