@@ -6,6 +6,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import mkolaczek.elm.TestUtil;
 
+import java.util.Arrays;
+
 public class GoToDeclarationTest extends LightCodeInsightFixtureTestCase {
 
     @Override
@@ -14,19 +16,24 @@ public class GoToDeclarationTest extends LightCodeInsightFixtureTestCase {
     }
 
     public void testModuleDeclaration() {
-        doTest("module");
+        doTest("module", "Test1.elm", "Test2.elm");
     }
 
     public void testOperatorDeclaration() {
-        doTest("operator");
+        doTest("operator", "Test1.elm", "Test2.elm");
     }
 
-    private void doTest(String dir) {
-        PsiFile[] files = myFixture.configureByFiles(dir + "/Test1.elm", dir + "/Test2.elm");
+    public void testPortDeclaration() {
+        doTest("port", "Test2.elm");
+    }
+
+    private void doTest(String dir, String... fileNames) {
+        String[] fullFileNames = Arrays.stream(fileNames).map(n -> dir + "/" + n).toArray(String[]::new);
+        PsiFile[] files = myFixture.configureByFiles(fullFileNames);
         //com.intellij.openapi.fileEditor.impl.TestEditorManagerImpl.openEditor() returns empty list,
         //which prevents GoToDeclarationAction from opening new editor, so here I do it manually
         Editor oldEditor = getEditor();
-        myFixture.openFileInEditor(files[1].getVirtualFile());
+        myFixture.openFileInEditor(files[files.length - 1].getVirtualFile());
         new GotoDeclarationAction().invoke(getProject(), oldEditor, files[0]);
 
         myFixture.checkResultByFile(dir + "/Test2.expected.elm");
