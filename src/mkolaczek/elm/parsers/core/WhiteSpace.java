@@ -23,7 +23,7 @@ public class WhiteSpace implements Parser {
         MAYBE("Whitespace") {
             @Override
             boolean accepts(PsiBuilder builder) {
-                return lastChar(builder) != '\n';
+                return builder.eof() || lastChar(builder) != '\n';
             }
         },
         FORCED("Forced WS") {
