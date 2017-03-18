@@ -22,6 +22,7 @@ public class PortDeclaration extends ElmNamedElement implements DocCommented {
         return PsiTreeUtil.findChildOfType(this, PortName.class);
     }
 
+    @NotNull
     @Override
     public PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
         return ElmElementFactory.portName(getProject(), name);

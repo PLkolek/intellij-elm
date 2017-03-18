@@ -28,6 +28,7 @@ public class TypeConstructor extends ElmNamedElement {
     }
 
 
+    @NotNull
     @Override
     public PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
         return ElmElementFactory.typeConstructor(getProject(), name);

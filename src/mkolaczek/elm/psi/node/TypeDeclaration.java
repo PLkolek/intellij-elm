@@ -38,6 +38,7 @@ public class TypeDeclaration extends ElmNamedElement implements DocCommented {
         return PsiTreeUtil.findChildOfType(this, TypeName.class);
     }
 
+    @NotNull
     @Override
     public PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
         return ElmElementFactory.typeName(getProject(), name);

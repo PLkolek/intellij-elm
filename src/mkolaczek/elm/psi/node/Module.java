@@ -41,6 +41,7 @@ public class Module extends ElmNamedElement implements DocCommented {
         return super.getName() != null ? super.getName() : "Main";
     }
 
+    @NotNull
     @Override
     public PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
         return ElmElementFactory.moduleName(getProject(), name);

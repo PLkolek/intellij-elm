@@ -25,6 +25,7 @@ public class OperatorDeclaration extends ElmNamedElement implements DocCommented
         return PsiTreeUtil.findChildOfType(this, OperatorSymbol.class);
     }
 
+    @NotNull
     @Override
     public PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
         return ElmElementFactory.operatorName(getProject(), name);

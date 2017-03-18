@@ -21,6 +21,7 @@ public class ModuleAlias extends ElmNamedElement {
     }
 
 
+    @NotNull
     @Override
     public PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
         return ElmElementFactory.moduleAlias(getProject(), name);

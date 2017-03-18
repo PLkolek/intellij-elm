@@ -37,6 +37,7 @@ public abstract class ElmNamedElement extends ASTWrapperPsiElement implements Ps
         return this;
     }
 
+    @NotNull
     protected abstract PsiElement createNewNameIdentifier(@NonNls @NotNull String name);
 
     @Override

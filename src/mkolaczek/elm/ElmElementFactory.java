@@ -6,10 +6,7 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiWhiteSpace;
 import mkolaczek.elm.boilerplate.ElmFileType;
 import mkolaczek.elm.psi.ElmFile;
-import mkolaczek.elm.psi.node.Import;
-import mkolaczek.elm.psi.node.Imports;
-import mkolaczek.elm.psi.node.ModuleName;
-import mkolaczek.elm.psi.node.ModuleNameRef;
+import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import org.apache.commons.lang.StringUtils;
@@ -94,6 +91,11 @@ public class ElmElementFactory {
     public static PsiElement portName(Project project, String name) {
         ElmFile file = createFile(project, "port " + name);
         return file.module().declarations(TypeOfDeclaration.PORT).findFirst().get().getNameIdentifier();
+    }
+
+    public static ValueExport valueExport(Project project, String name) {
+        ElmFile file = createFile(project, String.format("module Dummy exposing (%s)", name));
+        return file.module().header().get().valueExports(name).findFirst().get();
     }
 
     private static ElmFile createFile(Project project, String text) {
