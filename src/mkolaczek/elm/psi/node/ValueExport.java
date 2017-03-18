@@ -3,6 +3,7 @@ package mkolaczek.elm.psi.node;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
 import mkolaczek.elm.references.ValueReference;
@@ -30,5 +31,12 @@ public class ValueExport extends ElmNamedElement {
     @Override
     public PsiReference getReference() {
         return new ValueReference(this);
+    }
+
+    @Override
+    public void delete() throws IncorrectOperationException {
+        if (!ModuleValueList.maybeDeleteChild(this)) {
+            super.delete();
+        }
     }
 }

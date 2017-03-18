@@ -53,7 +53,8 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
         Stream<TypeConstructor> constructors = module.declarations(TypeOfDeclaration.TYPE)
                                                      .flatMap(TypeDeclaration::constructors);
         Stream<OperatorDeclaration> operators = module.declarations(TypeOfDeclaration.OPERATOR);
-        Stream<PsiNameIdentifierOwner> toCheck = Stream.of(Stream.of(module), types, constructors, operators)
+        Stream<PortDeclaration> ports = module.declarations(TypeOfDeclaration.PORT);
+        Stream<PsiNameIdentifierOwner> toCheck = Stream.of(Stream.of(module), types, constructors, operators, ports)
                                                        .flatMap(identity());
         return toCheck
                 .filter(e -> !isNullOrEmpty(e.getName()))
