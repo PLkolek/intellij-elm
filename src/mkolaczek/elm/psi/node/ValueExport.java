@@ -2,8 +2,10 @@ package mkolaczek.elm.psi.node;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
+import mkolaczek.elm.references.ValueReference;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,5 +25,10 @@ public class ValueExport extends ElmNamedElement {
     @Override
     protected PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
         return ElmElementFactory.valueExport(getProject(), name);
+    }
+
+    @Override
+    public PsiReference getReference() {
+        return new ValueReference(this);
     }
 }

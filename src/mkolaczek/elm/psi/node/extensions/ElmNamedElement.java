@@ -4,6 +4,7 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -43,8 +44,14 @@ public abstract class ElmNamedElement extends ASTWrapperPsiElement implements Ps
     @Override
     public int getTextOffset() {
         PsiElement nameIdentifier = getNameIdentifier();
-        return nameIdentifier != null ? nameIdentifier.getTextOffset() : super.getTextOffset();
+        return nameIdentifier != null && nameIdentifier != this ? nameIdentifier.getTextOffset() : super.getTextOffset();
     }
 
+    public boolean sameName(String name) {
+        return getName() != null && getName().equals(name);
+    }
 
+    public boolean sameName(PsiNamedElement other) {
+        return sameName(other.getName());
+    }
 }

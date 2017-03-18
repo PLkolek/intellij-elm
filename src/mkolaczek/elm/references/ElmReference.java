@@ -1,16 +1,15 @@
 package mkolaczek.elm.references;
 
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
-import mkolaczek.elm.psi.node.OperatorSymbolRef;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.stream.Stream;
 
-public abstract class ElmReference extends PsiReferenceBase.Poly<OperatorSymbolRef> {
-    public ElmReference(OperatorSymbolRef element) {
+
+public abstract class ElmReference<T extends PsiNamedElement> extends PsiReferenceBase.Poly<T> {
+    public ElmReference(T element) {
         super(element, TextRange.create(0, element.getTextLength()), false);
     }
 
@@ -24,4 +23,14 @@ public abstract class ElmReference extends PsiReferenceBase.Poly<OperatorSymbolR
     public Object[] getVariants() {
         return PsiReference.EMPTY_ARRAY;
     }
+
+    @NotNull
+    @Override
+    public ResolveResult[] multiResolve(boolean incompleteCode) {
+        return multiResolve()
+                .map(PsiElementResolveResult::new)
+                .toArray(ResolveResult[]::new);
+    }
+
+    protected abstract Stream<? extends PsiElement> multiResolve();
 }

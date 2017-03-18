@@ -45,10 +45,6 @@ public class OperatorDeclaration extends ElmNamedElement implements DocCommented
         return new ItemPresentation(this);
     }
 
-    public boolean sameName(String name) {
-        return getName() != null && getName().equals(name);
-    }
-
     public boolean sameParensName(String name) {
         return name.equals(parensName().orElse(null));
     }

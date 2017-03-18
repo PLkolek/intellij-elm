@@ -57,14 +57,6 @@ public class Module extends ElmNamedElement implements DocCommented {
         return new ItemPresentation(this);
     }
 
-    public boolean sameName(String name) {
-        return getName().equals(name);
-    }
-
-    public boolean sameName(Module other) {
-        return sameName(other.getName());
-    }
-
     @Override
     public Optional<DocComment> docComment() {
         return Optional.ofNullable(getChildOfType(this, DocComment.class));
@@ -135,14 +127,16 @@ public class Module extends ElmNamedElement implements DocCommented {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
     }
 
-    public Stream<OperatorDeclaration> exposedOperatorDeclaration(String symbol) {
-        boolean isExposed = exports(TypeOfExport.OPERATOR).map(PsiNamedElement::getName)
-                                                          .filter(symbol::equals)
-                                                          .count() > 0;
+    public <D extends PsiNamedElement> Stream<D> exposedDeclaration(TypeOfDeclaration<D, ? extends PsiNamedElement> typeOfDeclaration,
+                                                                    String symbol) {
+        boolean isExposed = exports(typeOfDeclaration.exportedAs()).map(PsiNamedElement::getName)
+                                                                   .filter(symbol::equals)
+                                                                   .count() > 0;
 
-        return isExposed || exposesEverything() ? declarations(TypeOfDeclaration.OPERATOR, symbol) : Stream.empty();
+        return isExposed || exposesEverything() ? declarations(typeOfDeclaration, symbol) : Stream.empty();
 
     }
+
 
     public boolean exposesEverything() {
         return header().flatMap(HasExposing::exposingList).map(ModuleValueList::isOpenListing).orElse(true);
@@ -152,5 +146,4 @@ public class Module extends ElmNamedElement implements DocCommented {
     public <T extends PsiElement> Stream<T> exports(TypeOfExport<T> exposedElementsType) {
         return stream(header()).flatMap(h -> h.exports(exposedElementsType));
     }
-
 }

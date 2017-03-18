@@ -4,11 +4,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.psi.node.*;
 
-public interface TypeOfDeclaration<T extends PsiNamedElement, S extends PsiElement> {
+public interface TypeOfDeclaration<Declaration extends PsiNamedElement, Export extends PsiElement> {
 
-    Class<T> psiClass();
+    Class<Declaration> psiClass();
 
-    TypeOfExport<S> exportedAs();
+    TypeOfExport<Export> exportedAs();
 
     TypeOfDeclaration<TypeDeclaration, TypeExport> TYPE = new TypeOfDeclaration<TypeDeclaration, TypeExport>() {
         @Override
