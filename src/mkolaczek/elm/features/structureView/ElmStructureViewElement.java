@@ -9,11 +9,9 @@ import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.TypeDeclaration;
-import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public class ElmStructureViewElement implements StructureViewTreeElement, SortableTreeElement {
     private final NavigatablePsiElement element;
@@ -59,8 +57,7 @@ public class ElmStructureViewElement implements StructureViewTreeElement, Sortab
     public TreeElement[] getChildren() {
         if (element instanceof Module) {
             Module module = (Module) this.element;
-            return Stream.concat(module.declarations(TypeOfDeclaration.TYPE),
-                    module.declarations(TypeOfDeclaration.OPERATOR))
+            return module.declarations()
                          .map(ElmStructureViewElement::new)
                          .toArray(TreeElement[]::new);
         }

@@ -4,16 +4,14 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.ElmElementFactory;
-import mkolaczek.elm.features.goTo.ItemPresentation;
-import mkolaczek.elm.psi.node.extensions.DocCommented;
-import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
+import mkolaczek.elm.psi.node.extensions.Declaration;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class OperatorDeclaration extends ElmNamedElement implements DocCommented {
+public class OperatorDeclaration extends Declaration {
     public OperatorDeclaration(ASTNode node) {
         super(node);
     }
@@ -38,11 +36,6 @@ public class OperatorDeclaration extends ElmNamedElement implements DocCommented
     @NotNull
     public static String parens(String n) {
         return "(" + n + ")";
-    }
-
-    @Override
-    public ItemPresentation getPresentation() {
-        return new ItemPresentation(this);
     }
 
     public boolean sameParensName(String name) {

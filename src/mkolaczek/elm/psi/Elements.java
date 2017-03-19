@@ -8,7 +8,6 @@ import mkolaczek.elm.psi.node.*;
 
 public interface Elements {
 
-    Element DECLARATION = new Element("declaration");
     Element DECLARATIONS = new Element("declarations");
     Element DOC_COMMENT = new Element("doc comment");
     Element IMPORT_LINE = new Element("import line");
@@ -58,9 +57,7 @@ public interface Elements {
 
         public static PsiElement createElement(ASTNode node) {
             IElementType type = node.getElementType();
-            if (type == DECLARATION) {
-                return new Declaration(node);
-            } else if (type == DECLARATIONS) {
+            if (type == DECLARATIONS) {
                 return new Declarations(node);
             } else if (type == DOC_COMMENT) {
                 return new DocComment(node);

@@ -113,6 +113,10 @@ public class Module extends ElmNamedElement implements DocCommented {
         return imports().stream().filter(i -> !i.isAliased());
     }
 
+    public Stream<Declaration> declarations() {
+        return findChildrenOfType(this, Declaration.class).stream();
+    }
+
     public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration) {
         return findChildrenOfType(this, typeOfDeclaration.psiClass()).stream();
     }
