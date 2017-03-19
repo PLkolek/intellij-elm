@@ -39,7 +39,7 @@ public class UnusedDeclarationTest extends LightCodeInsightFixtureTestCase {
         return TestUtil.testDataPath(getClass());
     }
 
-    public void testUnusedModule() {
+    public void testUnused() {
         myFixture.configureByFiles("Test.elm");
         myFixture.enableInspections(Collections.singleton(UnusedDeclarationInspection.class));
         myFixture.checkHighlighting();

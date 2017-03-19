@@ -1,1 +1,1 @@
-<EOLError descr="declarations expected"></EOLError>
+<error descr="declarations expected"> </error>
