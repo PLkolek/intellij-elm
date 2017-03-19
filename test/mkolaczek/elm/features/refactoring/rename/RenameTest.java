@@ -34,4 +34,10 @@ public class RenameTest extends LightCodeInsightFixtureTestCase {
         myFixture.checkResultByFile("operator/Test.elm", "operator/Test.expected.elm", false);
     }
 
+    public void testRenamePort() {
+        myFixture.configureByFiles("port/Test.elm");
+        myFixture.renameElementAtCaret("newName");
+        myFixture.checkResultByFile("port/Test.elm", "port/Test.expected.elm", false);
+    }
+
 }

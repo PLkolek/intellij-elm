@@ -6,16 +6,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
 import mkolaczek.elm.lexer.ElmLexerAdapter;
-import mkolaczek.elm.psi.node.Module;
-import mkolaczek.elm.psi.node.OperatorDeclaration;
-import mkolaczek.elm.psi.node.TypeConstructorName;
-import mkolaczek.elm.psi.node.TypeDeclaration;
+import mkolaczek.elm.psi.node.*;
 
 import java.util.regex.Pattern;
 
 public class InplaceRenamer extends MemberInplaceRenamer {
     private static final Pattern MODULE_PATTERN = Pattern.compile("[A-Z][a-zA-Z0-9]*(\\.[A-Z][a-zA-Z0-9]*)*");
     private static final Pattern CAP_VAR_PATTERN = Pattern.compile("[A-Z][a-zA-Z0-9]*");
+    private static final Pattern LOW_VAR_PATTERN = Pattern.compile("[a-z][a-zA-Z0-9]*");
 
     public InplaceRenamer(PsiNamedElement elementToRename, PsiElement something, Editor editor) {
         super(elementToRename, something, editor);
@@ -36,6 +34,10 @@ public class InplaceRenamer extends MemberInplaceRenamer {
 
         if (elementToRename instanceof OperatorDeclaration) {
             return !newName.isEmpty() && ElmLexerAdapter.isSymbol(newName);
+        }
+
+        if (elementToRename instanceof PortDeclaration) {
+            return LOW_VAR_PATTERN.matcher(newName).matches();
         }
 
         return super.isIdentifier(newName, language);

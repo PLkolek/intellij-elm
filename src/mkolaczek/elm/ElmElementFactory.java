@@ -89,7 +89,7 @@ public class ElmElementFactory {
     }
 
     public static PsiElement portName(Project project, String name) {
-        ElmFile file = createFile(project, "port " + name);
+        ElmFile file = createFile(project, "port module M exposing(..)\nport " + name);
         return file.module().declarations(TypeOfDeclaration.PORT).findFirst().get().getNameIdentifier();
     }
 
