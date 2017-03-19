@@ -70,6 +70,10 @@ public class SafeDeleteTest extends MultiFileTestCase {
         deleteUnused("operator/notUsed/Test.elm", "operator/notUsed/Expected.elm");
     }
 
+    public void testSafeDeleteUnusedPort() throws Exception {
+        deleteUnused("port/notUsed/Test.elm", "port/notUsed/Expected.elm");
+    }
+
     private void deleteUnused(String file, String expected) throws IOException {
         configureByFiles(null, file);
         safeDelete();

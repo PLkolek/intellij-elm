@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.psi.Token;
 import org.jetbrains.annotations.NotNull;
@@ -11,8 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.List;
 
-import static com.intellij.psi.util.PsiTreeUtil.nextVisibleLeaf;
-import static com.intellij.psi.util.PsiTreeUtil.prevVisibleLeaf;
+import static com.intellij.psi.util.PsiTreeUtil.*;
 
 public abstract class SeparatedList extends ASTWrapperPsiElement {
     private final Token separator;
@@ -31,7 +31,11 @@ public abstract class SeparatedList extends ASTWrapperPsiElement {
         int index = values.indexOf(listedValue);
         if (values.size() > 1) {
             PsiElement comma = index > 0 ? prevVisibleLeaf(listedValue) : nextVisibleLeaf(listedValue);
+            PsiElement ws = index > 0 ? prevLeaf(listedValue) : nextLeaf(listedValue);
             if (comma != null && comma.getNode().getElementType() == separator) {
+                if (ws instanceof PsiWhiteSpace) {
+                    ws.delete();
+                }
                 comma.delete();
             }
         }
