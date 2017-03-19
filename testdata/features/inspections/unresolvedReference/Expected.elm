@@ -1,4 +1,5 @@
-module Module exposing (Type(BadCons))
+module Module exposing (Type(BadCons),
+    (...), badPort)
 
 import BadModule
 import ModuleToImport
