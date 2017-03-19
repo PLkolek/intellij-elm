@@ -6,6 +6,7 @@ import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import mkolaczek.elm.psi.node.*;
+import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.DocCommented;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +43,7 @@ public class ElmDocumentationProvider implements DocumentationProvider {
         if (element instanceof TypeConstructor) {
             return ((TypeConstructor) element).typeDeclaration().getText();
         }
-        if (element instanceof TypeDeclaration || element instanceof OperatorDeclaration) {
+        if (element instanceof Declaration) {
             return StringEscapeUtils.escapeHtml(element.getText());
         }
         return null;
@@ -106,10 +107,10 @@ public class ElmDocumentationProvider implements DocumentationProvider {
             element = ((TypeConstructor) element).typeDeclaration();
         }
         if (element instanceof DocCommented) {
-            DocCommented module = (DocCommented) element;
-            String docCommentText = module.docComment().map(PsiElement::getText).orElse("");
+            DocCommented docCommented = (DocCommented) element;
+            String docCommentText = docCommented.docComment().map(PsiElement::getText).orElse("");
             return String.format("<html><head></head><body><pre>%s</pre><p>%s</p></body></html>",
-                    quickInfoText(module),
+                    quickInfoText(docCommented),
                     docCommentText);
         }
         return null;

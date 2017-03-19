@@ -5,6 +5,7 @@ import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import mkolaczek.elm.TestUtil;
 import mkolaczek.elm.features.ElmDocumentationProvider;
 import mkolaczek.elm.psi.ElmFile;
+import mkolaczek.elm.psi.node.PortDeclaration;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import org.jetbrains.annotations.NotNull;
 
@@ -90,6 +91,21 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
                 file -> file.module().declarations(TypeOfDeclaration.OPERATOR, "<:")
                             .findFirst().get()
         );
+    }
+
+    public void testPortQuickNavigateInfo() {
+        String expected = "port somePort : Cmd Int";
+        quickNavigateTest(expected, this::port);
+    }
+
+    public void testPortDocumentation() {
+        docTest("<pre>port somePort : Cmd Int</pre><p>{-| Test port -}</p>", this::port);
+    }
+
+    @NotNull
+    private PortDeclaration port(ElmFile file) {
+        return file.module().declarations(TypeOfDeclaration.PORT, "somePort")
+                   .findFirst().get();
     }
 
     private void docTest(String expectedText, Function<ElmFile, PsiElement> elemProvider) {
