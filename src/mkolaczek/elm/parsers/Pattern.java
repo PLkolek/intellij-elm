@@ -25,7 +25,11 @@ public class Pattern {
         //TODO: continue
         return or(
                 record(),
-                tuple()
+                tuple(),
+                list(),
+                expect(UNDERSCORE),
+                expect(LOW_VAR),
+                dottedCapVar("constructor")
         );
     }
 
@@ -34,7 +38,13 @@ public class Pattern {
     }
 
     private static Parser tuple() {
-        return parens("tuple type",
+        return parens("tuple pattern",
+                tryP(commaSep(expression).as(Elements.SURROUND_CONTENTS))
+        );
+    }
+
+    private static Parser list() {
+        return squareBrackets("list pattern",
                 tryP(commaSep(expression).as(Elements.SURROUND_CONTENTS))
         );
     }

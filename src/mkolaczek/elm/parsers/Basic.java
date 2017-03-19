@@ -63,6 +63,10 @@ public class Basic {
         ).as(as);
     }
 
+    static Parser squareBrackets(String name, Parser contents) {
+        return surround(name, Tokens.LSQUAREBRACKET, Tokens.RSQUAREBRACKET, contents);
+    }
+
     public static Parser parens(String name, Parser contents) {
         return surround(name, Tokens.LPAREN, Tokens.RPAREN, contents);
     }

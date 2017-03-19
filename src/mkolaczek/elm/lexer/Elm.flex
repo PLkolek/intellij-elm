@@ -45,6 +45,8 @@ SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
 %state INCOMMENT
 %state DOCCOMMENT
 %state INLINECOMMENT
+%state INMULTILINESTRING
+%state INSTRING
 
 %%
 <YYINITIAL> {
@@ -65,6 +67,8 @@ SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
   ")"               { return RPAREN; }
   "{"               { return LBRACKET; }
   "}"               { return RBRACKET; }
+  "["               { return LSQUAREBRACKET; }
+  "]"               { return RSQUAREBRACKET; }
   ","               { return COMMA; }
   ".."              { return OPEN_LISTING; }
   "="               { return EQUALS; }
@@ -73,7 +77,11 @@ SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
   "|"               { return PIPE; }
   "."               { return DOT; }
   ":"               { return COLON; }
+  "_"               { return UNDERSCORE; }
   "{-|"             { yypushstate(DOCCOMMENT); return BEGIN_DOC_COMMENT;}
+  "{-"              { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
+  "\"\"\""          { yypushstate(INMULTILINESTRING); return MULTILINE_STRING;}
+  "\""              { yypushstate(INSTRING); return QUOTE;}
   "{-"              { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
   {WS}+             { return TokenType.WHITE_SPACE; }
   {CAP_VAR}         { return CAP_VAR; }
@@ -100,6 +108,21 @@ SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
     {CLRF}          { return TokenType.WHITE_SPACE; }
     [^\-\}\{\r\n]*  { return COMMENT_CONTENT; }
     [\-\{\}]        { return COMMENT_CONTENT; }
+    [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+}
+
+<INMULTILINESTRING> {
+    "\"\"\""        { yypopstate(); return MULTILINE_STRING; }
+    [^\"]*          { return STRING_CONTENT; }
+    [\"]            { return STRING_CONTENT; }
+    [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+}
+
+<INSTRING> {
+    "\\\""          { return STRING_CONTENT; }
+    "\""            { yypopstate(); return QUOTE; }
+    {CLRF}          { yypopstate(); return TokenType.WHITE_SPACE; }
+    [^\"\n]*        { return STRING_CONTENT; }
     [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
