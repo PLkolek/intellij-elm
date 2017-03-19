@@ -48,11 +48,12 @@ public class Tokens {
     public static final Token COMMA = new Token("COMMA", ",");
     public static final Token DOT = new Token("DOT", ".");
     public static final Token SYM_OP = new Token("SYM_OP", "operator consisting of symbols");
+    public static final Token CONS = new Token("CONS", "::");
+
+
     public static final Token DIGIT = new Token("digit");
 
-
     public static final Token RUNE_OF_AUTOCOMPLETION = new Token("RUNE_OF_AUTOCOMPLETION");
-
     public static final TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR, SYM_OP);
     public static final TokenSet COMMENT_TOKENS = TokenSet.create(COMMENT_CONTENT, BEGIN_COMMENT, END_COMMENT,
             LINE_COMMENT);

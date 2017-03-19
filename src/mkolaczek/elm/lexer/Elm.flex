@@ -60,6 +60,7 @@ SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
   "infixl"          { return INFIXL; }
   "infixr"          { return INFIXR; }
   "infix"           { return INFIX; }
+  "::"              { return CONS; }
   "("               { return LPAREN; }
   ")"               { return RPAREN; }
   "{"               { return LBRACKET; }
