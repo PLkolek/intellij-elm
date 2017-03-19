@@ -2,7 +2,9 @@ package mkolaczek.elm.parsers;
 
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.ParserBox;
+import mkolaczek.elm.parsers.core.Sequence;
 import mkolaczek.elm.psi.Elements;
+import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
 import static mkolaczek.elm.parsers.SepBy.commaSep;
@@ -48,25 +50,35 @@ public class Pattern {
     }
 
     static {
-        expression.setParser(
-                sequence(
-                        consTerm(),
-                        maybeWhitespace(),
-                        tryP(
-                                or(
-                                        sequence(
-                                                expect(CONS),
-                                                maybeWhitespace(),
-                                                consTerm()
-                                        ),
-                                        sequence(
-                                                expect(AS),
-                                                maybeWhitespace(),
-                                                expect(LOW_VAR)
-                                        )
-                                )
-                        )
+        expression.setParser(expr());
+    }
+
+    @NotNull
+    private static Sequence expr() {
+        return sequence(
+                consTerm(),
+                maybeWhitespace(),
+                tryP(
+                        or(cons(), as())
                 )
+        );
+    }
+
+    @NotNull
+    private static Sequence cons() {
+        return sequence(
+                expect(CONS),
+                maybeWhitespace(),
+                consTerm()
+        );
+    }
+
+    @NotNull
+    private static Sequence as() {
+        return sequence(
+                expect(AS),
+                maybeWhitespace(),
+                expect(LOW_VAR)
         );
     }
 }
