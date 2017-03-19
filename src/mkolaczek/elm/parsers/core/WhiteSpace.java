@@ -97,6 +97,11 @@ public class WhiteSpace implements Parser {
     }
 
     @Override
+    public Set<Token> secondTokens() {
+        throw new UnsupportedOperationException("Whitespace has no second tokens");
+    }
+
+    @Override
     public boolean isRequired() {
         return false;
     }

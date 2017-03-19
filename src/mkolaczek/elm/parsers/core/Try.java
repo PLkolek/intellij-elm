@@ -45,6 +45,11 @@ public class Try implements Parser {
     }
 
     @Override
+    public Set<Token> secondTokens() {
+        return contents.secondTokens();
+    }
+
+    @Override
     public boolean isRequired() {
         return false;
     }

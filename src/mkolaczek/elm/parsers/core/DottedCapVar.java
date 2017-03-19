@@ -100,6 +100,11 @@ public class DottedCapVar implements Parser {
     }
 
     @Override
+    public Set<Token> secondTokens() {
+        throw new UnsupportedOperationException("DottedCapVar can be a sigle token");
+    }
+
+    @Override
     public boolean isRequired() {
         return true;
     }

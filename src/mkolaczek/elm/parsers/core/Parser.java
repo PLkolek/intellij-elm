@@ -13,6 +13,8 @@ public interface Parser {
 
     Set<Token> startingTokens();
 
+    Set<Token> secondTokens();
+
     boolean isRequired();
 
     String name();
@@ -23,6 +25,10 @@ public interface Parser {
 
     default Parser as(Element as, As.Mode mode) {
         return new As(this, as, mode);
+    }
+
+    default Parser ll2() {
+        return new LL2(this);
     }
 
     static boolean anyRequired(Parser... parsers) {

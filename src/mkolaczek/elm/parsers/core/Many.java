@@ -61,6 +61,11 @@ public class Many implements Parser {
     }
 
     @Override
+    public Set<Token> secondTokens() {
+        return parser.secondTokens();
+    }
+
+    @Override
     public boolean isRequired() {
         return false;
     }

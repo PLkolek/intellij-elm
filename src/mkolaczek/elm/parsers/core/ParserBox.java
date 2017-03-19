@@ -31,6 +31,11 @@ public class ParserBox implements Parser {
     }
 
     @Override
+    public Set<Token> secondTokens() {
+        return containedParser.secondTokens();
+    }
+
+    @Override
     public boolean isRequired() {
         return containedParser.isRequired();
     }

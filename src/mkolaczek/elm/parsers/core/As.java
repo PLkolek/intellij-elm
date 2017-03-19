@@ -39,6 +39,11 @@ public class As implements Parser {
     }
 
     @Override
+    public Set<Token> secondTokens() {
+        return content.secondTokens();
+    }
+
+    @Override
     public boolean isRequired() {
         return content.isRequired();
     }

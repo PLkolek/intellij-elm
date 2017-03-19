@@ -64,6 +64,11 @@ public class Or implements Parser {
     }
 
     @Override
+    public Set<Token> secondTokens() {
+        throw new UnsupportedOperationException("Hopefully this won't be necessary");
+    }
+
+    @Override
     public boolean isRequired() {
         return true;
     }

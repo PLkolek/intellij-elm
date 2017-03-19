@@ -105,6 +105,20 @@ public class Sequence implements Parser {
     }
 
     @Override
+    public Set<Token> secondTokens() {
+        int nonWsCount = 0;
+        for (Parser parser : parsers) {
+            if (!(parser instanceof WhiteSpace)) {
+                nonWsCount++;
+                if (nonWsCount == 2) {
+                    return parser.startingTokens();
+                }
+            }
+        }
+        throw new UnsupportedOperationException("Sequence with only one non whitespace parser has no second tokens");
+    }
+
+    @Override
     public boolean isRequired() {
         return Parser.anyRequired(parsers);
     }

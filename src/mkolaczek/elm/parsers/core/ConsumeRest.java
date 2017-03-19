@@ -32,6 +32,11 @@ public class ConsumeRest implements Parser {
     }
 
     @Override
+    public Set<Token> secondTokens() {
+        throw new UnsupportedOperationException("Consume rest has no second tokens");
+    }
+
+    @Override
     public boolean isRequired() {
         return false;
     }

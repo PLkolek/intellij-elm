@@ -33,6 +33,11 @@ public class Expect implements Parser {
     }
 
     @Override
+    public Set<Token> secondTokens() {
+        throw new UnsupportedOperationException("Expect contains only one token");
+    }
+
+    @Override
     public boolean isRequired() {
         return true;
     }

@@ -33,7 +33,12 @@ public class Declaration {
 
 
     private static Parser declaration() {
-        return or("declaration", Basic.docComment(), typeDecl(), infixDecl(), portDecl());
+        return or("declaration",
+                Basic.docComment(),
+                typeDecl(),
+                infixDecl(),
+                portDecl(),
+                Expression.definition());
     }
 
     private static Parser portDecl() {
