@@ -46,7 +46,7 @@ public class Many implements Parser {
             } else {
                 Optional<Token> nextValid = SkipUntil.nextValid(childNextTokens, builder);
                 if (nextValid.isPresent() && startingTokens().contains(nextValid.get())) {
-                    skipUntil(parser.name(), myNextTokens, builder);
+                    skipUntil(parser.name(), startingTokens(), builder);
                 } else {
                     break;
                 }
