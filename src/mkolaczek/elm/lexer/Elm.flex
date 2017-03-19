@@ -4,6 +4,7 @@ import static mkolaczek.elm.psi.Tokens.*;
 import java.util.LinkedList;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.StringEscapesTokenTypes;
 
 %%
 
@@ -41,6 +42,11 @@ CAP_VAR=[A-Z][a-zA-Z0-9ᛜ]*
 LOW_VAR=[a-z][a-zA-Z0-9ᛜ]*
 SYMBOL= [\+\-\/\*=\.<>:&\|\^\?%#~\!]
 SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
+ESCAPE_CHAR=[abfnrtv\"\\\']
+UNICODE_ESCAPE="\\"u[a-fA-F0-9]{4}
+VALID_ESCAPE="\\"{ESCAPE_CHAR}
+INVALID_ESCAPE="\\"[^abfnrtv\"\\\n']
+INVALID_UNICODE_ESCAPE="\\u"[^ \"]{0,4}
 
 %state INCOMMENT
 %state DOCCOMMENT
@@ -112,18 +118,25 @@ SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
 }
 
 <INMULTILINESTRING> {
-    "\"\"\""        { yypopstate(); return MULTILINE_STRING; }
-    [^\"]*          { return STRING_CONTENT; }
-    [\"]            { return STRING_CONTENT; }
-    [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+    "\"\"\""                    { yypopstate(); return MULTILINE_STRING; }
+    {UNICODE_ESCAPE}            { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
+    {VALID_ESCAPE}              { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
+    {INVALID_ESCAPE}            { return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN; }
+    {INVALID_UNICODE_ESCAPE}    { return StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN; }
+    [^\\\"]*                    { return STRING_CONTENT; }
+    [\"\\\n]                    { return STRING_CONTENT; }
+    [^]                         { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
 <INSTRING> {
-    "\\\""          { return STRING_CONTENT; }
-    "\""            { yypopstate(); return QUOTE; }
-    {CLRF}          { yypopstate(); return TokenType.WHITE_SPACE; }
-    [^\"\n]*        { return STRING_CONTENT; }
-    [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+    "\""                        { yypopstate(); return QUOTE; }
+    {CLRF}                      { yypopstate(); return TokenType.WHITE_SPACE; }
+    {UNICODE_ESCAPE}            { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
+    {VALID_ESCAPE}              { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
+    {INVALID_ESCAPE}            { return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN; }
+    {INVALID_UNICODE_ESCAPE}    { return StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN; }
+    [^\"\n]*                    { return STRING_CONTENT; }
+    [^]                         { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
 <INLINECOMMENT> {

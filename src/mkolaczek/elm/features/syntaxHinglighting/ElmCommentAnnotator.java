@@ -3,6 +3,7 @@ package mkolaczek.elm.features.syntaxHinglighting;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.psi.node.DocComment;
@@ -11,11 +12,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class ElmCommentAnnotator implements Annotator {
     @Override
-    public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
+    public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         if (element instanceof DocComment) {
-            createAnnotation(element, holder, ElmSyntaxHighlighter.COMMENT);
+            createAnnotation(element, holder, DefaultLanguageHighlighterColors.BLOCK_COMMENT);
         } else if (element instanceof MultilineComment) {
-            createAnnotation(element, holder, ElmSyntaxHighlighter.DOC_COMMENT);
+            createAnnotation(element, holder, DefaultLanguageHighlighterColors.DOC_COMMENT);
         }
     }
 
