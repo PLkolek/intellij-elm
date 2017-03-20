@@ -13,7 +13,6 @@ public interface Elements {
     Element IMPORT_LINE = new Element("import line");
     Element MODULE_HEADER = new Element("module header");
     Element MODULE_VALUE_LIST = new Element("MODULE_VALUE_LIST", "exposed values");
-    Element MULTILINE_COMMENT = new Element("multiline comment");
     Element TYPE_DECLARATION = new Element("type declaration");
     Element MODULE_NAME = new Element("module name");
     Element MODULE_NAME_REF = new Element("MODULE_NAME_REF", "module name");
@@ -70,8 +69,6 @@ public interface Elements {
                 return new ModuleHeader(node);
             } else if (type == MODULE_VALUE_LIST) {
                 return new ModuleValueList(node);
-            } else if (type == MULTILINE_COMMENT) {
-                return new MultilineComment(node);
             } else if (type == TYPE_DECLARATION) {
                 return new TypeDeclaration(node);
             } else if (type == MODULE_NAME_REF) {

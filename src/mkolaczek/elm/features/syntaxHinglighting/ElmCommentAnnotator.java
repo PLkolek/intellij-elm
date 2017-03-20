@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.psi.node.DocComment;
-import mkolaczek.elm.psi.node.MultilineComment;
 import org.jetbrains.annotations.NotNull;
 
 public class ElmCommentAnnotator implements Annotator {
@@ -15,8 +14,6 @@ public class ElmCommentAnnotator implements Annotator {
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         if (element instanceof DocComment) {
             createAnnotation(element, holder, DefaultLanguageHighlighterColors.BLOCK_COMMENT);
-        } else if (element instanceof MultilineComment) {
-            createAnnotation(element, holder, DefaultLanguageHighlighterColors.DOC_COMMENT);
         }
     }
 

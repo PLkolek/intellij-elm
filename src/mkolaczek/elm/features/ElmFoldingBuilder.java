@@ -9,7 +9,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.node.ModuleHeader;
 import mkolaczek.elm.psi.node.TypeDeclaration;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,6 @@ public class ElmFoldingBuilder implements FoldingBuilder {
 
     private static final Set<IElementType> FOLDABLE_NODES = Sets.newHashSet(
             DOC_COMMENT,
-            MULTILINE_COMMENT,
             IMPORTS,
             EXPOSING_NODE,
             EFFECT_MODULE_SETTINGS,
@@ -33,7 +31,7 @@ public class ElmFoldingBuilder implements FoldingBuilder {
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
-        final List<FoldingDescriptor> descriptors = Lists.newArrayList();
+        List<FoldingDescriptor> descriptors = Lists.newArrayList();
         collectDescriptors(node, document, descriptors);
         return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
     }
@@ -51,12 +49,9 @@ public class ElmFoldingBuilder implements FoldingBuilder {
     @Nullable
     @Override
     public String getPlaceholderText(@NotNull ASTNode node) {
-        final IElementType type = node.getElementType();
+        IElementType type = node.getElementType();
         if (type == DOC_COMMENT) {
             return "{-|...-}";
-        }
-        if (type == Elements.MULTILINE_COMMENT) {
-            return "{-...-}";
         }
         if (type == IMPORTS) {
             return "import ...";
@@ -89,7 +84,7 @@ public class ElmFoldingBuilder implements FoldingBuilder {
     }
 
     private static boolean spanMultipleLines(@NotNull ASTNode node, @NotNull Document document) {
-        final TextRange range = node.getTextRange();
+        TextRange range = node.getTextRange();
         return document.getLineNumber(range.getStartOffset()) < document.getLineNumber(range.getEndOffset());
     }
 }
