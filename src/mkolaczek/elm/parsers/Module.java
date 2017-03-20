@@ -105,7 +105,7 @@ public class Module {
                         maybeWhitespace(expect(Tokens.MODULE)),
                         maybeWhitespace(dottedCapVar("module name").as(Elements.MODULE_NAME)),
                         maybeWhitespace(settings()).skipWsError(),
-                        maybeWhitespace(exposing()),
+                        maybeWhitespace(exposing()).skipWsError(),
                         WhiteSpace.freshLine()
                 );
 
@@ -114,15 +114,12 @@ public class Module {
                         or("Module declaration keywords",
                                 sequence("Port module declaration keywords",
                                         expect(Tokens.PORT),
-                                        WhiteSpace.maybeWhitespace(),
-                                        expect(Tokens.MODULE)
+                                        maybeWhitespace(expect(Tokens.MODULE)).skipWsError()
                                 ),
                                 expect(Tokens.MODULE)
                         ),
-                        WhiteSpace.maybeWhitespace(),
-                        dottedCapVar("module name").as(Elements.MODULE_NAME),
-                        WhiteSpace.maybeWhitespace(),
-                        exposing(),
+                        maybeWhitespace(dottedCapVar("module name").as(Elements.MODULE_NAME)),
+                        maybeWhitespace(exposing()).skipWsError(),
                         WhiteSpace.freshLine()
                 );
         return or(effectSequence, sequence).as(Elements.MODULE_HEADER);
