@@ -4,19 +4,19 @@ import com.google.common.collect.ImmutableMap;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+import static mkolaczek.elm.psi.Tokens.*;
+
 public class ElmStringAnnotator implements Annotator {
 
     private static final Map<IElementType, String> tokenErrorMessages = ImmutableMap.of(
-            Tokens.INVALID_EOL_IN_STRING, "Invalid end of line in single line string",
-            StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN, "Invalid escape character",
-            StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN, "Invalid unicode escape characters"
+            INVALID_EOL_IN_STRING, "Invalid end of line in single line string",
+            INVALID_CHARACTER_ESCAPE_TOKEN, "Invalid escape character",
+            INVALID_UNICODE_ESCAPE_TOKEN, "Invalid unicode escape characters"
     );
 
     @Override

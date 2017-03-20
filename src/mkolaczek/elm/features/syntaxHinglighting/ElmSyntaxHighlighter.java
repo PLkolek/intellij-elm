@@ -6,7 +6,6 @@ import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
-import com.intellij.psi.StringEscapesTokenTypes;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.lexer.ElmLexerAdapter;
 import mkolaczek.elm.psi.Tokens;
@@ -32,12 +31,12 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
     );
 
     private static final Set<IElementType> VALID_ESCAPES = ImmutableSet.of(
-            StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN
+            Tokens.VALID_STRING_ESCAPE_TOKEN
     );
 
     private static final Set<IElementType> INVALID_ESCAPES = ImmutableSet.of(
-            StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN,
-            StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN
+            Tokens.INVALID_CHARACTER_ESCAPE_TOKEN,
+            Tokens.INVALID_UNICODE_ESCAPE_TOKEN
     );
 
     private static final Set<IElementType> STRING_LITERALS = ImmutableSet.of(

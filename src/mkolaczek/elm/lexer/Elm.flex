@@ -4,7 +4,6 @@ import static mkolaczek.elm.psi.Tokens.*;
 import java.util.LinkedList;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.StringEscapesTokenTypes;
 
 %%
 
@@ -119,25 +118,25 @@ INVALID_UNICODE_ESCAPE="\\u"[^ \"]{0,4}
 
 <INMULTILINESTRING> {
     "\"\"\""                    { yypopstate(); return MULTILINE_STRING; }
-    {UNICODE_ESCAPE}            { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
-    {VALID_ESCAPE}              { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
-    {INVALID_ESCAPE}            { return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN; }
-    {INVALID_UNICODE_ESCAPE}    { return StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN; }
+    {UNICODE_ESCAPE}            { return VALID_STRING_ESCAPE_TOKEN; }
+    {VALID_ESCAPE}              { return VALID_STRING_ESCAPE_TOKEN; }
+    {INVALID_ESCAPE}            { return INVALID_CHARACTER_ESCAPE_TOKEN; }
+    {INVALID_UNICODE_ESCAPE}    { return INVALID_UNICODE_ESCAPE_TOKEN; }
     [^\\\"]+                    { return STRING_CONTENT; }
     [\"\n]                      { return STRING_CONTENT; }
-    "\\"                        { return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN; }
+    "\\"                        { return INVALID_CHARACTER_ESCAPE_TOKEN; }
     [^]                         { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
 <INSTRING> {
     "\""                        { yypopstate(); return QUOTE; }
     {CLRF}                      { yypopstate(); yypushback(1); return INVALID_EOL_IN_STRING; }
-    {UNICODE_ESCAPE}            { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
-    {VALID_ESCAPE}              { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
-    {INVALID_ESCAPE}            { return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN; }
-    {INVALID_UNICODE_ESCAPE}    { return StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN; }
+    {UNICODE_ESCAPE}            { return VALID_STRING_ESCAPE_TOKEN; }
+    {VALID_ESCAPE}              { return VALID_STRING_ESCAPE_TOKEN; }
+    {INVALID_ESCAPE}            { return INVALID_CHARACTER_ESCAPE_TOKEN; }
+    {INVALID_UNICODE_ESCAPE}    { return INVALID_UNICODE_ESCAPE_TOKEN; }
     [^\\\"\n]+                  { return STRING_CONTENT; }
-    "\\"                        { return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN; }
+    "\\"                        { return INVALID_CHARACTER_ESCAPE_TOKEN; }
     [^]                         { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 

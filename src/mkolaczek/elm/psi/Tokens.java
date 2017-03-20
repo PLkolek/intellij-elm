@@ -6,68 +6,70 @@ import com.intellij.psi.tree.TokenSet;
 
 import java.util.function.Predicate;
 
-public class Tokens {
+public interface Tokens {
 
-    public static final Token PORT = new Token("port");
-    public static final Token EFFECT = new Token("effect");
-    public static final Token MODULE = new Token("module");
-    public static final Token IMPORT = new Token("import");
-    public static final Token AS = new Token("as");
-    public static final Token WHERE = new Token("where");
-    public static final Token EXPOSING = new Token("exposing");
-    public static final Token TYPE = new Token("type");
-    public static final Token ALIAS = new Token("alias");
-    public static final Token INFIXL = new Token("infixl");
-    public static final Token INFIXR = new Token("infixr");
-    public static final Token INFIX = new Token("infix");
+    Token PORT = new Token("port");
+    Token EFFECT = new Token("effect");
+    Token MODULE = new Token("module");
+    Token IMPORT = new Token("import");
+    Token AS = new Token("as");
+    Token WHERE = new Token("where");
+    Token EXPOSING = new Token("exposing");
+    Token TYPE = new Token("type");
+    Token ALIAS = new Token("alias");
+    Token INFIXL = new Token("infixl");
+    Token INFIXR = new Token("infixr");
+    Token INFIX = new Token("infix");
 
-    public static final Token OPEN_LISTING = new Token("..");
-    public static final Token ARROW = new Token("ARROW", "->");
-    public static final Token EQUALS = new Token("EQUALS", "=");
-    public static final Token PIPE = new Token("PIPE", "|");
-    public static final Token COLON = new Token("COLON", ":");
-    public static final Token COMMA = new Token("COMMA", ",");
-    public static final Token DOT = new Token("DOT", ".");
-    public static final Token CONS = new Token("CONS", "::");
-    public static final Token UNDERSCORE = new Token("UNDERSCORE", "_");
-    public static final Token MULTILINE_STRING = new Token("MULTILINE_STRING", "\"\"\"");
-    public static final Token QUOTE = new Token("QUOTE", "\"");
+    Token OPEN_LISTING = new Token("..");
+    Token ARROW = new Token("ARROW", "->");
+    Token EQUALS = new Token("EQUALS", "=");
+    Token PIPE = new Token("PIPE", "|");
+    Token COLON = new Token("COLON", ":");
+    Token COMMA = new Token("COMMA", ",");
+    Token DOT = new Token("DOT", ".");
+    Token CONS = new Token("CONS", "::");
+    Token UNDERSCORE = new Token("UNDERSCORE", "_");
+    Token MULTILINE_STRING = new Token("MULTILINE_STRING", "\"\"\"");
+    Token QUOTE = new Token("QUOTE", "\"");
 
-    public static final Token BEGIN_COMMENT = new Token("BEGIN_COMMENT", "{-");
-    public static final Token BEGIN_DOC_COMMENT = new Token("BEGIN_DOC_COMMENT", "{-|");
-    public static final Token END_COMMENT = new Token("END_COMMENT", "-}");
-    public static final Token END_DOC_COMMENT = new Token("END_DOC_COMMENT", "-}");
-    public static final Token LINE_COMMENT = new Token("LINE_COMMENT", "--");
-    public static final Token COMMENT_CONTENT = new Token("COMMENT_CONTENT", "comment content");
+    Token BEGIN_COMMENT = new Token("BEGIN_COMMENT", "{-");
+    Token BEGIN_DOC_COMMENT = new Token("BEGIN_DOC_COMMENT", "{-|");
+    Token END_COMMENT = new Token("END_COMMENT", "-}");
+    Token END_DOC_COMMENT = new Token("END_DOC_COMMENT", "-}");
+    Token LINE_COMMENT = new Token("LINE_COMMENT", "--");
+    Token COMMENT_CONTENT = new Token("COMMENT_CONTENT", "comment content");
 
-    public static final Token STRING_CONTENT = new Token("STRING_CONTENT", "string content");
-    public static final Token INVALID_EOL_IN_STRING =
-            new Token("INVALID_EOL_IN_STRING",
-                    "invalid end of line in single line string");
+    Token STRING_CONTENT = new Token("STRING_CONTENT", "string content");
+    Token INVALID_EOL_IN_STRING = new Token("INVALID_EOL_IN_STRING", "invalid end of line in single line string");
+    //Those should be StringEscapesTokenTypes for something to work (ie. ToUppercase), but...
+    Token VALID_STRING_ESCAPE_TOKEN = new Token("VALID_STRING_ESCAPE_TOKEN", "valid escape sequence");
+    Token INVALID_CHARACTER_ESCAPE_TOKEN = new Token("INVALID_CHARACTER_ESCAPE_TOKEN", "invalid escape sequence");
+    Token INVALID_UNICODE_ESCAPE_TOKEN = new Token("INVALID_UNICODE_ESCAPE_TOKEN", "invalid unicode escape sequence");
 
 
-    public static final Token LBRACKET = new Token("LBRACKET", "{");
-    public static final Token RBRACKET = new Token("RBRACKET", "}");
-    public static final Token LPAREN = new Token("LPAREN", "(");
-    public static final Token RPAREN = new Token("RPAREN", ")");
-    public static final Token LSQUAREBRACKET = new Token("LSQUAREBRACKET", "[");
-    public static final Token RSQUAREBRACKET = new Token("RSQUAREBRACKET", "]");
+    Token LBRACKET = new Token("LBRACKET", "{");
+    Token RBRACKET = new Token("RBRACKET", "}");
+    Token LPAREN = new Token("LPAREN", "(");
+    Token RPAREN = new Token("RPAREN", ")");
+    Token LSQUAREBRACKET = new Token("LSQUAREBRACKET", "[");
+    Token RSQUAREBRACKET = new Token("RSQUAREBRACKET", "]");
 
-    public static final Token CAP_VAR = new Token("CAP_VAR", "uppercase identifier");
-    public static final Token LOW_VAR = new Token("LOW_VAR", "lowercase identifier");
-    public static final Token SYM_OP = new Token("SYM_OP", "operator consisting of symbols");
+    Token CAP_VAR = new Token("CAP_VAR", "uppercase identifier");
+    Token LOW_VAR = new Token("LOW_VAR", "lowercase identifier");
+    Token SYM_OP = new Token("SYM_OP", "operator consisting of symbols");
 
-    public static final Token DIGIT = new Token("digit");
-    public static final Token RUNE_OF_AUTOCOMPLETION = new Token("RUNE_OF_AUTOCOMPLETION");
-    public static final TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR, SYM_OP);
-    public static final TokenSet COMMENT_TOKENS = TokenSet.create(COMMENT_CONTENT, BEGIN_COMMENT, END_COMMENT,
+    Token DIGIT = new Token("digit");
+    Token RUNE_OF_AUTOCOMPLETION = new Token("RUNE_OF_AUTOCOMPLETION");
+    TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR, SYM_OP);
+    TokenSet COMMENT_TOKENS = TokenSet.create(COMMENT_CONTENT, BEGIN_COMMENT, END_COMMENT,
             LINE_COMMENT);
 
-    public static boolean is(Token compared, Token... expected) {
+    static boolean is(Token compared, Token... expected) {
         return Sets.newHashSet(expected).contains(compared);
     }
 
-    public static Predicate<PsiBuilder> is(Token... expected) {
+    static Predicate<PsiBuilder> is(Token... expected) {
         return builder -> is((Token) builder.getTokenType(), expected);
     }
 
