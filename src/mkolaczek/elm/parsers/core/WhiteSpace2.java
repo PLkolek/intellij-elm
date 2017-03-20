@@ -26,8 +26,11 @@ public class WhiteSpace2 implements Parser {
 
     @Override
     public Result parse(PsiBuilder builder, Collection<Parser> nextParsers) {
-        if (!acceptsWhiteSpace(builder)) {
-            return Result.WS_ERROR;
+        if (!type.accepts(builder)) {
+            builder.error(type.name + " expected");
+            if (!skipWsError) {
+                return Result.WS_ERROR;
+            }
         }
         if (!prefixedParsed.willParse(builder)) {
             return Result.TOKEN_ERROR;

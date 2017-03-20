@@ -40,7 +40,7 @@ public class WhiteSpace implements Parser {
             }
         };
 
-        private final String name;
+        final String name;
 
         Type(String name) {
             this.name = name;
