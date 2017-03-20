@@ -5,6 +5,7 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.psi.node.CharacterLiteral;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -21,6 +22,9 @@ public class ElmStringAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         IElementType elementType = element.getNode().getElementType();
+        if (element instanceof CharacterLiteral && !((CharacterLiteral) element).isLengthValid()) {
+            holder.createErrorAnnotation(element, "Length of character literal is invalid");
+        }
         if (elementType == INVALID_EOL_IN_STRING) {
             holder.createErrorAnnotation(element.getParent(), "Invalid end of line in character literal");
         }
