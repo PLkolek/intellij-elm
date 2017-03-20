@@ -37,8 +37,8 @@ public class Declaration {
                 Basic.docComment(),
                 typeDecl(),
                 infixDecl(),
-                portDecl()
-                //, Expression.definition()
+                portDecl(),
+                Expression.definition()
         );
     }
 
