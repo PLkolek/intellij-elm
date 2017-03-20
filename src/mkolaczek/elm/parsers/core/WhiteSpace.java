@@ -76,11 +76,10 @@ public class WhiteSpace implements Parser {
 
     @Override
     public boolean parse(PsiBuilder builder, Set<Token> nextTokens) {
-        boolean ok = type.accepts(builder);
-        if (!ok) {
+        if (!type.accepts(builder)) {
             error(builder);
         }
-        return type != Type.NO || ok;
+        return true;
     }
 
     private static char lastChar(PsiBuilder builder) {
