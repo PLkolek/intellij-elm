@@ -34,7 +34,7 @@ import com.intellij.psi.StringEscapesTokenTypes;
 %eof}
 
 
-CLRF="\r"|"\n"|"\r\n"|[\ \f\t]
+CLRF="\r"|"\n"|"\r\n"
 LINE_WS=[\ \f\t]
 WS={CLRF}|{LINE_WS}
 DIGIT=[0-9]
@@ -102,7 +102,7 @@ INVALID_UNICODE_ESCAPE="\\u"[^ \"]{0,4}
     "{-"            { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
     "-}"            { yypopstate(); return END_DOC_COMMENT; }
     {CLRF}          { return TokenType.WHITE_SPACE; }
-    [^\-\}\{\r\n]*  { return COMMENT_CONTENT; }
+    [^\-\}\{\r\n]+  { return COMMENT_CONTENT; }
     [\-\{\}]        { return COMMENT_CONTENT; }
     [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
@@ -112,7 +112,7 @@ INVALID_UNICODE_ESCAPE="\\u"[^ \"]{0,4}
     "{-"            { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
     "-}"            { yypopstate(); return END_COMMENT; }
     {CLRF}          { return TokenType.WHITE_SPACE; }
-    [^\-\}\{\r\n]*  { return COMMENT_CONTENT; }
+    [^\-\}\{\r\n]+  { return COMMENT_CONTENT; }
     [\-\{\}]        { return COMMENT_CONTENT; }
     [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
@@ -123,24 +123,26 @@ INVALID_UNICODE_ESCAPE="\\u"[^ \"]{0,4}
     {VALID_ESCAPE}              { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
     {INVALID_ESCAPE}            { return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN; }
     {INVALID_UNICODE_ESCAPE}    { return StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN; }
-    [^\\\"]*                    { return STRING_CONTENT; }
-    [\"\\\n]                    { return STRING_CONTENT; }
+    [^\\\"]+                    { return STRING_CONTENT; }
+    [\"\n]                      { return STRING_CONTENT; }
+    "\\"                        { return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN; }
     [^]                         { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
 <INSTRING> {
     "\""                        { yypopstate(); return QUOTE; }
-    {CLRF}                      { yypopstate(); return TokenType.WHITE_SPACE; }
+    {CLRF}                      { yypopstate(); yypushback(1); return INVALID_EOL_IN_STRING; }
     {UNICODE_ESCAPE}            { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
     {VALID_ESCAPE}              { return StringEscapesTokenTypes.VALID_STRING_ESCAPE_TOKEN; }
     {INVALID_ESCAPE}            { return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN; }
     {INVALID_UNICODE_ESCAPE}    { return StringEscapesTokenTypes.INVALID_UNICODE_ESCAPE_TOKEN; }
-    [^\"\n]*                    { return STRING_CONTENT; }
+    [^\\\"\n]+                  { return STRING_CONTENT; }
+    "\\"                        { return StringEscapesTokenTypes.INVALID_CHARACTER_ESCAPE_TOKEN; }
     [^]                         { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
 <INLINECOMMENT> {
     {CLRF}          { yypopstate(); return TokenType.WHITE_SPACE; }
-    [^\r\n]*        { return COMMENT_CONTENT; }
+    [^\r\n]+        { return COMMENT_CONTENT; }
     [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }

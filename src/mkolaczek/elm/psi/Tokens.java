@@ -41,7 +41,9 @@ public class Tokens {
     public static final Token COMMENT_CONTENT = new Token("COMMENT_CONTENT", "comment content");
 
     public static final Token STRING_CONTENT = new Token("STRING_CONTENT", "string content");
-
+    public static final Token INVALID_EOL_IN_STRING =
+            new Token("INVALID_EOL_IN_STRING",
+                    "invalid end of line in single line string");
 
 
     public static final Token LBRACKET = new Token("LBRACKET", "{");

@@ -53,6 +53,7 @@
                 implementation="mkolaczek.elm.features.refactoring.safeDelete.ElmSafeDeleteDelegate"/>
         <annotator language="Elm"
                    implementationClass="mkolaczek.elm.features.inspections.UnresolvedReferenceAnnotator"/>
+        <annotator language="Elm" implementationClass="mkolaczek.elm.features.syntaxHinglighting.ElmStringAnnotator"/>
     </extensions>
 
     <actions>
