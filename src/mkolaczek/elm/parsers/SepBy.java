@@ -9,7 +9,9 @@ import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
+import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
+import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
 
 public class SepBy {
     public static Parser pipeSep(Parser parser) {
@@ -40,8 +42,8 @@ public class SepBy {
     @NotNull
     private static Many sepSuffix(Token separator, Parser parser) {
         return Many.many(String.format("more %ss", parser.name()),
-                Basic.padded(separator),
-                parser
+                maybeWhitespace(expect(separator)),
+                maybeWhitespace(parser)
         );
     }
 }

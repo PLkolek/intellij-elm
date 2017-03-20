@@ -14,7 +14,7 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
+import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
 
 public class
 Type {
@@ -35,10 +35,8 @@ Type {
     @NotNull
     private static Sequence fieldSuffix() {
         return sequence("record field suffix",
-                maybeWhitespace(),
-                expect(Tokens.COLON),
-                maybeWhitespace(),
-                expression
+                maybeWhitespace(expect(Tokens.COLON)),
+                maybeWhitespace(expression)
         );
     }
 
@@ -48,18 +46,16 @@ Type {
                     tryP(
                             sequence(
                                     expect(Tokens.LOW_VAR),
-                                    maybeWhitespace(),
-                                    or(
+                                    maybeWhitespace(or(
                                             sequence(
                                                     expect(Tokens.PIPE),
-                                                    maybeWhitespace(),
-                                                    tryCommaSep(field)
+                                                    maybeWhitespace(tryCommaSep(field))
                                             ),
                                             sequence(
                                                     fieldSuffix(),
-                                                    maybeWhitespace(),
-                                                    commaSepSuffix(field))
-                                    )
+                                                    maybeWhitespace(commaSepSuffix(field))
+                                            )
+                                    ))
                             ).as(Elements.SURROUND_CONTENTS)
                     )
             ).as(Elements.RECORD_TYPE);
@@ -93,10 +89,8 @@ Type {
                     ),
                     tryP(
                             sequence(
-                                    maybeWhitespace(),
-                                    expect(Tokens.ARROW),
-                                    maybeWhitespace(),
-                                    expression
+                                    maybeWhitespace(expect(Tokens.ARROW)),
+                                    maybeWhitespace(expression)
                             )
                     )
             );

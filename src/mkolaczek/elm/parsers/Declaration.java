@@ -5,13 +5,15 @@ import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
-import static mkolaczek.elm.parsers.Basic.*;
+import static mkolaczek.elm.parsers.Basic.operatorSymbol;
+import static mkolaczek.elm.parsers.Basic.spacePrefix;
 import static mkolaczek.elm.parsers.SepBy.pipeSep;
 import static mkolaczek.elm.parsers.core.ConsumeRest.consumeRest;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.forcedWhitespace;
+import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
 
 public class Declaration {
 
@@ -71,8 +73,8 @@ public class Declaration {
         return sequence("type declaration contents suffix",
                 nameArgs(),
                 sequence(
-                        padded(Tokens.EQUALS),
-                        pipeSep(Type.unionConstructor())
+                        maybeWhitespace(expect(Tokens.EQUALS)),
+                        maybeWhitespace(pipeSep(Type.unionConstructor()))
                 ).as(Elements.TYPE_DECL_DEF_NODE)
         ).as(Elements.TYPE_DECL_NODE);
     }
@@ -82,8 +84,8 @@ public class Declaration {
                 expect(Tokens.ALIAS),
                 forcedWhitespace(),
                 nameArgs(),
-                padded(Tokens.EQUALS),
-                Type.expression
+                maybeWhitespace(expect(Tokens.EQUALS)),
+                maybeWhitespace(Type.expression)
         ).as(Elements.TYPE_ALIAS_DECL_NODE);
     }
 

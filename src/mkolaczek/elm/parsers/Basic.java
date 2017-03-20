@@ -14,7 +14,6 @@ import static mkolaczek.elm.parsers.SepBy.commaSep;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
 import static mkolaczek.elm.psi.Tokens.RPAREN;
@@ -34,18 +33,6 @@ public class Basic {
         return or(name,
                 expect(Tokens.OPEN_LISTING).as(Elements.OPEN_LISTING_NODE),
                 commaSep(listedValue)
-        );
-    }
-
-    public static Parser padded(Token paddedToken) {
-        return padded(expect(paddedToken));
-    }
-
-    public static Parser padded(Parser paddedValue) {
-        return sequence(paddedValue.name(),
-                maybeWhitespace(),
-                paddedValue,
-                maybeWhitespace()
         );
     }
 

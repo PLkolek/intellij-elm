@@ -15,7 +15,7 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
+import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class Pattern {
@@ -68,9 +68,8 @@ public class Pattern {
     private static Sequence expr() {
         return sequence(
                 consTerm(),
-                maybeWhitespace(),
                 tryP(
-                        or(cons(), as())
+                        maybeWhitespace(or(cons(), as()))
                 )
         );
     }
@@ -79,8 +78,7 @@ public class Pattern {
     private static Sequence cons() {
         return sequence(
                 expect(CONS),
-                maybeWhitespace(),
-                consTerm()
+                maybeWhitespace(consTerm())
         );
     }
 
@@ -88,8 +86,7 @@ public class Pattern {
     private static Sequence as() {
         return sequence(
                 expect(AS),
-                maybeWhitespace(),
-                expect(LOW_VAR)
+                maybeWhitespace(expect(LOW_VAR))
         );
     }
 }

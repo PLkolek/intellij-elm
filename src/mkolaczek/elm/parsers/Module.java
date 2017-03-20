@@ -81,8 +81,7 @@ public class Module {
     public static Parser settings() {
         return sequence(
                 expect(Tokens.WHERE),
-                WhiteSpace.maybeWhitespace(),
-                settingsList()
+                maybeWhitespace(settingsList())
         ).as(Elements.EFFECT_MODULE_SETTINGS);
     }
 
@@ -91,8 +90,8 @@ public class Module {
                 tryCommaSep(
                         sequence(
                                 expect(Tokens.LOW_VAR),
-                                Basic.padded(expect(Tokens.EQUALS)),
-                                expect(Tokens.CAP_VAR)
+                                maybeWhitespace(expect(Tokens.EQUALS)),
+                                maybeWhitespace(expect(Tokens.CAP_VAR))
                         ).as(Elements.EFFECT_MODULE_SETTING)
                 )
         ).as(Elements.EFFECT_MODULE_SETTINGS_LIST);
