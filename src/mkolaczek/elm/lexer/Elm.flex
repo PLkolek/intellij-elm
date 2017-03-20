@@ -44,14 +44,15 @@ SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
 ESCAPE_CHAR=[abfnrtv\"\\\']
 UNICODE_ESCAPE="\\"u[a-fA-F0-9]{4}
 VALID_ESCAPE="\\"{ESCAPE_CHAR}
-INVALID_ESCAPE="\\"[^abfnrtv\"\\\n']
-INVALID_UNICODE_ESCAPE="\\u"[^ \"]{0,4}
+INVALID_ESCAPE="\\"[^abfnrtv\"\'\\\n']
+INVALID_UNICODE_ESCAPE="\\u"[^ \"\']{0,4}
 
 %state INCOMMENT
 %state DOCCOMMENT
 %state INLINECOMMENT
 %state INMULTILINESTRING
 %state INSTRING
+%state INCHARACTER
 
 %%
 <YYINITIAL> {
@@ -87,6 +88,7 @@ INVALID_UNICODE_ESCAPE="\\u"[^ \"]{0,4}
   "{-"              { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
   "\"\"\""          { yypushstate(INMULTILINESTRING); return MULTILINE_STRING;}
   "\""              { yypushstate(INSTRING); return QUOTE;}
+  "\'"              { yypushstate(INCHARACTER); return SINGLE_QUOTE;}
   "{-"              { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
   {WS}+             { return TokenType.WHITE_SPACE; }
   {CAP_VAR}         { return CAP_VAR; }
@@ -136,6 +138,18 @@ INVALID_UNICODE_ESCAPE="\\u"[^ \"]{0,4}
     {INVALID_ESCAPE}            { return INVALID_CHARACTER_ESCAPE_TOKEN; }
     {INVALID_UNICODE_ESCAPE}    { return INVALID_UNICODE_ESCAPE_TOKEN; }
     [^\\\"\n]+                  { return STRING_CONTENT; }
+    "\\"                        { return INVALID_CHARACTER_ESCAPE_TOKEN; }
+    [^]                         { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+}
+
+<INCHARACTER> {
+    "\'"                        { yypopstate(); return SINGLE_QUOTE; }
+    {CLRF}                      { yypopstate(); return INVALID_EOL_IN_STRING; }
+    {UNICODE_ESCAPE}            { return VALID_STRING_ESCAPE_TOKEN; }
+    {VALID_ESCAPE}              { return VALID_STRING_ESCAPE_TOKEN; }
+    {INVALID_ESCAPE}            { return INVALID_CHARACTER_ESCAPE_TOKEN; }
+    {INVALID_UNICODE_ESCAPE}    { return INVALID_UNICODE_ESCAPE_TOKEN; }
+    [^\\\'\n]+                  { return STRING_CONTENT; }
     "\\"                        { return INVALID_CHARACTER_ESCAPE_TOKEN; }
     [^]                         { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }

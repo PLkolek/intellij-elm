@@ -14,7 +14,6 @@ import static mkolaczek.elm.psi.Tokens.*;
 public class ElmStringAnnotator implements Annotator {
 
     private static final Map<IElementType, String> tokenErrorMessages = ImmutableMap.of(
-            INVALID_EOL_IN_STRING, "Invalid end of line in single line string",
             INVALID_CHARACTER_ESCAPE_TOKEN, "Invalid escape character",
             INVALID_UNICODE_ESCAPE_TOKEN, "Invalid unicode escape characters"
     );
@@ -22,6 +21,9 @@ public class ElmStringAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         IElementType elementType = element.getNode().getElementType();
+        if (elementType == INVALID_EOL_IN_STRING) {
+            holder.createErrorAnnotation(element.getParent(), "Invalid end of line in character literal");
+        }
         if (tokenErrorMessages.containsKey(elementType)) {
             holder.createErrorAnnotation(element.getParent(), tokenErrorMessages.get(elementType));
         }

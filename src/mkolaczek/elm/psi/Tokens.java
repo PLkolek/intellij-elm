@@ -32,6 +32,7 @@ public interface Tokens {
     Token UNDERSCORE = new Token("UNDERSCORE", "_");
     Token MULTILINE_STRING = new Token("MULTILINE_STRING", "\"\"\"");
     Token QUOTE = new Token("QUOTE", "\"");
+    Token SINGLE_QUOTE = new Token("SINGLE_QUOTE", "\'");
 
     Token BEGIN_COMMENT = new Token("BEGIN_COMMENT", "{-");
     Token BEGIN_DOC_COMMENT = new Token("BEGIN_DOC_COMMENT", "{-|");

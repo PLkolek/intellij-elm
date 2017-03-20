@@ -54,6 +54,7 @@ public interface Elements {
     Element PORT_NAME = new Element("port name");
 
     Element STRING_LITERAL = new Element("string literal");
+    Element CHARACTER_LITERAL = new Element("character literal");
 
     class Factory {
 
@@ -143,6 +144,8 @@ public interface Elements {
                 return new PortName(node);
             } else if (type == STRING_LITERAL) {
                 return new StringLiteral(node);
+            } else if (type == CHARACTER_LITERAL) {
+                return new CharacterLiteral(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {

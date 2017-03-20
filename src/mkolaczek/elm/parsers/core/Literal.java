@@ -1,7 +1,9 @@
 package mkolaczek.elm.parsers.core;
 
 import mkolaczek.elm.psi.Elements;
+import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
+import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Many.many;
@@ -13,8 +15,13 @@ public class Literal {
     public static Parser literal() {
         //TODO: continue
         return or(
-                string()
+                string(),
+                character()
         );
+    }
+
+    private static Parser character() {
+        return singleline(Tokens.SINGLE_QUOTE).as(Elements.CHARACTER_LITERAL);
     }
 
     private static Parser string() {
@@ -33,10 +40,15 @@ public class Literal {
     }
 
     private static Parser singlelineString() {
+        return singleline(Tokens.QUOTE);
+    }
+
+    @NotNull
+    private static Sequence singleline(Token quote) {
         return sequence(
-                expect(Tokens.QUOTE),
+                expect(quote),
                 stringContent(),
-                or(expect(Tokens.QUOTE), expect(INVALID_EOL_IN_STRING))
+                or(expect(quote), expect(INVALID_EOL_IN_STRING))
         );
     }
 
