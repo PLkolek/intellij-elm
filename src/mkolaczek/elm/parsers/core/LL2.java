@@ -21,8 +21,11 @@ public class LL2 implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder builder, Collection<Parser> nextParsers) {
-        return willParse(builder) && contents.parse(builder, nextParsers);
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers) {
+        if (willParse(builder)) {
+            return contents.parse(builder, nextParsers);
+        }
+        return Result.TOKEN_ERROR;
     }
 
     @SuppressWarnings("SuspiciousMethodCalls")

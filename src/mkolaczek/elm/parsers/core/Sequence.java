@@ -79,28 +79,31 @@ public class Sequence implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
+    public Result parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
         if (psiBuilder.eof() || !willParse(psiBuilder)) {
-            return false;
+            return Result.TOKEN_ERROR;
         }
         //noinspection SuspiciousMethodCalls
         return parse2(psiBuilder, nextParsers);
     }
 
-    public boolean parse2(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
+    public Result parse2(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
         List<Collection<Parser>> childrenNextParsers = nextParsers(nextParsers);
 
         for (int i = 0; i < parsers.length; i++) {
             Parser parser = parsers[i];
             Collection<Parser> parserNextParsers = childrenNextParsers.get(i);
-            if (!parser.parse(psiBuilder, parserNextParsers)) {
+            Result result = parser.parse(psiBuilder, parserNextParsers);
+            if (result == Result.WS_ERROR) {
+                return result;
+            } else if (result == Result.TOKEN_ERROR) {
                 Collection<Parser> skipUntilParsers = Lists.newArrayList(parserNextParsers);
                 skipUntilParsers.add(parser);
                 SkipUntil.skipUntil(parser.name(), skipUntilParsers, psiBuilder);
                 parser.parse(psiBuilder, parserNextParsers);
             }
         }
-        return true;
+        return Result.OK;
     }
 
     @Override

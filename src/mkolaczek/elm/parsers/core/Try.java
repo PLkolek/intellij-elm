@@ -22,16 +22,18 @@ public class Try implements Parser {
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    public boolean parse(PsiBuilder builder, Collection<Parser> myNextParsers) {
-        if (willParse(builder)) {
-            contents.parse(builder, myNextParsers);
-        } else if (!anyWillParse(myNextParsers, builder)) {
-            if (willParseAfterSkipping(this, myNextParsers, builder)) {
+    public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers) {
+        Result result = contents.parse(builder, myNextParsers);
+        if (result == Result.TOKEN_ERROR) {
+            if (!anyWillParse(myNextParsers, builder) && willParseAfterSkipping(this, myNextParsers, builder)) {
                 SkipUntil.skipUntil(name(), Lists.newArrayList(this), builder);
-                contents.parse(builder, myNextParsers);
+                return contents.parse(builder, myNextParsers);
+            } else {
+                return Result.OK;
             }
+
         }
-        return true;
+        return result;
     }
 
     @Override

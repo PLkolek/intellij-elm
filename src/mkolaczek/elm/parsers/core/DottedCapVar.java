@@ -41,9 +41,9 @@ public class DottedCapVar implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder builder, Collection<Parser> nextParsers) {
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers) {
         if (builder.eof() || !isCapVar(builder)) {
-            return false;
+            return Result.TOKEN_ERROR;
         }
         PsiBuilder.Marker prefix = builder.mark();
         PsiBuilder.Marker prefixEnd = builder.mark();
@@ -73,7 +73,7 @@ public class DottedCapVar implements Parser {
             prefix.drop();
         }
         prefixEnd.drop();
-        return true;
+        return Result.OK;
     }
 
     private boolean isDot(PsiBuilder builder) {

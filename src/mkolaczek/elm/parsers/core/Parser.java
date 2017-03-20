@@ -11,7 +11,11 @@ import static java.util.Arrays.stream;
 
 public interface Parser {
 
-    boolean parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers);
+    enum Result {
+        OK, WS_ERROR, TOKEN_ERROR
+    }
+
+    Result parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers);
 
     boolean willParse(PsiBuilder psiBuilder);
 

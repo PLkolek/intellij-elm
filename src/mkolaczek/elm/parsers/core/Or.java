@@ -45,17 +45,17 @@ public class Or implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder, Collection<Parser> myNextParsers) {
+    public Result parse(PsiBuilder psiBuilder, Collection<Parser> myNextParsers) {
         //noinspection SuspiciousMethodCalls
         if (psiBuilder.eof()) {
-            return false;
+            return Result.TOKEN_ERROR;
         }
         for (Parser parser : parsers) {
-            if (parser.parse(psiBuilder, myNextParsers)) {
-                return true;
+            if (parser.parse(psiBuilder, myNextParsers) == Result.OK) {
+                return Result.OK;
             }
         }
-        return false;
+        return Result.TOKEN_ERROR;
     }
 
     @Override

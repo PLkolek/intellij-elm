@@ -20,10 +20,10 @@ public class As implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
+    public Result parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
         int startingOffset = psiBuilder.getCurrentOffset();
         PsiBuilder.Marker marker = psiBuilder.mark();
-        boolean result = content.parse(psiBuilder, nextParsers);
+        Result result = content.parse(psiBuilder, nextParsers);
         if (mode == Mode.MARK_ALWAYS || startingOffset != psiBuilder.getCurrentOffset()) {
             marker.done(as);
         } else {

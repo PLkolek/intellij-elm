@@ -38,7 +38,7 @@ public class Many implements Parser {
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    public boolean parse(PsiBuilder builder, Collection<Parser> myNextParsers) {
+    public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers) {
         Collection<Parser> childNextParsers = Lists.newArrayList(myNextParsers);
         childNextParsers.add(this);
         do {
@@ -54,7 +54,7 @@ public class Many implements Parser {
                 }
             }
         } while (true);
-        return true;
+        return Result.OK;
     }
 
     @Override

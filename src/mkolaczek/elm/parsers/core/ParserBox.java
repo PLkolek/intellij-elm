@@ -20,7 +20,7 @@ public class ParserBox implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
+    public Result parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
         return containedParser.parse(psiBuilder, nextParsers);
     }
 

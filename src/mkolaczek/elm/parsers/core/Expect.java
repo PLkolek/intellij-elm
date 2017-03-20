@@ -18,12 +18,12 @@ public class Expect implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
+    public Result parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
         if (psiBuilder.eof() || expectedToken != psiBuilder.getTokenType()) {
-            return false;
+            return Result.TOKEN_ERROR;
         }
         psiBuilder.advanceLexer();
-        return true;
+        return Result.OK;
     }
 
     @Override
