@@ -1,5 +1,8 @@
-package mkolaczek.elm.parsers.core;
+package mkolaczek.elm.parsers;
 
+import mkolaczek.elm.parsers.core.Or;
+import mkolaczek.elm.parsers.core.Parser;
+import mkolaczek.elm.parsers.core.Sequence;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
@@ -33,7 +36,7 @@ public class Literal {
     }
 
     private static Parser string() {
-        return or(
+        return Or.or(
                 multilineString(),
                 singlelineString()
         ).as(Elements.STRING_LITERAL);
