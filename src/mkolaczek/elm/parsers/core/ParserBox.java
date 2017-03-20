@@ -2,9 +2,8 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.base.Preconditions;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.Token;
 
-import java.util.Set;
+import java.util.Collection;
 
 public class ParserBox implements Parser {
 
@@ -21,18 +20,13 @@ public class ParserBox implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens) {
-        return containedParser.parse(psiBuilder, nextTokens);
+    public boolean parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
+        return containedParser.parse(psiBuilder, nextParsers);
     }
 
     @Override
-    public Set<Token> startingTokens() {
-        return containedParser.startingTokens();
-    }
-
-    @Override
-    public Set<Token> secondTokens() {
-        return containedParser.secondTokens();
+    public boolean willParse(PsiBuilder psiBuilder) {
+        return containedParser.willParse(psiBuilder);
     }
 
     @Override

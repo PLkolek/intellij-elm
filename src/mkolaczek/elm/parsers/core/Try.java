@@ -1,14 +1,12 @@
 package mkolaczek.elm.parsers.core;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.Token;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.Collection;
 
-import static mkolaczek.elm.parsers.core.SkipUntil.nextValid;
+import static mkolaczek.elm.parsers.core.SkipUntil.anyWillParse;
+import static mkolaczek.elm.parsers.core.SkipUntil.willParseAfterSkipping;
 
 public class Try implements Parser {
 
@@ -24,29 +22,21 @@ public class Try implements Parser {
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    public boolean parse(PsiBuilder builder, Set<Token> myNextTokens) {
-        Set<Token> nextTokens = Sets.union(myNextTokens, startingTokens());
-        IElementType token = builder.getTokenType();
-        if (startingTokens().contains(token)) {
-            contents.parse(builder, myNextTokens);
-        } else if (!myNextTokens.contains(token)) {
-            Optional<Token> nextValid = nextValid(nextTokens, builder);
-            if (nextValid.isPresent() && startingTokens().contains(nextValid.get())) {
-                SkipUntil.skipUntil(name(), startingTokens(), builder);
-                contents.parse(builder, myNextTokens);
+    public boolean parse(PsiBuilder builder, Collection<Parser> myNextParsers) {
+        if (willParse(builder)) {
+            contents.parse(builder, myNextParsers);
+        } else if (!anyWillParse(myNextParsers, builder)) {
+            if (willParseAfterSkipping(this, myNextParsers, builder)) {
+                SkipUntil.skipUntil(name(), Lists.newArrayList(this), builder);
+                contents.parse(builder, myNextParsers);
             }
         }
         return true;
     }
 
     @Override
-    public Set<Token> startingTokens() {
-        return contents.startingTokens();
-    }
-
-    @Override
-    public Set<Token> secondTokens() {
-        return contents.secondTokens();
+    public boolean willParse(PsiBuilder psiBuilder) {
+        return contents.willParse(psiBuilder);
     }
 
     @Override

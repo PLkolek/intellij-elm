@@ -1,11 +1,9 @@
 package mkolaczek.elm.parsers.core;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.Token;
 
-import java.util.Set;
+import java.util.Collection;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
@@ -36,22 +34,10 @@ public class Or implements Parser {
         this.parsers = parsers;
     }
 
-    private static Set<Token> startingTokens(Parser... parsers) {
-        Set<Token> result = Sets.newHashSet();
-        for (Parser parser : parsers) {
-            result.addAll(parser.startingTokens());
-        }
-        return result;
-    }
-
     @Override
-    public boolean parse(PsiBuilder psiBuilder, Set<Token> myNextTokens) {
-        //noinspection SuspiciousMethodCalls
-        if (psiBuilder.eof()) {
-            return false;
-        }
+    public boolean willParse(PsiBuilder builder) {
         for (Parser parser : parsers) {
-            if (parser.parse(psiBuilder, myNextTokens)) {
+            if (parser.willParse(builder)) {
                 return true;
             }
         }
@@ -59,13 +45,17 @@ public class Or implements Parser {
     }
 
     @Override
-    public Set<Token> startingTokens() {
-        return startingTokens(parsers);
-    }
-
-    @Override
-    public Set<Token> secondTokens() {
-        throw new UnsupportedOperationException("Hopefully this won't be necessary");
+    public boolean parse(PsiBuilder psiBuilder, Collection<Parser> myNextParsers) {
+        //noinspection SuspiciousMethodCalls
+        if (psiBuilder.eof()) {
+            return false;
+        }
+        for (Parser parser : parsers) {
+            if (parser.parse(psiBuilder, myNextParsers)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

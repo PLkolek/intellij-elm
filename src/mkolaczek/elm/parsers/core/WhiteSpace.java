@@ -1,12 +1,9 @@
 package mkolaczek.elm.parsers.core;
 
-import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.Token;
-import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * When parsing whitespace, errors are inserted into AST, but ignored in whole parsing.
@@ -75,7 +72,12 @@ public class WhiteSpace implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder builder, Set<Token> nextTokens) {
+    public boolean willParse(PsiBuilder psiBuilder) {
+        return false;
+    }
+
+    @Override
+    public boolean parse(PsiBuilder builder, Collection<Parser> nextParsers) {
         if (!type.accepts(builder)) {
             error(builder);
         }
@@ -88,16 +90,6 @@ public class WhiteSpace implements Parser {
 
     private void error(PsiBuilder builder) {
         builder.error(name() + " expected");
-    }
-
-    @Override
-    public Set<Token> startingTokens() {
-        return Sets.newHashSet(Tokens.BEGIN_COMMENT);
-    }
-
-    @Override
-    public Set<Token> secondTokens() {
-        throw new UnsupportedOperationException("Whitespace has no second tokens");
     }
 
     @Override

@@ -1,13 +1,11 @@
 package mkolaczek.elm.parsers.core;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.Token;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.Collection;
 
-import static mkolaczek.elm.parsers.core.SkipUntil.skipUntil;
+import static mkolaczek.elm.parsers.core.SkipUntil.*;
 
 public class Many implements Parser {
 
@@ -22,7 +20,11 @@ public class Many implements Parser {
     }
 
     public static Many many(Parser parser) {
-        return new Many(parser.name() + "s", parser);
+        return many(parser.name() + "s", parser);
+    }
+
+    public static Many many(String name, Parser parser) {
+        return new Many(name, parser);
     }
 
     public static Many many(String name, Parser... parsers) {
@@ -36,17 +38,17 @@ public class Many implements Parser {
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    public boolean parse(PsiBuilder builder, Set<Token> myNextTokens) {
-        Set<Token> childNextTokens = Sets.union(myNextTokens, startingTokens());
+    public boolean parse(PsiBuilder builder, Collection<Parser> myNextParsers) {
+        Collection<Parser> childNextParsers = Lists.newArrayList(myNextParsers);
+        childNextParsers.add(this);
         do {
-            if (startingTokens().contains(builder.getTokenType())) {
-                parser.parse(builder, childNextTokens);
-            } else if (myNextTokens.contains(builder.getTokenType()) || builder.eof()) {
+            if (willParse(builder)) {
+                parser.parse(builder, childNextParsers);
+            } else if (anyWillParse(myNextParsers, builder) || builder.eof()) {
                 break;
             } else {
-                Optional<Token> nextValid = SkipUntil.nextValid(childNextTokens, builder);
-                if (nextValid.isPresent() && startingTokens().contains(nextValid.get())) {
-                    skipUntil(parser.name(), startingTokens(), builder);
+                if (willParseAfterSkipping(this, myNextParsers, builder)) {
+                    skipUntil(parser.name(), Lists.newArrayList(this), builder);
                 } else {
                     break;
                 }
@@ -56,13 +58,8 @@ public class Many implements Parser {
     }
 
     @Override
-    public Set<Token> startingTokens() {
-        return parser.startingTokens();
-    }
-
-    @Override
-    public Set<Token> secondTokens() {
-        return parser.secondTokens();
+    public boolean willParse(PsiBuilder psiBuilder) {
+        return parser.willParse(psiBuilder);
     }
 
     @Override

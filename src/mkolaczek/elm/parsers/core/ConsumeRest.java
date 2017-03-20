@@ -2,9 +2,8 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.Token;
 
-import java.util.Set;
+import java.util.Collection;
 
 public class ConsumeRest implements Parser {
 
@@ -19,7 +18,7 @@ public class ConsumeRest implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens) {
+    public boolean parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
         if (!psiBuilder.eof()) {
             SkipUntil.skipUntil(name, Sets.newHashSet(), psiBuilder);
         }
@@ -27,13 +26,8 @@ public class ConsumeRest implements Parser {
     }
 
     @Override
-    public Set<Token> startingTokens() {
-        return Sets.newHashSet();
-    }
-
-    @Override
-    public Set<Token> secondTokens() {
-        throw new UnsupportedOperationException("Consume rest has no second tokens");
+    public boolean willParse(PsiBuilder psiBuilder) {
+        return false;
     }
 
     @Override

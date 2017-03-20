@@ -1,20 +1,17 @@
 package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
-import com.intellij.psi.tree.IElementType;
-import mkolaczek.elm.psi.Token;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.Collection;
 
 public class SkipUntil {
 
-    public static void skipUntil(String expectedName, Set<Token> nextTokens, PsiBuilder builder) {
+    public static void skipUntil(String expectedName, Collection<Parser> nextParsers, PsiBuilder builder) {
         PsiBuilder.Marker errorStart = builder.mark();
         int startingOffset = builder.getCurrentOffset();
         while (!builder.eof()) {
             //noinspection SuspiciousMethodCalls
-            if (nextTokens.contains(builder.getTokenType())) {
+            if (anyWillParse(nextParsers, builder)) {
                 errorStart.error(expectedName + " expected");
                 return;
             }
@@ -28,18 +25,22 @@ public class SkipUntil {
         }
     }
 
-    public static Optional<Token> nextValid(Set<Token> nextTokens, PsiBuilder builder) {
+    public static boolean willParseAfterSkipping(Parser me, Collection<Parser> nextParsers, PsiBuilder builder) {
         PsiBuilder.Marker errorStart = builder.mark();
         while (!builder.eof()) {
-            IElementType token = builder.getTokenType();
             //noinspection SuspiciousMethodCalls
-            if (nextTokens.contains(token)) {
+            if (anyWillParse(nextParsers, builder)) {
+                boolean result = me.willParse(builder);
                 errorStart.rollbackTo();
-                return Optional.of((Token) token);
+                return result;
             }
             builder.advanceLexer();
         }
         errorStart.rollbackTo();
-        return Optional.empty();
+        return false;
+    }
+
+    public static boolean anyWillParse(Collection<Parser> nextParsers, PsiBuilder builder) {
+        return nextParsers.stream().anyMatch(p -> p.willParse(builder));
     }
 }

@@ -1,16 +1,14 @@
 package mkolaczek.elm.parsers.core;
 
-import com.google.common.collect.ImmutableSet;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.Element;
-import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
+import java.util.Collection;
 
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
 import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
@@ -38,7 +36,12 @@ public class DottedCapVar implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder builder, Set<Token> nextTokens) {
+    public boolean willParse(PsiBuilder psiBuilder) {
+        return isCapVar(psiBuilder);
+    }
+
+    @Override
+    public boolean parse(PsiBuilder builder, Collection<Parser> nextParsers) {
         if (builder.eof() || !isCapVar(builder)) {
             return false;
         }
@@ -92,16 +95,6 @@ public class DottedCapVar implements Parser {
 
     private boolean isCapVar(PsiBuilder builder) {
         return builder.getTokenType() == CAP_VAR || builder.getTokenType() == RUNE_OF_AUTOCOMPLETION;
-    }
-
-    @Override
-    public Set<Token> startingTokens() {
-        return ImmutableSet.of(Tokens.CAP_VAR, Tokens.RUNE_OF_AUTOCOMPLETION);
-    }
-
-    @Override
-    public Set<Token> secondTokens() {
-        throw new UnsupportedOperationException("DottedCapVar can be a sigle token");
     }
 
     @Override

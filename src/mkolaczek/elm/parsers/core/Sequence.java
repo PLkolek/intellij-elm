@@ -2,13 +2,10 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
-import mkolaczek.elm.psi.Token;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class Sequence implements Parser {
 
@@ -50,70 +47,52 @@ public class Sequence implements Parser {
         this.parsers = parsers;
     }
 
-    private List<Set<Token>> nextTokens2(Set<Token> myNextTokens) {
-        List<Set<Token>> result = Lists.newArrayList();
-        Set<Token> nextTokens = Sets.newHashSet(myNextTokens);
+    private List<Collection<Parser>> nextParsers(Collection<Parser> myNextParsers) {
+        List<Collection<Parser>> result = Lists.newArrayList();
+        Collection<Parser> nextParsers = Lists.newArrayList(myNextParsers);
         for (int i = parsers.length - 1; i >= 0; i--) {
-            result.add(Sets.newHashSet(nextTokens));
-            nextTokens.addAll(parsers[i].startingTokens());
+            result.add(Lists.newArrayList(nextParsers));
+            nextParsers.add(parsers[i]);
         }
         return Lists.reverse(result);
     }
 
-    @NotNull
-    private static Set<Token> startingTokens(Parser... parsers) {
-        Set<Token> startingTokens = Sets.newHashSet();
+    @Override
+    public boolean willParse(PsiBuilder psiBuilder) {
         for (Parser parser : parsers) {
-            startingTokens.addAll(parser.startingTokens());
+            if (parser.willParse(psiBuilder)) {
+                return true;
+            }
             if (parser.isRequired()) {
-                break;
+                return false;
             }
         }
-        return startingTokens;
+        return false;
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens) {
-        //noinspection SuspiciousMethodCalls
-        return !psiBuilder.eof() && parse2(psiBuilder, nextTokens);
-    }
-
-    public boolean parse2(PsiBuilder psiBuilder, Set<Token> nextTokens) {
-        List<Set<Token>> childrenNextTokens = nextTokens2(nextTokens);
-
-        //TODO: handle optional parsers properly
-        if (!parsers[0].parse(psiBuilder, childrenNextTokens.get(0))) {
+    public boolean parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
+        if (psiBuilder.eof() || !willParse(psiBuilder)) {
             return false;
         }
+        //noinspection SuspiciousMethodCalls
+        return parse2(psiBuilder, nextParsers);
+    }
 
-        for (int i = 1; i < parsers.length; i++) {
+    public boolean parse2(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
+        List<Collection<Parser>> childrenNextParsers = nextParsers(nextParsers);
+
+        for (int i = 0; i < parsers.length; i++) {
             Parser parser = parsers[i];
-            Set<Token> parserNextTokens = childrenNextTokens.get(i);
-            if (!parser.parse(psiBuilder, parserNextTokens)) {
-                SkipUntil.skipUntil(parser.name(), Sets.union(parserNextTokens, parser.startingTokens()), psiBuilder);
-                parser.parse(psiBuilder, parserNextTokens);
+            Collection<Parser> parserNextParsers = childrenNextParsers.get(i);
+            if (!parser.parse(psiBuilder, parserNextParsers)) {
+                Collection<Parser> skipUntilParsers = Lists.newArrayList(parserNextParsers);
+                skipUntilParsers.add(parser);
+                SkipUntil.skipUntil(parser.name(), skipUntilParsers, psiBuilder);
+                parser.parse(psiBuilder, parserNextParsers);
             }
         }
         return true;
-    }
-
-    @Override
-    public Set<Token> startingTokens() {
-        return startingTokens(parsers);
-    }
-
-    @Override
-    public Set<Token> secondTokens() {
-        int nonWsCount = 0;
-        for (Parser parser : parsers) {
-            if (!(parser instanceof WhiteSpace)) {
-                nonWsCount++;
-                if (nonWsCount == 2) {
-                    return parser.startingTokens();
-                }
-            }
-        }
-        throw new UnsupportedOperationException("Sequence with only one non whitespace parser has no second tokens");
     }
 
     @Override

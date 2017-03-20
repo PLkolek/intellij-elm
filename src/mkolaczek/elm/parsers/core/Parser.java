@@ -4,17 +4,16 @@ import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 
-import java.util.Set;
+import java.util.Collection;
+import java.util.HashSet;
 
 import static java.util.Arrays.stream;
 
 public interface Parser {
 
-    boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens);
+    boolean parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers);
 
-    Set<Token> startingTokens();
-
-    Set<Token> secondTokens();
+    boolean willParse(PsiBuilder psiBuilder);
 
     boolean isRequired();
 
@@ -28,8 +27,8 @@ public interface Parser {
         return new As(this, as, mode);
     }
 
-    default Parser ll2() {
-        return new LL2(this);
+    default Parser ll2(HashSet<Token> firstTokens, HashSet<Token> secondTokens) {
+        return new LL2(this, firstTokens, secondTokens);
     }
 
     static boolean anyRequired(Parser... parsers) {

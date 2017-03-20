@@ -2,9 +2,8 @@ package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.psi.Element;
-import mkolaczek.elm.psi.Token;
 
-import java.util.Set;
+import java.util.Collection;
 
 public class As implements Parser {
 
@@ -21,10 +20,10 @@ public class As implements Parser {
     }
 
     @Override
-    public boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens) {
+    public boolean parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
         int startingOffset = psiBuilder.getCurrentOffset();
         PsiBuilder.Marker marker = psiBuilder.mark();
-        boolean result = content.parse(psiBuilder, nextTokens);
+        boolean result = content.parse(psiBuilder, nextParsers);
         if (mode == Mode.MARK_ALWAYS || startingOffset != psiBuilder.getCurrentOffset()) {
             marker.done(as);
         } else {
@@ -34,13 +33,8 @@ public class As implements Parser {
     }
 
     @Override
-    public Set<Token> startingTokens() {
-        return content.startingTokens();
-    }
-
-    @Override
-    public Set<Token> secondTokens() {
-        return content.secondTokens();
+    public boolean willParse(PsiBuilder psiBuilder) {
+        return content.willParse(psiBuilder);
     }
 
     @Override
