@@ -9,6 +9,7 @@ import java.util.Set;
 import static java.util.Arrays.stream;
 
 public interface Parser {
+
     boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens);
 
     Set<Token> startingTokens();

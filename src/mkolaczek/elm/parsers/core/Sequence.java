@@ -75,28 +75,26 @@ public class Sequence implements Parser {
     @Override
     public boolean parse(PsiBuilder psiBuilder, Set<Token> nextTokens) {
         //noinspection SuspiciousMethodCalls
-        if (psiBuilder.eof() || !startingTokens().contains(psiBuilder.getTokenType())) {
+        return !psiBuilder.eof() && parse2(psiBuilder, nextTokens);
+    }
+
+    public boolean parse2(PsiBuilder psiBuilder, Set<Token> nextTokens) {
+        List<Set<Token>> childrenNextTokens = nextTokens2(nextTokens);
+
+        //TODO: handle optional parsers properly
+        if (!parsers[0].parse(psiBuilder, childrenNextTokens.get(0))) {
             return false;
         }
 
-        parse2(psiBuilder, nextTokens);
-        return true;
-    }
-
-    public void parse2(PsiBuilder psiBuilder, Set<Token> nextTokens) {
-        List<Set<Token>> childrenNextTokens = nextTokens2(nextTokens);
-
-        for (int i = 0; i < parsers.length; i++) {
+        for (int i = 1; i < parsers.length; i++) {
             Parser parser = parsers[i];
             Set<Token> parserNextTokens = childrenNextTokens.get(i);
             if (!parser.parse(psiBuilder, parserNextTokens)) {
-                if (parser instanceof WhiteSpace && ((WhiteSpace) parser).getType() == WhiteSpace.Type.NO) {
-                    return;
-                }
                 SkipUntil.skipUntil(parser.name(), Sets.union(parserNextTokens, parser.startingTokens()), psiBuilder);
                 parser.parse(psiBuilder, parserNextTokens);
             }
         }
+        return true;
     }
 
     @Override

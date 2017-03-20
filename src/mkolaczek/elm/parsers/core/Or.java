@@ -47,15 +47,15 @@ public class Or implements Parser {
     @Override
     public boolean parse(PsiBuilder psiBuilder, Set<Token> myNextTokens) {
         //noinspection SuspiciousMethodCalls
-        if (psiBuilder.eof() || !startingTokens().contains(psiBuilder.getTokenType())) {
+        if (psiBuilder.eof()) {
             return false;
         }
         for (Parser parser : parsers) {
             if (parser.parse(psiBuilder, myNextTokens)) {
-                break;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     @Override

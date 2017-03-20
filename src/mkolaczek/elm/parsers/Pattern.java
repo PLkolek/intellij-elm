@@ -23,7 +23,6 @@ public class Pattern {
     public static ParserBox expression = new ParserBox("pattern expression");
 
     public static Parser term() {
-        //TODO: continue
         return or(
                 record(),
                 tuple(),

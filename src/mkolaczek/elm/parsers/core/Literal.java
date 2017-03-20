@@ -13,7 +13,6 @@ import static mkolaczek.elm.psi.Tokens.*;
 
 public class Literal {
     public static Parser literal() {
-        //TODO: continue
         return or(
                 string(),
                 character(),

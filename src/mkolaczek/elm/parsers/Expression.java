@@ -1,20 +1,33 @@
 package mkolaczek.elm.parsers;
 
 import mkolaczek.elm.parsers.core.Parser;
+import mkolaczek.elm.psi.Tokens;
 
+import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 
 public class Expression {
     public static Parser definition() {
         //TODO: continue
-        return sequence("definition",
-                rootPattern());
-    }
+        Parser valueDefinition =
+                sequence(
+                        or(
+                                expect(Tokens.LOW_VAR),
+                                Basic.operator().ll2()
+                        ),
+                        or(
+                                sequence(
+                                        expect(Tokens.COLON),
+                                        Type.expression
+                                )
+                        )
+                );
 
-    private static Parser rootPattern() {
+
+        //TODO: continue
         return or(
-                Basic.operator().ll2(),
+                valueDefinition,
                 Pattern.term()
         );
     }
