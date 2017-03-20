@@ -23,8 +23,9 @@ public class Literal {
 
     private static Parser number() {
         return or(
-                expect(Tokens.HEX_NUMBER),
-                expect(Tokens.INVALID_HEX_NUMBER)
+                expect(Tokens.DIGIT),
+                expect(Tokens.INVALID_HEX_NUMBER),
+                expect(Tokens.NUMBER)
         );
     }
 

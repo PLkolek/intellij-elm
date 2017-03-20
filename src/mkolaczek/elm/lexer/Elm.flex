@@ -49,6 +49,11 @@ INVALID_ESCAPE="\\"[^abfnrtv\"\'\\\n']
 INVALID_UNICODE_ESCAPE="\\u"[^ \"\']{0,4}
 HEX_LITERAL="0x"{HEX}+
 INVALID_HEX_LITERAL="0x"
+EXPONENT_PART = [eE][\+\-]? {DIGIT}+
+FRACTIONAL_PART = "."{DIGIT}+
+INT=([1-9]{DIGIT}*) | "0"
+FRACTIONAL_NUMBER = {INT} {FRACTIONAL_PART}? {EXPONENT_PART}?
+NUMBER = {FRACTIONAL_NUMBER} | {HEX_LITERAL}
 
 %state INCOMMENT
 %state DOCCOMMENT
@@ -97,9 +102,9 @@ INVALID_HEX_LITERAL="0x"
   {CAP_VAR}             { return CAP_VAR; }
   {LOW_VAR}             { return LOW_VAR; }
   {SYMBOL_OP}           { return SYM_OP; }
-  {HEX_LITERAL}         { return HEX_NUMBER; }
   {INVALID_HEX_LITERAL} { return INVALID_HEX_NUMBER; }
   {DIGIT}               { return DIGIT; }
+  {NUMBER}              { return NUMBER; }
   "ᛜ"                   { return RUNE_OF_AUTOCOMPLETION; }
   [^]                   { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }

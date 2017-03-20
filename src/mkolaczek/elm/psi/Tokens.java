@@ -48,6 +48,7 @@ public interface Tokens {
     Token INVALID_CHARACTER_ESCAPE_TOKEN = new Token("INVALID_CHARACTER_ESCAPE_TOKEN", "invalid escape sequence");
     Token INVALID_UNICODE_ESCAPE_TOKEN = new Token("INVALID_UNICODE_ESCAPE_TOKEN", "invalid unicode escape sequence");
 
+    Token NUMBER = new Token("number");
     Token HEX_NUMBER = new Token("hex number");
     Token INVALID_HEX_NUMBER = new Token("invalid hex number");
 
