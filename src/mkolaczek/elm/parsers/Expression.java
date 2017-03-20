@@ -4,9 +4,11 @@ import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.psi.Tokens;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static mkolaczek.elm.parsers.Basic.spacePrefix;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
+import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class Expression {
@@ -22,7 +24,8 @@ public class Expression {
                                 sequence(
                                         expect(Tokens.COLON),
                                         Type.expression
-                                )
+                                ),
+                                definitionEnd()
                         )
                 );
 
@@ -30,7 +33,17 @@ public class Expression {
         //TODO: continue
         return or(
                 valueDefinition,
-                Pattern.term()
+                sequence(
+                        Pattern.term(),
+                        definitionEnd()
+                )
+        );
+    }
+
+    private static Parser definitionEnd() {
+        return sequence(
+                spacePrefix(Pattern.term()),
+                maybeWhitespace(expect(EQUALS))
         );
     }
 }
