@@ -23,7 +23,14 @@ public class Try implements Parser {
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers) {
+        PsiBuilder.Marker start = builder.mark();
+        int startOffset = builder.getCurrentOffset();
         Result result = contents.parse(builder, myNextParsers);
+        if (startOffset == builder.getCurrentOffset()) {
+            start.rollbackTo();
+        } else {
+            start.drop();
+        }
         if (result == Result.TOKEN_ERROR) {
             if (!anyWillParse(myNextParsers, builder) && willParseAfterSkipping(this, myNextParsers, builder)) {
                 SkipUntil.skipUntil(name(), Lists.newArrayList(this), builder);
