@@ -16,7 +16,7 @@ public class FoldingTest extends LightCodeInsightFixtureTestCase {
         return TestUtil.testDataPath(getClass());
     }
 
-    public void testModuleQuickNavigateInfo() {
+    public void testFolding() {
         myFixture.configureByFile("Test.elm");
         CodeFoldingManagerImpl.getInstance(getProject()).buildInitialFoldings(myFixture.getEditor());
         FoldingModelEx foldingModel = (FoldingModelEx) myFixture.getEditor().getFoldingModel();

@@ -3,7 +3,6 @@ package mkolaczek.elm.parsers;
 import mkolaczek.elm.parsers.core.As;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.Sequence;
-import mkolaczek.elm.parsers.core.WhiteSpace;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 
@@ -15,6 +14,7 @@ import static mkolaczek.elm.parsers.core.Many.many;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
+import static mkolaczek.elm.parsers.core.WhiteSpace2.freshLine;
 import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
 import static mkolaczek.elm.psi.Elements.MODULE_ALIAS;
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
@@ -24,15 +24,14 @@ public class Module {
 
     public static Parser moduleHeader() {
         return sequence("Module Header",
-                WhiteSpace.freshLine(),
-                tryP(moduleDeclaration()),
-                tryP(sequence("Doc comment", Basic.docComment(), WhiteSpace.freshLine())),
+                tryP(freshLine(moduleDeclaration())),
+                tryP(freshLine(Basic.docComment())),
                 many(Module.importLine()).as(Elements.IMPORTS, As.Mode.MARK_ALWAYS)
         );
     }
 
     public static Parser importLine() {
-        return sequence(
+        return freshLine(sequence(
                 expect(Tokens.IMPORT),
                 maybeWhitespace(dottedCapVar("module name").as(Elements.MODULE_NAME_REF)),
                 tryP(
@@ -41,9 +40,8 @@ public class Module {
                                 maybeWhitespace(expect(CAP_VAR).as(MODULE_ALIAS))
                         )
                 ),
-                tryP(maybeWhitespace(exposing()).skipWsError()),
-                WhiteSpace.freshLine()
-        ).as(Elements.IMPORT_LINE);
+                tryP(maybeWhitespace(exposing()).skipWsError())
+        ).as(Elements.IMPORT_LINE));
     }
 
     public static Parser exposing() {
@@ -104,8 +102,7 @@ public class Module {
                         maybeWhitespace(expect(Tokens.MODULE)),
                         maybeWhitespace(dottedCapVar("module name").as(Elements.MODULE_NAME)),
                         maybeWhitespace(settings()).skipWsError(),
-                        maybeWhitespace(exposing()).skipWsError(),
-                        WhiteSpace.freshLine()
+                        maybeWhitespace(exposing()).skipWsError()
                 );
 
         Sequence sequence =
@@ -118,8 +115,7 @@ public class Module {
                                 expect(Tokens.MODULE)
                         ),
                         maybeWhitespace(dottedCapVar("module name").as(Elements.MODULE_NAME)),
-                        maybeWhitespace(exposing()).skipWsError(),
-                        WhiteSpace.freshLine()
+                        maybeWhitespace(exposing()).skipWsError()
                 );
         return or(effectSequence, sequence).as(Elements.MODULE_HEADER);
     }

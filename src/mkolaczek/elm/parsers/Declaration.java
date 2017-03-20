@@ -1,6 +1,9 @@
 package mkolaczek.elm.parsers;
 
-import mkolaczek.elm.parsers.core.*;
+import mkolaczek.elm.parsers.core.Many;
+import mkolaczek.elm.parsers.core.Parser;
+import mkolaczek.elm.parsers.core.Sequence;
+import mkolaczek.elm.parsers.core.WhiteSpace2;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +15,7 @@ import static mkolaczek.elm.parsers.core.ConsumeRest.consumeRest;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
-import static mkolaczek.elm.parsers.core.WhiteSpace.forcedWhitespace;
+import static mkolaczek.elm.parsers.core.WhiteSpace2.freshLine;
 import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
 
 public class Declaration {
@@ -21,8 +24,7 @@ public class Declaration {
         return sequence("declarations",
                 Many.many1(
                         sequence("declaration",
-                                WhiteSpace.freshLine(),
-                                declaration()
+                                freshLine(declaration())
                         )
                 ),
                 consumeRest("declaration")
@@ -61,11 +63,10 @@ public class Declaration {
     private static Parser typeDecl() {
         return sequence(
                 expect(Tokens.TYPE),
-                forcedWhitespace(),
-                or("type declaration contents",
+                maybeWhitespace(or("type declaration contents",
                         typeAliasDecl(),
                         typeDeclContents()
-                )
+                ))
         ).as(Elements.TYPE_DECLARATION);
     }
 
@@ -82,8 +83,7 @@ public class Declaration {
     private static Parser typeAliasDecl() {
         return sequence("type alias declaration",
                 expect(Tokens.ALIAS),
-                forcedWhitespace(),
-                nameArgs(),
+                maybeWhitespace(nameArgs()),
                 maybeWhitespace(expect(Tokens.EQUALS)),
                 maybeWhitespace(Type.expression)
         ).as(Elements.TYPE_ALIAS_DECL_NODE);

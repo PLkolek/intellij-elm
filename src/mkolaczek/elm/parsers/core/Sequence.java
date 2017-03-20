@@ -38,18 +38,6 @@ public class Sequence implements Parser {
         return new Sequence(name, parsers);
     }
 
-    public Sequence separatedBy(WhiteSpace whiteSpace) {
-        Parser[] newParsers = new Parser[parsers.length * 2 - 1];
-        for (int i = 0; i < parsers.length; i++) {
-            newParsers[2 * i] = parsers[i];
-            if (i > 0) {
-                newParsers[2 * i - 1] = whiteSpace;
-            }
-        }
-
-        return new Sequence(name, newParsers);
-    }
-
     private Sequence(String name, Parser... parsers) {
         this.name = name;
         this.parsers = parsers;
@@ -94,7 +82,7 @@ public class Sequence implements Parser {
             Parser parser = parsers[i];
             Collection<Parser> parserNextParsers = childrenNextParsers.get(i);
             Result result = parser.parse(psiBuilder, parserNextParsers);
-            if (result == Result.WS_ERROR) {
+            if (result == Result.WS_ERROR && shouldContinue(i)) {
                 return result;
             } else if (result == Result.TOKEN_ERROR) {
                 Collection<Parser> skipUntilParsers = Lists.newArrayList(parserNextParsers);
@@ -104,6 +92,10 @@ public class Sequence implements Parser {
             }
         }
         return Result.OK;
+    }
+
+    public boolean shouldContinue(int i) {
+        return i < parsers.length - 1 && parsers[i + 1] instanceof ConsumeRest;
     }
 
     @Override

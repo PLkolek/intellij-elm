@@ -29,5 +29,5 @@ Elm File(0,34)
                   TypeNameRef(TYPE_NAME_REF)(32,33)
                     PsiElement(Token.CAP_VAR)('A')(32,33)
             PsiElement(Token.RPAREN)(')')(33,34)
-        PsiErrorElement:Fresh line expected(34,34)
-          <empty list>
+    PsiErrorElement:declarations expected(34,34)
+      <empty list>
