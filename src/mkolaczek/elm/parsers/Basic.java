@@ -3,7 +3,7 @@ package mkolaczek.elm.parsers;
 import mkolaczek.elm.parsers.core.Many;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.Try;
-import mkolaczek.elm.parsers.core.WhiteSpace;
+import mkolaczek.elm.parsers.core.WhiteSpace2;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
@@ -15,6 +15,7 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
+import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
 import static mkolaczek.elm.psi.Tokens.RPAREN;
 
@@ -25,7 +26,7 @@ public class Basic {
                 expect(LPAREN),
                 listingContent(name + " content", listedValue),
                 expect(RPAREN)
-        ).separatedBy(maybeWhitespace())
+        ).separatedBy(WhiteSpace2::maybeWhitespace)
          .as(Elements.MODULE_VALUE_LIST);
     }
 
@@ -53,7 +54,7 @@ public class Basic {
                 expect(Tokens.LPAREN),
                 operatorSymbol(Elements.OPERATOR_SYMBOL_REF),
                 expect(Tokens.RPAREN)
-        ).separatedBy(maybeWhitespace()).as(Elements.OPERATOR);
+        ).separatedBy(WhiteSpace2::maybeWhitespace).as(Elements.OPERATOR);
     }
 
     public static Parser operatorSymbol(Element as) {
@@ -83,13 +84,13 @@ public class Basic {
         return sequence(name, surroundContent(left, right, contents));
     }
 
-    @NotNull
-    private static Parser[] surroundContent(Token left, Token right, Parser contents) {
-        return new Parser[]{expect(left), maybeWhitespace(), contents, maybeWhitespace(), expect(right)};
-    }
-
     public static Parser surround(Token left, Token right, Parser contents) {
         return sequence(surroundContent(left, right, contents));
+    }
+
+    @NotNull
+    private static Parser[] surroundContent(Token left, Token right, Parser contents) {
+        return new Parser[]{expect(left), maybeWhitespace(contents), maybeWhitespace(expect(right))};
     }
 
     public static Parser docComment() {
@@ -101,11 +102,7 @@ public class Basic {
 
     public static Parser spacePrefix(Parser parser) {
         return Many.many(String.format("space prefixed list of %ss", parser.name()),
-                Try.tryP(
-                        sequence("space prefixed " + parser.name(),
-                                WhiteSpace.maybeWhitespace(),
-                                parser)
-                )
+                Try.tryP(maybeWhitespace(parser))
         );
     }
 }

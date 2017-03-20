@@ -7,6 +7,7 @@ import mkolaczek.elm.parsers.core.WhiteSpace;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 
+import static mkolaczek.elm.parsers.Basic.listing;
 import static mkolaczek.elm.parsers.SepBy.tryCommaSep;
 import static mkolaczek.elm.parsers.core.DottedCapVar.dottedCapVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
@@ -14,6 +15,7 @@ import static mkolaczek.elm.parsers.core.Many.many;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
+import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
 import static mkolaczek.elm.psi.Elements.MODULE_ALIAS;
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
 import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
@@ -32,24 +34,14 @@ public class Module {
     public static Parser importLine() {
         return sequence(
                 expect(Tokens.IMPORT),
-                WhiteSpace.maybeWhitespace(),
-                or(
-                        dottedCapVar("module name").as(Elements.MODULE_NAME_REF)
-                ),
+                maybeWhitespace(dottedCapVar("module name").as(Elements.MODULE_NAME_REF)),
                 tryP(
                         sequence("as clause",
-                                WhiteSpace.maybeWhitespace(),
-                                expect(Tokens.AS),
-                                WhiteSpace.maybeWhitespace(),
-                                expect(CAP_VAR).as(MODULE_ALIAS)
+                                maybeWhitespace(expect(Tokens.AS)).skipWsError(),
+                                maybeWhitespace(expect(CAP_VAR).as(MODULE_ALIAS))
                         )
                 ),
-                tryP(
-                        sequence("exposing clause",
-                                WhiteSpace.maybeWhitespace(),
-                                exposing()
-                        )
-                ),
+                tryP(maybeWhitespace(exposing()).skipWsError()),
                 WhiteSpace.freshLine()
         ).as(Elements.IMPORT_LINE);
     }
@@ -57,8 +49,7 @@ public class Module {
     public static Parser exposing() {
         return sequence(
                 expect(Tokens.EXPOSING),
-                WhiteSpace.maybeWhitespace(),
-                Basic.listing("list of exposed values", exportValue())
+                maybeWhitespace(listing("list of exposed values", exportValue()))
         ).as(Elements.EXPOSING_NODE);
 
     }
@@ -76,7 +67,7 @@ public class Module {
         return sequence("exported type",
                 expect(CAP_VAR).as(Elements.TYPE_NAME_REF),
                 tryP(
-                        Basic.listing("type constructors",
+                        listing("type constructors",
                                 or(
                                         expect(CAP_VAR),
                                         expect(RUNE_OF_AUTOCOMPLETION)
@@ -111,14 +102,10 @@ public class Module {
         Sequence effectSequence =
                 sequence("Module declaration",
                         expect(Tokens.EFFECT),
-                        WhiteSpace.maybeWhitespace(),
-                        expect(Tokens.MODULE),
-                        WhiteSpace.maybeWhitespace(),
-                        dottedCapVar("module name").as(Elements.MODULE_NAME),
-                        WhiteSpace.maybeWhitespace(),
-                        settings(),
-                        WhiteSpace.maybeWhitespace(),
-                        exposing(),
+                        maybeWhitespace(expect(Tokens.MODULE)),
+                        maybeWhitespace(dottedCapVar("module name").as(Elements.MODULE_NAME)),
+                        maybeWhitespace(settings()).skipWsError(),
+                        maybeWhitespace(exposing()),
                         WhiteSpace.freshLine()
                 );
 

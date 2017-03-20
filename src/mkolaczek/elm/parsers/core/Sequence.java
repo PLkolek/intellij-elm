@@ -4,8 +4,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 public class Sequence implements Parser {
 
@@ -28,6 +30,12 @@ public class Sequence implements Parser {
             }
         }
         return "Something is wrong, that name should never be needed!";
+    }
+
+    public Sequence separatedBy(Function<Parser, WhiteSpace2> whiteSpace) {
+        Parser[] parsers = Arrays.stream(this.parsers).map(whiteSpace).toArray(Parser[]::new);
+        parsers[0] = this.parsers[0]; //it's separated, not prefixed
+        return new Sequence(name, parsers);
     }
 
     public Sequence separatedBy(WhiteSpace whiteSpace) {

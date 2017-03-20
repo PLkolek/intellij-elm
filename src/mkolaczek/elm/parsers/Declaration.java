@@ -1,9 +1,6 @@
 package mkolaczek.elm.parsers;
 
-import mkolaczek.elm.parsers.core.Many;
-import mkolaczek.elm.parsers.core.Parser;
-import mkolaczek.elm.parsers.core.Sequence;
-import mkolaczek.elm.parsers.core.WhiteSpace;
+import mkolaczek.elm.parsers.core.*;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +12,6 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.forcedWhitespace;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
 public class Declaration {
 
@@ -48,17 +44,15 @@ public class Declaration {
                 expect(Tokens.LOW_VAR).as(Elements.PORT_NAME),
                 expect(Tokens.COLON),
                 Type.expression
-        ).separatedBy(maybeWhitespace()).as(Elements.PORT_DECLARATION);
+        ).separatedBy(WhiteSpace2::maybeWhitespace).as(Elements.PORT_DECLARATION);
     }
 
     private static Parser infixDecl() {
         return sequence("infix operator declaration",
                 or(expect(Tokens.INFIXL), expect(Tokens.INFIXR), expect(Tokens.INFIX)),
-                maybeWhitespace(),
                 expect(Tokens.DIGIT),
-                maybeWhitespace(),
                 operatorSymbol(Elements.OPERATOR_SYMBOL)
-        ).as(Elements.INFIX_OPERATOR_DECLARATION);
+        ).separatedBy(WhiteSpace2::maybeWhitespace).as(Elements.INFIX_OPERATOR_DECLARATION);
 
     }
 
