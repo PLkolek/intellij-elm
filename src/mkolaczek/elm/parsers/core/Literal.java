@@ -1,5 +1,6 @@
 package mkolaczek.elm.parsers.core;
 
+import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 
 import static mkolaczek.elm.parsers.core.Expect.expect;
@@ -20,7 +21,7 @@ public class Literal {
         return or(
                 multilineString(),
                 singlelineString()
-        );
+        ).as(Elements.STRING_LITERAL);
     }
 
     private static Sequence multilineString() {

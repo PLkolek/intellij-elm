@@ -23,7 +23,7 @@ public class ElmStringAnnotator implements Annotator {
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         IElementType elementType = element.getNode().getElementType();
         if (tokenErrorMessages.containsKey(elementType)) {
-            holder.createErrorAnnotation(element, tokenErrorMessages.get(elementType));
+            holder.createErrorAnnotation(element.getParent(), tokenErrorMessages.get(elementType));
         }
     }
 }

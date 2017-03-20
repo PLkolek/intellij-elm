@@ -130,7 +130,7 @@ INVALID_UNICODE_ESCAPE="\\u"[^ \"]{0,4}
 
 <INSTRING> {
     "\""                        { yypopstate(); return QUOTE; }
-    {CLRF}                      { yypopstate(); yypushback(1); return INVALID_EOL_IN_STRING; }
+    {CLRF}                      { yypopstate(); return INVALID_EOL_IN_STRING; }
     {UNICODE_ESCAPE}            { return VALID_STRING_ESCAPE_TOKEN; }
     {VALID_ESCAPE}              { return VALID_STRING_ESCAPE_TOKEN; }
     {INVALID_ESCAPE}            { return INVALID_CHARACTER_ESCAPE_TOKEN; }

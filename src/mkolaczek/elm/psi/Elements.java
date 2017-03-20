@@ -53,6 +53,8 @@ public interface Elements {
     Element PORT_DECLARATION = new Element("port declaration");
     Element PORT_NAME = new Element("port name");
 
+    Element STRING_LITERAL = new Element("string literal");
+
     class Factory {
 
         public static PsiElement createElement(ASTNode node) {
@@ -139,6 +141,8 @@ public interface Elements {
                 return new PortDeclaration(node);
             } else if (type == PORT_NAME) {
                 return new PortName(node);
+            } else if (type == STRING_LITERAL) {
+                return new StringLiteral(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {
