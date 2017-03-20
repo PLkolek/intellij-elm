@@ -54,6 +54,7 @@
         <annotator language="Elm"
                    implementationClass="mkolaczek.elm.features.inspections.UnresolvedReferenceAnnotator"/>
         <annotator language="Elm" implementationClass="mkolaczek.elm.features.syntaxHinglighting.ElmStringAnnotator"/>
+        <annotator language="Elm" implementationClass="mkolaczek.elm.features.syntaxHinglighting.ElmNumberAnnotator"/>
     </extensions>
 
     <actions>

@@ -42,10 +42,13 @@ LOW_VAR=[a-z][a-zA-Z0-9ᛜ]*
 SYMBOL= [\+\-\/\*=\.<>:&\|\^\?%#~\!]
 SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
 ESCAPE_CHAR=[abfnrtv\"\\\']
-UNICODE_ESCAPE="\\"u[a-fA-F0-9]{4}
+HEX=[a-fA-F0-9]
+UNICODE_ESCAPE="\\"u{HEX}{4}
 VALID_ESCAPE="\\"{ESCAPE_CHAR}
 INVALID_ESCAPE="\\"[^abfnrtv\"\'\\\n']
 INVALID_UNICODE_ESCAPE="\\u"[^ \"\']{0,4}
+HEX_LITERAL="0x"{HEX}+
+INVALID_HEX_LITERAL="0x"
 
 %state INCOMMENT
 %state DOCCOMMENT
@@ -56,47 +59,49 @@ INVALID_UNICODE_ESCAPE="\\u"[^ \"\']{0,4}
 
 %%
 <YYINITIAL> {
-  "port"            { return PORT; }
-  "effect"          { return EFFECT; }
-  "module"          { return MODULE; }
-  "where"           { return WHERE; }
-  "import"          { return IMPORT; }
-  "as"              { return AS; }
-  "exposing"        { return EXPOSING; }
-  "type"            { return TYPE; }
-  "alias"           { return ALIAS; }
-  "infixl"          { return INFIXL; }
-  "infixr"          { return INFIXR; }
-  "infix"           { return INFIX; }
-  "::"              { return CONS; }
-  "("               { return LPAREN; }
-  ")"               { return RPAREN; }
-  "{"               { return LBRACKET; }
-  "}"               { return RBRACKET; }
-  "["               { return LSQUAREBRACKET; }
-  "]"               { return RSQUAREBRACKET; }
-  ","               { return COMMA; }
-  ".."              { return OPEN_LISTING; }
-  "="               { return EQUALS; }
-  "->"              { return ARROW; }
-  "--"              { yypushstate(INLINECOMMENT); return LINE_COMMENT; }
-  "|"               { return PIPE; }
-  "."               { return DOT; }
-  ":"               { return COLON; }
-  "_"               { return UNDERSCORE; }
-  "{-|"             { yypushstate(DOCCOMMENT); return BEGIN_DOC_COMMENT;}
-  "{-"              { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
-  "\"\"\""          { yypushstate(INMULTILINESTRING); return MULTILINE_STRING;}
-  "\""              { yypushstate(INSTRING); return QUOTE;}
-  "\'"              { yypushstate(INCHARACTER); return SINGLE_QUOTE;}
-  "{-"              { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
-  {WS}+             { return TokenType.WHITE_SPACE; }
-  {CAP_VAR}         { return CAP_VAR; }
-  {LOW_VAR}         { return LOW_VAR; }
-  {SYMBOL_OP}       { return SYM_OP; }
-  {DIGIT}           { return DIGIT; }
-  "ᛜ"               { return RUNE_OF_AUTOCOMPLETION; }
-  [^]               { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+  "port"                { return PORT; }
+  "effect"              { return EFFECT; }
+  "module"              { return MODULE; }
+  "where"               { return WHERE; }
+  "import"              { return IMPORT; }
+  "as"                  { return AS; }
+  "exposing"            { return EXPOSING; }
+  "type"                { return TYPE; }
+  "alias"               { return ALIAS; }
+  "infixl"              { return INFIXL; }
+  "infixr"              { return INFIXR; }
+  "infix"               { return INFIX; }
+  "::"                  { return CONS; }
+  "("                   { return LPAREN; }
+  ")"                   { return RPAREN; }
+  "{"                   { return LBRACKET; }
+  "}"                   { return RBRACKET; }
+  "["                   { return LSQUAREBRACKET; }
+  "]"                   { return RSQUAREBRACKET; }
+  ","                   { return COMMA; }
+  ".."                  { return OPEN_LISTING; }
+  "="                   { return EQUALS; }
+  "->"                  { return ARROW; }
+  "--"                  { yypushstate(INLINECOMMENT); return LINE_COMMENT; }
+  "|"                   { return PIPE; }
+  "."                   { return DOT; }
+  ":"                   { return COLON; }
+  "_"                   { return UNDERSCORE; }
+  "{-|"                 { yypushstate(DOCCOMMENT); return BEGIN_DOC_COMMENT;}
+  "{-"                  { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
+  "\"\"\""              { yypushstate(INMULTILINESTRING); return MULTILINE_STRING;}
+  "\""                  { yypushstate(INSTRING); return QUOTE;}
+  "\'"                  { yypushstate(INCHARACTER); return SINGLE_QUOTE;}
+  "{-"                  { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
+  {WS}+                 { return TokenType.WHITE_SPACE; }
+  {CAP_VAR}             { return CAP_VAR; }
+  {LOW_VAR}             { return LOW_VAR; }
+  {SYMBOL_OP}           { return SYM_OP; }
+  {HEX_LITERAL}         { return HEX_NUMBER; }
+  {INVALID_HEX_LITERAL} { return INVALID_HEX_NUMBER; }
+  {DIGIT}               { return DIGIT; }
+  "ᛜ"                   { return RUNE_OF_AUTOCOMPLETION; }
+  [^]                   { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 
 <DOCCOMMENT> {

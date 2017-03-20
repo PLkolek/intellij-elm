@@ -41,13 +41,15 @@ public interface Tokens {
     Token LINE_COMMENT = new Token("LINE_COMMENT", "--");
     Token COMMENT_CONTENT = new Token("COMMENT_CONTENT", "comment content");
 
-    Token STRING_CONTENT = new Token("STRING_CONTENT", "string content");
+    Token STRING_CONTENT = new Token("string content");
     Token INVALID_EOL_IN_STRING = new Token("INVALID_EOL_IN_STRING", "invalid end of line in single line string");
     //Those should be StringEscapesTokenTypes for something to work (ie. ToUppercase), but...
     Token VALID_STRING_ESCAPE_TOKEN = new Token("VALID_STRING_ESCAPE_TOKEN", "valid escape sequence");
     Token INVALID_CHARACTER_ESCAPE_TOKEN = new Token("INVALID_CHARACTER_ESCAPE_TOKEN", "invalid escape sequence");
     Token INVALID_UNICODE_ESCAPE_TOKEN = new Token("INVALID_UNICODE_ESCAPE_TOKEN", "invalid unicode escape sequence");
 
+    Token HEX_NUMBER = new Token("hex number");
+    Token INVALID_HEX_NUMBER = new Token("invalid hex number");
 
     Token LBRACKET = new Token("LBRACKET", "{");
     Token RBRACKET = new Token("RBRACKET", "}");

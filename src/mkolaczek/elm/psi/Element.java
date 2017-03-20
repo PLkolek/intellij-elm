@@ -16,7 +16,7 @@ public class Element extends IElementType {
         this(debugName(name), name);
     }
 
-    private static String debugName(String name) {
+    static String debugName(String name) {
         return stream(name.split("\\s+")).map(String::toUpperCase).collect(joining("_"));
     }
 

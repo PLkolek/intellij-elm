@@ -16,7 +16,15 @@ public class Literal {
         //TODO: continue
         return or(
                 string(),
-                character()
+                character(),
+                number()
+        );
+    }
+
+    private static Parser number() {
+        return or(
+                expect(Tokens.HEX_NUMBER),
+                expect(Tokens.INVALID_HEX_NUMBER)
         );
     }
 

@@ -14,7 +14,7 @@ public class Token extends IElementType {
     private final String name;
 
     public Token(String name) {
-        this(name, name);
+        this(Element.debugName(name), name);
     }
 
     public Token(@NotNull @NonNls String debugName, String name) {
