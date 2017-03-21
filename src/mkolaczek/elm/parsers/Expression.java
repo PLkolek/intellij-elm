@@ -67,7 +67,6 @@ public class Expression {
     }
 
     private static Parser let() {
-        //TODO: implement
         return sequence(
                 maybeWhitespace(expect(Tokens.LET)),
                 indentedBlock(
@@ -75,7 +74,9 @@ public class Expression {
                                 definition(),
                                 many(indented(definition()))
                         )
-                )
+                ),
+                maybeWhitespace(expect(Tokens.IN)),
+                maybeWhitespace(expression)
         );
     }
 }

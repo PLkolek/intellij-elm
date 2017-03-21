@@ -27,7 +27,9 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
             Tokens.ALIAS,
             Tokens.INFIXL,
             Tokens.INFIXR,
-            Tokens.INFIX
+            Tokens.INFIX,
+            Tokens.LET,
+            Tokens.IN
     );
 
     private static final Set<IElementType> VALID_ESCAPES = ImmutableSet.of(
