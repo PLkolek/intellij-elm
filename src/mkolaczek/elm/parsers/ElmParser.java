@@ -7,6 +7,7 @@ import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.parsers.core.Sequence;
+import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.psi.Elements;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +39,6 @@ public class ElmParser implements PsiParser {
                 tryP(Module.moduleHeader()),
                 Declaration.declarations()
         );
-        parser.parse2(builder, Sets.newHashSet());
+        parser.parse2(builder, Sets.newHashSet(), Indentation.create());
     }
 }

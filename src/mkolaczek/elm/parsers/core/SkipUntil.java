@@ -1,17 +1,21 @@
 package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Indentation;
 
 import java.util.Collection;
 
 public class SkipUntil {
 
-    public static void skipUntil(String expectedName, Collection<Parser> nextParsers, PsiBuilder builder) {
+    public static void skipUntil(String expectedName,
+                                 Collection<Parser> nextParsers,
+                                 PsiBuilder builder,
+                                 Indentation indentation) {
         PsiBuilder.Marker errorStart = builder.mark();
         int startingOffset = builder.getCurrentOffset();
         while (!builder.eof()) {
             //noinspection SuspiciousMethodCalls
-            if (anyWillParse(nextParsers, builder)) {
+            if (anyWillParse(nextParsers, builder, indentation)) {
                 errorStart.error(expectedName + " expected");
                 return;
             }
@@ -25,12 +29,15 @@ public class SkipUntil {
         }
     }
 
-    public static boolean willParseAfterSkipping(Parser me, Collection<Parser> nextParsers, PsiBuilder builder) {
+    public static boolean willParseAfterSkipping(Parser me,
+                                                 Collection<Parser> nextParsers,
+                                                 PsiBuilder builder,
+                                                 Indentation indentation) {
         PsiBuilder.Marker errorStart = builder.mark();
         while (!builder.eof()) {
             //noinspection SuspiciousMethodCalls
-            if (anyWillParse(nextParsers, builder)) {
-                boolean result = me.willParse(builder);
+            if (anyWillParse(nextParsers, builder, indentation)) {
+                boolean result = me.willParse(builder, indentation);
                 errorStart.rollbackTo();
                 return result;
             }
@@ -40,7 +47,7 @@ public class SkipUntil {
         return false;
     }
 
-    public static boolean anyWillParse(Collection<Parser> nextParsers, PsiBuilder builder) {
-        return nextParsers.stream().anyMatch(p -> p.willParse(builder));
+    public static boolean anyWillParse(Collection<Parser> nextParsers, PsiBuilder builder, Indentation indentation) {
+        return nextParsers.stream().anyMatch(p -> p.willParse(builder, indentation));
     }
 }

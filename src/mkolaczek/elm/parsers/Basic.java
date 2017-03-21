@@ -3,7 +3,7 @@ package mkolaczek.elm.parsers;
 import mkolaczek.elm.parsers.core.Many;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.Try;
-import mkolaczek.elm.parsers.core.WhiteSpace2;
+import mkolaczek.elm.parsers.core.WhiteSpace;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
@@ -14,7 +14,7 @@ import static mkolaczek.elm.parsers.SepBy.commaSep;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
-import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
+import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
 import static mkolaczek.elm.psi.Tokens.RPAREN;
 
@@ -25,7 +25,7 @@ public class Basic {
                 expect(LPAREN),
                 listingContent(name + " content", listedValue),
                 expect(RPAREN)
-        ).separatedBy(WhiteSpace2::maybeWhitespace)
+        ).separatedBy(WhiteSpace::maybeWhitespace)
          .as(Elements.MODULE_VALUE_LIST);
     }
 
@@ -41,7 +41,7 @@ public class Basic {
                 expect(Tokens.LPAREN),
                 operatorSymbol(Elements.OPERATOR_SYMBOL_REF),
                 expect(Tokens.RPAREN)
-        ).separatedBy(WhiteSpace2::maybeWhitespace).as(Elements.OPERATOR);
+        ).separatedBy(WhiteSpace::maybeWhitespace).as(Elements.OPERATOR);
     }
 
     public static Parser operatorSymbol(Element as) {

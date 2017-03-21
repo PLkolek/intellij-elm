@@ -3,6 +3,7 @@ package mkolaczek.elm.parsers.core;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
+import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
@@ -36,12 +37,12 @@ public class DottedCapVar implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder psiBuilder) {
+    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
         return isCapVar(psiBuilder);
     }
 
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers) {
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
         if (builder.eof() || !isCapVar(builder)) {
             return Result.TOKEN_ERROR;
         }
@@ -51,12 +52,12 @@ public class DottedCapVar implements Parser {
         int suffixStart = builder.getCurrentOffset();
         builder.advanceLexer();
         int start = builder.getCurrentOffset();
-        while (isDot(builder) && WhiteSpace2.Type.NO.accepts(builder)) {
+        while (isDot(builder) && WhiteSpace.Type.NO.accepts(builder, indentation)) {
             prefixEnd = replace(builder, prefixEnd);
             builder.advanceLexer();
             suffix = replace(builder, suffix);
             suffixStart = builder.getCurrentOffset();
-            if (!isCapVar(builder) || !WhiteSpace2.Type.NO.accepts(builder)) {
+            if (!isCapVar(builder) || !WhiteSpace.Type.NO.accepts(builder, indentation)) {
                 builder.error("Uppercase identifier expected");
                 break;
             }

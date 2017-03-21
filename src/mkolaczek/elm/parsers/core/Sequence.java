@@ -3,6 +3,7 @@ package mkolaczek.elm.parsers.core;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Indentation;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,7 +33,7 @@ public class Sequence implements Parser {
         return "Something is wrong, that name should never be needed!";
     }
 
-    public Sequence separatedBy(Function<Parser, WhiteSpace2> whiteSpace) {
+    public Sequence separatedBy(Function<Parser, WhiteSpace> whiteSpace) {
         Parser[] parsers = Arrays.stream(this.parsers).map(whiteSpace).toArray(Parser[]::new);
         parsers[0] = this.parsers[0]; //it's separated, not prefixed
         return new Sequence(name, parsers);
@@ -54,9 +55,9 @@ public class Sequence implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder psiBuilder) {
+    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
         for (Parser parser : parsers) {
-            if (parser.willParse(psiBuilder)) {
+            if (parser.willParse(psiBuilder, indentation)) {
                 return true;
             }
             if (parser.isRequired()) {
@@ -67,28 +68,28 @@ public class Sequence implements Parser {
     }
 
     @Override
-    public Result parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
-        if (psiBuilder.eof() || !willParse(psiBuilder)) {
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
+        if (builder.eof() || !willParse(builder, indentation)) {
             return Result.TOKEN_ERROR;
         }
         //noinspection SuspiciousMethodCalls
-        return parse2(psiBuilder, nextParsers);
+        return parse2(builder, nextParsers, indentation);
     }
 
-    public Result parse2(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
+    public Result parse2(PsiBuilder psiBuilder, Collection<Parser> nextParsers, Indentation indentation) {
         List<Collection<Parser>> childrenNextParsers = nextParsers(nextParsers);
 
         for (int i = 0; i < parsers.length; i++) {
             Parser parser = parsers[i];
             Collection<Parser> parserNextParsers = childrenNextParsers.get(i);
-            Result result = parser.parse(psiBuilder, parserNextParsers);
+            Result result = parser.parse(psiBuilder, parserNextParsers, indentation);
             if (result == Result.WS_ERROR && shouldContinue(i)) {
                 return result;
             } else if (result == Result.TOKEN_ERROR) {
                 Collection<Parser> skipUntilParsers = Lists.newArrayList(parserNextParsers);
                 skipUntilParsers.add(parser);
-                SkipUntil.skipUntil(parser.name(), skipUntilParsers, psiBuilder);
-                parser.parse(psiBuilder, parserNextParsers);
+                SkipUntil.skipUntil(parser.name(), skipUntilParsers, psiBuilder, indentation);
+                parser.parse(psiBuilder, parserNextParsers, indentation);
             }
         }
         return Result.OK;

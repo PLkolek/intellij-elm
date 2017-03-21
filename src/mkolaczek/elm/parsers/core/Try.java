@@ -2,6 +2,7 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Indentation;
 
 import java.util.Collection;
 
@@ -22,19 +23,22 @@ public class Try implements Parser {
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers) {
+    public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers, Indentation indentation) {
         PsiBuilder.Marker start = builder.mark();
         int startOffset = builder.getCurrentOffset();
-        Result result = contents.parse(builder, myNextParsers);
+        Result result = contents.parse(builder, myNextParsers, indentation);
         if (startOffset == builder.getCurrentOffset()) {
             start.rollbackTo();
         } else {
             start.drop();
         }
         if (result == Result.TOKEN_ERROR) {
-            if (!anyWillParse(myNextParsers, builder) && willParseAfterSkipping(this, myNextParsers, builder)) {
-                SkipUntil.skipUntil(name(), Lists.newArrayList(this), builder);
-                return contents.parse(builder, myNextParsers);
+            if (!anyWillParse(myNextParsers, builder, indentation) && willParseAfterSkipping(this,
+                    myNextParsers,
+                    builder,
+                    indentation)) {
+                SkipUntil.skipUntil(name(), Lists.newArrayList(this), builder, indentation);
+                return contents.parse(builder, myNextParsers, indentation);
             } else {
                 return Result.OK;
             }
@@ -44,8 +48,8 @@ public class Try implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder psiBuilder) {
-        return contents.willParse(psiBuilder);
+    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
+        return contents.willParse(psiBuilder, indentation);
     }
 
     @Override

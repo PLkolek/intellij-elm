@@ -1,6 +1,7 @@
 package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.psi.Token;
 
 import java.util.Collection;
@@ -18,16 +19,16 @@ public class Expect implements Parser {
     }
 
     @Override
-    public Result parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers) {
-        if (psiBuilder.eof() || expectedToken != psiBuilder.getTokenType()) {
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
+        if (builder.eof() || expectedToken != builder.getTokenType()) {
             return Result.TOKEN_ERROR;
         }
-        psiBuilder.advanceLexer();
+        builder.advanceLexer();
         return Result.OK;
     }
 
     @Override
-    public boolean willParse(PsiBuilder psiBuilder) {
+    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
         return psiBuilder.getTokenType() == expectedToken;
     }
 

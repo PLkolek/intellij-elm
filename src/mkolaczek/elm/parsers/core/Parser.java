@@ -1,6 +1,7 @@
 package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 
@@ -15,9 +16,9 @@ public interface Parser {
         OK, WS_ERROR, TOKEN_ERROR
     }
 
-    Result parse(PsiBuilder psiBuilder, Collection<Parser> nextParsers);
+    Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation);
 
-    boolean willParse(PsiBuilder psiBuilder);
+    boolean willParse(PsiBuilder psiBuilder, Indentation indentation);
 
     boolean isRequired();
 

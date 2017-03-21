@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
-import static mkolaczek.elm.parsers.core.WhiteSpace2.maybeWhitespace;
+import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
 public class SepBy {
     public static Parser pipeSep(Parser parser) {
