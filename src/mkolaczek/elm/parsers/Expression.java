@@ -11,6 +11,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static mkolaczek.elm.parsers.Basic.spacePrefix;
 import static mkolaczek.elm.parsers.Literal.glsl;
 import static mkolaczek.elm.parsers.Literal.literal;
+import static mkolaczek.elm.parsers.SepBy.tryCommaSep;
 import static mkolaczek.elm.parsers.core.DottedVar.dottedVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Many.indentedMany1;
@@ -89,13 +90,19 @@ public class Expression {
     }
 
     private static Parser term() {
-
         return or(
                 variable(),
                 literal(),
                 glsl(),
+                list(),
                 //TODO: just for testing
                 expect(CAP_VAR)
+        );
+    }
+
+    private static Parser list() {
+        return Basic.squareBrackets("list expression",
+                tryCommaSep(expression)
         );
     }
 
