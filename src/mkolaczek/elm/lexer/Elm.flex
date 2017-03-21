@@ -90,6 +90,7 @@ NUMBER = {FRACTIONAL_NUMBER} | {HEX_LITERAL}
   "}"                   { return RBRACKET; }
   "["                   { return LSQUAREBRACKET; }
   "]"                   { return RSQUAREBRACKET; }
+  "\\"|"\x03BB"         { return LAMBDA; }
   ","                   { return COMMA; }
   ".."                  { return OPEN_LISTING; }
   "="                   { return EQUALS; }

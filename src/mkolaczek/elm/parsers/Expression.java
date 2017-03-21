@@ -60,9 +60,20 @@ public class Expression {
                         let(),
                         if_(),
                         case_(),
+                        function(),
                         //TODO: just for testing
                         expect(CAP_VAR)
                 )
+        );
+    }
+
+    private static Parser function() {
+        return sequence(
+                expect(LAMBDA),
+                maybeWhitespace(Pattern.term()),
+                spacePrefix(Pattern.term()),
+                expect(ARROW),
+                expression
         );
     }
 

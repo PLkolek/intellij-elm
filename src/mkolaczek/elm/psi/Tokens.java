@@ -35,6 +35,7 @@ public interface Tokens {
     Token COLON = new Token("COLON", ":");
     Token COMMA = new Token("COMMA", ",");
     Token DOT = new Token("DOT", ".");
+    Token LAMBDA = new Token("LAMBDA", "\\");
     Token CONS = new Token("CONS", "::");
     Token UNDERSCORE = new Token("UNDERSCORE", "_");
     Token MULTILINE_STRING = new Token("MULTILINE_STRING", "\"\"\"");
