@@ -1,5 +1,6 @@
 package mkolaczek.elm.parsers;
 
+import mkolaczek.elm.parsers.core.DottedVar;
 import mkolaczek.elm.parsers.core.Many;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.ParserBox;
@@ -82,8 +83,12 @@ public class Expression {
     }
 
     private static Parser term() {
-        //TODO: just for testing
-        return expect(CAP_VAR);
+
+        return or(
+                sequence(DottedVar.dottedVar("qualified variable")),
+                //TODO: just for testing
+                expect(CAP_VAR)
+        );
     }
 
     private static Parser function() {

@@ -1,67 +1,82 @@
 package mkolaczek.elm.parsers.core;
 
+import com.google.common.collect.ImmutableSet;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.psi.Element;
+import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Set;
 
-import static mkolaczek.elm.psi.Tokens.CAP_VAR;
-import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
+import static mkolaczek.elm.psi.Tokens.*;
 
-public class DottedCapVar implements Parser {
+public class DottedVar implements Parser {
 
     private final String name;
+    private final Set<Token> varTokens;
     @Nullable
     private final Element prefixType;
     @Nullable
     private final Element suffixType;
 
-    public DottedCapVar(String name, @Nullable Element prefixType, @Nullable Element suffixType) {
+    public DottedVar(String name, Set<Token> varTokens, @Nullable Element prefixType, @Nullable Element suffixType) {
         this.name = name;
+        this.varTokens = varTokens;
         this.prefixType = prefixType;
         this.suffixType = suffixType;
     }
 
-    public static DottedCapVar dottedCapVar(String name) {
-        return new DottedCapVar(name, null, null);
+    public static DottedVar dottedCapVar(String name) {
+        return new DottedVar(name, ImmutableSet.of(CAP_VAR), null, null);
     }
 
-    public static DottedCapVar dottedCapVar(String name, @NotNull Element prefix, @NotNull Element suffix) {
-        return new DottedCapVar(name, prefix, suffix);
+    public static DottedVar dottedCapVar(String name, @NotNull Element prefix, @NotNull Element suffix) {
+        return new DottedVar(name, ImmutableSet.of(CAP_VAR), prefix, suffix);
+    }
+
+    public static Parser dottedVar(String name) {
+        return new DottedVar(name, ImmutableSet.of(CAP_VAR, LOW_VAR), null, null);
     }
 
     @Override
     public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
-        return isCapVar(psiBuilder);
+        return isVar(psiBuilder);
     }
 
     @Override
     public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
-        if (builder.eof() || !isCapVar(builder)) {
+        if (builder.eof() || !isVar(builder)) {
             return Result.TOKEN_ERROR;
         }
         PsiBuilder.Marker prefix = builder.mark();
         PsiBuilder.Marker prefixEnd = builder.mark();
         PsiBuilder.Marker suffix = builder.mark();
         int suffixStart = builder.getCurrentOffset();
+        IElementType type = builder.getTokenType();
         builder.advanceLexer();
         int start = builder.getCurrentOffset();
-        while (isDot(builder) && WhiteSpace.Type.NO.accepts(builder, indentation)) {
-            prefixEnd = replace(builder, prefixEnd);
-            builder.advanceLexer();
-            suffix = replace(builder, suffix);
-            suffixStart = builder.getCurrentOffset();
-            if (!isCapVar(builder) || !WhiteSpace.Type.NO.accepts(builder, indentation)) {
-                builder.error("Uppercase identifier expected");
-                break;
+        if (type == CAP_VAR) {
+            while (isDot(builder) && WhiteSpace.Type.NO.accepts(builder, indentation)) {
+                prefixEnd = replace(builder, prefixEnd);
+                builder.advanceLexer();
+                suffix = replace(builder, suffix);
+                suffixStart = builder.getCurrentOffset();
+                if (!isVar(builder) || !WhiteSpace.Type.NO.accepts(builder, indentation)) {
+                    builder.error(varTokens + " expected");
+                    break;
+                }
+                type = builder.getTokenType();
+                builder.advanceLexer();
+                if (type != CAP_VAR) {
+                    break;
+                }
             }
-            builder.advanceLexer();
         }
         if (isValid(builder, suffixType, suffixStart)) {
             suffix.done(suffixType);
@@ -94,8 +109,10 @@ public class DottedCapVar implements Parser {
         return prefixEnd;
     }
 
-    private boolean isCapVar(PsiBuilder builder) {
-        return builder.getTokenType() == CAP_VAR || builder.getTokenType() == RUNE_OF_AUTOCOMPLETION;
+    private boolean isVar(PsiBuilder builder) {
+        IElementType tokenType = builder.getTokenType();
+        //noinspection SuspiciousMethodCalls
+        return tokenType == CAP_VAR || varTokens.contains(tokenType) || tokenType == RUNE_OF_AUTOCOMPLETION;
     }
 
     @Override

@@ -10,7 +10,7 @@ import static mkolaczek.elm.parsers.Basic.*;
 import static mkolaczek.elm.parsers.Literal.literal;
 import static mkolaczek.elm.parsers.SepBy.commaSep;
 import static mkolaczek.elm.parsers.SepBy.tryCommaSep;
-import static mkolaczek.elm.parsers.core.DottedCapVar.dottedCapVar;
+import static mkolaczek.elm.parsers.core.DottedVar.dottedCapVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
