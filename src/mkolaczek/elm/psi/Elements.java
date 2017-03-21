@@ -129,8 +129,6 @@ public interface Elements {
                 return new RecordType(node);
             } else if (type == SURROUND_CONTENTS) {
                 return new SurroundContents(node);
-            } else if (type == TUPLE_TYPE) {
-                return new TupleType(node);
             } else if (type == TYPE_CONSTRUCTOR_ARGS) {
                 return new TypeConstructorArgs(node);
             } else if (type == INFIX_OPERATOR_DECLARATION) {

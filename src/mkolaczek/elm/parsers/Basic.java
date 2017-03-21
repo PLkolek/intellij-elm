@@ -14,6 +14,7 @@ import static mkolaczek.elm.parsers.SepBy.commaSep;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
+import static mkolaczek.elm.parsers.core.Try.tryP;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
 import static mkolaczek.elm.psi.Tokens.RPAREN;
@@ -90,6 +91,12 @@ public class Basic {
     public static Parser spacePrefix(Parser parser) {
         return Many.many(String.format("space prefixed list of %ss", parser.name()),
                 Try.tryP(maybeWhitespace(parser))
+        );
+    }
+
+    public static Parser tuple(String name, Parser expression) {
+        return parens(name,
+                tryP(commaSep(expression).as(Elements.SURROUND_CONTENTS))
         );
     }
 }

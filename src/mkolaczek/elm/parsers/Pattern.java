@@ -25,7 +25,7 @@ public class Pattern {
     public static Parser term() {
         return or(
                 record(),
-                tuple(),
+                tuple("tuple pattern", expression),
                 list(),
                 expect(UNDERSCORE),
                 expect(LOW_VAR),
@@ -36,12 +36,6 @@ public class Pattern {
 
     private static Parser record() {
         return brackets(tryCommaSep(expect(LOW_VAR)));
-    }
-
-    private static Parser tuple() {
-        return parens("tuple pattern",
-                tryP(commaSep(expression).as(Elements.SURROUND_CONTENTS))
-        );
     }
 
     private static Parser list() {

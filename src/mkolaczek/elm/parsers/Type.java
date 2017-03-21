@@ -8,7 +8,8 @@ import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
-import static mkolaczek.elm.parsers.SepBy.*;
+import static mkolaczek.elm.parsers.SepBy.commaSepSuffix;
+import static mkolaczek.elm.parsers.SepBy.tryCommaSep;
 import static mkolaczek.elm.parsers.core.DottedVar.dottedCapVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
@@ -20,11 +21,6 @@ public class
 Type {
 
     public static ParserBox expression = new ParserBox("type expression");
-
-    private static Parser tuple =
-            parens("tuple type",
-                    tryP(commaSep(expression).as(Elements.SURROUND_CONTENTS))
-            ).as(Elements.TUPLE_TYPE);
 
     private static Parser field =
             sequence("record field",
@@ -64,7 +60,7 @@ Type {
             or("type term",
                     typeRef(),
                     expect(Tokens.LOW_VAR),
-                    tuple,
+                    tuple("tuple type", expression),
                     record
             );
 
