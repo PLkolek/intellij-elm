@@ -3,10 +3,14 @@ package mkolaczek.elm.parsers.core;
 import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Indentation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
+import static mkolaczek.elm.parsers.core.IndentedBlock.indentedBlock;
+import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.SkipUntil.*;
+import static mkolaczek.elm.parsers.core.WhiteSpace.indented;
 
 public class Many implements Parser {
 
@@ -30,6 +34,16 @@ public class Many implements Parser {
 
     public static Many many(String name, Parser... parsers) {
         return new Many(name, Sequence.sequence(name, parsers));
+    }
+
+    @NotNull
+    public static IndentedBlock indentedMany1(Parser itemParser) {
+        return indentedBlock(
+                sequence(
+                        itemParser,
+                        many(indented(itemParser))
+                )
+        );
     }
 
     private Many(String name, Parser parser) {

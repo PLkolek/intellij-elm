@@ -1,5 +1,6 @@
 package mkolaczek.elm.parsers;
 
+import mkolaczek.elm.parsers.core.Many;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.ParserBox;
 import mkolaczek.elm.psi.Tokens;
@@ -7,11 +8,9 @@ import mkolaczek.elm.psi.Tokens;
 import static com.google.common.collect.Sets.newHashSet;
 import static mkolaczek.elm.parsers.Basic.spacePrefix;
 import static mkolaczek.elm.parsers.core.Expect.expect;
-import static mkolaczek.elm.parsers.core.IndentedBlock.indentedBlock;
-import static mkolaczek.elm.parsers.core.Many.many;
+import static mkolaczek.elm.parsers.core.Many.indentedMany1;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
-import static mkolaczek.elm.parsers.core.WhiteSpace.indented;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.*;
 
@@ -60,9 +59,27 @@ public class Expression {
                 or(
                         let(),
                         if_(),
+                        case_(),
                         //TODO: just for testing
                         expect(CAP_VAR)
                 )
+        );
+    }
+
+    private static Parser case_() {
+        return sequence(
+                expect(CASE),
+                maybeWhitespace(expression),
+                expect(OF),
+                indentedMany1(caseBranch())
+        );
+    }
+
+    private static Parser caseBranch() {
+        return sequence(
+                Pattern.expression,
+                expect(Tokens.ARROW),
+                maybeWhitespace(expression)
         );
     }
 
@@ -80,14 +97,10 @@ public class Expression {
     private static Parser let() {
         return sequence(
                 maybeWhitespace(expect(Tokens.LET)),
-                indentedBlock(
-                        sequence(
-                                definition(),
-                                many(indented(definition()))
-                        )
-                ),
+                Many.indentedMany1(definition()),
                 maybeWhitespace(expect(Tokens.IN)),
                 maybeWhitespace(expression)
         );
     }
+
 }

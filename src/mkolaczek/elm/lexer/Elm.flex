@@ -81,6 +81,8 @@ NUMBER = {FRACTIONAL_NUMBER} | {HEX_LITERAL}
   "if"                  { return IF; }
   "then"                { return THEN; }
   "else"                { return ELSE; }
+  "case"                { return CASE; }
+  "of"                  { return OF; }
   "::"                  { return CONS; }
   "("                   { return LPAREN; }
   ")"                   { return RPAREN; }

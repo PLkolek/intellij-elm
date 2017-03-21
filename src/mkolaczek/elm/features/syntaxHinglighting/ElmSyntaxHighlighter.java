@@ -32,7 +32,9 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
             Tokens.IN,
             Tokens.IF,
             Tokens.THEN,
-            Tokens.ELSE
+            Tokens.ELSE,
+            Tokens.CASE,
+            Tokens.OF
     );
 
     private static final Set<IElementType> VALID_ESCAPES = ImmutableSet.of(

@@ -25,6 +25,8 @@ public interface Tokens {
     Token IF = new Token("if");
     Token THEN = new Token("then");
     Token ELSE = new Token("else");
+    Token CASE = new Token("case");
+    Token OF = new Token("of");
 
     Token OPEN_LISTING = new Token("..");
     Token ARROW = new Token("ARROW", "->");
