@@ -54,7 +54,7 @@ Type {
                                     ))
                             ).as(Elements.SURROUND_CONTENTS)
                     )
-            ).as(Elements.RECORD_TYPE);
+            );
 
     private static Parser term =
             or("type term",

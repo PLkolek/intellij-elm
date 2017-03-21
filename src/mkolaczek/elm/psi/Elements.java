@@ -39,9 +39,7 @@ public interface Elements {
     Element PIPE_SEP = new Element("PIPE_SEP", "pipe separated list");
     Element COMMA_SEP = new Element("COMMA_SEP", "comma separated list");
     Element TYPE_DECL_DEF_NODE = new Element("TYPE_DECL_FED_NODE", "type definition");
-    Element RECORD_TYPE = new Element("record type");
     Element SURROUND_CONTENTS = new Element("surround contents");
-    Element TUPLE_TYPE = new Element("tuple type");
 
     Element TYPE_CONSTRUCTOR_ARGS = new Element("type constructor arguments");
     Element OPERATOR = new Element("operator");
@@ -125,8 +123,6 @@ public interface Elements {
                 return new CommaSeparatedList(node);
             } else if (type == PIPE_SEP) {
                 return new PipeSeparatedList(node);
-            } else if (type == RECORD_TYPE) {
-                return new RecordType(node);
             } else if (type == SURROUND_CONTENTS) {
                 return new SurroundContents(node);
             } else if (type == TYPE_CONSTRUCTOR_ARGS) {
