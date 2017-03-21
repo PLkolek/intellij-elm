@@ -78,6 +78,9 @@ NUMBER = {FRACTIONAL_NUMBER} | {HEX_LITERAL}
   "infix"               { return INFIX; }
   "let"                 { return LET; }
   "in"                  { return IN; }
+  "if"                  { return IF; }
+  "then"                { return THEN; }
+  "else"                { return ELSE; }
   "::"                  { return CONS; }
   "("                   { return LPAREN; }
   ")"                   { return RPAREN; }

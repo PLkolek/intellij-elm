@@ -22,6 +22,9 @@ public interface Tokens {
     Token INFIX = new Token("infix");
     Token LET = new Token("let");
     Token IN = new Token("in");
+    Token IF = new Token("if");
+    Token THEN = new Token("then");
+    Token ELSE = new Token("else");
 
     Token OPEN_LISTING = new Token("..");
     Token ARROW = new Token("ARROW", "->");
@@ -33,36 +36,36 @@ public interface Tokens {
     Token CONS = new Token("CONS", "::");
     Token UNDERSCORE = new Token("UNDERSCORE", "_");
     Token MULTILINE_STRING = new Token("MULTILINE_STRING", "\"\"\"");
-    Token QUOTE = new Token("QUOTE", "\"");
 
+    Token QUOTE = new Token("QUOTE", "\"");
     Token SINGLE_QUOTE = new Token("SINGLE_QUOTE", "\'");
     Token BEGIN_COMMENT = new Token("BEGIN_COMMENT", "{-");
     Token BEGIN_DOC_COMMENT = new Token("BEGIN_DOC_COMMENT", "{-|");
     Token END_COMMENT = new Token("END_COMMENT", "-}");
     Token END_DOC_COMMENT = new Token("END_DOC_COMMENT", "-}");
-    Token LINE_COMMENT = new Token("LINE_COMMENT", "--");
 
+    Token LINE_COMMENT = new Token("LINE_COMMENT", "--");
     Token COMMENT_CONTENT = new Token("COMMENT_CONTENT", "comment content");
     Token STRING_CONTENT = new Token("string content");
     Token INVALID_EOL_IN_STRING = new Token("INVALID_EOL_IN_STRING", "invalid end of line in single line string");
     //Those should be StringEscapesTokenTypes for something to work (ie. ToUppercase), but...
     Token VALID_STRING_ESCAPE_TOKEN = new Token("VALID_STRING_ESCAPE_TOKEN", "valid escape sequence");
+
     Token INVALID_CHARACTER_ESCAPE_TOKEN = new Token("INVALID_CHARACTER_ESCAPE_TOKEN", "invalid escape sequence");
-
     Token INVALID_UNICODE_ESCAPE_TOKEN = new Token("INVALID_UNICODE_ESCAPE_TOKEN", "invalid unicode escape sequence");
-    Token NUMBER = new Token("number");
 
+    Token NUMBER = new Token("number");
     Token INVALID_HEX_NUMBER = new Token("invalid hex number");
     Token LBRACKET = new Token("LBRACKET", "{");
     Token RBRACKET = new Token("RBRACKET", "}");
     Token LPAREN = new Token("LPAREN", "(");
     Token RPAREN = new Token("RPAREN", ")");
-    Token LSQUAREBRACKET = new Token("LSQUAREBRACKET", "[");
 
+    Token LSQUAREBRACKET = new Token("LSQUAREBRACKET", "[");
     Token RSQUAREBRACKET = new Token("RSQUAREBRACKET", "]");
     Token CAP_VAR = new Token("CAP_VAR", "uppercase identifier");
-    Token LOW_VAR = new Token("LOW_VAR", "lowercase identifier");
 
+    Token LOW_VAR = new Token("LOW_VAR", "lowercase identifier");
     Token SYM_OP = new Token("SYM_OP", "operator consisting of symbols");
     Token DIGIT = new Token("digit");
     Token RUNE_OF_AUTOCOMPLETION = new Token("RUNE_OF_AUTOCOMPLETION");

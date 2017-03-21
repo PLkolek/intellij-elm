@@ -59,10 +59,21 @@ public class Expression {
         expression.setParser(
                 or(
                         let(),
-
+                        if_(),
                         //TODO: just for testing
                         expect(CAP_VAR)
                 )
+        );
+    }
+
+    private static Parser if_() {
+        return sequence(
+                maybeWhitespace(expect(Tokens.IF)),
+                maybeWhitespace(expression),
+                expect(Tokens.THEN),
+                maybeWhitespace(expression),
+                expect(Tokens.ELSE),
+                maybeWhitespace(expression) //this should handle else if
         );
     }
 
