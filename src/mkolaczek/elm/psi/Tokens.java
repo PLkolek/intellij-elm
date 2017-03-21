@@ -20,6 +20,7 @@ public interface Tokens {
     Token INFIXL = new Token("infixl");
     Token INFIXR = new Token("infixr");
     Token INFIX = new Token("infix");
+    Token LET = new Token("let");
 
     Token OPEN_LISTING = new Token("..");
     Token ARROW = new Token("ARROW", "->");

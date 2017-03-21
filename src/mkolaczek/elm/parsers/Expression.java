@@ -43,7 +43,22 @@ public class Expression {
     private static Parser definitionEnd() {
         return sequence(
                 spacePrefix(Pattern.term()),
-                maybeWhitespace(expect(EQUALS))
+                maybeWhitespace(expect(EQUALS)),
+                expression()
+        );
+    }
+
+    private static Parser expression() {
+        //TODO: implement
+        return or(
+                let()
+        );
+    }
+
+    private static Parser let() {
+        //TODO: implement
+        return sequence(
+                maybeWhitespace(expect(Tokens.LET))
         );
     }
 }
