@@ -79,20 +79,20 @@ public class Sequence implements Parser {
     public Result parse2(PsiBuilder psiBuilder, Collection<Parser> nextParsers, Indentation indentation) {
         List<Collection<Parser>> childrenNextParsers = nextParsers(nextParsers);
 
+        Result result = Result.OK;
         for (int i = 0; i < parsers.length; i++) {
             Parser parser = parsers[i];
             Collection<Parser> parserNextParsers = childrenNextParsers.get(i);
-            Result result = parser.parse(psiBuilder, parserNextParsers, indentation);
-            if (result == Result.WS_ERROR && shouldContinue(i)) {
-                return result;
-            } else if (result == Result.TOKEN_ERROR) {
+            result = parser.parse(psiBuilder, parserNextParsers, indentation);
+            if (result == Result.TOKEN_ERROR) {
                 Collection<Parser> skipUntilParsers = Lists.newArrayList(parserNextParsers);
                 skipUntilParsers.add(parser);
                 SkipUntil.skipUntil(parser.name(), skipUntilParsers, psiBuilder, indentation);
                 parser.parse(psiBuilder, parserNextParsers, indentation);
+                result = Result.OK;
             }
         }
-        return Result.OK;
+        return result;
     }
 
     public boolean shouldContinue(int i) {

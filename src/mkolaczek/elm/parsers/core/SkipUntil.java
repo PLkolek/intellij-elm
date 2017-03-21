@@ -1,5 +1,6 @@
 package mkolaczek.elm.parsers.core;
 
+import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Indentation;
 
@@ -34,6 +35,8 @@ public class SkipUntil {
                                                  PsiBuilder builder,
                                                  Indentation indentation) {
         PsiBuilder.Marker errorStart = builder.mark();
+        nextParsers = Lists.newArrayList(nextParsers);
+        nextParsers.add(me);
         while (!builder.eof()) {
             //noinspection SuspiciousMethodCalls
             if (anyWillParse(nextParsers, builder, indentation)) {
