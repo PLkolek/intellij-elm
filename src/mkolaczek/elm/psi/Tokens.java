@@ -28,7 +28,8 @@ public interface Tokens {
     Token CASE = new Token("case");
     Token OF = new Token("of");
 
-    Token OPEN_LISTING = new Token("..");
+    Token MINUS = new Token("MINUS", "-");
+    Token OPEN_LISTING = new Token("OPEN_LISTING", "..");
     Token ARROW = new Token("ARROW", "->");
     Token EQUALS = new Token("EQUALS", "=");
     Token PIPE = new Token("PIPE", "|");

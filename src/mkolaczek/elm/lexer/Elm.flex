@@ -95,6 +95,7 @@ NUMBER = {FRACTIONAL_NUMBER} | {HEX_LITERAL}
   ".."                  { return OPEN_LISTING; }
   "="                   { return EQUALS; }
   "->"                  { return ARROW; }
+  "-"                   { return MINUS; }
   "--"                  { yypushstate(INLINECOMMENT); return LINE_COMMENT; }
   "|"                   { return PIPE; }
   "."                   { return DOT; }

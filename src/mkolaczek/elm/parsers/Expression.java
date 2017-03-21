@@ -11,6 +11,7 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Many.indentedMany1;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
+import static mkolaczek.elm.parsers.core.Try.tryP;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.*;
 
@@ -61,10 +62,28 @@ public class Expression {
                         if_(),
                         case_(),
                         function(),
-                        //TODO: just for testing
-                        expect(CAP_VAR)
+                        somethingSomething()
                 )
         );
+    }
+
+    private static Parser somethingSomething() {
+        //TODO: obviously...
+        return sequence(
+                possiblyNegativeTerm()
+        );
+    }
+
+    private static Parser possiblyNegativeTerm() {
+        return sequence(
+                tryP(expect(Tokens.MINUS)),
+                term()
+        );
+    }
+
+    private static Parser term() {
+        //TODO: just for testing
+        return expect(CAP_VAR);
     }
 
     private static Parser function() {
