@@ -1,9 +1,6 @@
 package mkolaczek.elm.parsers;
 
-import mkolaczek.elm.parsers.core.Many;
-import mkolaczek.elm.parsers.core.Parser;
-import mkolaczek.elm.parsers.core.Try;
-import mkolaczek.elm.parsers.core.WhiteSpace;
+import mkolaczek.elm.parsers.core.*;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Token;
@@ -96,6 +93,13 @@ public class Basic {
 
     public static Parser tuple(String name, Parser expression) {
         return parens(name,
+                tryP(commaSep(expression).as(Elements.SURROUND_CONTENTS))
+        );
+    }
+
+    @NotNull
+    static Parser list(String name, ParserBox expression) {
+        return squareBrackets(name,
                 tryP(commaSep(expression).as(Elements.SURROUND_CONTENTS))
         );
     }

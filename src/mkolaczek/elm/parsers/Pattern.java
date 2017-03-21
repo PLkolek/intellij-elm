@@ -3,12 +3,10 @@ package mkolaczek.elm.parsers;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.ParserBox;
 import mkolaczek.elm.parsers.core.Sequence;
-import mkolaczek.elm.psi.Elements;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
 import static mkolaczek.elm.parsers.Literal.literal;
-import static mkolaczek.elm.parsers.SepBy.commaSep;
 import static mkolaczek.elm.parsers.SepBy.tryCommaSep;
 import static mkolaczek.elm.parsers.core.DottedVar.dottedCapVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
@@ -26,7 +24,7 @@ public class Pattern {
         return or(
                 record(),
                 tuple("tuple pattern", expression),
-                list(),
+                list("list pattern", expression),
                 expect(UNDERSCORE),
                 expect(LOW_VAR),
                 dottedCapVar("constructor"),
@@ -36,12 +34,6 @@ public class Pattern {
 
     private static Parser record() {
         return brackets(tryCommaSep(expect(LOW_VAR)));
-    }
-
-    private static Parser list() {
-        return squareBrackets("list pattern",
-                tryP(commaSep(expression).as(Elements.SURROUND_CONTENTS))
-        );
     }
 
     private static Parser consTerm() {
