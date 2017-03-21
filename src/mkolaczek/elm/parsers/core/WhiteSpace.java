@@ -22,6 +22,10 @@ public class WhiteSpace implements Parser {
         return new WhiteSpace(prefixedParsed, Type.FRESH_LINE, false);
     }
 
+    public static WhiteSpace noWhiteSpace(Parser prefixedParsed) {
+        return new WhiteSpace(prefixedParsed, Type.NO, false);
+    }
+
     public static WhiteSpace indented(Parser prefixedParsed) {
         return new WhiteSpace(prefixedParsed, Type.INDENTED, false);
     }

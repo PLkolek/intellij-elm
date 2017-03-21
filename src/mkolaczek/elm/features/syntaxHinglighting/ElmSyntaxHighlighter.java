@@ -52,6 +52,12 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
             Tokens.STRING_CONTENT
     );
 
+    private static final Set<IElementType> GLSL_TOKENS = ImmutableSet.of(
+            Tokens.BEGIN_GLSL,
+            Tokens.GLSL_CONTENT,
+            Tokens.END_GLSL
+    );
+
 
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
@@ -78,6 +84,9 @@ public class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
         }
         if (INVALID_ESCAPES.contains(tokenType)) {
             return new TextAttributesKey[]{DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE};
+        }
+        if (GLSL_TOKENS.contains(tokenType)) {
+            return new TextAttributesKey[]{DefaultLanguageHighlighterColors.STRING};
         }
         return EMPTY_KEYS;
     }

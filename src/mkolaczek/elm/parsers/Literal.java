@@ -23,6 +23,14 @@ public class Literal {
         );
     }
 
+    public static Parser glsl() {
+        return sequence(
+                expect(Tokens.BEGIN_GLSL),
+                many(expect(GLSL_CONTENT)),
+                expect(Tokens.END_GLSL)
+        );
+    }
+
     private static Parser number() {
         return or(
                 expect(Tokens.DIGIT),

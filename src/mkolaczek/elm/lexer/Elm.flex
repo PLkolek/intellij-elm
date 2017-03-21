@@ -61,6 +61,7 @@ NUMBER = {FRACTIONAL_NUMBER} | {HEX_LITERAL}
 %state INMULTILINESTRING
 %state INSTRING
 %state INCHARACTER
+%state INGLSL
 
 %%
 <YYINITIAL> {
@@ -107,6 +108,7 @@ NUMBER = {FRACTIONAL_NUMBER} | {HEX_LITERAL}
   "\""                  { yypushstate(INSTRING); return QUOTE;}
   "\'"                  { yypushstate(INCHARACTER); return SINGLE_QUOTE;}
   "{-"                  { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
+  "[glsl|"              { yypushstate(INGLSL); return BEGIN_GLSL; }
   {WS}+                 { return TokenType.WHITE_SPACE; }
   {CAP_VAR}             { return CAP_VAR; }
   {LOW_VAR}             { return LOW_VAR; }
@@ -134,6 +136,13 @@ NUMBER = {FRACTIONAL_NUMBER} | {HEX_LITERAL}
     {CLRF}          { return TokenType.WHITE_SPACE; }
     [^\-\}\{\r\n]+  { return COMMENT_CONTENT; }
     [\-\{\}]        { return COMMENT_CONTENT; }
+    [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+}
+
+<INGLSL> {
+    "|]"            { yypopstate(); return END_GLSL; }
+    [^\|\]]+        { return GLSL_CONTENT; }
+    [\|\]]          { return GLSL_CONTENT; }
     [^]             { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }
 

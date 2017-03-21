@@ -1,19 +1,25 @@
 package mkolaczek.elm.parsers;
 
-import mkolaczek.elm.parsers.core.DottedVar;
 import mkolaczek.elm.parsers.core.Many;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.ParserBox;
+import mkolaczek.elm.parsers.core.Sequence;
 import mkolaczek.elm.psi.Tokens;
+import org.jetbrains.annotations.NotNull;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static mkolaczek.elm.parsers.Basic.spacePrefix;
+import static mkolaczek.elm.parsers.Literal.glsl;
+import static mkolaczek.elm.parsers.Literal.literal;
+import static mkolaczek.elm.parsers.core.DottedVar.dottedVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Many.indentedMany1;
+import static mkolaczek.elm.parsers.core.Many.many;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
+import static mkolaczek.elm.parsers.core.WhiteSpace.noWhiteSpace;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class Expression {
@@ -85,9 +91,22 @@ public class Expression {
     private static Parser term() {
 
         return or(
-                sequence(DottedVar.dottedVar("qualified variable")),
+                variable(),
+                literal(),
+                glsl(),
                 //TODO: just for testing
                 expect(CAP_VAR)
+        );
+    }
+
+    @NotNull
+    private static Sequence variable() {
+        return sequence(
+                dottedVar("qualified variable"),
+                many("accessors",
+                        noWhiteSpace(expect(DOT)),
+                        noWhiteSpace(expect(LOW_VAR))
+                )
         );
     }
 

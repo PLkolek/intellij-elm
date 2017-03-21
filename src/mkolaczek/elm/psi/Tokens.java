@@ -43,20 +43,23 @@ public interface Tokens {
 
     Token QUOTE = new Token("QUOTE", "\"");
     Token SINGLE_QUOTE = new Token("SINGLE_QUOTE", "\'");
-    Token BEGIN_COMMENT = new Token("BEGIN_COMMENT", "{-");
-    Token BEGIN_DOC_COMMENT = new Token("BEGIN_DOC_COMMENT", "{-|");
-    Token END_COMMENT = new Token("END_COMMENT", "-}");
-    Token END_DOC_COMMENT = new Token("END_DOC_COMMENT", "-}");
-
-    Token LINE_COMMENT = new Token("LINE_COMMENT", "--");
-    Token COMMENT_CONTENT = new Token("COMMENT_CONTENT", "comment content");
     Token STRING_CONTENT = new Token("string content");
     Token INVALID_EOL_IN_STRING = new Token("INVALID_EOL_IN_STRING", "invalid end of line in single line string");
     //Those should be StringEscapesTokenTypes for something to work (ie. ToUppercase), but...
     Token VALID_STRING_ESCAPE_TOKEN = new Token("VALID_STRING_ESCAPE_TOKEN", "valid escape sequence");
-
     Token INVALID_CHARACTER_ESCAPE_TOKEN = new Token("INVALID_CHARACTER_ESCAPE_TOKEN", "invalid escape sequence");
     Token INVALID_UNICODE_ESCAPE_TOKEN = new Token("INVALID_UNICODE_ESCAPE_TOKEN", "invalid unicode escape sequence");
+
+    Token BEGIN_COMMENT = new Token("BEGIN_COMMENT", "{-");
+    Token END_COMMENT = new Token("END_COMMENT", "-}");
+    Token BEGIN_DOC_COMMENT = new Token("BEGIN_DOC_COMMENT", "{-|");
+    Token END_DOC_COMMENT = new Token("END_DOC_COMMENT", "-}");
+    Token LINE_COMMENT = new Token("LINE_COMMENT", "--");
+    Token COMMENT_CONTENT = new Token("comment content");
+
+    Token BEGIN_GLSL = new Token("BEGIN_GLSL", "[glsl|");
+    Token END_GLSL = new Token("END_GLSL", "|]");
+    Token GLSL_CONTENT = new Token("glsl content");
 
     Token NUMBER = new Token("number");
     Token INVALID_HEX_NUMBER = new Token("invalid hex number");
