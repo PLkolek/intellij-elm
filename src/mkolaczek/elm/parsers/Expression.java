@@ -8,8 +8,7 @@ import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static mkolaczek.elm.parsers.Basic.list;
-import static mkolaczek.elm.parsers.Basic.spacePrefix;
+import static mkolaczek.elm.parsers.Basic.*;
 import static mkolaczek.elm.parsers.Literal.glsl;
 import static mkolaczek.elm.parsers.Literal.literal;
 import static mkolaczek.elm.parsers.core.DottedVar.dottedVar;
@@ -95,15 +94,29 @@ public class Expression {
                 literal(),
                 glsl(),
                 list("list expression", expression),
+                accessible(record("record expression", fieldSuffix())),
                 //TODO: just for testing
                 expect(CAP_VAR)
         );
     }
 
     @NotNull
+    private static Sequence fieldSuffix() {
+        return sequence("record field suffix",
+                maybeWhitespace(expect(Tokens.EQUALS)),
+                maybeWhitespace(expression)
+        );
+    }
+
+    @NotNull
     private static Sequence variable() {
+        return accessible(dottedVar("qualified variable"));
+    }
+
+    @NotNull
+    private static Sequence accessible(Parser parser) {
         return sequence(
-                dottedVar("qualified variable"),
+                parser,
                 many("accessors",
                         noWhiteSpace(expect(DOT)),
                         noWhiteSpace(expect(LOW_VAR))

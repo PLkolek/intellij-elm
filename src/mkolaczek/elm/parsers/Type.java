@@ -8,8 +8,6 @@ import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
-import static mkolaczek.elm.parsers.SepBy.commaSepSuffix;
-import static mkolaczek.elm.parsers.SepBy.tryCommaSep;
 import static mkolaczek.elm.parsers.core.DottedVar.dottedCapVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
@@ -22,12 +20,6 @@ Type {
 
     public static ParserBox expression = new ParserBox("type expression");
 
-    private static Parser field =
-            sequence("record field",
-                    expect(Tokens.LOW_VAR),
-                    fieldSuffix()
-            );
-
     @NotNull
     private static Sequence fieldSuffix() {
         return sequence("record field suffix",
@@ -37,31 +29,12 @@ Type {
     }
 
 
-    private static Parser record =
-            brackets("record type",
-                    tryP(
-                            sequence(
-                                    expect(Tokens.LOW_VAR),
-                                    maybeWhitespace(or(
-                                            sequence(
-                                                    expect(Tokens.PIPE),
-                                                    maybeWhitespace(tryCommaSep(field))
-                                            ),
-                                            sequence(
-                                                    fieldSuffix(),
-                                                    maybeWhitespace(commaSepSuffix(field))
-                                            )
-                                    ))
-                            ).as(Elements.SURROUND_CONTENTS)
-                    )
-            );
-
     private static Parser term =
             or("type term",
                     typeRef(),
                     expect(Tokens.LOW_VAR),
                     tuple("tuple type", expression),
-                    record
+                    record("record type", fieldSuffix())
             );
 
     private static Parser app =

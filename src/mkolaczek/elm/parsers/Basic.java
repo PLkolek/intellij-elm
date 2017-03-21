@@ -7,7 +7,7 @@ import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
-import static mkolaczek.elm.parsers.SepBy.commaSep;
+import static mkolaczek.elm.parsers.SepBy.*;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
@@ -101,6 +101,35 @@ public class Basic {
     static Parser list(String name, ParserBox expression) {
         return squareBrackets(name,
                 tryP(commaSep(expression).as(Elements.SURROUND_CONTENTS))
+        );
+    }
+
+    @NotNull
+    static Parser record(String name, Parser fieldSuffix) {
+        return brackets(name,
+                tryP(
+                        sequence(
+                                expect(Tokens.LOW_VAR),
+                                maybeWhitespace(or(
+                                        sequence(
+                                                expect(Tokens.PIPE),
+                                                maybeWhitespace(tryCommaSep(recordField(fieldSuffix)))
+                                        ),
+                                        sequence(
+                                                fieldSuffix,
+                                                maybeWhitespace(commaSepSuffix(recordField(fieldSuffix)))
+                                        )
+                                ))
+                        ).as(Elements.SURROUND_CONTENTS)
+                )
+        );
+    }
+
+    @NotNull
+    private static Sequence recordField(Parser fieldSuffix) {
+        return Sequence.sequence("record field",
+                expect(Tokens.LOW_VAR),
+                fieldSuffix
         );
     }
 }
