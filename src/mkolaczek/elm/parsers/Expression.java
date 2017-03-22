@@ -69,15 +69,16 @@ public class Expression {
                         if_(),
                         case_(),
                         function(),
-                        somethingSomething()
+                        termOperation()
                 )
         );
     }
 
-    private static Parser somethingSomething() {
-        //TODO: obviously...
+    private static Parser termOperation() {
+        //TODO: continue expression end
         return sequence(
-                possiblyNegativeTerm()
+                possiblyNegativeTerm(),
+                spacePrefix(term())
         );
     }
 
