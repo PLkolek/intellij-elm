@@ -20,6 +20,7 @@ import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.parsers.core.WhiteSpace.noWhiteSpace;
+import static mkolaczek.elm.psi.Elements.EXPRESSION;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class Expression {
@@ -64,7 +65,7 @@ public class Expression {
                 or("expression",
                         finalExpression(),
                         termOperation()
-                ).as(Elements.EXPRESSION)
+                ).as(EXPRESSION)
         );
     }
 
@@ -101,10 +102,12 @@ public class Expression {
     private static Sequence minusOperator() {
         return sequence(
                 expect(MINUS),
-                maybeWhitespace(or(
-                        term(),
-                        finalExpression()
-                ))
+                maybeWhitespace(
+                        or(
+                                term(),
+                                finalExpression().as(EXPRESSION)
+                        ).as(Elements.OPERAND)
+                )
         );
     }
 
@@ -114,8 +117,8 @@ public class Expression {
                 expect(SYM_OP),
                 maybeWhitespace(or(
                         possiblyNegativeTerm(),
-                        finalExpression()
-                ))
+                        finalExpression().as(EXPRESSION)
+                ).as(Elements.OPERAND))
         );
     }
 

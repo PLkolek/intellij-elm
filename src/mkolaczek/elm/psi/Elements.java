@@ -55,6 +55,7 @@ public interface Elements {
 
 
     Element EXPRESSION = new Element("expression");
+    Element OPERAND = new Element("operand");
 
     class Factory {
 
@@ -142,6 +143,8 @@ public interface Elements {
                 return new CharacterLiteral(node);
             } else if (type == EXPRESSION) {
                 return new Expression(node);
+            } else if (type == OPERAND) {
+                return new Operand(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {
