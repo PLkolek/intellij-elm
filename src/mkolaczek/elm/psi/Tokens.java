@@ -74,6 +74,7 @@ public interface Tokens {
 
     Token LOW_VAR = new Token("LOW_VAR", "lowercase identifier");
     Token SYM_OP = new Token("SYM_OP", "operator consisting of symbols");
+    Token COMMA_OP = new Token("tuple constructor operator");
     Token DIGIT = new Token("digit");
     Token RUNE_OF_AUTOCOMPLETION = new Token("RUNE_OF_AUTOCOMPLETION");
     TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR, SYM_OP);

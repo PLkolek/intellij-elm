@@ -57,9 +57,6 @@ public class WhiteSpace implements Parser {
                 return Result.WS_ERROR;
             }
         }
-        if (!prefixedParsed.willParse(builder, indentation)) {
-            return Result.TOKEN_ERROR;
-        }
         return prefixedParsed.parse(builder, nextParsers, indentation);
     }
 

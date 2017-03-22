@@ -21,7 +21,7 @@ public class Indentation {
     }
 
     public int current() {
-        return Optional.ofNullable(indentationLevels.peekLast()).orElse(0);
+        return Optional.ofNullable(indentationLevels.peek()).orElse(0);
     }
 
     public boolean contains(int currentIndent) {

@@ -42,7 +42,7 @@ public class Expression {
 
 
         //TODO: continue
-        return or(
+        return or("definition",
                 valueDefinition,
                 sequence(
                         Pattern.term(),
@@ -52,7 +52,7 @@ public class Expression {
     }
 
     private static Parser definitionEnd() {
-        return sequence(
+        return sequence("definitionEnd",
                 spacePrefix(Pattern.term()),
                 maybeWhitespace(expect(EQUALS)),
                 expression
@@ -64,7 +64,7 @@ public class Expression {
     static {
         //TODO: implement
         expression.setParser(
-                or(
+                or("expression",
                         let(),
                         if_(),
                         case_(),
@@ -83,7 +83,7 @@ public class Expression {
 
     private static Parser possiblyNegativeTerm() {
         return sequence(
-                tryP(expect(Tokens.MINUS)),
+                tryP(expect(MINUS)),
                 term()
         );
     }
@@ -95,8 +95,25 @@ public class Expression {
                 glsl(),
                 list("list expression", expression),
                 accessible(record("record expression", fieldSuffix())),
+                accessible(tupleLike()),
                 //TODO: just for testing
                 expect(CAP_VAR)
+        );
+    }
+
+    private static Parser tupleLike() {
+        return or(
+                operator(),
+                Basic.tuple("tuple expression", expression)
+        );
+    }
+
+    private static Parser operator() {
+        return or(
+                Basic.operator().ll2(newHashSet(LPAREN), newHashSet(SYM_OP)),
+                Basic.parens("minus operator", expect(MINUS)).ll2(newHashSet(LPAREN), newHashSet(MINUS)),
+                Basic.parens("tuple operator", or(expect(Tokens.COMMA_OP), expect(COMMA)))
+                     .ll2(newHashSet(LPAREN), newHashSet(COMMA, COMMA_OP))
         );
     }
 

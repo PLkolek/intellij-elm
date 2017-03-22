@@ -76,19 +76,19 @@ public class Sequence implements Parser {
         return parse2(builder, nextParsers, indentation);
     }
 
-    public Result parse2(PsiBuilder psiBuilder, Collection<Parser> nextParsers, Indentation indentation) {
+    public Result parse2(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
         List<Collection<Parser>> childrenNextParsers = nextParsers(nextParsers);
 
         Result result = Result.OK;
         for (int i = 0; i < parsers.length; i++) {
             Parser parser = parsers[i];
             Collection<Parser> parserNextParsers = childrenNextParsers.get(i);
-            result = parser.parse(psiBuilder, parserNextParsers, indentation);
+            result = parser.parse(builder, parserNextParsers, indentation);
             if (result == Result.TOKEN_ERROR) {
                 Collection<Parser> skipUntilParsers = Lists.newArrayList(parserNextParsers);
                 skipUntilParsers.add(parser);
-                SkipUntil.skipUntil(parser.name(), skipUntilParsers, psiBuilder, indentation);
-                parser.parse(psiBuilder, parserNextParsers, indentation);
+                SkipUntil.skipUntil(parser.name(), skipUntilParsers, builder, indentation);
+                parser.parse(builder, parserNextParsers, indentation);
                 result = Result.OK;
             }
         }

@@ -109,9 +109,11 @@ NUMBER = {FRACTIONAL_NUMBER} | {HEX_LITERAL}
   "\'"                  { yypushstate(INCHARACTER); return SINGLE_QUOTE;}
   "{-"                  { yypushstate(INCOMMENT); return BEGIN_COMMENT; }
   "[glsl|"              { yypushstate(INGLSL); return BEGIN_GLSL; }
+  "(-)"                 { yypushstate(INGLSL); return BEGIN_GLSL; }
   {WS}+                 { return TokenType.WHITE_SPACE; }
   {CAP_VAR}             { return CAP_VAR; }
   {LOW_VAR}             { return LOW_VAR; }
+  ","+                  { return COMMA_OP; }
   {SYMBOL_OP}           { return SYM_OP; }
   {INVALID_HEX_LITERAL} { return INVALID_HEX_NUMBER; }
   {DIGIT}               { return DIGIT; }
