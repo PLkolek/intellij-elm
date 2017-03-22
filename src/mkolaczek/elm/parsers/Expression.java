@@ -96,8 +96,14 @@ public class Expression {
                 list("list expression", expression),
                 accessible(record("record expression", fieldSuffix())),
                 accessible(tupleLike()),
-                //TODO: just for testing
-                expect(CAP_VAR)
+                accessor()
+        );
+    }
+
+    private static Parser accessor() {
+        return sequence("accessor",
+                expect(DOT),
+                noWhiteSpace(expect(LOW_VAR))
         );
     }
 
