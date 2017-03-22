@@ -34,7 +34,8 @@ public class KeywordCompletion {
         c.autocomplete(onFreshLine().and(after(IMPORTS)),                       keyword("port"));
 
         c.autocomplete(e().atStartOf(e(EXPRESSION)),                            keyword("let"));
-        c.autocomplete(e().atStartOf(e(OPERAND)),                            keyword("let"));
+        c.autocomplete(e().atStartOf(e(OPERAND)),                               keyword("let"));
+        c.autocomplete(e().inside(e(LET_EXPRESSION)),                           keyword("in")); //too broad, but...
         //@formatter:on
 
         c.autocomplete(afterLeaf(childOf(MODULE_NAME_REF).inside(e(IMPORT_LINE))).andNot(onFreshLine()),

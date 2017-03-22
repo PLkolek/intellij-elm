@@ -236,7 +236,7 @@ public class Expression {
                 Many.indentedMany1(definition()),
                 maybeWhitespace(expect(Tokens.IN)),
                 maybeWhitespace(expression)
-        );
+        ).as(Elements.LET_EXPRESSION);
     }
 
 }

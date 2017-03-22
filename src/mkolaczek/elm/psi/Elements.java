@@ -56,6 +56,7 @@ public interface Elements {
 
     Element EXPRESSION = new Element("expression");
     Element OPERAND = new Element("operand");
+    Element LET_EXPRESSION = new Element("let expression");
 
     class Factory {
 
@@ -143,6 +144,8 @@ public interface Elements {
                 return new CharacterLiteral(node);
             } else if (type == EXPRESSION) {
                 return new Expression(node);
+            } else if (type == LET_EXPRESSION) {
+                return new LetExpression(node);
             } else if (type == OPERAND) {
                 return new Operand(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {

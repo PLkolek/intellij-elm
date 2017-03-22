@@ -1,1 +1,1 @@
-someValue = 2 + let
+someValue = 2 + let <caret>

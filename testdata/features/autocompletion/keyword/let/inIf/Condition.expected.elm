@@ -1,1 +1,1 @@
-someValue = if let
+someValue = if let <caret>
