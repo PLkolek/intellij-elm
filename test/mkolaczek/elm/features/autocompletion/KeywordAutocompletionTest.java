@@ -60,12 +60,19 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
         performTest("port/Test.elm", "port/expected.elm", "port", "type", "infixr", "infixl", "infix", "import");
     }
 
-    public void testLetInIfConditionCompletion() {
-        performTest("let/inIf/Condition.elm", "let/inIf/Condition.expected.elm", "let");
+    public void testExpressionInIfConditionCompletion() {
+        performTest("expression/inIf/Condition.elm",
+                "expression/inIf/Condition.expected.elm",
+                "let",
+                "if",
+                "then",
+                "else");
     }
 
-    public void testLetInLastBinaryOperationCompletion() {
-        performTest("let/inBinaryOperation/Last.elm", "let/inBinaryOperation/Last.expected.elm", "let");
+    public void testExpressionInLastBinaryOperationCompletion() {
+        performTest("expression/inBinaryOperation/Last.elm",
+                "expression/inBinaryOperation/Last.expected.elm",
+                "let", "if");
     }
 
     public void testInCompletion() {

@@ -21,6 +21,7 @@ import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.parsers.core.WhiteSpace.noWhiteSpace;
 import static mkolaczek.elm.psi.Elements.EXPRESSION;
+import static mkolaczek.elm.psi.Elements.IF_EXPRESSION;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class Expression {
@@ -226,7 +227,7 @@ public class Expression {
                 maybeWhitespace(expression),
                 expect(Tokens.ELSE),
                 maybeWhitespace(expression) //this should handle else if
-        );
+        ).as(IF_EXPRESSION);
 
     }
 

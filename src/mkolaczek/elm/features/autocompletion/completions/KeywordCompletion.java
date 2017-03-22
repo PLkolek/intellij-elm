@@ -6,6 +6,7 @@ import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.features.autocompletion.insertHandlers.BracesInsertHandler;
+import mkolaczek.elm.psi.Elements;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.features.autocompletion.ModulePattern.module;
@@ -36,6 +37,11 @@ public class KeywordCompletion {
         c.autocomplete(e().atStartOf(e(EXPRESSION)),                            keyword("let"));
         c.autocomplete(e().atStartOf(e(OPERAND)),                               keyword("let"));
         c.autocomplete(e().inside(e(LET_EXPRESSION)),                           keyword("in")); //too broad, but...
+
+        c.autocomplete(e().atStartOf(e(EXPRESSION)),                            keyword("if"));
+        c.autocomplete(e().atStartOf(e(OPERAND)),                               keyword("if"));
+        c.autocomplete(e().inside(e(Elements.IF_EXPRESSION)),                           keyword("then")); //too broad, but...
+        c.autocomplete(e().inside(e(IF_EXPRESSION)),                           keyword("else")); //too broad, but...
         //@formatter:on
 
         c.autocomplete(afterLeaf(childOf(MODULE_NAME_REF).inside(e(IMPORT_LINE))).andNot(onFreshLine()),
