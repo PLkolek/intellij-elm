@@ -28,7 +28,7 @@ public class Expression {
         Parser valueDefinition =
                 sequence(
                         or(
-                                expect(Tokens.LOW_VAR),
+                                expect(Tokens.LOW_VAR).as(VALUE_NAME),
                                 Basic.operator().ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP))
                         ),
                         or(

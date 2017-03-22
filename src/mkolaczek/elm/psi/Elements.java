@@ -60,6 +60,8 @@ public interface Elements {
     Element LET_EXPRESSION = new Element("let expression");
     Element IF_EXPRESSION = new Element("if expression");
     Element CASE_EXPRESSION = new Element("case expression");
+    Element VALUE_NAME = new Element("pattern variable");
+    Element PATTERN_TERM = new Element("pattern term");
 
     class Factory {
 
@@ -157,6 +159,10 @@ public interface Elements {
                 return new CaseExpression(node);
             } else if (type == OPERAND) {
                 return new Operand(node);
+            } else if (type == VALUE_NAME) {
+                return new ValueName(node);
+            } else if (type == PATTERN_TERM) {
+                return new PatternTerm(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {

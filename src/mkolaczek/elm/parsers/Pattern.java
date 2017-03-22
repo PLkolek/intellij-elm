@@ -3,6 +3,7 @@ package mkolaczek.elm.parsers;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.ParserBox;
 import mkolaczek.elm.parsers.core.Sequence;
+import mkolaczek.elm.psi.Elements;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
@@ -26,14 +27,19 @@ public class Pattern {
                 tuple("tuple pattern", expression),
                 list("list pattern", expression),
                 expect(UNDERSCORE),
-                expect(LOW_VAR),
+                variable(),
                 dottedCapVar("constructor"),
                 literal()
-        );
+        ).as(Elements.PATTERN_TERM);
+    }
+
+    @NotNull
+    public static Parser variable() {
+        return or("pattern variable", expect(LOW_VAR), expect(RUNE_OF_AUTOCOMPLETION)).as(Elements.VALUE_NAME);
     }
 
     private static Parser record() {
-        return brackets(tryCommaSep(expect(LOW_VAR)));
+        return brackets(tryCommaSep(variable()));
     }
 
     private static Parser consTerm() {
@@ -72,7 +78,7 @@ public class Pattern {
     private static Sequence as() {
         return sequence(
                 expect(AS),
-                maybeWhitespace(expect(LOW_VAR))
+                maybeWhitespace(variable())
         );
     }
 }
