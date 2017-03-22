@@ -18,9 +18,14 @@ public class ValueAutocompletionTest extends LightCodeInsightFixtureTestCase {
         return TestUtil.testDataPath(getClass(), "value");
     }
 
-    public void testValueDeclarationCompletion() {
-        myFixture.configureByFiles("declaration/Test.elm");
+    public void testSimpleValueDeclarationCompletion() {
+        myFixture.configureByFiles("declaration/Simple.elm");
         autocomplete("someValue", "otherValue", "port", "infix", "infixl", "infixr", "type");
+    }
+
+    public void testValueDeclarationInPatternCompletion() {
+        myFixture.configureByFiles("declaration/InPattern.elm");
+        autocomplete("someValue", "otherValue");
     }
 
     private void autocomplete(String... suggestions) {
