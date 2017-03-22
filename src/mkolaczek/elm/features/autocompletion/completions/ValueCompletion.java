@@ -24,7 +24,7 @@ import static mkolaczek.elm.psi.node.Module.module;
 public class ValueCompletion {
     public static void values(ElmCompletionContributor c) {
         c.autocompletePlain(
-                afterLeaf(e(DIGIT).inside(e(INFIX_OPERATOR_DECLARATION))),
+                afterLeaf(e(DIGIT)).inside(e(INFIX_OPERATOR_DECLARATION)),
                 parameters -> exposed(parameters, TypeOfExport.OPERATOR)
         );
         c.autocomplete(
@@ -38,6 +38,7 @@ public class ValueCompletion {
         );
 
         c.autocomplete(afterLeaf(e(PORT).inside(e(PORT_DECLARATION))), params -> exposed(params, TypeOfExport.VALUE));
+        c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)), params -> exposed(params, TypeOfExport.VALUE));
 
     }
 

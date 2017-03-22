@@ -48,12 +48,13 @@ public interface Elements {
 
     Element INFIX_OPERATOR_DECLARATION = new Element("infix operator declaration");
     Element PORT_DECLARATION = new Element("port declaration");
+    Element VALUE_DECLARATION = new Element("value declaration");
+
     Element PORT_NAME = new Element("port name");
-
     Element STRING_LITERAL = new Element("string literal");
+
+
     Element CHARACTER_LITERAL = new Element("character literal");
-
-
     Element EXPRESSION = new Element("expression");
     Element OPERAND = new Element("operand");
     Element LET_EXPRESSION = new Element("let expression");
@@ -136,6 +137,8 @@ public interface Elements {
                 return new TypeConstructorArgs(node);
             } else if (type == INFIX_OPERATOR_DECLARATION) {
                 return new OperatorDeclaration(node);
+            } else if (type == VALUE_DECLARATION) {
+                return new ValueDeclaration(node);
             } else if (type == PORT_DECLARATION) {
                 return new PortDeclaration(node);
             } else if (type == PORT_NAME) {

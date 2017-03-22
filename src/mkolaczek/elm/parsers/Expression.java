@@ -54,7 +54,7 @@ public class Expression {
         return sequence("definitionEnd",
                 spacePrefix(Pattern.term()),
                 maybeWhitespace(expect(EQUALS)),
-                expression
+                maybeWhitespace(expression)
         );
     }
 
@@ -196,8 +196,8 @@ public class Expression {
                 expect(LAMBDA),
                 maybeWhitespace(Pattern.term()),
                 spacePrefix(Pattern.term()),
-                expect(ARROW),
-                expression
+                maybeWhitespace(expect(ARROW)),
+                maybeWhitespace(expression)
         );
     }
 
