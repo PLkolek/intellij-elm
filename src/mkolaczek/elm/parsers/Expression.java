@@ -23,7 +23,6 @@ import static mkolaczek.elm.psi.Tokens.*;
 
 public class Expression {
     public static Parser definition() {
-        //TODO: continue
         Parser valueDefinition =
                 sequence(
                         or(
@@ -40,7 +39,6 @@ public class Expression {
                 );
 
 
-        //TODO: continue
         return or("definition",
                 valueDefinition,
                 sequence(
@@ -61,23 +59,62 @@ public class Expression {
     private static final ParserBox expression = new ParserBox("expression");
 
     static {
-        //TODO: implement
         expression.setParser(
                 or("expression",
-                        let(),
-                        if_(),
-                        case_(),
-                        function(),
+                        finalExpression(),
                         termOperation()
                 )
         );
     }
 
+    @NotNull
+    private static Parser finalExpression() {
+        return or(
+                let(),
+                if_(),
+                case_(),
+                function()
+        );
+    }
+
     private static Parser termOperation() {
-        //TODO: continue expression end
-        return sequence(
+        return sequence("term operation",
                 possiblyNegativeTerm(),
-                spacePrefix(term())
+                spacePrefix(
+                        or(
+                                term(),
+                                binaryOperator()
+                        )
+                )
+        );
+    }
+
+    private static Parser binaryOperator() {
+        return or("infix binary operator use",
+                minusOperator(),
+                otherOperator()
+        );
+    }
+
+    @NotNull
+    private static Sequence minusOperator() {
+        return sequence(
+                expect(MINUS),
+                maybeWhitespace(or(
+                        term(),
+                        finalExpression()
+                ))
+        );
+    }
+
+    @NotNull
+    private static Sequence otherOperator() {
+        return sequence(
+                expect(SYM_OP),
+                maybeWhitespace(or(
+                        possiblyNegativeTerm(),
+                        finalExpression()
+                ))
         );
     }
 
