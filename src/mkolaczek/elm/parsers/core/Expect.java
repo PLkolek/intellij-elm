@@ -41,4 +41,9 @@ public class Expect implements Parser {
     public String name() {
         return expectedToken.getName();
     }
+
+    @Override
+    public String toString() {
+        return "expect(" + name() + ")";
+    }
 }

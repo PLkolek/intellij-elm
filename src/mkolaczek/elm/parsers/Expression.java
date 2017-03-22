@@ -222,9 +222,9 @@ public class Expression {
         return sequence(
                 maybeWhitespace(expect(Tokens.IF)),
                 maybeWhitespace(expression),
-                expect(Tokens.THEN),
+                maybeWhitespace(expect(Tokens.THEN)),
                 maybeWhitespace(expression),
-                expect(Tokens.ELSE),
+                maybeWhitespace(expect(Tokens.ELSE)),
                 maybeWhitespace(expression) //this should handle else if
         ).as(IF_EXPRESSION);
 

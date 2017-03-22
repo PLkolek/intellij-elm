@@ -52,8 +52,9 @@ public class Or implements Parser {
             return Result.TOKEN_ERROR;
         }
         for (Parser parser : parsers) {
-            if (parser.parse(builder, myNextParsers, indentation) == Result.OK) {
-                return Result.OK;
+            Result result = parser.parse(builder, myNextParsers, indentation);
+            if (result != Result.TOKEN_ERROR) {
+                return result;
             }
         }
         return Result.TOKEN_ERROR;

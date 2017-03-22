@@ -120,4 +120,9 @@ public class WhiteSpace implements Parser {
 
         abstract boolean accepts(PsiBuilder builder, Indentation indentation);
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s(%s)", type.name, prefixedParsed.name());
+    }
 }
