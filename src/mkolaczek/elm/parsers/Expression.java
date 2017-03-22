@@ -4,6 +4,7 @@ import mkolaczek.elm.parsers.core.Many;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.ParserBox;
 import mkolaczek.elm.parsers.core.Sequence;
+import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +64,7 @@ public class Expression {
                 or("expression",
                         finalExpression(),
                         termOperation()
-                )
+                ).as(Elements.EXPRESSION)
         );
     }
 
@@ -223,6 +224,7 @@ public class Expression {
                 expect(Tokens.ELSE),
                 maybeWhitespace(expression) //this should handle else if
         );
+
     }
 
     private static Parser let() {

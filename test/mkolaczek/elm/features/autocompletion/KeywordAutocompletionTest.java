@@ -60,6 +60,10 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
         performTest("port/Test.elm", "port/expected.elm", "port", "type", "infixr", "infixl", "infix", "import");
     }
 
+    public void testLetInIfConditionCompletion() {
+        performTest("let/inIf/Condition.elm", "let/inIf/Condition.expected.elm", "let");
+    }
+
     private void performTest(String beforeFile, String afterFile, String... suggestions) {
         configureByFile(beforeFile);
         List<String> strings = autocomplete();

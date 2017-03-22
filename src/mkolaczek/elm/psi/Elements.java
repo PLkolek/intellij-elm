@@ -53,6 +53,9 @@ public interface Elements {
     Element STRING_LITERAL = new Element("string literal");
     Element CHARACTER_LITERAL = new Element("character literal");
 
+
+    Element EXPRESSION = new Element("expression");
+
     class Factory {
 
         public static PsiElement createElement(ASTNode node) {
@@ -137,6 +140,8 @@ public interface Elements {
                 return new StringLiteral(node);
             } else if (type == CHARACTER_LITERAL) {
                 return new CharacterLiteral(node);
+            } else if (type == EXPRESSION) {
+                return new Expression(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {
