@@ -17,7 +17,6 @@ import static mkolaczek.elm.parsers.core.Many.indentedMany1;
 import static mkolaczek.elm.parsers.core.Many.many;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
-import static mkolaczek.elm.parsers.core.Try.tryP;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.parsers.core.WhiteSpace.noWhiteSpace;
 import static mkolaczek.elm.psi.Tokens.*;
@@ -83,8 +82,11 @@ public class Expression {
     }
 
     private static Parser possiblyNegativeTerm() {
-        return sequence(
-                tryP(expect(MINUS)),
+        return or(
+                sequence(
+                        expect(MINUS),
+                        noWhiteSpace(term())
+                ),
                 term()
         );
     }
