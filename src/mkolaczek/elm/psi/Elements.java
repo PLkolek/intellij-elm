@@ -58,6 +58,7 @@ public interface Elements {
     Element OPERAND = new Element("operand");
     Element LET_EXPRESSION = new Element("let expression");
     Element IF_EXPRESSION = new Element("if expression");
+    Element CASE_EXPRESSION = new Element("case expression");
 
     class Factory {
 
@@ -149,6 +150,8 @@ public interface Elements {
                 return new LetExpression(node);
             } else if (type == IF_EXPRESSION) {
                 return new IfExpression(node);
+            } else if (type == CASE_EXPRESSION) {
+                return new CaseExpression(node);
             } else if (type == OPERAND) {
                 return new Operand(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {

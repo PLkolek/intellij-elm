@@ -20,8 +20,7 @@ import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.parsers.core.WhiteSpace.noWhiteSpace;
-import static mkolaczek.elm.psi.Elements.EXPRESSION;
-import static mkolaczek.elm.psi.Elements.IF_EXPRESSION;
+import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class Expression {
@@ -208,7 +207,7 @@ public class Expression {
                 maybeWhitespace(expression),
                 expect(OF),
                 indentedMany1(caseBranch())
-        );
+        ).as(CASE_EXPRESSION);
     }
 
     private static Parser caseBranch() {

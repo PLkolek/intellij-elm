@@ -92,7 +92,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
             protected boolean accept(UsageInfo info) {
                 PsiFile psiFile = info.getFile();
                 if (psiFile == null) {
-                    return false; // ignore usages in currentFile
+                    return false; // ignore usages inLet currentFile
                 }
                 int offset = info.getNavigationOffset();
                 if (offset == -1) {
@@ -101,7 +101,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
                 PsiElement usage = psiFile.findElementAt(offset);
                 assert usage != null;
                 boolean outsideSelf = getParentOfType(usage, element.getClass()) != element;
-                //same as in ElmSafeDeleteDelegate, sorry
+                //same as inLet ElmSafeDeleteDelegate, sorry
                 boolean outsideExposing = getParentOfType(usage, ExposingNode.class) == null;
                 return !(usage instanceof PsiComment) && outsideSelf && outsideExposing; // ignore comments
             }

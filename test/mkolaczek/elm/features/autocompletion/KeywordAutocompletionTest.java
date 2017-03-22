@@ -63,20 +63,21 @@ public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
     public void testExpressionInIfConditionCompletion() {
         performTest("expression/inIf/Condition.elm",
                 "expression/inIf/Condition.expected.elm",
-                "let",
-                "if",
-                "then",
-                "else");
+                "let", "if", "then", "else", "case");
     }
 
     public void testExpressionInLastBinaryOperationCompletion() {
         performTest("expression/inBinaryOperation/Last.elm",
                 "expression/inBinaryOperation/Last.expected.elm",
-                "let", "if");
+                "let", "if", "case");
     }
 
     public void testInCompletion() {
-        performTest("in/In.elm", "in/In.expected.elm", "in");
+        performTest("expression/inLet/In.elm", "expression/inLet/In.expected.elm", "in");
+    }
+
+    public void testOfCompletion() {
+        performTest("expression/inCase/Of.elm", "expression/inCase/Of.expected.elm", "of");
     }
 
     private void performTest(String beforeFile, String afterFile, String... suggestions) {
