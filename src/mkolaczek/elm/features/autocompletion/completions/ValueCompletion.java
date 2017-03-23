@@ -51,8 +51,8 @@ public class ValueCompletion {
         return declared(parameters, TypeOfDeclaration.PORT);
     }
 
-    private static Stream<String> declared(CompletionParameters parameters,
-                                           TypeOfDeclaration<?, ?> typeOfDeclaration) {
+    private static <T extends PsiNamedElement> Stream<String> declared(CompletionParameters parameters,
+                                                                       TypeOfDeclaration<T, ?> typeOfDeclaration) {
         Set<String> excluded = exposed(parameters, typeOfDeclaration.exportedAs())
                 .collect(toSet());
         return module(parameters.getPosition()).declarations(typeOfDeclaration)

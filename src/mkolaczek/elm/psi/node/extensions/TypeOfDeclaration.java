@@ -1,10 +1,9 @@
 package mkolaczek.elm.psi.node.extensions;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.psi.node.*;
 
-public interface TypeOfDeclaration<Declaration extends PsiNamedElement, Export extends PsiElement> {
+public interface TypeOfDeclaration<Declaration, Export extends PsiElement> {
 
     Class<Declaration> psiClass();
 
