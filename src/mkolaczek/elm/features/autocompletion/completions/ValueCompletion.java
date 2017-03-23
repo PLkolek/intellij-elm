@@ -2,14 +2,14 @@ package mkolaczek.elm.features.autocompletion.completions;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
-import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
+import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import mkolaczek.util.Streams;
 
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
@@ -44,19 +44,21 @@ public class ValueCompletion {
     }
 
     private static Stream<String> moduleOperators(CompletionParameters parameters) {
-        return declared(parameters, TypeOfDeclaration.OPERATOR).map(OperatorDeclaration::parens);
+        return declared(parameters,
+                TypeOfExport.OPERATOR,
+                Declaration::declaredOperatorName).map(OperatorDeclaration::parens);
     }
 
     private static Stream<String> moduleValues(CompletionParameters parameters) {
-        return declared(parameters, TypeOfDeclaration.PORT);
+        return declared(parameters, TypeOfExport.VALUE, Declaration::declaredValueNames);
     }
 
-    private static <T extends PsiNamedElement> Stream<String> declared(CompletionParameters parameters,
-                                                                       TypeOfDeclaration<T, ?> typeOfDeclaration) {
-        Set<String> excluded = exposed(parameters, typeOfDeclaration.exportedAs())
-                .collect(toSet());
-        return module(parameters.getPosition()).declarations(typeOfDeclaration)
-                                               .map(PsiNamedElement::getName)
+    private static Stream<String> declared(CompletionParameters parameters,
+                                           TypeOfExport<?> typeOfExport,
+                                           Function<Declaration, Stream<String>> valueExtractor) {
+        Set<String> excluded = exposed(parameters, typeOfExport).collect(toSet());
+        return module(parameters.getPosition()).declarations()
+                                               .flatMap(valueExtractor)
                                                .flatMap(Streams::stream)
                                                .filter(o -> !excluded.contains(o));
     }

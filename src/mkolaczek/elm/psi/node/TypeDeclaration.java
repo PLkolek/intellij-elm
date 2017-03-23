@@ -5,7 +5,9 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.ElmElementFactory;
+import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.node.extensions.Declaration;
+import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +17,7 @@ import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
 
-public class TypeDeclaration extends Declaration {
+public class TypeDeclaration extends ElmNamedElement implements Declaration {
 
     public TypeDeclaration(ASTNode node) {
         super(node);
@@ -44,5 +46,10 @@ public class TypeDeclaration extends Declaration {
 
     public Optional<TypeConstructor> constructor(String name) {
         return constructors().filter(t -> name.equals(t.getName())).findAny();
+    }
+
+    @Override
+    public ItemPresentation getPresentation() {
+        return new ItemPresentation(this);
     }
 }

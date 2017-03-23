@@ -1,16 +1,17 @@
 package mkolaczek.elm.psi.node.extensions;
 
-import com.intellij.lang.ASTNode;
-import mkolaczek.elm.features.goTo.ItemPresentation;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.NavigatablePsiElement;
 
-public abstract class Declaration extends ElmNamedElement implements DocCommented {
-    public Declaration(@NotNull ASTNode node) {
-        super(node);
+import java.util.stream.Stream;
+
+public interface Declaration extends DocCommented, NavigatablePsiElement {
+
+    default Stream<String> declaredValueNames() {
+        return Stream.empty();
     }
 
-    @Override
-    public ItemPresentation getPresentation() {
-        return new ItemPresentation(this);
+    default Stream<String> declaredOperatorName() {
+        return Stream.empty();
     }
+
 }

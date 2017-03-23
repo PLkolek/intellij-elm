@@ -98,6 +98,10 @@ public class ElmElementFactory {
         return file.module().header().get().valueExports(name).findFirst().get();
     }
 
+    public static PsiElement valueName(Project project, String name) {
+        throw new UnsupportedOperationException("Rename unsupported yet");
+    }
+
     private static ElmFile createFile(Project project, String text) {
         String name = "dummy.elm";
         return (ElmFile) PsiFileFactory.getInstance(project).
