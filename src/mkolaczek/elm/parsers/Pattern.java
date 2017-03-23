@@ -31,7 +31,7 @@ public class Pattern {
                 list("list pattern", expression),
                 expect(UNDERSCORE),
                 variable(),
-                dottedCapVar("constructor"),
+                constructor(),
                 literal()
         ).as(Elements.PATTERN_TERM);
     }
@@ -48,13 +48,17 @@ public class Pattern {
     private static Parser consTerm() {
         return or(
                 sequence(
-                        dottedCapVar("constructor",
-                                MODULE_NAME_REF,
-                                TYPE_CONSTRUCTOR_REF).as(Elements.QUALIFIED_TYPE_CONSTRUCTOR_REF),
+                        constructor(),
                         spacePrefix(term())
                 ),
                 term()
         );
+    }
+
+    private static Parser constructor() {
+        return dottedCapVar("constructor",
+                MODULE_NAME_REF,
+                TYPE_CONSTRUCTOR_REF).as(Elements.QUALIFIED_TYPE_CONSTRUCTOR_REF);
     }
 
     static {
