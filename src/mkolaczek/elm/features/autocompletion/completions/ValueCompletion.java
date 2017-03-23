@@ -25,6 +25,16 @@ public class ValueCompletion {
                 afterLeaf(e(DIGIT)).inside(e(INFIX_OPERATOR_DECLARATION)),
                 parameters -> exposed(parameters, TypeOfExport.OPERATOR)
         );
+        c.autocomplete(afterLeaf(e(PORT).inside(e(PORT_DECLARATION))), params -> exposed(params, TypeOfExport.VALUE));
+        c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)), params -> exposed(params, TypeOfExport.VALUE));
+        c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)),
+                params -> exposed(params, TypeOfExport.OPERATOR).map(OperatorDeclaration::parens));
+        c.autocomplete(e().inside((e(OPERATOR).atStartOf(e(VALUE_DECLARATION)))),
+                params -> exposed(params, TypeOfExport.OPERATOR).map(OperatorDeclaration::parens));
+        c.autocomplete(e().inside(e(VALUE_NAME)).inside(e(PATTERN_TERM).atStartOf(e(VALUE_DECLARATION))),
+                params -> exposed(params, TypeOfExport.VALUE)
+        );
+
         c.autocomplete(
                 e().andOr(e().inside(e(OPERATOR)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
                 ValueCompletion::moduleOperators
@@ -33,12 +43,6 @@ public class ValueCompletion {
         c.autocomplete(
                 e().andOr(e().inside(e(VALUE_EXPORT)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
                 ValueCompletion::moduleValues
-        );
-
-        c.autocomplete(afterLeaf(e(PORT).inside(e(PORT_DECLARATION))), params -> exposed(params, TypeOfExport.VALUE));
-        c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)), params -> exposed(params, TypeOfExport.VALUE));
-        c.autocomplete(e().inside(e(VALUE_NAME)).inside(e(PATTERN_TERM).atStartOf(e(VALUE_DECLARATION))),
-                params -> exposed(params, TypeOfExport.VALUE)
         );
 
     }
