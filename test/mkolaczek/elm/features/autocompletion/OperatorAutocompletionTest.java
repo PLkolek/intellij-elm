@@ -31,6 +31,11 @@ public class OperatorAutocompletionTest extends LightCodeInsightFixtureTestCase 
         autocomplete("***");
     }
 
+    public void testSymbolDefinitionCompletion() {
+        myFixture.configureByFiles("definition/Definition.elm");
+        autocomplete("(---)");
+    }
+
     public void testSymbolCompletionInExposing() {
         myFixture.configureByFiles("exposing/Test.elm");
         autocomplete("(***)", "(---)");
