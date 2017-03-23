@@ -23,6 +23,7 @@ public class Pattern {
 
     public static Parser term() {
         return or(
+                expect(RUNE_OF_AUTOCOMPLETION),
                 record(),
                 tuple("tuple pattern", expression),
                 list("list pattern", expression),

@@ -23,10 +23,16 @@ public class ValueAutocompletionTest extends LightCodeInsightFixtureTestCase {
         autocomplete("someValue", "otherValue", "port", "infix", "infixl", "infixr", "type", "(***)");
     }
 
-    public void testValueDeclarationInPatternCompletion() {
-        myFixture.configureByFiles("declaration/InPattern.elm");
+    public void testValueDeclarationInRecordCompletion() {
+        myFixture.configureByFiles("declaration/InRecord.elm");
         autocomplete("someValue", "otherValue");
     }
+
+    public void testValueDeclarationInListCompletion() {
+        myFixture.configureByFiles("declaration/InList.elm");
+        autocomplete("someValue", "otherValue");
+    }
+
 
     public void testExposingValueFromPatternCompletion() {
         myFixture.configureByFiles("exposing/FromPattern.elm");

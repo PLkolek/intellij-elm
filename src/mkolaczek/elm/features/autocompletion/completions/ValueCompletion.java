@@ -15,8 +15,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
-import static mkolaczek.elm.psi.Tokens.DIGIT;
-import static mkolaczek.elm.psi.Tokens.PORT;
+import static mkolaczek.elm.psi.Tokens.*;
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class ValueCompletion {
@@ -31,7 +30,9 @@ public class ValueCompletion {
                 params -> exposed(params, TypeOfExport.OPERATOR).map(OperatorDeclaration::parens));
         c.autocomplete(e().inside((e(OPERATOR).atStartOf(e(VALUE_DECLARATION)))),
                 params -> exposed(params, TypeOfExport.OPERATOR).map(OperatorDeclaration::parens));
-        c.autocomplete(e().inside(e(VALUE_NAME)).inside(e(PATTERN_TERM).atStartOf(e(VALUE_DECLARATION))),
+        //noinspection unchecked
+        c.autocomplete(e().andOr(e(RUNE_OF_AUTOCOMPLETION), e().inside(e(VALUE_NAME)))
+                          .inside(e(PATTERN_TERM).atStartOf(e(VALUE_DECLARATION))),
                 params -> exposed(params, TypeOfExport.VALUE)
         );
 
