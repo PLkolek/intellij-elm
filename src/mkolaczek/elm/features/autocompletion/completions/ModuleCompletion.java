@@ -44,7 +44,8 @@ public class ModuleCompletion {
         return ProjectUtil.otherModuleNames(location.getProject(), module(location))
                           .filter(n -> n.startsWith(finalPrefix))
                           .map(n -> Names.suffix(n, finalPrefix))
-                          .filter(n -> !n.isEmpty());
+                          .filter(n -> !n.isEmpty())
+                          .map(n -> n + ".");
     }
 
     @NotNull
