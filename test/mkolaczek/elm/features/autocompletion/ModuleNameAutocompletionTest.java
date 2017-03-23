@@ -46,6 +46,11 @@ public class ModuleNameAutocompletionTest extends LightCodeInsightFixtureTestCas
         autocomplete();
     }
 
+    public void testInPatternNoCharactersTypedYet() {
+        myFixture.configureByFiles("inPattern/noCharactersYet/Test.elm", "inPattern/noCharactersYet/PrefixSuffix.elm");
+        autocomplete("Prefix.Suffix", "let", "if", "case");
+    }
+
 
     private void autocomplete(String... suggestions) {
         myFixture.complete(CompletionType.BASIC, 1);

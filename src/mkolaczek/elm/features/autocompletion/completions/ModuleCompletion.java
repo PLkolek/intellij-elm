@@ -1,6 +1,7 @@
 package mkolaczek.elm.features.autocompletion.completions;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.psi.PsiElement;
 import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.features.autocompletion.Names;
@@ -15,7 +16,9 @@ import java.util.stream.Stream;
 
 import static mkolaczek.elm.features.autocompletion.ElmCompletionContributor.location;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
+import static mkolaczek.elm.psi.Elements.PATTERN_TERM;
 import static mkolaczek.elm.psi.Elements.QUALIFIED_TYPE_NAME_REF;
+import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class ModuleCompletion {
@@ -23,6 +26,9 @@ public class ModuleCompletion {
         c.autocomplete(Patterns.afterLeaf(Tokens.MODULE), ModuleCompletion::fileName);
         c.autocomplete(Patterns.afterLeaf(Tokens.AS), ModuleCompletion::moduleNameParts);
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)), ModuleCompletion::modules);
+        c.autocomplete(e(RUNE_OF_AUTOCOMPLETION).inside(e(PATTERN_TERM)),
+                params -> matchingModules(params.getPosition(), "")
+        );
     }
 
     private static Stream<String> modules(CompletionParameters parameters) {
@@ -30,7 +36,11 @@ public class ModuleCompletion {
         String prefix = qualifiedType.moduleName().map(ModuleNameRef::getName).orElse("");
         String finalPrefix = prefix.length() > 0 ? prefix + "." : "";
 
-        return ProjectUtil.otherModuleNames(qualifiedType.getProject(), module(qualifiedType))
+        return matchingModules(qualifiedType, finalPrefix);
+    }
+
+    private static Stream<String> matchingModules(PsiElement location, String finalPrefix) {
+        return ProjectUtil.otherModuleNames(location.getProject(), module(location))
                           .filter(n -> n.startsWith(finalPrefix))
                           .map(n -> Names.suffix(n, finalPrefix))
                           .filter(n -> !n.isEmpty());
