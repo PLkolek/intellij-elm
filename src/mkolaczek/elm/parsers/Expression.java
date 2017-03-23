@@ -29,7 +29,8 @@ public class Expression {
                 sequence(
                         or(
                                 expect(Tokens.LOW_VAR).as(VALUE_NAME),
-                                Basic.operator().ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP))
+                                Basic.operator(Elements.OPERATOR_SYMBOL)
+                                     .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP))
                         ).as(DEFINED_VALUES),
                         or(
                                 sequence(
@@ -160,7 +161,7 @@ public class Expression {
 
     private static Parser operator() {
         return or(
-                Basic.operator().ll2(newHashSet(LPAREN), newHashSet(SYM_OP)),
+                Basic.operator(Elements.OPERATOR_SYMBOL_REF).ll2(newHashSet(LPAREN), newHashSet(SYM_OP)),
                 Basic.parens("minus operator", expect(MINUS)).ll2(newHashSet(LPAREN), newHashSet(MINUS)),
                 Basic.parens("tuple operator", or(expect(Tokens.COMMA_OP), expect(COMMA)))
                      .ll2(newHashSet(LPAREN), newHashSet(COMMA, COMMA_OP))

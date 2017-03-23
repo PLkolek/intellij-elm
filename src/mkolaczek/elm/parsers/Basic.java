@@ -34,10 +34,10 @@ public class Basic {
         );
     }
 
-    public static Parser operator() {
+    public static Parser operator(Element operatorSymbol) {
         return sequence(
                 expect(Tokens.LPAREN),
-                operatorSymbol(Elements.OPERATOR_SYMBOL_REF),
+                operatorSymbol(operatorSymbol),
                 expect(Tokens.RPAREN)
         ).separatedBy(WhiteSpace::maybeWhitespace).as(Elements.OPERATOR);
     }

@@ -10,12 +10,12 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class SymbolAutocompletionTest extends LightCodeInsightFixtureTestCase {
+public class OperatorAutocompletionTest extends LightCodeInsightFixtureTestCase {
 
 
     @Override
     protected String getTestDataPath() {
-        return TestUtil.testDataPath(getClass(), "symbol");
+        return TestUtil.testDataPath(getClass(), "operator");
     }
 
     private void autocomplete(String... suggestions) {
@@ -33,6 +33,6 @@ public class SymbolAutocompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testSymbolCompletionInExposing() {
         myFixture.configureByFiles("exposing/Test.elm");
-        autocomplete("(***)");
+        autocomplete("(***)", "(---)");
     }
 }

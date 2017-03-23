@@ -17,6 +17,7 @@ import static mkolaczek.elm.parsers.core.Try.tryP;
 import static mkolaczek.elm.parsers.core.WhiteSpace.freshLine;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.psi.Elements.MODULE_ALIAS;
+import static mkolaczek.elm.psi.Elements.OPERATOR_SYMBOL_REF;
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
 import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
 
@@ -56,7 +57,7 @@ public class Module {
         return or(
                 expect(Tokens.RUNE_OF_AUTOCOMPLETION).as(Elements.RUNE_OF_AUTOCOMPLETION_EL),
                 expect(Tokens.LOW_VAR).as(Elements.VALUE_EXPORT),
-                Basic.operator(),
+                Basic.operator(OPERATOR_SYMBOL_REF),
                 typeExport()
         ).as(Elements.EXPORTED_VALUE);
     }
