@@ -24,18 +24,22 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.afterLeaf;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
-import static mkolaczek.elm.psi.Elements.QUALIFIED_TYPE_NAME_REF;
-import static mkolaczek.elm.psi.Elements.TYPE_DECL_NODE;
+import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class TypeCompletion {
     public static void types(ElmCompletionContributor c) {
         //@formatter:off
-        c.autocomplete(afterLeaf(e(TYPE)),                                  TypeCompletion::exposedTypes);
-        c.autocomplete(afterLeaf(e(ALIAS)),                                 TypeCompletion::exposedConstructorlessTypes);
-        c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),   TypeCompletion::exposedTypeConstructors);
-        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),              TypeCompletion::typesFromModule);
+        c.autocomplete(afterLeaf(e(TYPE)),                                      TypeCompletion::exposedTypes);
+        c.autocomplete(afterLeaf(e(ALIAS)),                                     TypeCompletion::exposedConstructorlessTypes);
+        c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),       TypeCompletion::exposedTypeConstructors);
+        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),                  TypeCompletion::typesFromModule);
+        c.autocomplete(
+                e(RUNE_OF_AUTOCOMPLETION).andNot(e().withParent(e(TYPE_CONSTRUCTOR_REF))).inside(e(MODULE_HEADER)),
+                TypeCompletion::typesFromModule
+        );
+
         //@formatter:on
     }
 
