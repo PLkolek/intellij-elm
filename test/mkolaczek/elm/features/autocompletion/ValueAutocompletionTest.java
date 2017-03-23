@@ -28,6 +28,11 @@ public class ValueAutocompletionTest extends LightCodeInsightFixtureTestCase {
         autocomplete("someValue", "otherValue");
     }
 
+    public void testExposingValueFromPatternCompletion() {
+        myFixture.configureByFiles("exposing/FromPattern.elm");
+        autocomplete("val1", "val2", "val3");
+    }
+
     private void autocomplete(String... suggestions) {
         myFixture.complete(CompletionType.BASIC, 1);
         List<String> strings = myFixture.getLookupElementStrings();
