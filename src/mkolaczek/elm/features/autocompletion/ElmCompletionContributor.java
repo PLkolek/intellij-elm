@@ -4,10 +4,7 @@ import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.patterns.PsiElementPattern.Capture;
 import com.intellij.psi.PsiElement;
-import mkolaczek.elm.features.autocompletion.completions.KeywordCompletion;
-import mkolaczek.elm.features.autocompletion.completions.ModuleCompletion;
-import mkolaczek.elm.features.autocompletion.completions.TypeCompletion;
-import mkolaczek.elm.features.autocompletion.completions.ValueCompletion;
+import mkolaczek.elm.features.autocompletion.completions.*;
 import mkolaczek.elm.features.autocompletion.providers.LambdaBasedCompletionProvider;
 import mkolaczek.elm.features.autocompletion.providers.PlainMatchingCompletionProvider;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +25,7 @@ public class ElmCompletionContributor extends CompletionContributor {
         TypeCompletion.types(this);
         ModuleCompletion.modules(this);
         ValueCompletion.values(this);
+        TypeConstructorCompletion.typeConstructors(this);
     }
 
     public static <T extends PsiElement> T location(CompletionParameters parameters, Class<T> parentType) {
