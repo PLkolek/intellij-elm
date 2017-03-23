@@ -15,6 +15,8 @@ import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
+import static mkolaczek.elm.psi.Elements.MODULE_NAME_REF;
+import static mkolaczek.elm.psi.Elements.TYPE_CONSTRUCTOR_REF;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class Pattern {
@@ -46,7 +48,9 @@ public class Pattern {
     private static Parser consTerm() {
         return or(
                 sequence(
-                        dottedCapVar("constructor"),
+                        dottedCapVar("constructor",
+                                MODULE_NAME_REF,
+                                TYPE_CONSTRUCTOR_REF).as(Elements.QUALIFIED_TYPE_CONSTRUCTOR_REF),
                         spacePrefix(term())
                 ),
                 term()

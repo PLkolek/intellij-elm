@@ -63,6 +63,7 @@ public interface Elements {
     Element VALUE_NAME = new Element("pattern variable");
     Element PATTERN_TERM = new Element("pattern term");
     Element DEFINED_VALUES = new Element("defined values");
+    Element QUALIFIED_TYPE_CONSTRUCTOR_REF = new Element("quallified reference");
 
     class Factory {
 
@@ -130,6 +131,8 @@ public interface Elements {
                 return new TypeNameRef(node);
             } else if (type == QUALIFIED_TYPE_NAME_REF) {
                 return new QualifiedTypeNameRef(node);
+            } else if (type == QUALIFIED_TYPE_CONSTRUCTOR_REF) {
+                return new QualifiedTypeConstructorRef(node);
             } else if (type == COMMA_SEP) {
                 return new CommaSeparatedList(node);
             } else if (type == PIPE_SEP) {

@@ -3,6 +3,7 @@ package mkolaczek.elm.references;
 import com.google.common.collect.Sets;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
@@ -37,7 +38,9 @@ public class TypeConstructorReference extends PsiReferenceBase<TypeConstructorRe
     @Override
     public Object[] getVariants() {
         TypeExport typeExport = PsiTreeUtil.getParentOfType(myElement, TypeExport.class);
-        assert typeExport != null;
+        if (typeExport == null) {
+            return PsiReference.EMPTY_ARRAY;
+        }
         Set<String> excluded = Sets.newHashSet(typeExport.constructorNames());
 
         return module(myElement).declarations(TypeOfDeclaration.TYPE, typeExport.typeNameString())
