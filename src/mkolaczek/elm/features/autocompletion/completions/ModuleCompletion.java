@@ -26,6 +26,7 @@ public class ModuleCompletion {
         c.autocomplete(Patterns.afterLeaf(Tokens.AS), ModuleCompletion::moduleNameParts);
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)), ModuleCompletion::modules);
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_CONSTRUCTOR_REF)), ModuleCompletion::modules);
+        c.autocomplete(e().inside(e(QUALIFIED_VAR)), ModuleCompletion::modules);
         c.autocomplete(e(RUNE_OF_AUTOCOMPLETION).inside(e(PATTERN_TERM)),
                 params -> matchingModules(params.getPosition(), "")
         );

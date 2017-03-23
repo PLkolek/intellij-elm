@@ -178,7 +178,9 @@ public class Expression {
 
     @NotNull
     private static Sequence variable() {
-        return accessible(dottedVar("qualified variable"));
+        return accessible(dottedVar("qualified variable",
+                Elements.MODULE_NAME_REF,
+                Elements.VAR).as(Elements.QUALIFIED_VAR));
     }
 
     @NotNull

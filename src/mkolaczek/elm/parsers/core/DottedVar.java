@@ -40,8 +40,8 @@ public class DottedVar implements Parser {
         return new DottedVar(name, ImmutableSet.of(CAP_VAR), prefix, suffix);
     }
 
-    public static Parser dottedVar(String name) {
-        return new DottedVar(name, ImmutableSet.of(CAP_VAR, LOW_VAR), null, null);
+    public static Parser dottedVar(String name, @NotNull Element prefix, @NotNull Element suffix) {
+        return new DottedVar(name, ImmutableSet.of(CAP_VAR, LOW_VAR), prefix, suffix);
     }
 
     @Override
