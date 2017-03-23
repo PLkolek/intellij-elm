@@ -10,10 +10,8 @@ import mkolaczek.elm.psi.node.extensions.TypeOfExport;
 import mkolaczek.util.Streams;
 
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
@@ -46,23 +44,20 @@ public class ValueCompletion {
     }
 
     private static Stream<String> moduleOperators(CompletionParameters parameters) {
-        return declared(parameters, TypeOfDeclaration.OPERATOR, OperatorDeclaration::parens);
+        return declared(parameters, TypeOfDeclaration.OPERATOR).map(OperatorDeclaration::parens);
     }
 
     private static Stream<String> moduleValues(CompletionParameters parameters) {
-        return declared(parameters, TypeOfDeclaration.PORT, identity());
+        return declared(parameters, TypeOfDeclaration.PORT);
     }
 
     private static Stream<String> declared(CompletionParameters parameters,
-                                           TypeOfDeclaration<?, ?> typeOfDeclaration,
-                                           Function<String, String> namePresenter) {
+                                           TypeOfDeclaration<?, ?> typeOfDeclaration) {
         Set<String> excluded = exposed(parameters, typeOfDeclaration.exportedAs())
-                .map(namePresenter)
                 .collect(toSet());
         return module(parameters.getPosition()).declarations(typeOfDeclaration)
                                                .map(PsiNamedElement::getName)
                                                .flatMap(Streams::stream)
-                                               .map(namePresenter)
                                                .filter(o -> !excluded.contains(o));
     }
 

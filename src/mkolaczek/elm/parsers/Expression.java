@@ -30,7 +30,7 @@ public class Expression {
                         or(
                                 expect(Tokens.LOW_VAR).as(VALUE_NAME),
                                 Basic.operator().ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP))
-                        ),
+                        ).as(DEFINED_VALUES),
                         or(
                                 sequence(
                                         expect(Tokens.COLON),
@@ -44,7 +44,7 @@ public class Expression {
         return or("definition",
                 valueDefinition,
                 sequence(
-                        Pattern.term(),
+                        Pattern.term().as(Elements.DEFINED_VALUES),
                         definitionEnd()
                 )
         );

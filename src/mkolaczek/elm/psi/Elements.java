@@ -62,6 +62,7 @@ public interface Elements {
     Element CASE_EXPRESSION = new Element("case expression");
     Element VALUE_NAME = new Element("pattern variable");
     Element PATTERN_TERM = new Element("pattern term");
+    Element DEFINED_VALUES = new Element("defined values");
 
     class Factory {
 
@@ -163,6 +164,8 @@ public interface Elements {
                 return new ValueName(node);
             } else if (type == PATTERN_TERM) {
                 return new PatternTerm(node);
+            } else if (type == DEFINED_VALUES) {
+                return new DefinedValues(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {
