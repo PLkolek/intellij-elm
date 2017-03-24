@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.*;
-import mkolaczek.elm.psi.node.extensions.HasExposing;
 import mkolaczek.elm.psi.node.extensions.QualifiedRef;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import mkolaczek.elm.references.Resolver;
@@ -12,7 +11,6 @@ import mkolaczek.elm.references.Resolver;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.ElmCompletionContributor.location;
 import static mkolaczek.elm.features.autocompletion.Patterns.childOf;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
@@ -51,11 +49,7 @@ public class TypeConstructorCompletion {
     }
 
     private static Stream<String> nonQualifiedConstructors(CompletionParameters parameters) {
-        return Resolver.aaa(module(parameters.getPosition()),
-                m -> TypeDeclaration.constructorsMultimap(m.declarations(TypeOfDeclaration.TYPE).collect(toSet())),
-                HasExposing::filterExposedConstructors,
-                m -> m.values().stream()
-        );
+        return Resolver.forTypeConstructors().resolve(module(parameters.getPosition()));
     }
 
     private static Stream<String> constructorsFromType(CompletionParameters parameters) {
