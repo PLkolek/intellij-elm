@@ -11,7 +11,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class TypeAutocompletionTest extends LightCodeInsightFixtureTestCase {
+public class TypeCompletionTest extends LightCodeInsightFixtureTestCase {
 
 
     @Override

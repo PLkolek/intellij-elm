@@ -10,7 +10,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class ValueAutocompletionTest extends LightCodeInsightFixtureTestCase {
+public class ValueCompletionTest extends LightCodeInsightFixtureTestCase {
 
 
     @Override

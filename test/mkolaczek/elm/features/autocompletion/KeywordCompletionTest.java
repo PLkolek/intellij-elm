@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class KeywordAutocompletionTest extends LightFixtureCompletionTestCase {
+public class KeywordCompletionTest extends LightFixtureCompletionTestCase {
 
 
     @Override
