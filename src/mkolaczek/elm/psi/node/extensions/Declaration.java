@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 public interface Declaration extends DocCommented, NavigatablePsiElement {
 
-    default Stream<String> declaredValueNames() {
+    default Stream<String> topLevelValueNames() {
         return Stream.empty();
     }
 

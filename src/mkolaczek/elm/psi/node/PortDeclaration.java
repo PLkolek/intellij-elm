@@ -38,7 +38,7 @@ public class PortDeclaration extends ElmNamedElement implements Declaration {
     }
 
     @Override
-    public Stream<String> declaredValueNames() {
+    public Stream<String> topLevelValueNames() {
         return Streams.stream(Optional.ofNullable(getName()));
     }
 }

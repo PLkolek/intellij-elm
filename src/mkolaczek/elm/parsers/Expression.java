@@ -24,6 +24,7 @@ import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class Expression {
+
     public static Parser definition() {
         Parser valueDefinition =
                 sequence(
@@ -31,7 +32,7 @@ public class Expression {
                                 expect(Tokens.LOW_VAR).as(VALUE_NAME),
                                 Basic.operator(Elements.OPERATOR_SYMBOL)
                                      .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP))
-                        ).as(DEFINED_VALUES),
+                        ).as(MAIN_DEFINED_VALUES),
                         or(
                                 sequence(
                                         expect(Tokens.COLON),
@@ -45,7 +46,7 @@ public class Expression {
         return or("definition",
                 valueDefinition,
                 sequence(
-                        Pattern.term().as(Elements.DEFINED_VALUES),
+                        Pattern.term().as(MAIN_DEFINED_VALUES),
                         definitionEnd()
                 )
         );
@@ -53,10 +54,14 @@ public class Expression {
 
     private static Parser definitionEnd() {
         return sequence("definitionEnd",
-                spacePrefix(Pattern.term()),
+                spacePrefix(definedValues()),
                 maybeWhitespace(expect(EQUALS)),
                 maybeWhitespace(expression)
         );
+    }
+
+    private static Parser definedValues() {
+        return Pattern.term().as(DEFINED_VALUES);
     }
 
     private static final ParserBox expression = new ParserBox("expression");
@@ -197,8 +202,8 @@ public class Expression {
     private static Parser function() {
         return sequence(
                 expect(LAMBDA),
-                maybeWhitespace(Pattern.term()).as(DEFINED_VALUES),
-                spacePrefix(Pattern.term()).as(DEFINED_VALUES),
+                maybeWhitespace(definedValues()),
+                spacePrefix(definedValues()),
                 maybeWhitespace(expect(ARROW)),
                 maybeWhitespace(expression)
         ).as(Elements.LAMBDA_EXPRESSION);

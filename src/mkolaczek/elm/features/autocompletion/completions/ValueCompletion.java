@@ -66,7 +66,7 @@ public class ValueCompletion {
     }
 
     private static Stream<String> moduleValues(CompletionParameters parameters) {
-        return declared(parameters, TypeOfExposed.VALUE, Declaration::declaredValueNames);
+        return declared(parameters, TypeOfExposed.VALUE, Declaration::topLevelValueNames);
     }
 
     private static Stream<String> declared(CompletionParameters parameters,

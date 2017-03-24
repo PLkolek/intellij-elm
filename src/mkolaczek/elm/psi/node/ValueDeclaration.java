@@ -8,18 +8,25 @@ import mkolaczek.util.Streams;
 
 import java.util.stream.Stream;
 
+import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
+
 public class ValueDeclaration extends ASTWrapperPsiElement implements Declaration, DefinesValues {
     public ValueDeclaration(ASTNode node) {
         super(node);
     }
 
     @Override
-    public Stream<String> declaredValueNames() {
-        return definedValues().flatMap(DefinedValues::valueNames);
+    public Stream<String> topLevelValueNames() {
+        return topLevelValues().map(ValueName::getName);
     }
 
     @Override
     public Stream<String> declaredOperatorName() {
         return definedValues().map(DefinedValues::operatorName).flatMap(Streams::stream);
     }
+
+    public Stream<ValueName> topLevelValues() {
+        return findChildrenOfType(this, MainDefinedValues.class).stream().flatMap(DefinedValues::values);
+    }
+
 }

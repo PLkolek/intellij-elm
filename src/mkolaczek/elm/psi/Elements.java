@@ -68,6 +68,7 @@ public interface Elements {
     Element QUALIFIED_VAR = new Element("qualified var");
     Element CASE_BRANCH = new Element("case branch");
     Element LAMBDA_EXPRESSION = new Element("lambda expression");
+    Element MAIN_DEFINED_VALUES = new Element("main defined values");
 
     class Factory {
 
@@ -173,6 +174,8 @@ public interface Elements {
                 return new PatternTerm(node);
             } else if (type == DEFINED_VALUES) {
                 return new DefinedValues(node);
+            } else if (type == MAIN_DEFINED_VALUES) {
+                return new MainDefinedValues(node);
             } else if (type == VAR) {
                 return new Var(node);
             } else if (type == QUALIFIED_VAR) {

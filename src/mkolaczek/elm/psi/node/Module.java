@@ -135,7 +135,7 @@ public class Module extends ElmNamedElement implements DocCommented {
 
     public Stream<PsiNamedElement> declaredValues() {
         return Stream.concat(
-                declarations(TypeOfDeclaration.VALUE).flatMap(ValueDeclaration::declaredValues),
+                declarations(TypeOfDeclaration.VALUE).flatMap(ValueDeclaration::topLevelValues),
                 declarations(TypeOfDeclaration.PORT)
         );
     }
