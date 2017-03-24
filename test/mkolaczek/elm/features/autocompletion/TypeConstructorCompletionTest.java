@@ -29,6 +29,11 @@ public class TypeConstructorCompletionTest extends LightCodeInsightFixtureTestCa
         autocomplete("BCons");
     }
 
+    public void testInPatternQualifiedCompletion() {
+        myFixture.configureByFiles("inPattern/qualified/Importing.elm", "inPattern/qualified/Imported.elm");
+        autocomplete("Cons1", "Cons2");
+    }
+
     private void autocomplete(String... suggestions) {
         myFixture.complete(CompletionType.BASIC, 1);
         List<String> strings = myFixture.getLookupElementStrings();

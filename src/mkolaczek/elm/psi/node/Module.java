@@ -153,13 +153,16 @@ public class Module extends ElmNamedElement implements DocCommented {
     }
 
     public Stream<TypeConstructor> exportedConstructors() {
-
+        if (exposesEverything()) {
+            return declarations(TypeOfDeclaration.TYPE).flatMap(TypeDeclaration::constructors);
+        }
 
         Map<String, TypeExposing> exposedTypes =
                 exposed(TypeOfExposed.TYPE).collect(toMap(
                         TypeExposing::typeNameString,
                         identity()
                 ));
+
         return declarations(TypeOfDeclaration.TYPE)
                 .filter(d -> exposedTypes.containsKey(d.getName()))
                 .flatMap(d -> {
