@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.*;
+import mkolaczek.elm.psi.node.extensions.QualifiedRef;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 
 import java.util.Set;
@@ -24,6 +25,8 @@ public class TypeConstructorCompletion {
         );
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_CONSTRUCTOR_REF)),
                 TypeConstructorCompletion::constructorsFromModule);
+        c.autocomplete(e().inside(e(QUALIFIED_VAR)),
+                TypeConstructorCompletion::constructorsFromModule);
         c.autocomplete(e(RUNE_OF_AUTOCOMPLETION).inside(e(PATTERN_TERM)),
                 TypeConstructorCompletion::nonQualifiedConstructors
         );
@@ -33,7 +36,7 @@ public class TypeConstructorCompletion {
 
     private static Stream<String> constructorsFromModule(CompletionParameters parameters) {
         Module module = module(parameters.getPosition());
-        QualifiedTypeConstructorRef qualifiedConstructor = location(parameters, QualifiedTypeConstructorRef.class);
+        QualifiedRef qualifiedConstructor = location(parameters, QualifiedRef.class);
         if (qualifiedConstructor != null && qualifiedConstructor.moduleName().isPresent()) {
             return module.imports(qualifiedConstructor.moduleName().get().getName())
                          .flatMap(Import::importedModule)

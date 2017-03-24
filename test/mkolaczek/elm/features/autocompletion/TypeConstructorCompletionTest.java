@@ -45,6 +45,11 @@ public class TypeConstructorCompletionTest extends LightCodeInsightFixtureTestCa
         autocomplete("Cons3", "Cons4");
     }
 
+    public void testInExpressionCompletion() {
+        myFixture.configureByFiles(files("inExpression/", "Current.elm"));
+        autocomplete("Cons1", "Cons2", "if", "let", "case");
+    }
+
     private String[] files(String dir, String... files) {
         return Arrays.stream(files).map(f -> dir + f).toArray(String[]::new);
     }
