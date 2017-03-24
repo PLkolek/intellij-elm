@@ -13,6 +13,7 @@ import static mkolaczek.elm.features.autocompletion.ElmCompletionContributor.loc
 import static mkolaczek.elm.features.autocompletion.Patterns.childOf;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
 import static mkolaczek.elm.psi.Elements.*;
+import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class TypeConstructorCompletion {
@@ -23,19 +24,28 @@ public class TypeConstructorCompletion {
         );
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_CONSTRUCTOR_REF)),
                 TypeConstructorCompletion::constructorsFromModule);
+        c.autocomplete(e(RUNE_OF_AUTOCOMPLETION).inside(e(PATTERN_TERM)),
+                TypeConstructorCompletion::nonQualifiedConstructors
+        );
 
         //@formatter:on
     }
 
     private static Stream<String> constructorsFromModule(CompletionParameters parameters) {
+        Module module = module(parameters.getPosition());
         QualifiedTypeConstructorRef qualifiedConstructor = location(parameters, QualifiedTypeConstructorRef.class);
         if (qualifiedConstructor != null && qualifiedConstructor.moduleName().isPresent()) {
-            return module(qualifiedConstructor).imports(qualifiedConstructor.moduleName().get().getName())
-                                               .flatMap(Import::importedModule)
-                                               .flatMap(Module::exportedConstructors)
-                                               .map(TypeConstructor::getName);
+            return module.imports(qualifiedConstructor.moduleName().get().getName())
+                         .flatMap(Import::importedModule)
+                         .flatMap(Module::exportedConstructors)
+                         .map(TypeConstructor::getName);
         }
-        return Stream.empty();
+
+        return nonQualifiedConstructors(parameters);
+    }
+
+    private static Stream<String> nonQualifiedConstructors(CompletionParameters parameters) {
+        return module(parameters.getPosition()).constructorDeclarations().map(TypeConstructor::getName);
     }
 
     private static Stream<String> constructorsFromType(CompletionParameters parameters) {

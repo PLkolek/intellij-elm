@@ -57,7 +57,7 @@ public class KeywordCompletionTest extends LightFixtureCompletionTestCase {
     }
 
     public void testPortCompletion() {
-        performTest("port/Test.elm", "port/expected.elm", "port", "type", "infixr", "infixl", "infix", "import");
+        performTest("port/Test.elm", "port/expected.elm", "port", "type", "infixr", "infixl", "infix", "import", "B");
     }
 
     public void testExpressionInIfConditionCompletion() {

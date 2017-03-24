@@ -137,10 +137,14 @@ public class Module extends ElmNamedElement implements DocCommented {
                 .filter(decl -> names.contains(decl.getName()));
     }
 
+    public Stream<TypeConstructor> constructorDeclarations() {
+        return declarations(TypeOfDeclaration.TYPE).flatMap(TypeDeclaration::constructors);
+    }
+
+
     public Optional<Declarations> declarationsNode() {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
     }
-
 
     public <D extends PsiNamedElement> Stream<D> exportedDeclaration(TypeOfDeclaration<D, ? extends PsiNamedElement> typeOfDeclaration,
                                                                      String symbol) {
