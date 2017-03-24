@@ -1,17 +1,19 @@
 package mkolaczek.elm.psi.node.extensions;
 
 
+import com.google.common.collect.Multimap;
 import com.intellij.psi.PsiElement;
-import mkolaczek.elm.psi.node.ExposingNode;
-import mkolaczek.elm.psi.node.ModuleValueList;
-import mkolaczek.elm.psi.node.TypeExposing;
-import mkolaczek.elm.psi.node.ValueExposing;
+import mkolaczek.elm.psi.node.*;
 import mkolaczek.util.Streams;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
+import static mkolaczek.util.Collectors.toMultimap;
 
 public interface HasExposing extends PsiElement {
 
@@ -33,4 +35,27 @@ public interface HasExposing extends PsiElement {
     default <T extends PsiElement> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
         return Streams.stream(exposingList()).flatMap(l -> l.exposed(exposedElementsType));
     }
+
+    default Multimap<String, TypeConstructor> filterExposedConstructors(Multimap<String, TypeConstructor> constructors) {
+        if (exposesEverything()) {
+            return constructors;
+        }
+
+        Map<String, TypeExposing> exposedTypes =
+                exposed(TypeOfExposed.TYPE).collect(toMap(
+                        TypeExposing::typeNameString,
+                        identity()
+                ));
+
+        return constructors.entries().stream()
+                           .filter(e -> exposedTypes.containsKey(e.getKey()))
+                           .filter(e -> exposedTypes.get(e.getKey()).exposes(e.getValue()))
+                           .collect(toMultimap());
+    }
+
+    default Boolean exposesEverything() {
+        return exposingList().map(ModuleValueList::isOpenListing).orElse(noExposingExposesAll());
+    }
+
+    boolean noExposingExposesAll();
 }

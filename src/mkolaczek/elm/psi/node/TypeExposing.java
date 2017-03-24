@@ -47,6 +47,10 @@ public class TypeExposing extends ASTWrapperPsiElement {
         return valueList().map(ModuleValueList::isOpenListing).orElse(false);
     }
 
+    public boolean exposes(TypeConstructor constructor) {
+        return exposesEverything() || constructorNames().contains(constructor.getName());
+    }
+
     //WEIRD STUFF
     public static String declarationString(TypeExposing typeExposing) {
         return typeExposing.typeNameString() + " = " + Joiner.on(" | ").join(typeExposing.constructorNames());

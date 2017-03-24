@@ -1,6 +1,7 @@
 package mkolaczek.elm.psi.node;
 
 
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -16,15 +17,14 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.intellij.psi.util.PsiTreeUtil.*;
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toList;
+import static mkolaczek.elm.psi.node.TypeDeclaration.constructorsMultimap;
 import static mkolaczek.util.Streams.stream;
 
 public class Module extends ElmNamedElement implements DocCommented {
@@ -156,27 +156,19 @@ public class Module extends ElmNamedElement implements DocCommented {
     }
 
     public Stream<TypeConstructor> exportedConstructors() {
-        if (exposesEverything()) {
-            return declarations(TypeOfDeclaration.TYPE).flatMap(TypeDeclaration::constructors);
-        }
+        return exportedConstructorsMap()
+                .values()
+                .stream();
+    }
 
-        Map<String, TypeExposing> exposedTypes =
-                exposed(TypeOfExposed.TYPE).collect(toMap(
-                        TypeExposing::typeNameString,
-                        identity()
-                ));
+    public Multimap<String, TypeConstructor> exportedConstructorsMap() {
+        Multimap<String, TypeConstructor> constructors = constructorsMultimap(
+                declarations(TypeOfDeclaration.TYPE).collect(toList())
+        );
 
-        return declarations(TypeOfDeclaration.TYPE)
-                .filter(d -> exposedTypes.containsKey(d.getName()))
-                .flatMap(d -> {
-                    TypeExposing typeExposing = exposedTypes.get(d.getName());
-                    if (typeExposing.exposesEverything()) {
-                        return d.constructors();
-                    } else {
-                        return d.constructors().filter(nameIn(typeExposing.constructorNames()));
-                    }
-                });
-
+        return header().map(h -> h.filterExposedConstructors(
+                constructors))
+                       .orElse(constructors);
     }
 
     public boolean exposesEverything() {

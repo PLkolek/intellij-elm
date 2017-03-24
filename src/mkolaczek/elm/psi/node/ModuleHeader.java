@@ -17,4 +17,8 @@ public class ModuleHeader extends ASTWrapperPsiElement implements HasExposing {
     }
 
 
+    @Override
+    public boolean noExposingExposesAll() {
+        return true;
+    }
 }

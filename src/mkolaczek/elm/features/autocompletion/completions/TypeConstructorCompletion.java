@@ -47,7 +47,12 @@ public class TypeConstructorCompletion {
     private static Stream<String> nonQualifiedConstructors(CompletionParameters parameters) {
         Module module = module(parameters.getPosition());
 
-        return module.constructorDeclarations().map(TypeConstructor::getName);
+        Stream<TypeConstructor> exposedConstructors = module.imports().flatMap(i ->
+                i.importedModule()
+                 .flatMap(m -> i.filterExposedConstructors(m.exportedConstructorsMap()).values().stream())
+        );
+
+        return Stream.concat(module.constructorDeclarations(), exposedConstructors).map(TypeConstructor::getName);
     }
 
     private static Stream<String> constructorsFromType(CompletionParameters parameters) {

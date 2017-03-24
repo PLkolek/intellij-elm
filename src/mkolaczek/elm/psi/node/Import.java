@@ -48,4 +48,9 @@ public class Import extends ASTWrapperPsiElement implements HasExposing {
     private boolean nameEquals(String name) {
         return importedModuleName().isPresent() && importedModuleName().get().getName().equals(name);
     }
+
+    @Override
+    public boolean noExposingExposesAll() {
+        return false;
+    }
 }
