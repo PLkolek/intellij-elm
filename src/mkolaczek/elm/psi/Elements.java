@@ -66,6 +66,7 @@ public interface Elements {
     Element QUALIFIED_TYPE_CONSTRUCTOR_REF = new Element("quallified reference");
     Element VAR = new Element("variable name");
     Element QUALIFIED_VAR = new Element("qualified var");
+    Element CASE_BRANCH = new Element("case branch");
 
     class Factory {
 
@@ -175,6 +176,8 @@ public interface Elements {
                 return new Var(node);
             } else if (type == QUALIFIED_VAR) {
                 return new QualifiedVar(node);
+            } else if (type == CASE_BRANCH) {
+                return new CaseBranch(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {

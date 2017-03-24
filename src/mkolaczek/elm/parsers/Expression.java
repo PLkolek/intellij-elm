@@ -215,10 +215,10 @@ public class Expression {
 
     private static Parser caseBranch() {
         return sequence(
-                Pattern.expression,
+                Pattern.expression.as(DEFINED_VALUES),
                 expect(Tokens.ARROW),
                 maybeWhitespace(expression)
-        );
+        ).as(Elements.CASE_BRANCH);
     }
 
     private static Parser if_() {

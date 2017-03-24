@@ -50,6 +50,11 @@ public class ValueCompletionTest extends LightCodeInsightFixtureTestCase {
         autocomplete("lTopLevel", "lMiddleLevel", "lBottomLevel", "let");
     }
 
+    public void testValueInCaseExpressionCompletion() {
+        myFixture.configureByFiles(files("inCaseExpression/", "Case.elm"));
+        autocomplete("cTopLevel", "cMidLevel", "cBottomLevel", "case");
+    }
+
     private void autocomplete(String... suggestions) {
         myFixture.complete(CompletionType.BASIC, 1);
         List<String> strings = myFixture.getLookupElementStrings();

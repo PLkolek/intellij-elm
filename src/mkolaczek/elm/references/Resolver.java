@@ -4,9 +4,9 @@ package mkolaczek.elm.references;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.psi.node.Import;
-import mkolaczek.elm.psi.node.LetExpression;
 import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.TypeDeclaration;
+import mkolaczek.elm.psi.node.extensions.DefinesValues;
 import mkolaczek.elm.psi.node.extensions.HasExposing;
 import mkolaczek.elm.psi.node.extensions.QualifiedRef;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
@@ -75,10 +75,10 @@ public class Resolver<T> {
         Module module = module(target);
         Stream<? extends PsiNamedElement> locals = Stream.empty();
         if (includeLocal) {
-            Stream<LetExpression> lets = StreamEx.iterate(getParentOfType(target, LetExpression.class),
+            Stream<DefinesValues> lets = StreamEx.iterate(getParentOfType(target, DefinesValues.class),
                     Objects::nonNull,
-                    e -> getParentOfType(e, LetExpression.class));
-            locals = lets.flatMap(LetExpression::declaredValues);
+                    e -> getParentOfType(e, DefinesValues.class));
+            locals = lets.flatMap(DefinesValues::declaredValues);
         }
 
         Stream<? extends PsiNamedElement> exposedValues = module.imports().flatMap(
