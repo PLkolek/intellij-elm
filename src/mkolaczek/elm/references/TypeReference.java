@@ -76,7 +76,6 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
         Stream<TypeDeclaration> typeDecls = module(myElement).declarations(TypeOfDeclaration.TYPE);
         if (includeImported) {
             Stream<TypeDeclaration> imported = module(myElement).imports()
-                                                                .stream()
                                                                 .flatMap(TypeReference::importedTypes);
             typeDecls = Stream.concat(typeDecls, imported);
         }

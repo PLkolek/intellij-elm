@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -98,8 +97,8 @@ public class Module extends ElmNamedElement implements DocCommented {
         return checkNotNull(PsiTreeUtil.getParentOfType(element, Module.class));
     }
 
-    public Collection<Import> imports() {
-        return findChildrenOfType(this, Import.class);
+    public Stream<Import> imports() {
+        return findChildrenOfType(this, Import.class).stream();
     }
 
     public Optional<Imports> importsNode() {
@@ -107,15 +106,15 @@ public class Module extends ElmNamedElement implements DocCommented {
     }
 
     public Stream<Import> imports(String name) {
-        return imports().stream().filter(i -> i.importedAs(name));
+        return imports().filter(i -> i.importedAs(name));
     }
 
     public Stream<Import> aliasedImports() {
-        return imports().stream().filter(Import::isAliased);
+        return imports().filter(Import::isAliased);
     }
 
     public Stream<Import> notAliasedImports() {
-        return imports().stream().filter(i -> !i.isAliased());
+        return imports().filter(i -> !i.isAliased());
     }
 
     public Stream<Declaration> declarations() {

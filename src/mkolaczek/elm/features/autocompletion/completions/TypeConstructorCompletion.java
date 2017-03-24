@@ -45,7 +45,9 @@ public class TypeConstructorCompletion {
     }
 
     private static Stream<String> nonQualifiedConstructors(CompletionParameters parameters) {
-        return module(parameters.getPosition()).constructorDeclarations().map(TypeConstructor::getName);
+        Module module = module(parameters.getPosition());
+
+        return module.constructorDeclarations().map(TypeConstructor::getName);
     }
 
     private static Stream<String> constructorsFromType(CompletionParameters parameters) {
