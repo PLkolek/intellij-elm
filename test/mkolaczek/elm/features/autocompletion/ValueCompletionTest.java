@@ -45,6 +45,11 @@ public class ValueCompletionTest extends LightCodeInsightFixtureTestCase {
         autocomplete("somePort", "Cons1", "Cons2");
     }
 
+    public void testValueInLetExpressionCompletion() {
+        myFixture.configureByFiles(files("inLetExpression/", "Let.elm"));
+        autocomplete("lTopLevel", "lMiddleLevel", "lBottomLevel", "let");
+    }
+
     private void autocomplete(String... suggestions) {
         myFixture.complete(CompletionType.BASIC, 1);
         List<String> strings = myFixture.getLookupElementStrings();

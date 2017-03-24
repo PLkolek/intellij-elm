@@ -73,7 +73,7 @@ public class KeywordCompletionTest extends LightFixtureCompletionTestCase {
     }
 
     public void testInCompletion() {
-        performTest("expression/inLet/In.elm", "expression/inLet/In.expected.elm", "in", "someVal");
+        performTest("expression/inLet/In.elm", "expression/inLet/In.expected.elm", "in", "someVal", "letVal");
     }
 
     public void testOfCompletion() {

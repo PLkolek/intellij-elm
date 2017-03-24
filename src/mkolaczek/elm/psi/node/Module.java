@@ -133,10 +133,6 @@ public class Module extends ElmNamedElement implements DocCommented {
                 .filter(decl -> names.contains(decl.getName()));
     }
 
-    public Stream<TypeConstructor> declaredConstructors() {
-        return declarations(TypeOfDeclaration.TYPE).flatMap(TypeDeclaration::constructors);
-    }
-
     public Stream<PsiNamedElement> declaredValues() {
         return Stream.concat(
                 declarations(TypeOfDeclaration.VALUE).flatMap(ValueDeclaration::declaredValues),

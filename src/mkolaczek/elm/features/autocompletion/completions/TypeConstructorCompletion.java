@@ -43,7 +43,7 @@ public class TypeConstructorCompletion {
     }
 
     private static Stream<String> nonQualifiedConstructors(CompletionParameters parameters) {
-        return resolver.resolveUnqualified(module(parameters.getPosition()));
+        return resolver.resolveUnqualified(parameters.getPosition());
     }
 
     private static Stream<String> constructorsFromType(CompletionParameters parameters) {
