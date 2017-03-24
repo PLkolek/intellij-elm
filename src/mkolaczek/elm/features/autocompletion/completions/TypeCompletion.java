@@ -8,8 +8,8 @@ import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.ModuleHeader;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeDeclaration;
-import mkolaczek.elm.psi.node.TypeExport;
-import mkolaczek.elm.psi.node.extensions.TypeOfExport;
+import mkolaczek.elm.psi.node.TypeExposing;
+import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import mkolaczek.elm.references.TypeReference;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,21 +49,21 @@ public class TypeCompletion {
 
     private static Stream<String> exposedConstructorlessTypes(CompletionParameters parameters) {
         return module(parameters.getPosition())
-                .exports(TypeOfExport.TYPE)
-                .filter(TypeExport::withoutConstructors)
-                .map(TypeExport::typeNameString);
+                .exposed(TypeOfExposed.TYPE)
+                .filter(TypeExposing::withoutConstructors)
+                .map(TypeExposing::typeNameString);
     }
 
     private static Stream<String> exposedTypes(CompletionParameters parameters) {
         return module(parameters.getPosition())
-                .exports(TypeOfExport.TYPE)
+                .exposed(TypeOfExposed.TYPE)
                 .flatMap(TypeCompletion::typeCompletions);
     }
 
-    private static Stream<String> typeCompletions(TypeExport typeExport) {
-        ArrayList<String> result = Lists.newArrayList(typeExport.typeNameString());
-        if (!typeExport.withoutConstructors()) {
-            result.add(TypeExport.declarationString(typeExport));
+    private static Stream<String> typeCompletions(TypeExposing typeExposing) {
+        ArrayList<String> result = Lists.newArrayList(typeExposing.typeNameString());
+        if (!typeExposing.withoutConstructors()) {
+            result.add(TypeExposing.declarationString(typeExposing));
         }
         return result.stream();
     }
@@ -82,8 +82,8 @@ public class TypeCompletion {
         String typeName = declaration.getName();
 
         Optional<ModuleHeader> header = module(position).header();
-        Collection<String> constructors = header.flatMap(h -> h.typeExport(typeName))
-                                                .map(TypeExport::constructorNames)
+        Collection<String> constructors = header.flatMap(h -> h.exposedType(typeName))
+                                                .map(TypeExposing::constructorNames)
                                                 .orElse(newArrayList());
         Set<String> declared = declaration.constructors()
                                           .map(TypeConstructor::getText)

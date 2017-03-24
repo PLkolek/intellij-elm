@@ -24,7 +24,7 @@ public class OperatorReference extends ElmReference<OperatorSymbolRef> {
                                         .filter(d -> d.sameName(myElement.getName()));
         } else if (insideImport(myElement)) {
             resolved = containingImport(myElement).importedModule()
-                                                  .flatMap(m -> m.exposedDeclaration(OPERATOR, myElement.getName()));
+                                                  .flatMap(m -> m.exportedDeclaration(OPERATOR, myElement.getName()));
         } else {
             throw new IllegalStateException("Operators in code not supperted yet");
         }

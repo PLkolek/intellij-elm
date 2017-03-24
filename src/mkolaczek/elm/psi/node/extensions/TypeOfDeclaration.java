@@ -7,17 +7,17 @@ public interface TypeOfDeclaration<Declaration, Export extends PsiElement> {
 
     Class<Declaration> psiClass();
 
-    TypeOfExport<Export> exportedAs();
+    TypeOfExposed<Export> exposedAs();
 
-    TypeOfDeclaration<TypeDeclaration, TypeExport> TYPE = new TypeOfDeclaration<TypeDeclaration, TypeExport>() {
+    TypeOfDeclaration<TypeDeclaration, TypeExposing> TYPE = new TypeOfDeclaration<TypeDeclaration, TypeExposing>() {
         @Override
         public Class<TypeDeclaration> psiClass() {
             return TypeDeclaration.class;
         }
 
         @Override
-        public TypeOfExport<TypeExport> exportedAs() {
-            return TypeOfExport.TYPE;
+        public TypeOfExposed<TypeExposing> exposedAs() {
+            return TypeOfExposed.TYPE;
         }
     };
 
@@ -29,20 +29,20 @@ public interface TypeOfDeclaration<Declaration, Export extends PsiElement> {
         }
 
         @Override
-        public TypeOfExport<OperatorSymbolRef> exportedAs() {
-            return TypeOfExport.OPERATOR;
+        public TypeOfExposed<OperatorSymbolRef> exposedAs() {
+            return TypeOfExposed.OPERATOR;
         }
     };
 
-    TypeOfDeclaration<PortDeclaration, ValueExport> PORT = new TypeOfDeclaration<PortDeclaration, ValueExport>() {
+    TypeOfDeclaration<PortDeclaration, ValueExposing> PORT = new TypeOfDeclaration<PortDeclaration, ValueExposing>() {
         @Override
         public Class<PortDeclaration> psiClass() {
             return PortDeclaration.class;
         }
 
         @Override
-        public TypeOfExport<ValueExport> exportedAs() {
-            return TypeOfExport.VALUE;
+        public TypeOfExposed<ValueExposing> exposedAs() {
+            return TypeOfExposed.VALUE;
         }
     };
 }

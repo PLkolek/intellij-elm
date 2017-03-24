@@ -131,11 +131,11 @@ public class Module extends ElmNamedElement implements DocCommented {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
     }
 
-    public <D extends PsiNamedElement> Stream<D> exposedDeclaration(TypeOfDeclaration<D, ? extends PsiNamedElement> typeOfDeclaration,
-                                                                    String symbol) {
-        boolean isExposed = exports(typeOfDeclaration.exportedAs()).map(PsiNamedElement::getName)
-                                                                   .filter(symbol::equals)
-                                                                   .count() > 0;
+    public <D extends PsiNamedElement> Stream<D> exportedDeclaration(TypeOfDeclaration<D, ? extends PsiNamedElement> typeOfDeclaration,
+                                                                     String symbol) {
+        boolean isExposed = exposed(typeOfDeclaration.exposedAs()).map(PsiNamedElement::getName)
+                                                                  .filter(symbol::equals)
+                                                                  .count() > 0;
 
         return isExposed || exposesEverything() ? declarations(typeOfDeclaration, symbol) : Stream.empty();
 
@@ -147,7 +147,7 @@ public class Module extends ElmNamedElement implements DocCommented {
     }
 
     //SHORTCUTS
-    public <T extends PsiElement> Stream<T> exports(TypeOfExport<T> exposedElementsType) {
-        return stream(header()).flatMap(h -> h.exports(exposedElementsType));
+    public <T extends PsiElement> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
+        return stream(header()).flatMap(h -> h.exposed(exposedElementsType));
     }
 }

@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ValueExport extends ElmNamedElement {
-    public ValueExport(ASTNode node) {
+public class ValueExposing extends ElmNamedElement {
+    public ValueExposing(ASTNode node) {
         super(node);
     }
 
@@ -25,7 +25,7 @@ public class ValueExport extends ElmNamedElement {
     @NotNull
     @Override
     protected PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
-        return ElmElementFactory.valueExport(getProject(), name);
+        return ElmElementFactory.exposedValue(getProject(), name);
     }
 
     @Override

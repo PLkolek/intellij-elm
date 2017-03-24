@@ -7,7 +7,7 @@ import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
-import mkolaczek.elm.psi.node.extensions.TypeOfExport;
+import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,8 +54,8 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
             String aliasName = aliasDeclNode.typeDeclaration().getName();
             excluded = newHashSet(aliasName);
         } else if (exposingList != null) {
-            excluded = exposingList.exported(TypeOfExport.TYPE)
-                                   .map(TypeExport::typeNameString)
+            excluded = exposingList.exposed(TypeOfExposed.TYPE)
+                                   .map(TypeExposing::typeNameString)
                                    .collect(toSet());
         }
 
@@ -92,8 +92,8 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
         if (i.exposingList().isPresent() && i.exposingList().get().isOpenListing()) {
             return decls;
         }
-        Set<String> typeExports = i.exports(TypeOfExport.TYPE)
-                                   .map(TypeExport::typeNameString)
+        Set<String> typeExports = i.exposed(TypeOfExposed.TYPE)
+                                   .map(TypeExposing::typeNameString)
                                    .collect(Collectors.toSet());
         return decls.filter(d -> typeExports.contains(d.getName()));
     }

@@ -2,7 +2,7 @@ package mkolaczek.elm.references;
 
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.psi.node.PortDeclaration;
-import mkolaczek.elm.psi.node.ValueExport;
+import mkolaczek.elm.psi.node.ValueExposing;
 
 import java.util.stream.Stream;
 
@@ -10,8 +10,8 @@ import static mkolaczek.elm.psi.PsiUtil.*;
 import static mkolaczek.elm.psi.node.Module.module;
 import static mkolaczek.elm.psi.node.extensions.TypeOfDeclaration.PORT;
 
-public class ValueReference extends ElmReference<ValueExport> {
-    public ValueReference(ValueExport element) {
+public class ValueReference extends ElmReference<ValueExposing> {
+    public ValueReference(ValueExposing element) {
         super(element);
     }
 
@@ -23,7 +23,7 @@ public class ValueReference extends ElmReference<ValueExport> {
                                         .filter(d -> d.sameName(myElement.getName()));
         } else if (insideImport(myElement)) {
             resolved = containingImport(myElement).importedModule()
-                                                  .flatMap(m -> m.exposedDeclaration(PORT, myElement.getName()));
+                                                  .flatMap(m -> m.exportedDeclaration(PORT, myElement.getName()));
         } else {
             throw new IllegalStateException("Operators in code not supperted yet");
         }

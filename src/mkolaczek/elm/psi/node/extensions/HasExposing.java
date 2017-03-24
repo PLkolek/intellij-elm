@@ -4,8 +4,8 @@ package mkolaczek.elm.psi.node.extensions;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.psi.node.ExposingNode;
 import mkolaczek.elm.psi.node.ModuleValueList;
-import mkolaczek.elm.psi.node.TypeExport;
-import mkolaczek.elm.psi.node.ValueExport;
+import mkolaczek.elm.psi.node.TypeExposing;
+import mkolaczek.elm.psi.node.ValueExposing;
 import mkolaczek.util.Streams;
 
 import java.util.Optional;
@@ -20,19 +20,17 @@ public interface HasExposing extends PsiElement {
         return Optional.ofNullable(exposingNode).map(ExposingNode::valueList);
     }
 
-    default Optional<TypeExport> typeExport(String typeName) {
-        return Streams.stream(exposingList())
-                      .flatMap(l -> l.exported(TypeOfExport.TYPE))
-                      .filter(export -> typeName.equals(export.typeNameString())).findFirst();
+    default Optional<TypeExposing> exposedType(String typeName) {
+        return exposed(TypeOfExposed.TYPE)
+                .filter(export -> typeName.equals(export.typeNameString())).findFirst();
     }
 
-    default Stream<ValueExport> valueExports(String valueName) {
-        return Streams.stream(exposingList())
-                      .flatMap(l -> l.exported(TypeOfExport.VALUE))
-                      .filter(export -> valueName.equals(export.getName()));
+    default Stream<ValueExposing> exposedValue(String valueName) {
+        return exposed(TypeOfExposed.VALUE)
+                .filter(export -> valueName.equals(export.getName()));
     }
 
-    default <T extends PsiElement> Stream<T> exports(TypeOfExport<T> exposedElementsType) {
-        return Streams.stream(exposingList()).flatMap(l -> l.exported(exposedElementsType));
+    default <T extends PsiElement> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
+        return Streams.stream(exposingList()).flatMap(l -> l.exposed(exposedElementsType));
     }
 }

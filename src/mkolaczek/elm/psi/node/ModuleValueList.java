@@ -6,7 +6,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import mkolaczek.elm.psi.node.extensions.TypeOfExport;
+import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import mkolaczek.util.Streams;
 
 import java.util.Collection;
@@ -32,10 +32,10 @@ public class ModuleValueList extends ASTWrapperPsiElement {
         return Optional.ofNullable(getChildOfType(this, CommaSeparatedList.class));
     }
 
-    public <T extends PsiElement> Stream<T> exported(TypeOfExport<T> exposedElementsType) {
-        return values(ExportedValue.class).stream()
-                                          .map(e -> e.export(exposedElementsType))
-                                          .flatMap(Streams::stream);
+    public <T extends PsiElement> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
+        return values(ExposedValue.class).stream()
+                                         .map(e -> e.exposed(exposedElementsType))
+                                         .flatMap(Streams::stream);
     }
 
     public <T extends PsiElement> Collection<T> values(Class<T> nodeType) {
@@ -47,11 +47,11 @@ public class ModuleValueList extends ASTWrapperPsiElement {
     }
 
     public static boolean maybeDeleteChild(PsiElement child) {
-        ExportedValue exportedValue = getParentOfType(child, ExportedValue.class);
-        if (exportedValue != null) {
-            exportedValue.containingList().deleteSeparator(exportedValue);
-            exportedValue.delete();
+        ExposedValue exposedValue = getParentOfType(child, ExposedValue.class);
+        if (exposedValue != null) {
+            exposedValue.containingList().deleteSeparator(exposedValue);
+            exposedValue.delete();
         }
-        return exportedValue != null;
+        return exposedValue != null;
     }
 }

@@ -46,7 +46,7 @@ public class ElmFindUsagesProvider implements FindUsagesProvider {
             return "type";
         } else if (element instanceof OperatorDeclaration || element instanceof OperatorSymbolRef) {
             return "operator";
-        } else if (element instanceof PortDeclaration || element instanceof ValueExport) {
+        } else if (element instanceof PortDeclaration || element instanceof ValueExposing) {
             return "port";
         }
         return "type constructor";

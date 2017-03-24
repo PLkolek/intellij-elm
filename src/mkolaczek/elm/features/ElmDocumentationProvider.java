@@ -53,7 +53,7 @@ public class ElmDocumentationProvider implements DocumentationProvider {
         Optional<ModuleValueList> valueList = module.header().flatMap(ModuleHeader::exposingList);
         String exposedValuesStr = "..";
         if (valueList.isPresent() && !valueList.get().isOpenListing()) {
-            exposedValuesStr = concatValues(valueList.get().values(ExportedValue.class));
+            exposedValuesStr = concatValues(valueList.get().values(ExposedValue.class));
         }
         return exposedValuesStr;
     }

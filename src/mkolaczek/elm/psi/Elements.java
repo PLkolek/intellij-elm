@@ -18,15 +18,15 @@ public interface Elements {
     Element MODULE_NAME_REF = new Element("MODULE_NAME_REF", "module name");
     Element MODULE_ALIAS = new Element("module alias");
     Element MODULE_NODE = new Element("MODULE_NODE", "module");
-    Element EXPORTED_VALUE = new Element("EXPORTED_VALUE", "exposed value");
+    Element EXPOSED_VALUE = new Element("EXPOSED_VALUE", "exposed value");
     Element EXPOSING_NODE = new Element("EXPOSING_NODE", "exposing");
     Element EFFECT_MODULE_SETTINGS = new Element("EFFECT_MODULE_SETTINGS", "module settings");
     Element EFFECT_MODULE_SETTINGS_LIST = new Element("EFFECT_MODULE_SETTINGS_LIST", "module settings list");
     Element EFFECT_MODULE_SETTING = new Element("EFFECT_MODULE_SETTING", "module setting");
     Element OPEN_LISTING_NODE = new Element("OPEN_LISTING_NODE", "open listing");
     Element IMPORTS = new Element("imports");
-    Element TYPE_EXPORT = new Element("type export");
-    Element VALUE_EXPORT = new Element("value export");
+    Element TYPE_EXPOSING = new Element("TYPE_EXPOSING", "exposed type");
+    Element VALUE_EXPOSING = new Element("VALUE_EXPOSING", "exposed value");
     Element TYPE_CONSTRUCTOR = new Element("type constructor");
     Element TYPE_CONSTRUCTOR_NAME = new Element("type constructor name");
     Element TYPE_CONSTRUCTOR_REF = new Element("TYPE_CONSTRUCTOR_REF", "type constructor");
@@ -91,8 +91,8 @@ public interface Elements {
                 return new ModuleAlias(node);
             } else if (type == MODULE_NODE) {
                 return new Module(node);
-            } else if (type == EXPORTED_VALUE) {
-                return new ExportedValue(node);
+            } else if (type == EXPOSED_VALUE) {
+                return new ExposedValue(node);
             } else if (type == EXPOSING_NODE) {
                 return new ExposingNode(node);
             } else if (type == OPERATOR) {
@@ -111,10 +111,10 @@ public interface Elements {
                 return new EffectModuleSettingsList(node);
             } else if (type == EFFECT_MODULE_SETTING) {
                 return new EffectModuleSetting(node);
-            } else if (type == TYPE_EXPORT) {
-                return new TypeExport(node);
-            } else if (type == VALUE_EXPORT) {
-                return new ValueExport(node);
+            } else if (type == TYPE_EXPOSING) {
+                return new TypeExposing(node);
+            } else if (type == VALUE_EXPOSING) {
+                return new ValueExposing(node);
             } else if (type == TYPE_CONSTRUCTOR) {
                 return new TypeConstructor(node);
             } else if (type == TYPE_CONSTRUCTOR_NAME) {

@@ -12,8 +12,8 @@ import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
-public class TypeExport extends ASTWrapperPsiElement {
-    public TypeExport(ASTNode node) {
+public class TypeExposing extends ASTWrapperPsiElement {
+    public TypeExposing(ASTNode node) {
         super(node);
     }
 
@@ -40,7 +40,7 @@ public class TypeExport extends ASTWrapperPsiElement {
 
 
     //WEIRD STUFF
-    public static String declarationString(TypeExport typeExport) {
-        return typeExport.typeNameString() + " = " + Joiner.on(" | ").join(typeExport.constructorNames());
+    public static String declarationString(TypeExposing typeExposing) {
+        return typeExposing.typeNameString() + " = " + Joiner.on(" | ").join(typeExposing.constructorNames());
     }
 }

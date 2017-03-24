@@ -24,8 +24,8 @@ public class TypeConstructorCompletionTest extends LightCodeInsightFixtureTestCa
         autocomplete("ACons", "BCons", "ACons | BCons");
     }
 
-    public void testInExportCompletion() {
-        myFixture.configureByFiles("export/Test.elm");
+    public void testInExposingCompletion() {
+        myFixture.configureByFiles("exposing/Test.elm");
         autocomplete("BCons");
     }
 

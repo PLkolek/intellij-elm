@@ -4,7 +4,7 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import mkolaczek.elm.psi.node.extensions.TypeOfExport;
+import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -13,12 +13,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 
 
-public class ExportedValue extends ASTWrapperPsiElement {
-    public ExportedValue(ASTNode node) {
+public class ExposedValue extends ASTWrapperPsiElement {
+    public ExposedValue(ASTNode node) {
         super(node);
     }
 
-    public <T extends PsiElement> Optional<T> export(TypeOfExport<T> exposedElementsType) {
+    public <T extends PsiElement> Optional<T> exposed(TypeOfExposed<T> exposedElementsType) {
         return Optional.ofNullable(findChildOfType(this, exposedElementsType.psiClass()));
     }
 

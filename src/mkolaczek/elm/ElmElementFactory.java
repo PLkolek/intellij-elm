@@ -8,7 +8,7 @@ import mkolaczek.elm.boilerplate.ElmFileType;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
-import mkolaczek.elm.psi.node.extensions.TypeOfExport;
+import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ public class ElmElementFactory {
 
     public static PsiElement typeNameRef(Project project, String name) {
         ElmFile file = createFile(project, String.format("module Dummy exposing (%s)", name));
-        return file.module().header().get().typeExport(name).get().typeName();
+        return file.module().header().get().exposedType(name).get().typeName();
     }
 
     public static PsiElement typeConstructor(Project project, String name) {
@@ -38,7 +38,7 @@ public class ElmElementFactory {
 
     public static PsiElement typeConstructorRef(Project project, String name) {
         ElmFile file = createFile(project, String.format("module Dummy exposing (DummyType(%s))", name));
-        return file.module().header().get().typeExport("DummyType").get().constructors().iterator().next();
+        return file.module().header().get().exposedType("DummyType").get().constructors().iterator().next();
     }
 
     public static ModuleName moduleName(Project project, String name) {
@@ -85,7 +85,7 @@ public class ElmElementFactory {
 
     public static PsiElement operatorSymbol(Project project, String newElementName) {
         ElmFile file = createFile(project, "module A exposing ((" + newElementName + "))");
-        return file.module().exports(TypeOfExport.OPERATOR).findFirst().get();
+        return file.module().exposed(TypeOfExposed.OPERATOR).findFirst().get();
     }
 
     public static PsiElement portName(Project project, String name) {
@@ -93,9 +93,9 @@ public class ElmElementFactory {
         return file.module().declarations(TypeOfDeclaration.PORT).findFirst().get().getNameIdentifier();
     }
 
-    public static ValueExport valueExport(Project project, String name) {
+    public static ValueExposing exposedValue(Project project, String name) {
         ElmFile file = createFile(project, String.format("module Dummy exposing (%s)", name));
-        return file.module().header().get().valueExports(name).findFirst().get();
+        return file.module().header().get().exposedValue(name).findFirst().get();
     }
 
     public static PsiElement valueName(Project project, String name) {

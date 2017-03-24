@@ -48,22 +48,22 @@ public class Module {
     public static Parser exposing() {
         return sequence(
                 expect(Tokens.EXPOSING),
-                maybeWhitespace(listing("list of exposed values", exportValue()))
+                maybeWhitespace(listing("list of exposed values", exposed()))
         ).as(Elements.EXPOSING_NODE);
 
     }
 
-    private static Parser exportValue() {
+    private static Parser exposed() {
         return or(
                 expect(Tokens.RUNE_OF_AUTOCOMPLETION).as(Elements.RUNE_OF_AUTOCOMPLETION_EL),
-                expect(Tokens.LOW_VAR).as(Elements.VALUE_EXPORT),
+                expect(Tokens.LOW_VAR).as(Elements.VALUE_EXPOSING),
                 Basic.operator(OPERATOR_SYMBOL_REF),
-                typeExport()
-        ).as(Elements.EXPORTED_VALUE);
+                exposedType()
+        ).as(Elements.EXPOSED_VALUE);
     }
 
-    private static Parser typeExport() {
-        return sequence("exported type",
+    private static Parser exposedType() {
+        return sequence("exposed type",
                 expect(CAP_VAR).as(Elements.TYPE_NAME_REF),
                 tryP(
                         listing("type constructors",
@@ -73,7 +73,7 @@ public class Module {
                                 ).as(Elements.TYPE_CONSTRUCTOR_REF)
                         )
                 )
-        ).as(Elements.TYPE_EXPORT);
+        ).as(Elements.TYPE_EXPOSING);
     }
 
 

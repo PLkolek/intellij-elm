@@ -5,7 +5,7 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeDeclaration;
-import mkolaczek.elm.psi.node.TypeExport;
+import mkolaczek.elm.psi.node.TypeExposing;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 
 import java.util.Set;
@@ -30,14 +30,14 @@ public class TypeConstructorCompletion {
     }
 
     private static Stream<String> constructorsFromType(CompletionParameters parameters) {
-        TypeExport typeExport = ElmCompletionContributor.location(parameters, TypeExport.class);
+        TypeExposing typeExposing = ElmCompletionContributor.location(parameters, TypeExposing.class);
 
-        Set<String> excluded = Sets.newHashSet(typeExport.constructorNames());
+        Set<String> excluded = Sets.newHashSet(typeExposing.constructorNames());
 
-        return module(typeExport).declarations(TypeOfDeclaration.TYPE, typeExport.typeNameString())
-                                 .flatMap(TypeDeclaration::constructors)
-                                 .filter(elem -> !excluded.contains(elem.getName()))
-                                 .map(TypeConstructor::getName);
+        return module(typeExposing).declarations(TypeOfDeclaration.TYPE, typeExposing.typeNameString())
+                                   .flatMap(TypeDeclaration::constructors)
+                                   .filter(elem -> !excluded.contains(elem.getName()))
+                                   .map(TypeConstructor::getName);
     }
 }
 
