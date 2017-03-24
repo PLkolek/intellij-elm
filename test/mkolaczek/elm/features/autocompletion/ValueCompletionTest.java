@@ -6,6 +6,7 @@ import mkolaczek.elm.TestUtil;
 
 import java.util.List;
 
+import static mkolaczek.elm.TestUtil.files;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -37,6 +38,11 @@ public class ValueCompletionTest extends LightCodeInsightFixtureTestCase {
     public void testExposingValueFromPatternCompletion() {
         myFixture.configureByFiles("exposing/FromPattern.elm");
         autocomplete("val1", "val2", "val3");
+    }
+
+    public void testValueInExpressionCompletion() {
+        myFixture.configureByFiles(files("inExpression/", "Importing.elm", "Imported.elm"));
+        autocomplete("somePort", "Cons1", "Cons2");
     }
 
     private void autocomplete(String... suggestions) {

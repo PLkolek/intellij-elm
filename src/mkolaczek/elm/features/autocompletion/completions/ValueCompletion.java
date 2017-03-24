@@ -52,11 +52,7 @@ public class ValueCompletion {
     }
 
     private static Stream<String> visibleValues(CompletionParameters parameters) {
-        return nonQualifiedValues(parameters);
-    }
-
-    private static Stream<String> nonQualifiedValues(CompletionParameters parameters) {
-        return Resolver.forValues().resolve(module(parameters.getPosition()));
+        return Resolver.forValues().resolve(parameters.getPosition());
     }
 
     private static Stream<String> moduleOperators(CompletionParameters parameters) {

@@ -1,7 +1,6 @@
 package mkolaczek.elm.psi.node;
 
 
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -23,8 +22,6 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.intellij.psi.util.PsiTreeUtil.*;
-import static java.util.stream.Collectors.toList;
-import static mkolaczek.elm.psi.node.TypeDeclaration.constructorsMultimap;
 import static mkolaczek.util.Streams.stream;
 
 public class Module extends ElmNamedElement implements DocCommented {
@@ -140,8 +137,11 @@ public class Module extends ElmNamedElement implements DocCommented {
         return declarations(TypeOfDeclaration.TYPE).flatMap(TypeDeclaration::constructors);
     }
 
-    public Stream<ValueName> declaredValues() {
-        return declarations(TypeOfDeclaration.VALUE).flatMap(ValueDeclaration::declaredValues);
+    public Stream<PsiNamedElement> declaredValues() {
+        return Stream.concat(
+                declarations(TypeOfDeclaration.VALUE).flatMap(ValueDeclaration::declaredValues),
+                declarations(TypeOfDeclaration.PORT)
+        );
     }
 
 
@@ -157,20 +157,6 @@ public class Module extends ElmNamedElement implements DocCommented {
 
         return isExposed || exposesEverything() ? declarations(typeOfDeclaration, symbol) : Stream.empty();
 
-    }
-
-    public Stream<TypeConstructor> exportedConstructors() {
-        return exportedConstructorsMap()
-                .values()
-                .stream();
-    }
-
-    public Multimap<String, TypeConstructor> exportedConstructorsMap() {
-        Multimap<String, TypeConstructor> constructors = constructorsMultimap(
-                declarations(TypeOfDeclaration.TYPE).collect(toList())
-        );
-
-        return header().map(h -> h.filterExposedConstructors(constructors)).orElse(constructors);
     }
 
     public boolean exposesEverything() {

@@ -3,6 +3,7 @@ package mkolaczek.elm.psi.node.extensions;
 
 import com.google.common.collect.Multimap;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.util.Streams;
 
@@ -13,13 +14,10 @@ import java.util.stream.Stream;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
+import static mkolaczek.elm.psi.node.extensions.ElmNamedElement.nameIn;
 import static mkolaczek.util.Collectors.toMultimap;
 
 public interface HasExposing extends PsiElement {
-
-    default Stream<ValueName> filterExposedValues(Stream<ValueName> t) {
-        return null;
-    }
 
     default Optional<ModuleValueList> exposingList() {
         ExposingNode exposingNode = findChildOfType(this, ExposingNode.class);
@@ -55,6 +53,13 @@ public interface HasExposing extends PsiElement {
                            .filter(e -> exposedTypes.containsKey(e.getKey()))
                            .filter(e -> exposedTypes.get(e.getKey()).exposes(e.getValue()))
                            .collect(toMultimap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    default Stream<PsiNamedElement> filterExposedValues(Stream<PsiNamedElement> t) {
+        if (exposesEverything()) {
+            return t;
+        }
+        return t.filter(nameIn(exposed(TypeOfExposed.VALUE)));
     }
 
     default Boolean exposesEverything() {

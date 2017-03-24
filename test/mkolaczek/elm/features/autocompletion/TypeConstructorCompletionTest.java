@@ -5,7 +5,6 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import mkolaczek.elm.TestUtil;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -31,27 +30,23 @@ public class TypeConstructorCompletionTest extends LightCodeInsightFixtureTestCa
     }
 
     public void testInPatternQualifiedCompletion() {
-        myFixture.configureByFiles(files("inPattern/qualified/", "Importing.elm", "Imported.elm"));
+        myFixture.configureByFiles(TestUtil.files("inPattern/qualified/", "Importing.elm", "Imported.elm"));
         autocomplete("Cons1", "Cons2");
     }
 
     public void testInPatternFromCurrentModuleCompletion() {
-        myFixture.configureByFiles(files("inPattern/fromCurrentModule/", "Current.elm"));
+        myFixture.configureByFiles(TestUtil.files("inPattern/fromCurrentModule/", "Current.elm"));
         autocomplete("Cons1", "Cons2");
     }
 
     public void testInPatternExposedCompletion() {
-        myFixture.configureByFiles(files("inPattern/exposed/", "Importing.elm", "Imported.elm"));
+        myFixture.configureByFiles(TestUtil.files("inPattern/exposed/", "Importing.elm", "Imported.elm"));
         autocomplete("Cons3", "Cons4");
     }
 
     public void testInExpressionCompletion() {
-        myFixture.configureByFiles(files("inExpression/", "Current.elm"));
+        myFixture.configureByFiles(TestUtil.files("inExpression/", "Current.elm"));
         autocomplete("Cons1", "Cons2", "if", "let", "case", "x");
-    }
-
-    private String[] files(String dir, String... files) {
-        return Arrays.stream(files).map(f -> dir + f).toArray(String[]::new);
     }
 
     private void autocomplete(String... suggestions) {
