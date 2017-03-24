@@ -1,5 +1,6 @@
 package mkolaczek.elm.psi.node.extensions;
 
+import com.google.common.collect.Sets;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -10,7 +11,10 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public abstract class ElmNamedElement extends ASTWrapperPsiElement implements PsiNameIdentifierOwner {
 
@@ -53,5 +57,11 @@ public abstract class ElmNamedElement extends ASTWrapperPsiElement implements Ps
 
     public boolean sameName(PsiNamedElement other) {
         return sameName(other.getName());
+    }
+
+
+    public static Predicate<PsiNamedElement> nameIn(Collection<String> names) {
+        Set<String> nameSet = Sets.newHashSet(names);
+        return e -> nameSet.contains(e.getName());
     }
 }

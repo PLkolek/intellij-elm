@@ -6,6 +6,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
@@ -38,6 +39,13 @@ public class TypeExposing extends ASTWrapperPsiElement {
         return ofNullable(valueList).map(vl -> vl.values(TypeConstructorRef.class)).orElse(newArrayList());
     }
 
+    public Optional<ModuleValueList> valueList() {
+        return Optional.ofNullable(findChildOfType(this, ModuleValueList.class));
+    }
+
+    public boolean exposesEverything() {
+        return valueList().map(ModuleValueList::isOpenListing).orElse(false);
+    }
 
     //WEIRD STUFF
     public static String declarationString(TypeExposing typeExposing) {

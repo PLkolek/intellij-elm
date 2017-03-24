@@ -1,6 +1,7 @@
 package mkolaczek.elm.psi.node;
 
 
+import com.google.common.collect.Sets;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
@@ -16,11 +17,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.intellij.psi.util.PsiTreeUtil.*;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 import static mkolaczek.util.Streams.stream;
 
 public class Module extends ElmNamedElement implements DocCommented {
@@ -122,14 +127,20 @@ public class Module extends ElmNamedElement implements DocCommented {
     }
 
     public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration, String name) {
+        return declarations(typeOfDeclaration, Sets.newHashSet(name));
+    }
+
+    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration,
+                                                              Set<String> names) {
         return findChildrenOfType(this, typeOfDeclaration.psiClass())
                 .stream()
-                .filter(decl -> name.equals(decl.getName()));
+                .filter(decl -> names.contains(decl.getName()));
     }
 
     public Optional<Declarations> declarationsNode() {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
     }
+
 
     public <D extends PsiNamedElement> Stream<D> exportedDeclaration(TypeOfDeclaration<D, ? extends PsiNamedElement> typeOfDeclaration,
                                                                      String symbol) {
@@ -141,6 +152,26 @@ public class Module extends ElmNamedElement implements DocCommented {
 
     }
 
+    public Stream<TypeConstructor> exportedConstructors() {
+
+
+        Map<String, TypeExposing> exposedTypes =
+                exposed(TypeOfExposed.TYPE).collect(toMap(
+                        TypeExposing::typeNameString,
+                        identity()
+                ));
+        return declarations(TypeOfDeclaration.TYPE)
+                .filter(d -> exposedTypes.containsKey(d.getName()))
+                .flatMap(d -> {
+                    TypeExposing typeExposing = exposedTypes.get(d.getName());
+                    if (typeExposing.exposesEverything()) {
+                        return d.constructors();
+                    } else {
+                        return d.constructors().filter(nameIn(typeExposing.constructorNames()));
+                    }
+                });
+
+    }
 
     public boolean exposesEverything() {
         return header().flatMap(HasExposing::exposingList).map(ModuleValueList::isOpenListing).orElse(true);
