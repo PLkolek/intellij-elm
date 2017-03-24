@@ -40,6 +40,11 @@ public class TypeConstructorCompletionTest extends LightCodeInsightFixtureTestCa
         autocomplete("Cons1", "Cons2");
     }
 
+    public void testInPatternExposedCompletion() {
+        myFixture.configureByFiles(files("inPattern/exposed/", "Importing.elm", "Imported.elm"));
+        autocomplete("Cons3", "Cons4");
+    }
+
     private String[] files(String dir, String... files) {
         return Arrays.stream(files).map(f -> dir + f).toArray(String[]::new);
     }
