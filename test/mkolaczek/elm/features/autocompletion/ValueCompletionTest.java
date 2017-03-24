@@ -55,6 +55,11 @@ public class ValueCompletionTest extends LightCodeInsightFixtureTestCase {
         autocomplete("cTopLevel", "cMidLevel", "cBottomLevel", "case");
     }
 
+    public void testValueInLambdaExpressionCompletion() {
+        myFixture.configureByFiles(files("inLambdaExpression/", "Lambda.elm"));
+        autocomplete("lambda", "arg1", "tup1", "tup2", "let", "case", "if");
+    }
+
     private void autocomplete(String... suggestions) {
         myFixture.complete(CompletionType.BASIC, 1);
         List<String> strings = myFixture.getLookupElementStrings();

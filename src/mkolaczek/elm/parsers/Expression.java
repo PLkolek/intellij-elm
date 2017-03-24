@@ -197,11 +197,11 @@ public class Expression {
     private static Parser function() {
         return sequence(
                 expect(LAMBDA),
-                maybeWhitespace(Pattern.term()),
-                spacePrefix(Pattern.term()),
+                maybeWhitespace(Pattern.term()).as(DEFINED_VALUES),
+                spacePrefix(Pattern.term()).as(DEFINED_VALUES),
                 maybeWhitespace(expect(ARROW)),
                 maybeWhitespace(expression)
-        );
+        ).as(Elements.LAMBDA_EXPRESSION);
     }
 
     private static Parser case_() {

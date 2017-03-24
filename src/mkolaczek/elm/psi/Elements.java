@@ -67,6 +67,7 @@ public interface Elements {
     Element VAR = new Element("variable name");
     Element QUALIFIED_VAR = new Element("qualified var");
     Element CASE_BRANCH = new Element("case branch");
+    Element LAMBDA_EXPRESSION = new Element("lambda expression");
 
     class Factory {
 
@@ -178,6 +179,8 @@ public interface Elements {
                 return new QualifiedVar(node);
             } else if (type == CASE_BRANCH) {
                 return new CaseBranch(node);
+            } else if (type == LAMBDA_EXPRESSION) {
+                return new LambdaExpression(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {
