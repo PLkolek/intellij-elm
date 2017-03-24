@@ -15,12 +15,16 @@ public class DefinedValues extends ASTWrapperPsiElement {
         super(node);
     }
 
+    public Stream<ValueName> values() {
+        return findChildrenOfType(this, ValueName.class).stream();
+    }
+
     public Optional<String> operatorName() {
         return ofNullable(findChildOfType(this, OperatorSymbol.class)).map(OperatorSymbol::getText);
     }
 
     public Stream<String> valueNames() {
-        return findChildrenOfType(this, ValueName.class).stream().map(ValueName::getName);
+        return values().map(ValueName::getName);
     }
 
 }

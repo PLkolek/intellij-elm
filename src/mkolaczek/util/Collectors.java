@@ -4,7 +4,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -14,16 +13,17 @@ import java.util.stream.Collector;
 
 public class Collectors {
 
-    public static <K, V> Collector<Map.Entry<K, V>, Multimap<K, V>, Multimap<K, V>> toMultimap() {
-        return new Collector<Map.Entry<K, V>, Multimap<K, V>, Multimap<K, V>>() {
+    public static <E, K, V> Collector<E, Multimap<K, V>, Multimap<K, V>> toMultimap(Function<E, K> keyGetter,
+                                                                                    Function<E, V> valueGetter) {
+        return new Collector<E, Multimap<K, V>, Multimap<K, V>>() {
             @Override
             public Supplier<Multimap<K, V>> supplier() {
                 return HashMultimap::create;
             }
 
             @Override
-            public BiConsumer<Multimap<K, V>, Map.Entry<K, V>> accumulator() {
-                return (m, e) -> m.put(e.getKey(), e.getValue());
+            public BiConsumer<Multimap<K, V>, E> accumulator() {
+                return (m, e) -> m.put(keyGetter.apply(e), valueGetter.apply(e));
             }
 
             @Override

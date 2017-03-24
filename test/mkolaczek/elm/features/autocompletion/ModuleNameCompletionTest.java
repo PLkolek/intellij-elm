@@ -58,7 +58,7 @@ public class ModuleNameCompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testInExpression() {
         myFixture.configureByFiles("inExpression/Test.elm", "inExpression/PrefixSuffix.elm");
-        autocomplete("Prefix.Suffix.", "let", "if", "case");
+        autocomplete("Prefix.Suffix.", "let", "if", "case", "someValue");
     }
 
     private void autocomplete(String... suggestions) {

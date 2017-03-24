@@ -20,6 +20,10 @@ public class ValueDeclaration extends ASTWrapperPsiElement implements Declaratio
         return Optional.ofNullable(getChildOfType(this, DefinedValues.class));
     }
 
+    public Stream<ValueName> declaredValues() {
+        return Streams.stream(definedValues()).flatMap(DefinedValues::values);
+    }
+
     @Override
     public Stream<String> declaredValueNames() {
         return Streams.stream(definedValues()).flatMap(DefinedValues::valueNames);

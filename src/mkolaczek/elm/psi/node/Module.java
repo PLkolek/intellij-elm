@@ -121,7 +121,7 @@ public class Module extends ElmNamedElement implements DocCommented {
         return findChildrenOfType(this, Declaration.class).stream();
     }
 
-    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration) {
+    public <T extends PsiElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration) {
         return findChildrenOfType(this, typeOfDeclaration.psiClass()).stream();
     }
 
@@ -136,8 +136,12 @@ public class Module extends ElmNamedElement implements DocCommented {
                 .filter(decl -> names.contains(decl.getName()));
     }
 
-    public Stream<TypeConstructor> constructorDeclarations() {
+    public Stream<TypeConstructor> declaredConstructors() {
         return declarations(TypeOfDeclaration.TYPE).flatMap(TypeDeclaration::constructors);
+    }
+
+    public Stream<ValueName> declaredValues() {
+        return declarations(TypeOfDeclaration.VALUE).flatMap(ValueDeclaration::declaredValues);
     }
 
 
@@ -166,9 +170,7 @@ public class Module extends ElmNamedElement implements DocCommented {
                 declarations(TypeOfDeclaration.TYPE).collect(toList())
         );
 
-        return header().map(h -> h.filterExposedConstructors(
-                constructors))
-                       .orElse(constructors);
+        return header().map(h -> h.filterExposedConstructors(constructors)).orElse(constructors);
     }
 
     public boolean exposesEverything() {
@@ -179,4 +181,5 @@ public class Module extends ElmNamedElement implements DocCommented {
     public <T extends PsiElement> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
         return stream(header()).flatMap(h -> h.exposed(exposedElementsType));
     }
+
 }

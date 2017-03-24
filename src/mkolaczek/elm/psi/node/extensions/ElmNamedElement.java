@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class ElmNamedElement extends ASTWrapperPsiElement implements PsiNameIdentifierOwner {
 
@@ -62,6 +64,11 @@ public abstract class ElmNamedElement extends ASTWrapperPsiElement implements Ps
 
     public static Predicate<PsiNamedElement> nameIn(Collection<String> names) {
         Set<String> nameSet = Sets.newHashSet(names);
+        return e -> nameSet.contains(e.getName());
+    }
+
+    public static Predicate<PsiNamedElement> nameIn(Stream<? extends PsiNamedElement> elements) {
+        Set<String> nameSet = elements.map(PsiNamedElement::getName).collect(Collectors.toSet());
         return e -> nameSet.contains(e.getName());
     }
 }

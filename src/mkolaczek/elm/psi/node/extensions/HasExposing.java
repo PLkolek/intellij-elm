@@ -17,6 +17,10 @@ import static mkolaczek.util.Collectors.toMultimap;
 
 public interface HasExposing extends PsiElement {
 
+    default Stream<ValueName> filterExposedValues(Stream<ValueName> t) {
+        return null;
+    }
+
     default Optional<ModuleValueList> exposingList() {
         ExposingNode exposingNode = findChildOfType(this, ExposingNode.class);
         return Optional.ofNullable(exposingNode).map(ExposingNode::valueList);
@@ -50,7 +54,7 @@ public interface HasExposing extends PsiElement {
         return constructors.entries().stream()
                            .filter(e -> exposedTypes.containsKey(e.getKey()))
                            .filter(e -> exposedTypes.get(e.getKey()).exposes(e.getValue()))
-                           .collect(toMultimap());
+                           .collect(toMultimap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     default Boolean exposesEverything() {
@@ -58,4 +62,5 @@ public interface HasExposing extends PsiElement {
     }
 
     boolean noExposingExposesAll();
+
 }

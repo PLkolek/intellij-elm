@@ -3,7 +3,7 @@ package mkolaczek.elm.psi.node.extensions;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.psi.node.*;
 
-public interface TypeOfDeclaration<Declaration, Export extends PsiElement> {
+public interface TypeOfDeclaration<Declaration extends PsiElement, Export extends PsiElement> {
 
     Class<Declaration> psiClass();
 
@@ -38,6 +38,18 @@ public interface TypeOfDeclaration<Declaration, Export extends PsiElement> {
         @Override
         public Class<PortDeclaration> psiClass() {
             return PortDeclaration.class;
+        }
+
+        @Override
+        public TypeOfExposed<ValueExposing> exposedAs() {
+            return TypeOfExposed.VALUE;
+        }
+    };
+
+    TypeOfDeclaration<ValueDeclaration, ValueExposing> VALUE = new TypeOfDeclaration<ValueDeclaration, ValueExposing>() {
+        @Override
+        public Class<ValueDeclaration> psiClass() {
+            return ValueDeclaration.class;
         }
 
         @Override

@@ -3,9 +3,12 @@ package mkolaczek.elm.features.autocompletion.completions;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
+import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
 import mkolaczek.elm.psi.node.extensions.Declaration;
+import mkolaczek.elm.psi.node.extensions.HasExposing;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
+import mkolaczek.elm.references.Resolver;
 import mkolaczek.util.Streams;
 
 import java.util.Set;
@@ -46,6 +49,20 @@ public class ValueCompletion {
                 ValueCompletion::moduleValues
         );
 
+        c.autocomplete(e().inside(e(QUALIFIED_VAR)), ValueCompletion::visibleValues);
+
+    }
+
+    private static Stream<String> visibleValues(CompletionParameters parameters) {
+        return nonQualifiedValues(parameters);
+    }
+
+    private static Stream<String> nonQualifiedValues(CompletionParameters parameters) {
+        return Resolver.aaa(module(parameters.getPosition()),
+                Module::declaredValues,
+                HasExposing::filterExposedValues,
+                x -> x
+        );
     }
 
     private static Stream<String> moduleOperators(CompletionParameters parameters) {
