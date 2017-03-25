@@ -29,7 +29,7 @@ public class ValueCompletion {
         c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)), params -> exposed(params, TypeOfExposed.VALUE));
         c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)),
                 params -> exposed(params, TypeOfExposed.OPERATOR).map(OperatorDeclaration::parens));
-        c.autocomplete(e().inside((e(OPERATOR).atStartOf(e(OPERATOR_DEFINITON)))),
+        c.autocomplete(e().inside((e(OPERATOR).atStartOf(e(INFIX_OPERATOR_DECLARATION)))),
                 params -> exposed(params, TypeOfExposed.OPERATOR).map(OperatorDeclaration::parens));
         //noinspection unchecked
         c.autocomplete(e().andOr(e(RUNE_OF_AUTOCOMPLETION), e().inside(e(VALUE_NAME)))

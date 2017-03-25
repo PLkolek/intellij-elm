@@ -69,7 +69,6 @@ public interface Elements {
     Element CASE_BRANCH = new Element("case branch");
     Element LAMBDA_EXPRESSION = new Element("lambda expression");
     Element MAIN_DEFINED_VALUES = new Element("main defined values");
-    Element OPERATOR_DEFINITON = new Element("operator definition");
 
     class Factory {
 
@@ -185,8 +184,6 @@ public interface Elements {
                 return new CaseBranch(node);
             } else if (type == LAMBDA_EXPRESSION) {
                 return new LambdaExpression(node);
-            } else if (type == OPERATOR_DEFINITON) {
-                return new OperatorDefinition(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {
