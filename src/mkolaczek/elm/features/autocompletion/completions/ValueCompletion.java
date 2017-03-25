@@ -56,7 +56,7 @@ public class ValueCompletion {
     }
 
     private static Stream<String> nonQualifiedValues(CompletionParameters parameters) {
-        return Resolver.forValues().resolve(parameters.getPosition());
+        return Resolver.forValues().variants(parameters.getPosition());
     }
 
     private static Stream<String> moduleOperators(CompletionParameters parameters) {

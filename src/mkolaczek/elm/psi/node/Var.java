@@ -6,6 +6,7 @@ import com.intellij.psi.PsiReference;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
 import mkolaczek.elm.references.TypeConstructorReference;
+import mkolaczek.elm.references.ValueReference;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,10 @@ public class Var extends ElmNamedElement {
         if (Character.isUpperCase(getText().charAt(0))) {
             return new TypeConstructorReference(this);
         }
-        return null;
+        if (Character.isLowerCase(getText().charAt(0))) {
+            return new ValueReference(this);
+        }
+        throw new IllegalStateException("Var is neither low nor cap var, probably Rune of Autocompletion");
     }
 
     @NotNull

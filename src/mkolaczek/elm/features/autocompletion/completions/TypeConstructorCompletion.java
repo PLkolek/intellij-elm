@@ -39,11 +39,11 @@ public class TypeConstructorCompletion {
     }
 
     private static Stream<String> visibleConstructors(CompletionParameters parameters) {
-        return resolver.resolve(parameters.getPosition());
+        return resolver.variants(parameters.getPosition());
     }
 
     private static Stream<String> nonQualifiedConstructors(CompletionParameters parameters) {
-        return resolver.resolveUnqualified(parameters.getPosition());
+        return resolver.unqualifiedVariants(parameters.getPosition());
     }
 
     private static Stream<String> constructorsFromType(CompletionParameters parameters) {

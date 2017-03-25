@@ -1,8 +1,7 @@
 package mkolaczek.elm.references;
 
 import com.intellij.psi.PsiElement;
-import mkolaczek.elm.psi.node.PortDeclaration;
-import mkolaczek.elm.psi.node.ValueExposing;
+import com.intellij.psi.PsiNamedElement;
 
 import java.util.stream.Stream;
 
@@ -10,14 +9,14 @@ import static mkolaczek.elm.psi.PsiUtil.*;
 import static mkolaczek.elm.psi.node.Module.module;
 import static mkolaczek.elm.psi.node.extensions.TypeOfDeclaration.PORT;
 
-public class ValueReference extends ElmReference<ValueExposing> {
-    public ValueReference(ValueExposing element) {
+public class ValueReference extends ElmReference<PsiNamedElement> {
+    public ValueReference(PsiNamedElement element) {
         super(element);
     }
 
     @Override
     protected Stream<? extends PsiElement> multiResolve() {
-        Stream<PortDeclaration> resolved;
+        Stream<? extends PsiElement> resolved;
         if (insideModuleHeader(myElement)) {
             resolved = module(myElement).declarations(PORT)
                                         .filter(d -> d.sameName(myElement.getName()));
@@ -25,7 +24,7 @@ public class ValueReference extends ElmReference<ValueExposing> {
             resolved = containingImport(myElement).importedModule()
                                                   .flatMap(m -> m.exportedDeclaration(PORT, myElement.getName()));
         } else {
-            throw new IllegalStateException("Operators in code not supperted yet");
+            resolved = Resolver.forValues().resolve(myElement);
         }
         return resolved;
     }
