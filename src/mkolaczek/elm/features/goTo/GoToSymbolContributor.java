@@ -5,10 +5,7 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
-import mkolaczek.elm.psi.node.OperatorDeclaration;
-import mkolaczek.elm.psi.node.PortDeclaration;
-import mkolaczek.elm.psi.node.TypeConstructor;
-import mkolaczek.elm.psi.node.TypeDeclaration;
+import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +28,8 @@ public class GoToSymbolContributor implements ChooseByNameContributor {
         Stream<String> ports = decls(project, PORT).map(PsiNamedElement::getName);
         Stream<String> operators = decls(project, OPERATOR).map(OperatorDeclaration::parensName)
                                                            .flatMap(Streams::stream);
-        return Stream.of(constructors, types, operators, ports).flatMap(identity()).toArray(String[]::new);
+        Stream<String> values = decls(project, VALUE).flatMap(ValueDeclaration::topLevelValueNames);
+        return Stream.of(constructors, types, operators, ports, values).flatMap(identity()).toArray(String[]::new);
     }
 
 
@@ -47,8 +45,10 @@ public class GoToSymbolContributor implements ChooseByNameContributor {
         Stream<TypeConstructor> constructors = decls(project, TYPE).flatMap(TypeDeclaration::constructors)
                                                                    .filter(c -> name.equals(c.getName()));
         Stream<OperatorDeclaration> operators = decls(project, OPERATOR).filter(o -> o.sameParensName(name));
+        Stream<ValueName> values = decls(project, VALUE).flatMap(ValueDeclaration::topLevelValues)
+                                                        .filter(v -> v.sameName(name));
 
-        return Stream.of(types, constructors, operators, ports)
+        return Stream.of(types, constructors, operators, ports, values)
                      .flatMap(identity())
                      .toArray(NavigationItem[]::new);
     }

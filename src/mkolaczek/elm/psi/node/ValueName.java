@@ -3,6 +3,7 @@ package mkolaczek.elm.psi.node;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.ElmElementFactory;
+import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -23,5 +24,10 @@ public class ValueName extends ElmNamedElement {
     @Override
     public PsiElement getNameIdentifier() {
         return this;
+    }
+
+    @Override
+    public ItemPresentation getPresentation() {
+        return new ItemPresentation(this);
     }
 }

@@ -5,9 +5,10 @@ import com.intellij.lang.ASTNode;
 import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.DefinesValues;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
+import static com.intellij.psi.util.PsiTreeUtil.getChildrenOfType;
 
 public class ValueDeclaration extends ASTWrapperPsiElement implements Declaration, DefinesValues {
     public ValueDeclaration(ASTNode node) {
@@ -20,7 +21,9 @@ public class ValueDeclaration extends ASTWrapperPsiElement implements Declaratio
     }
 
     public Stream<ValueName> topLevelValues() {
-        return findChildrenOfType(this, MainDefinedValues.class).stream().flatMap(DefinedValues::values);
+        MainDefinedValues[] values = getChildrenOfType(this, MainDefinedValues.class);
+        values = values == null ? new MainDefinedValues[]{} : values;
+        return Arrays.stream(values).flatMap(DefinedValues::values);
     }
 
 }
