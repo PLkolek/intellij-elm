@@ -24,7 +24,8 @@ public class Var extends ElmNamedElement {
         if (Character.isLowerCase(getText().charAt(0))) {
             return new ValueReference(this);
         }
-        throw new IllegalStateException("Var is neither low nor cap var, probably Rune of Autocompletion");
+        //"Var is neither low nor cap var, probably Rune of Autocompletion"
+        return null;
     }
 
     @NotNull
