@@ -19,7 +19,6 @@ public class KeywordCompletion {
     public static void keywords(ElmCompletionContributor c) {
         PsiElementPattern.Capture<PsiElement> inEffectModule = e().inside(module().effectModule());
         //@formatter:off
-        //temporary fix for definition parsing
         c.autocomplete(onFreshLine().andOr(e().inside(e(IMPORTS)), e().atStartOf(e(DECLARATIONS))),   keyword("import"));
         c.autocomplete(afterLeaf(childOf(MODULE_NAME)).andNot(inEffectModule),                  exposingCompletion());
         c.autocomplete(afterLeaf(RBRACKET).and(inEffectModule),                                 exposingCompletion());

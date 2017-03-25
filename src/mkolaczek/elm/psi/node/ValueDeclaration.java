@@ -4,7 +4,6 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.DefinesValues;
-import mkolaczek.util.Streams;
 
 import java.util.stream.Stream;
 
@@ -18,11 +17,6 @@ public class ValueDeclaration extends ASTWrapperPsiElement implements Declaratio
     @Override
     public Stream<String> topLevelValueNames() {
         return topLevelValues().map(ValueName::getName);
-    }
-
-    @Override
-    public Stream<String> declaredOperatorName() {
-        return definedValues().map(DefinedValues::operatorName).flatMap(Streams::stream);
     }
 
     public Stream<ValueName> topLevelValues() {

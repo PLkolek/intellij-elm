@@ -1,9 +1,6 @@
 package mkolaczek.elm.parsers;
 
-import mkolaczek.elm.parsers.core.Many;
-import mkolaczek.elm.parsers.core.Parser;
-import mkolaczek.elm.parsers.core.ParserBox;
-import mkolaczek.elm.parsers.core.Sequence;
+import mkolaczek.elm.parsers.core.*;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
@@ -26,29 +23,43 @@ import static mkolaczek.elm.psi.Tokens.*;
 public class Expression {
 
     public static Parser definition() {
-        Parser valueDefinition =
-                sequence(
-                        or(
-                                expect(Tokens.LOW_VAR).as(VALUE_NAME),
-                                Basic.operator(Elements.OPERATOR_SYMBOL)
-                                     .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP))
-                        ).as(MAIN_DEFINED_VALUES),
-                        or(
-                                sequence(
-                                        expect(Tokens.COLON),
-                                        Type.expression
-                                ),
-                                definitionEnd()
-                        )
-                );
-
-
         return or("definition",
-                valueDefinition,
+                operatorDefinition(),
+                valueDefinition()
+        );
+    }
+
+    @NotNull
+    public static Parser valueDefinition() {
+        return or(
+                sequence(
+                        expect(Tokens.LOW_VAR).as(VALUE_NAME).as(MAIN_DEFINED_VALUES),
+                        varOrSymbolDefEnd()
+                ),
                 sequence(
                         Pattern.term().as(MAIN_DEFINED_VALUES),
                         definitionEnd()
                 )
+        );
+    }
+
+    @NotNull
+    public static Sequence operatorDefinition() {
+        return sequence(
+                Basic.operator(Elements.OPERATOR_SYMBOL)
+                     .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP)),
+                varOrSymbolDefEnd()
+        );
+    }
+
+    @NotNull
+    public static Or varOrSymbolDefEnd() {
+        return or(
+                sequence(
+                        expect(Tokens.COLON),
+                        Type.expression
+                ),
+                definitionEnd()
         );
     }
 

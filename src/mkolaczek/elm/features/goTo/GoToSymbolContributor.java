@@ -3,6 +3,7 @@ package mkolaczek.elm.features.goTo;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
 import mkolaczek.elm.psi.node.PortDeclaration;
@@ -52,7 +53,7 @@ public class GoToSymbolContributor implements ChooseByNameContributor {
                      .toArray(NavigationItem[]::new);
     }
 
-    private <T extends PsiNamedElement> Stream<T> decls(Project project, TypeOfDeclaration<T, ?> type) {
+    private <T extends PsiElement> Stream<T> decls(Project project, TypeOfDeclaration<T, ?> type) {
         return modules(project).flatMap((module) -> module.declarations(type));
     }
 }
