@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.boilerplate.ElmFileType;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.*;
@@ -96,6 +97,11 @@ public class ElmElementFactory {
     public static ValueExposing exposedValue(Project project, String name) {
         ElmFile file = createFile(project, String.format("module Dummy exposing (%s)", name));
         return file.module().header().get().exposedValue(name).findFirst().get();
+    }
+
+    public static PsiElement var(Project project, String name) {
+        ElmFile file = createFile(project, String.format("x = %s", name));
+        return PsiTreeUtil.findChildOfType(file.module(), Var.class);
     }
 
     public static PsiElement valueName(Project project, String name) {

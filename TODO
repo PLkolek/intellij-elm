@@ -5,13 +5,13 @@ Features:
 * Module reference in documentation comments?
 * External documentation?
 * Smart enter
-* Types from other modules
 * Prelude libs
 * Remove whole type when removing last constructor
 * import type quick fix
+* autocompletion + references + go to for record fields
 
 Refactorings:
 * startingTokens() doesnt do any caching
-* sort out the distinction between startingTokens() and parse()
-* try to encoding parser naming in types
+* sort out the distinction between willParse() and parse()
+* try encoding parser naming in types
 * remove Elm prefixType from classes
