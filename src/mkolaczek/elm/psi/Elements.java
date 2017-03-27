@@ -61,6 +61,7 @@ public interface Elements {
     Element IF_EXPRESSION = new Element("if expression");
     Element CASE_EXPRESSION = new Element("case expression");
     Element VALUE_NAME = new Element("pattern variable");
+    Element VALUE_NAME_REF = new Element("VALUE_NAME_REF", "value name");
     Element PATTERN_TERM = new Element("pattern term");
     Element DEFINED_VALUES = new Element("defined values");
     Element QUALIFIED_TYPE_CONSTRUCTOR_REF = new Element("quallified reference");
@@ -69,6 +70,7 @@ public interface Elements {
     Element CASE_BRANCH = new Element("case branch");
     Element LAMBDA_EXPRESSION = new Element("lambda expression");
     Element MAIN_DEFINED_VALUES = new Element("main defined values");
+    Element TYPE_ANNOTATION = new Element("type annotation");
 
     class Factory {
 
@@ -152,6 +154,8 @@ public interface Elements {
                 return new ValueDeclaration(node);
             } else if (type == PORT_DECLARATION) {
                 return new PortDeclaration(node);
+            } else if (type == TYPE_ANNOTATION) {
+                return new TypeAnnotation(node);
             } else if (type == PORT_NAME) {
                 return new PortName(node);
             } else if (type == STRING_LITERAL) {
@@ -170,6 +174,8 @@ public interface Elements {
                 return new Operand(node);
             } else if (type == VALUE_NAME) {
                 return new ValueName(node);
+            } else if (type == VALUE_NAME_REF) {
+                return new ValueNameRef(node);
             } else if (type == PATTERN_TERM) {
                 return new PatternTerm(node);
             } else if (type == DEFINED_VALUES) {

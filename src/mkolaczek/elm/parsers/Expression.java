@@ -1,6 +1,9 @@
 package mkolaczek.elm.parsers;
 
-import mkolaczek.elm.parsers.core.*;
+import mkolaczek.elm.parsers.core.Many;
+import mkolaczek.elm.parsers.core.Parser;
+import mkolaczek.elm.parsers.core.ParserBox;
+import mkolaczek.elm.parsers.core.Sequence;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +36,13 @@ public class Expression {
     public static Parser valueDefinition() {
         return or(
                 sequence(
+                        expect(Tokens.LOW_VAR).as(Elements.VALUE_NAME_REF).as(MAIN_DEFINED_VALUES),
+                        expect(Tokens.COLON),
+                        Type.expression
+                ).as(Elements.TYPE_ANNOTATION).ll2(newHashSet(LOW_VAR), newHashSet(COLON)),
+                sequence(
                         expect(Tokens.LOW_VAR).as(VALUE_NAME).as(MAIN_DEFINED_VALUES),
-                        varOrSymbolDefEnd()
+                        definitionEnd()
                 ),
                 sequence(
                         Pattern.term().as(MAIN_DEFINED_VALUES),
@@ -48,18 +56,13 @@ public class Expression {
         return sequence(
                 Basic.operator(Elements.OPERATOR_SYMBOL)
                      .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP)),
-                varOrSymbolDefEnd()
-        );
-    }
-
-    @NotNull
-    public static Or varOrSymbolDefEnd() {
-        return or(
-                sequence(
-                        expect(Tokens.COLON),
-                        Type.expression
-                ),
-                definitionEnd()
+                or(
+                        sequence(
+                                expect(Tokens.COLON),
+                                Type.expression
+                        ),
+                        definitionEnd()
+                )
         );
     }
 

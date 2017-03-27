@@ -43,7 +43,4 @@ public class ModuleNameRef extends ASTWrapperPsiElement implements PsiNamedEleme
         return this;
     }
 
-    public Module getContaingModule() {
-        return PsiTreeUtil.getParentOfType(this, Module.class);
-    }
 }

@@ -1,6 +1,7 @@
 package mkolaczek.elm.references;
 
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
@@ -22,6 +23,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.psi.node.Module.module;
@@ -63,7 +65,7 @@ public class Resolver<T> {
     }
 
 
-    public Stream<PsiNamedElement> resolve(PsiNamedElement target) {
+    public Stream<? extends PsiNamedElement> resolve(PsiNamedElement target) {
         if (target.getName() == null) {
             return Stream.empty();
         }
@@ -72,11 +74,14 @@ public class Resolver<T> {
             return qualified.get();
         }
         Module module = module(target);
-        Stream<PsiNamedElement> locals = locals(target);
+        Stream<Stream<? extends PsiNamedElement>> locals = locals(target);
         Stream<? extends PsiNamedElement> declared = declared(module);
         Stream<PsiNamedElement> exposedValues = exposed(module);
-        List<PsiNamedElement> found;
-        found = locals.filter(e -> target.getName().equals(e.getName())).collect(toList());
+        List<? extends PsiNamedElement> found = locals.map(s -> s.filter(e -> target.getName().equals(e.getName()))
+                                                                 .collect(toList()))
+                                                      .filter(c -> !c.isEmpty())
+                                                      .findFirst()
+                                                      .orElse(Lists.newArrayList());
         if (!found.isEmpty()) {
             return found.stream();
         }
@@ -98,11 +103,11 @@ public class Resolver<T> {
 
     public Stream<String> unqualifiedVariants(PsiElement target) {
         Module module = module(target);
-        Stream<? extends PsiNamedElement> locals = locals(target);
+        Stream<? extends PsiNamedElement> locals = locals(target).flatMap(identity());
         Stream<? extends PsiNamedElement> exposedValues = exposed(module);
         Stream<? extends PsiNamedElement> declared = declared(module);
         return Stream.of(locals, declared, exposedValues)
-                     .flatMap(Function.identity())
+                     .flatMap(identity())
                      .map(PsiNamedElement::getName);
     }
 
@@ -119,13 +124,13 @@ public class Resolver<T> {
         return Optional.empty();
     }
 
-    public Stream<PsiNamedElement> locals(PsiElement target) {
-        Stream<PsiNamedElement> locals = Stream.empty();
+    public Stream<Stream<? extends PsiNamedElement>> locals(PsiElement target) {
+        Stream<Stream<? extends PsiNamedElement>> locals = Stream.empty();
         if (includeLocal) {
             Stream<DefinesValues> lets = StreamEx.iterate(getParentOfType(target, DefinesValues.class),
                     Objects::nonNull,
                     e -> getParentOfType(e, DefinesValues.class));
-            locals = lets.flatMap(DefinesValues::declaredValues);
+            locals = lets.map(DefinesValues::declaredValues);
         }
         return locals;
     }
