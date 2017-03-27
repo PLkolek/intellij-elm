@@ -10,7 +10,14 @@ port <warning descr="Unused port">somePort</warning> : PortType
 
 port usedPort : () -> PortType
 
+unusedValue : PortType
+<warning descr="Unused value">unusedValue</warning> = 3
+
+usedValue = 2
+
 useThings =
     ( usedPort ()
     , UsedCons
+    , usedValue
+    , useThings
     )

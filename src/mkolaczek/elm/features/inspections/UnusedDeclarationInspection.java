@@ -14,6 +14,7 @@ import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.CommonProcessors;
 import mkolaczek.elm.features.ElmFindUsagesProvider;
+import mkolaczek.elm.features.refactoring.safeDelete.ElmSafeDeleteDelegate;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
@@ -25,7 +26,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.function.Function.identity;
 
 public class UnusedDeclarationInspection extends LocalInspectionTool {
@@ -54,8 +54,14 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
                                                      .flatMap(TypeDeclaration::constructors);
         Stream<OperatorDeclaration> operators = module.declarations(TypeOfDeclaration.OPERATOR);
         Stream<PortDeclaration> ports = module.declarations(TypeOfDeclaration.PORT);
-        Stream<PsiNameIdentifierOwner> toCheck = Stream.of(Stream.of(module), types, constructors, operators, ports)
-                                                       .flatMap(identity());
+        Stream<ValueName> values = module.declarations(TypeOfDeclaration.VALUE)
+                                         .flatMap(ValueDeclaration::topLevelValues);
+        Stream<PsiNameIdentifierOwner> toCheck = Stream.of(Stream.of(module),
+                types,
+                constructors,
+                operators,
+                ports,
+                values).flatMap(identity());
         return toCheck
                 .filter(e -> !isNullOrEmpty(e.getName()))
                 .map(e -> check(manager, file, e))
@@ -100,10 +106,9 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
                 }
                 PsiElement usage = psiFile.findElementAt(offset);
                 assert usage != null;
-                boolean outsideSelf = getParentOfType(usage, element.getClass()) != element;
-                //same as inLet ElmSafeDeleteDelegate, sorry
-                boolean outsideExposing = getParentOfType(usage, ExposingNode.class) == null;
-                return !(usage instanceof PsiComment) && outsideSelf && outsideExposing; // ignore comments
+                boolean outsideSelf = !ElmSafeDeleteDelegate.isInside(usage, element);
+                boolean safeToDelete = ElmSafeDeleteDelegate.isSafeToDelete(usage);
+                return !(usage instanceof PsiComment) && outsideSelf && !safeToDelete;
             }
         };
 

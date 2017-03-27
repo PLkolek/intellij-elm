@@ -5,7 +5,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringSettings;
 import com.intellij.refactoring.safeDelete.NonCodeUsageSearchInfo;
 import com.intellij.refactoring.safeDelete.SafeDeleteProcessor;
@@ -15,11 +14,14 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.boilerplate.ElmLanguage;
 import mkolaczek.elm.psi.node.ExposingNode;
+import mkolaczek.elm.psi.node.ValueNameRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 
 public class ElmSafeDeleteDelegate implements SafeDeleteProcessorDelegate {
     @Override
@@ -43,19 +45,27 @@ public class ElmSafeDeleteDelegate implements SafeDeleteProcessorDelegate {
                                          @NotNull PsiElement[] allElementsToDelete) {
         List<UsageInfo> result = Lists.newArrayList();
         ReferencesSearch.search(element).forEach(reference -> {
-            final PsiElement refElement = reference.getElement();
+            PsiElement refElement = reference.getElement();
             if (!isInside(refElement, allElementsToDelete)) {
                 result.add(new SafeDeleteReferenceSimpleDeleteUsageInfo(refElement,
                         element,
-                        PsiTreeUtil.getParentOfType(refElement,
-                                ExposingNode.class) != null));
+                        isSafeToDelete(refElement)));
             }
             return true;
         });
         return result;
     }
 
-    private static boolean isInside(PsiElement refElement, PsiElement[] ancestors) {
+    public static boolean isSafeToDelete(PsiElement refElement) {
+        return getParentOfType(refElement, ExposingNode.class) != null
+                || getParentOfType(refElement, ValueNameRef.class) != null;
+    }
+
+    public static boolean isInside(PsiElement refElement, PsiElement ancestor) {
+        return isInside(refElement, new PsiElement[]{ancestor});
+    }
+
+    public static boolean isInside(PsiElement refElement, PsiElement[] ancestors) {
         for (PsiElement element : ancestors) {
             if (SafeDeleteProcessor.isInside(refElement, element)) {
                 return true;
