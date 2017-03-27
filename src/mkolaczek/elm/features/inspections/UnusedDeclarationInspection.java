@@ -78,12 +78,13 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
                                          CommonProcessors.CollectProcessor<UsageInfo> collector) {
         PsiElement name = element.getNameIdentifier();
         if (collector.getResults().isEmpty() && name != null) {
+            RemoveElementQuickFix quickFix = element instanceof ValueName ? null : new RemoveElementQuickFix();
             return manager.createProblemDescriptor(name,
                     (TextRange) null,
                     "Unused " + ElmFindUsagesProvider.type(element),
                     ProblemHighlightType.LIKE_UNUSED_SYMBOL,
                     true,
-                    new RemoveElementQuickFix());
+                    quickFix);
 
         }
         return null;
