@@ -28,7 +28,7 @@ public class FindUsagesTest extends LightCodeInsightFixtureTestCase {
 
     public void testFindConstructorUsages() {
         Collection<UsageInfo> usageInfos = myFixture.testFindUsages("typeConstructor/Test.elm");
-        assertThat(usageInfos.size(), is(2));
+        assertThat(usageInfos.size(), is(3));
     }
 
     public void testFindOperatorUsages() {
@@ -41,4 +41,13 @@ public class FindUsagesTest extends LightCodeInsightFixtureTestCase {
         assertThat(usageInfos.size(), is(1));
     }
 
+    public void testFunctionArgumentUsages() {
+        Collection<UsageInfo> usageInfos = myFixture.testFindUsages("value/functionArgument/FunctionArgument.elm");
+        assertThat(usageInfos.size(), is(2));
+    }
+
+    public void testCasePatternUsages() {
+        Collection<UsageInfo> usageInfos = myFixture.testFindUsages("value/casePattern/CasePattern.elm");
+        assertThat(usageInfos.size(), is(1));
+    }
 }
