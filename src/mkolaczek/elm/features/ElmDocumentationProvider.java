@@ -8,6 +8,7 @@ import com.intellij.psi.PsiManager;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.DocCommented;
+import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +16,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static mkolaczek.elm.psi.node.Module.module;
 
 public class ElmDocumentationProvider implements DocumentationProvider {
 
@@ -43,6 +46,14 @@ public class ElmDocumentationProvider implements DocumentationProvider {
         if (element instanceof TypeConstructor) {
             return ((TypeConstructor) element).typeDeclaration().getText();
         }
+        if (element instanceof OperatorDeclaration) {
+            String operatorName = ((OperatorDeclaration) element).getName();
+            Optional<InfixDeclaration> infix = module(element).declarations(TypeOfDeclaration.INFIX, operatorName)
+                                                              .findFirst();
+            String infixDeclText = infix.map(PsiElement::getText).orElse("");
+            return StringEscapeUtils.escapeHtml(infixDeclText + "\n" + element.getText());
+        }
+
         if (element instanceof Declaration) {
             return StringEscapeUtils.escapeHtml(element.getText());
         }

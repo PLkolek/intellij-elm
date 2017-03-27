@@ -80,14 +80,14 @@ public class DocumentationTest extends LightCodeInsightFixtureTestCase {
     }
 
     public void testOperatorQuickNavigateInfo() {
-        String expected = "infix 3 &lt;:";
+        String expected = "infix 3 &lt;:\n(&lt;:) x y = x + y";
         quickNavigateTest(expected, file -> file.module().declarations(TypeOfDeclaration.OPERATOR, "<:")
                                                 .findFirst().get());
     }
 
     public void testOperatorDocumentation() {
         docTest(
-                "<pre>infix 3 &lt;:</pre><p>{-| Test operator -}</p>",
+                "<pre>infix 3 &lt;:\n(&lt;:) x y = x + y</pre><p>{-| Test operator -}</p>",
                 file -> file.module().declarations(TypeOfDeclaration.OPERATOR, "<:")
                             .findFirst().get()
         );

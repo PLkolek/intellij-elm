@@ -35,8 +35,8 @@ import Test2 exposing (A, B)
 {-| Test type -}
 type B = Abc | Def | Ghci
 
-{-| Test operator -}
 infix 3 <:
+{-| Test operator -}
 (<:) x y = x + y
 
 {-| Test port -}
