@@ -1,7 +1,6 @@
 package mkolaczek.elm.references;
 
 import com.intellij.psi.PsiElement;
-import mkolaczek.elm.psi.node.OperatorDeclaration;
 import mkolaczek.elm.psi.node.OperatorSymbolRef;
 
 import java.util.stream.Stream;
@@ -18,7 +17,7 @@ public class OperatorReference extends ElmReference<OperatorSymbolRef> {
 
     @Override
     protected Stream<? extends PsiElement> multiResolve() {
-        Stream<OperatorDeclaration> resolved;
+        Stream<? extends PsiElement> resolved;
         if (insideModuleHeader(myElement)) {
             resolved = module(myElement).declarations(OPERATOR)
                                         .filter(d -> d.sameName(myElement.getName()));
@@ -26,7 +25,7 @@ public class OperatorReference extends ElmReference<OperatorSymbolRef> {
             resolved = containingImport(myElement).importedModule()
                                                   .flatMap(m -> m.exportedDeclaration(OPERATOR, myElement.getName()));
         } else {
-            throw new IllegalStateException("Operators in code not supperted yet");
+            resolved = Resolver.forOperators().resolve(myElement);
         }
         return resolved;
     }
