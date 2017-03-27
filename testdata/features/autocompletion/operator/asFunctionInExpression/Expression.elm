@@ -1,5 +1,5 @@
 
 
-infix 3 <<<<
+(<<<<) x y = x ++ y
 
 someVal = (<caret>)
