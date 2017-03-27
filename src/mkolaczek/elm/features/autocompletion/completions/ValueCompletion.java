@@ -52,6 +52,10 @@ public class ValueCompletion {
                 ValueCompletion::moduleValues
         );
 
+        c.autocomplete(
+                inside(EXPRESSION).afterLeaf(e(LPAREN)), p -> visibleOperators(p).map(OperatorDeclaration::parens)
+        );
+
         c.autocomplete(e().inside(e(QUALIFIED_VAR)), ValueCompletion::visibleValues);
 
     }
