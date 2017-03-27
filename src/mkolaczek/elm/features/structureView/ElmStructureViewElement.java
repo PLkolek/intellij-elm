@@ -8,7 +8,9 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.TypeAnnotation;
 import mkolaczek.elm.psi.node.TypeDeclaration;
+import mkolaczek.elm.psi.node.ValueDeclaration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -58,6 +60,7 @@ public class ElmStructureViewElement implements StructureViewTreeElement, Sortab
         if (element instanceof Module) {
             Module module = (Module) this.element;
             return module.declarations()
+                         .filter(d -> !(d instanceof TypeAnnotation))
                          .map(ElmStructureViewElement::new)
                          .toArray(TreeElement[]::new);
         }
@@ -65,6 +68,12 @@ public class ElmStructureViewElement implements StructureViewTreeElement, Sortab
             return ((TypeDeclaration) element).constructors()
                                               .map(ElmStructureViewElement::new)
                                               .toArray(TreeElement[]::new);
+        }
+
+        if (element instanceof ValueDeclaration) {
+            return ((ValueDeclaration) element).topLevelValues()
+                                               .map(ElmStructureViewElement::new)
+                                               .toArray(TreeElement[]::new);
         }
 
         return EMPTY_ARRAY;

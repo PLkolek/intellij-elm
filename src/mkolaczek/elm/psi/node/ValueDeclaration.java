@@ -2,6 +2,7 @@ package mkolaczek.elm.psi.node;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
 import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.DefinesValues;
 
@@ -26,4 +27,9 @@ public class ValueDeclaration extends ASTWrapperPsiElement implements Declaratio
         return Arrays.stream(values).flatMap(DefinedValues::values);
     }
 
+
+    @Override
+    public ItemPresentation getPresentation() {
+        return new mkolaczek.elm.features.goTo.ItemPresentation(this);
+    }
 }

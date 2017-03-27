@@ -10,4 +10,6 @@ public class ElmIcon {
     public static final Icon CONSTRUCTOR = IconLoader.getIcon("/elmConstructor.png");
     public static final Icon OPERATOR = IconLoader.getIcon("/elmOperator.png");
     public static final Icon PORT = IconLoader.getIcon("/elmPort.png");
+    public static final Icon VALUE_DECLARATION = IconLoader.getIcon("/elmValueDeclaration.png");
+    public static final Icon VALUE = IconLoader.getIcon("/elmValue.png");
 }

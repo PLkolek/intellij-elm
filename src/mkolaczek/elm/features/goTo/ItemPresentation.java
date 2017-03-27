@@ -1,5 +1,6 @@
 package mkolaczek.elm.features.goTo;
 
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.boilerplate.ElmIcon;
 import mkolaczek.elm.psi.node.*;
@@ -9,16 +10,19 @@ import javax.swing.*;
 
 public class ItemPresentation implements com.intellij.navigation.ItemPresentation {
 
-    private final PsiNamedElement element;
+    private final PsiElement element;
 
-    public ItemPresentation(PsiNamedElement element) {
+    public ItemPresentation(PsiElement element) {
         this.element = element;
     }
 
     @Nullable
     @Override
     public String getPresentableText() {
-        return element.getName();
+        if (element instanceof PsiNamedElement) {
+            return ((PsiNamedElement) element).getName();
+        }
+        return "value declaration";
     }
 
     @Nullable
@@ -40,7 +44,12 @@ public class ItemPresentation implements com.intellij.navigation.ItemPresentatio
             return ElmIcon.OPERATOR;
         } else if (element instanceof PortDeclaration) {
             return ElmIcon.PORT;
+        } else if (element instanceof ValueDeclaration) {
+            return ElmIcon.VALUE_DECLARATION;
+        } else if (element instanceof ValueName) {
+            return ElmIcon.VALUE;
         }
+
         return null;
     }
 }
