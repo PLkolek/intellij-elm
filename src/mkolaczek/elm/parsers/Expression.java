@@ -41,11 +41,17 @@ public class Expression {
                         Type.expression
                 ).as(Elements.TYPE_ANNOTATION).ll2(newHashSet(LOW_VAR), newHashSet(COLON)),
                 sequence(
-                        expect(Tokens.LOW_VAR).as(VALUE_NAME).as(MAIN_DEFINED_VALUES),
+                        sequence(
+                                expect(Tokens.LOW_VAR).as(VALUE_NAME).as(MAIN_DEFINED_VALUES),
+                                spacePrefix(definedValues())
+                        ).as(DEFINED_VALUES),
                         definitionEnd()
                 ),
                 sequence(
-                        Pattern.term().as(MAIN_DEFINED_VALUES),
+                        sequence(
+                                Pattern.term().as(MAIN_DEFINED_VALUES),
+                                spacePrefix(definedValues())
+                        ).as(DEFINED_VALUES),
                         definitionEnd()
                 )
         );
@@ -61,21 +67,23 @@ public class Expression {
                                 expect(Tokens.COLON),
                                 Type.expression
                         ),
-                        definitionEnd()
+                        sequence(
+                                spacePrefix(definedValues()),
+                                definitionEnd()
+                        ).as(DEFINED_VALUES)
                 )
         );
     }
 
     private static Parser definitionEnd() {
         return sequence("definitionEnd",
-                spacePrefix(definedValues()),
                 maybeWhitespace(expect(EQUALS)),
                 maybeWhitespace(expression)
         );
     }
 
     private static Parser definedValues() {
-        return Pattern.term().as(DEFINED_VALUES);
+        return Pattern.term();
     }
 
     private static final ParserBox expression = new ParserBox("expression");
@@ -216,8 +224,8 @@ public class Expression {
     private static Parser function() {
         return sequence(
                 expect(LAMBDA),
-                maybeWhitespace(definedValues()),
-                spacePrefix(definedValues()),
+                maybeWhitespace(definedValues()).as(DEFINED_VALUES),
+                spacePrefix(definedValues()).as(DEFINED_VALUES),
                 maybeWhitespace(expect(ARROW)),
                 maybeWhitespace(expression)
         ).as(Elements.LAMBDA_EXPRESSION);
