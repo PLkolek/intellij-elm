@@ -80,11 +80,11 @@ public class ElmElementFactory {
     }
 
     public static PsiElement operatorName(Project project, String name) {
-        ElmFile file = createFile(project, "infix 3 " + name);
+        ElmFile file = createFile(project, String.format("(%s) x y = x + y", name));
         return file.module().declarations(TypeOfDeclaration.OPERATOR).findAny().get().getNameIdentifier();
     }
 
-    public static PsiElement operatorSymbol(Project project, String newElementName) {
+    public static PsiElement operatorNameRef(Project project, String newElementName) {
         ElmFile file = createFile(project, "module A exposing ((" + newElementName + "))");
         return file.module().exposed(TypeOfExposed.OPERATOR).findFirst().get();
     }

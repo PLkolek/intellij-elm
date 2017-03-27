@@ -37,6 +37,7 @@ type B = Abc | Def | Ghci
 
 {-| Test operator -}
 infix 3 <:
+(<:) x y = x + y
 
 {-| Test port -}
 port somePort : Cmd Int

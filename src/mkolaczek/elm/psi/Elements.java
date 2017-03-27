@@ -46,7 +46,8 @@ public interface Elements {
     Element OPERATOR_SYMBOL = new Element("operator symbol");
     Element OPERATOR_SYMBOL_REF = new Element("operator symbol");
 
-    Element INFIX_OPERATOR_DECLARATION = new Element("infix operator declaration");
+    Element INFIX_DECLARATION = new Element("infix declaration");
+    Element OPERATOR_DECLARATION = new Element("operator declaration");
     Element PORT_DECLARATION = new Element("port declaration");
     Element VALUE_DECLARATION = new Element("value declaration");
 
@@ -72,7 +73,6 @@ public interface Elements {
     Element MAIN_DEFINED_VALUES = new Element("main defined values");
     Element TYPE_ANNOTATION = new Element("type annotation");
     Element TERM = new Element("term");
-    Element BINARY_OPERATOR = new Element("binary operator");
 
     class Factory {
 
@@ -150,7 +150,9 @@ public interface Elements {
                 return new SurroundContents(node);
             } else if (type == TYPE_CONSTRUCTOR_ARGS) {
                 return new TypeConstructorArgs(node);
-            } else if (type == INFIX_OPERATOR_DECLARATION) {
+            } else if (type == INFIX_DECLARATION) {
+                return new InfixDeclaration(node);
+            } else if (type == OPERATOR_DECLARATION) {
                 return new OperatorDeclaration(node);
             } else if (type == VALUE_DECLARATION) {
                 return new ValueDeclaration(node);
@@ -194,8 +196,6 @@ public interface Elements {
                 return new Term(node);
             } else if (type == LAMBDA_EXPRESSION) {
                 return new LambdaExpression(node);
-            } else if (type == BINARY_OPERATOR) {
-                return new BinaryOperator(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {

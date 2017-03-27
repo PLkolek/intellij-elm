@@ -38,7 +38,7 @@ public class Declaration {
                 typeDecl(),
                 infixDecl(),
                 portDecl(),
-                Expression.operatorDefinition().as(Elements.INFIX_OPERATOR_DECLARATION),
+                Expression.operatorDefinition().as(Elements.OPERATOR_DECLARATION),
                 Expression.valueDefinition().as(Elements.VALUE_DECLARATION)
         );
     }
@@ -56,8 +56,8 @@ public class Declaration {
         return sequence("infix operator declaration",
                 or(expect(Tokens.INFIXL), expect(Tokens.INFIXR), expect(Tokens.INFIX)),
                 expect(Tokens.DIGIT),
-                operatorSymbol(Elements.OPERATOR_SYMBOL)
-        ).separatedBy(WhiteSpace::maybeWhitespace).as(Elements.INFIX_OPERATOR_DECLARATION);
+                operatorSymbol(Elements.OPERATOR_SYMBOL_REF)
+        ).separatedBy(WhiteSpace::maybeWhitespace).as(Elements.INFIX_DECLARATION);
 
     }
 

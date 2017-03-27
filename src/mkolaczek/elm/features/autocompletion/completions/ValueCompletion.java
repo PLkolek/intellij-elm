@@ -22,14 +22,14 @@ import static mkolaczek.elm.psi.node.Module.module;
 public class ValueCompletion {
     public static void values(ElmCompletionContributor c) {
         c.autocompletePlain(
-                afterLeaf(e(DIGIT)).inside(e(INFIX_OPERATOR_DECLARATION)),
+                afterLeaf(e(DIGIT)).inside(e(INFIX_DECLARATION)),
                 parameters -> exposed(parameters, TypeOfExposed.OPERATOR)
         );
         c.autocomplete(afterLeaf(e(PORT).inside(e(PORT_DECLARATION))), params -> exposed(params, TypeOfExposed.VALUE));
         c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)), params -> exposed(params, TypeOfExposed.VALUE));
         c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)),
                 params -> exposed(params, TypeOfExposed.OPERATOR).map(OperatorDeclaration::parens));
-        c.autocomplete(e().inside((e(OPERATOR).atStartOf(e(INFIX_OPERATOR_DECLARATION)))),
+        c.autocomplete(e().inside((e(OPERATOR).atStartOf(e(OPERATOR_DECLARATION)))),
                 params -> exposed(params, TypeOfExposed.OPERATOR).map(OperatorDeclaration::parens));
         //noinspection unchecked
         c.autocomplete(e().andOr(e(RUNE_OF_AUTOCOMPLETION), e().inside(e(VALUE_NAME)))
@@ -42,7 +42,7 @@ public class ValueCompletion {
                 ValueCompletion::moduleOperators
         );
         c.autocompletePlain(e().andOr(
-                inside(BINARY_OPERATOR),
+                inside(OPERATOR_SYMBOL_REF).inside(e(EXPRESSION)),
                 e().inside(e(QUALIFIED_VAR).withParent(e().afterSibling(e(TERM))))),
                 ValueCompletion::visibleOperators
         );

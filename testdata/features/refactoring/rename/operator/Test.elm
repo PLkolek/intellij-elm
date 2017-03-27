@@ -5,5 +5,6 @@ type SomeType
     | B
 
 infixl 2 *.<caret>*
+(*.*) = 5
 
 type alias Alias = SomeType

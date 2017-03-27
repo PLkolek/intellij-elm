@@ -4,7 +4,8 @@ type <warning descr="Unused type">X</warning> = <warning descr="Unused type cons
 
 type PortType = <warning descr="Unused type constructor">Cons</warning> | UsedCons
 
-infix 7 <warning descr="Unused operator">.-></warning>
+infix 7 .->
+(<warning descr="Unused operator">.-></warning>) = 2
 
 port <warning descr="Unused port">somePort</warning> : PortType
 

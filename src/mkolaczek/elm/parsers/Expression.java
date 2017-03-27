@@ -129,7 +129,7 @@ public class Expression {
     @NotNull
     private static Sequence minusOperator() {
         return sequence(
-                expect(MINUS).as(Elements.BINARY_OPERATOR),
+                expect(MINUS).as(Elements.OPERATOR_SYMBOL_REF),
                 maybeWhitespace(
                         or(
                                 term(),
@@ -142,7 +142,7 @@ public class Expression {
     @NotNull
     private static Sequence otherOperator() {
         return sequence(
-                expect(SYM_OP).as(Elements.BINARY_OPERATOR),
+                expect(SYM_OP).as(Elements.OPERATOR_SYMBOL_REF),
                 maybeWhitespace(or(
                         possiblyNegativeTerm(),
                         finalExpression().as(EXPRESSION)

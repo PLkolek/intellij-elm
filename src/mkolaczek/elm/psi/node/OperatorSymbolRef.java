@@ -1,6 +1,5 @@
 package mkolaczek.elm.psi.node;
 
-import com.google.common.base.Preconditions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
@@ -35,16 +34,14 @@ public class OperatorSymbolRef extends ElmNamedElement {
     @NotNull
     @Override
     protected PsiElement createNewNameIdentifier(@NonNls @NotNull String name) {
-        return ElmElementFactory.operatorSymbol(getProject(), name);
-    }
-
-    @NotNull
-    public Operator operator() {
-        return Preconditions.checkNotNull(getParentOfType(this, Operator.class));
+        return ElmElementFactory.operatorNameRef(getProject(), name);
     }
 
     @Override
     public void delete() throws IncorrectOperationException {
-        operator().delete();
+        Operator operator = getParentOfType(this, Operator.class);
+        if (operator != null) {
+            operator.delete();
+        }
     }
 }
