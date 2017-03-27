@@ -13,6 +13,7 @@ import mkolaczek.elm.psi.node.extensions.QualifiedRef;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import one.util.streamex.StreamEx;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.psi.node.Module.module;
 
@@ -73,16 +75,14 @@ public class Resolver<T> {
         Stream<PsiNamedElement> locals = locals(target);
         Stream<? extends PsiNamedElement> declared = declared(module);
         Stream<PsiNamedElement> exposedValues = exposed(module);
-        Optional<? extends PsiNamedElement> found;
-        found = locals.filter(e -> target.getName().equals(e.getName()))
-                      .findFirst();
-        if (found.isPresent()) {
-            return Stream.of(found.get());
+        List<PsiNamedElement> found;
+        found = locals.filter(e -> target.getName().equals(e.getName())).collect(toList());
+        if (!found.isEmpty()) {
+            return found.stream();
         }
-        found = declared.filter(e -> target.getName().equals(e.getName()))
-                        .findFirst();
-        if (found.isPresent()) {
-            return Stream.of(found.get());
+        found = declared.filter(e -> target.getName().equals(e.getName())).collect(toList());
+        if (!found.isEmpty()) {
+            return found.stream();
         }
         return exposedValues.filter(e -> target.getName().equals(e.getName()));
     }

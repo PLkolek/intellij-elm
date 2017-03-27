@@ -114,6 +114,7 @@ public class Module extends ElmNamedElement implements DocCommented {
         return imports().filter(i -> !i.isAliased());
     }
 
+
     public Stream<Declaration> declarations() {
         return findChildrenOfType(this, Declaration.class).stream();
     }
@@ -140,7 +141,6 @@ public class Module extends ElmNamedElement implements DocCommented {
         );
     }
 
-
     public Optional<Declarations> declarationsNode() {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
     }
@@ -163,5 +163,4 @@ public class Module extends ElmNamedElement implements DocCommented {
     public <T extends PsiElement> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
         return stream(header()).flatMap(h -> h.exposed(exposedElementsType));
     }
-
 }
