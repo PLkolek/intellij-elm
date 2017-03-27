@@ -134,7 +134,7 @@ public class Module extends ElmNamedElement implements DocCommented {
                 .filter(decl -> names.contains(decl.getName()));
     }
 
-    public Stream<PsiNamedElement> declaredValues() {
+    public Stream<? extends PsiNamedElement> declaredValues() {
         return Stream.concat(
                 declarations(TypeOfDeclaration.VALUE).flatMap(ValueDeclaration::topLevelValues),
                 declarations(TypeOfDeclaration.PORT)

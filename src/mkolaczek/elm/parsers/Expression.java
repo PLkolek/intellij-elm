@@ -129,7 +129,7 @@ public class Expression {
     @NotNull
     private static Sequence minusOperator() {
         return sequence(
-                expect(MINUS),
+                expect(MINUS).as(Elements.BINARY_OPERATOR),
                 maybeWhitespace(
                         or(
                                 term(),
@@ -142,7 +142,7 @@ public class Expression {
     @NotNull
     private static Sequence otherOperator() {
         return sequence(
-                expect(SYM_OP),
+                expect(SYM_OP).as(Elements.BINARY_OPERATOR),
                 maybeWhitespace(or(
                         possiblyNegativeTerm(),
                         finalExpression().as(EXPRESSION)
@@ -169,7 +169,7 @@ public class Expression {
                 accessible(record("record expression", fieldSuffix())),
                 accessible(tupleLike()),
                 accessor()
-        );
+        ).as(Elements.TERM);
     }
 
     private static Parser accessor() {

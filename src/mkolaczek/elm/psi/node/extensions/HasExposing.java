@@ -55,11 +55,12 @@ public interface HasExposing extends PsiElement {
                            .collect(toMultimap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    default Stream<PsiNamedElement> filterExposedValues(Stream<PsiNamedElement> t) {
+    default Stream<? extends PsiNamedElement> filterExposed(Stream<? extends PsiNamedElement> elements,
+                                                            TypeOfExposed<? extends PsiNamedElement> typeOfExposed) {
         if (exposesEverything()) {
-            return t;
+            return elements;
         }
-        return t.filter(nameIn(exposed(TypeOfExposed.VALUE)));
+        return elements.filter(nameIn(exposed(typeOfExposed)));
     }
 
     default Boolean exposesEverything() {

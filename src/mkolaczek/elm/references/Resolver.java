@@ -8,10 +8,7 @@ import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.TypeDeclaration;
-import mkolaczek.elm.psi.node.extensions.DefinesValues;
-import mkolaczek.elm.psi.node.extensions.HasExposing;
-import mkolaczek.elm.psi.node.extensions.QualifiedRef;
-import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
+import mkolaczek.elm.psi.node.extensions.*;
 import one.util.streamex.StreamEx;
 
 import java.util.List;
@@ -55,15 +52,24 @@ public class Resolver<T> {
         );
     }
 
-    public static Resolver<?> forValues() {
+    public static Resolver<?> forOperators() {
         return new Resolver<>(
-                Module::declaredValues,
-                HasExposing::filterExposedValues,
-                x -> x,
-                true
+                m -> m.declarations(TypeOfDeclaration.OPERATOR),
+                ((hasExposing, declarations) -> hasExposing.filterExposed(declarations, TypeOfExposed.OPERATOR)),
+                identity(),
+                false
         );
     }
 
+
+    public static Resolver<?> forValues() {
+        return new Resolver<>(
+                Module::declaredValues,
+                ((hasExposing, declarations) -> hasExposing.filterExposed(declarations, TypeOfExposed.VALUE)),
+                identity(),
+                true
+        );
+    }
 
     public Stream<? extends PsiNamedElement> resolve(PsiNamedElement target) {
         if (target.getName() == null) {

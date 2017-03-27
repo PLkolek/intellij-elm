@@ -71,6 +71,8 @@ public interface Elements {
     Element LAMBDA_EXPRESSION = new Element("lambda expression");
     Element MAIN_DEFINED_VALUES = new Element("main defined values");
     Element TYPE_ANNOTATION = new Element("type annotation");
+    Element TERM = new Element("term");
+    Element BINARY_OPERATOR = new Element("binary operator");
 
     class Factory {
 
@@ -188,8 +190,12 @@ public interface Elements {
                 return new QualifiedVar(node);
             } else if (type == CASE_BRANCH) {
                 return new CaseBranch(node);
+            } else if (type == TERM) {
+                return new Term(node);
             } else if (type == LAMBDA_EXPRESSION) {
                 return new LambdaExpression(node);
+            } else if (type == BINARY_OPERATOR) {
+                return new BinaryOperator(node);
             } else if (type == RUNE_OF_AUTOCOMPLETION_EL) {
                 return new RuneOfAutocompletion(node);
             } else {

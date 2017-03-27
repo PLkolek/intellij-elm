@@ -40,4 +40,9 @@ public class OperatorCompletionTest extends LightCodeInsightFixtureTestCase {
         myFixture.configureByFiles("exposing/Test.elm");
         autocomplete("(***)", "(---)");
     }
+
+    public void testSymbolCompletionInExpression() {
+        myFixture.configureByFiles("expression/Expression.elm");
+        autocomplete("<<<<", "someVal");
+    }
 }

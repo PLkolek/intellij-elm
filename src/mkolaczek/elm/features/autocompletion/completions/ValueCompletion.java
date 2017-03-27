@@ -41,6 +41,11 @@ public class ValueCompletion {
                 e().andOr(e().inside(e(OPERATOR)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
                 ValueCompletion::moduleOperators
         );
+        c.autocompletePlain(e().andOr(
+                inside(BINARY_OPERATOR),
+                e().inside(e(QUALIFIED_VAR).withParent(e().afterSibling(e(TERM))))),
+                ValueCompletion::visibleOperators
+        );
 
         c.autocomplete(
                 e().andOr(e().inside(e(VALUE_EXPOSING)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
@@ -51,11 +56,11 @@ public class ValueCompletion {
 
     }
 
-    private static Stream<String> visibleValues(CompletionParameters parameters) {
-        return nonQualifiedValues(parameters);
+    private static Stream<String> visibleOperators(CompletionParameters parameters) {
+        return Resolver.forOperators().variants(parameters.getPosition());
     }
 
-    private static Stream<String> nonQualifiedValues(CompletionParameters parameters) {
+    private static Stream<String> visibleValues(CompletionParameters parameters) {
         return Resolver.forValues().variants(parameters.getPosition());
     }
 
