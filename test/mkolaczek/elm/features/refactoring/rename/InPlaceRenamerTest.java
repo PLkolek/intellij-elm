@@ -9,6 +9,7 @@ import mkolaczek.elm.boilerplate.ElmLanguage;
 import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeDeclaration;
+import mkolaczek.elm.psi.node.ValueName;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.Before;
@@ -31,6 +32,8 @@ public class InPlaceRenamerTest {
     TypeDeclaration type;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     TypeConstructor constructor;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    ValueName valueName;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     PsiElement something;
@@ -52,6 +55,11 @@ public class InPlaceRenamerTest {
         assertFalse(renamer(constructor).isIdentifier("123", ElmLanguage.INSTANCE));
         assertTrue(renamer(constructor).isIdentifier("A", ElmLanguage.INSTANCE));
         assertFalse(renamer(constructor).isIdentifier("A.B", ElmLanguage.INSTANCE));
+
+        assertFalse(renamer(valueName).isIdentifier("123", ElmLanguage.INSTANCE));
+        assertTrue(renamer(valueName).isIdentifier("a", ElmLanguage.INSTANCE));
+        assertFalse(renamer(valueName).isIdentifier("A", ElmLanguage.INSTANCE));
+        assertFalse(renamer(valueName).isIdentifier("a.b", ElmLanguage.INSTANCE));
     }
 
     @NotNull
