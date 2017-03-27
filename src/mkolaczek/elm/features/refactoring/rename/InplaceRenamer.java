@@ -36,7 +36,7 @@ public class InplaceRenamer extends MemberInplaceRenamer {
             return !newName.isEmpty() && ElmLexerAdapter.isSymbol(newName);
         }
 
-        if (elementToRename instanceof PortDeclaration) {
+        if (elementToRename instanceof PortDeclaration || elementToRename instanceof ValueName) {
             return LOW_VAR_PATTERN.matcher(newName).matches();
         }
 

@@ -71,7 +71,7 @@ public class Resolver<T> {
         }
         Optional<Stream<PsiNamedElement>> qualified = qualified(target);
         if (qualified.isPresent()) {
-            return qualified.get();
+            return qualified.get().filter(e -> target.getName().equals(e.getName()));
         }
         Module module = module(target);
         Stream<Stream<? extends PsiNamedElement>> locals = locals(target);
@@ -80,7 +80,6 @@ public class Resolver<T> {
         List<? extends PsiNamedElement> found = locals.map(s -> s.filter(e -> target.getName().equals(e.getName()))
                                                                  .collect(toList()))
                                                       .filter(c -> !c.isEmpty())
-
                                                       .findFirst()
                                                       .orElse(Lists.newArrayList());
         if (!found.isEmpty()) {

@@ -105,11 +105,12 @@ public class ElmElementFactory {
     }
 
     public static PsiElement valueName(Project project, String name) {
-        throw new UnsupportedOperationException("Rename unsupported yet");
+        ElmFile file = createFile(project, String.format("%s = 5", name));
+        return PsiTreeUtil.findChildOfType(file.module(), ValueName.class);
     }
 
     public static PsiElement valueNameRef(Project project, String name) {
-        ElmFile file = createFile(project, String.format("%s = Int", name));
+        ElmFile file = createFile(project, String.format("%s : Int", name));
         return PsiTreeUtil.findChildOfType(file.module(), ValueNameRef.class);
     }
 
