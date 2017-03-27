@@ -27,6 +27,10 @@ public class GoToDeclarationTest extends LightCodeInsightFixtureTestCase {
         doTest("port", "Test2.elm");
     }
 
+    public void testValueDeclaration() {
+        doTest("value", "Test1.elm", "Test2.elm");
+    }
+
     private void doTest(String dir, String... fileNames) {
         String[] fullFileNames = Arrays.stream(fileNames).map(n -> dir + "/" + n).toArray(String[]::new);
         PsiFile[] files = myFixture.configureByFiles(fullFileNames);
