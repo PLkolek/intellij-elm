@@ -60,4 +60,9 @@ public class FindUsagesTest extends LightCodeInsightFixtureTestCase {
         Collection<UsageInfo> usageInfos = myFixture.testFindUsages("value/topLevel/TopLevel.elm");
         assertThat(usageInfos.size(), is(3));
     }
+
+    public void testLambdaParamUsages() {
+        Collection<UsageInfo> usageInfos = myFixture.testFindUsages("value/lambda/Lambda.elm");
+        assertThat(usageInfos.size(), is(1));
+    }
 }
