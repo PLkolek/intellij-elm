@@ -34,6 +34,19 @@ public interface TypeOfDeclaration<Declaration extends PsiElement, Export extend
         }
     };
 
+    TypeOfDeclaration<InfixDeclaration, OperatorSymbolRef> INFIX
+            = new TypeOfDeclaration<InfixDeclaration, OperatorSymbolRef>() {
+        @Override
+        public Class<InfixDeclaration> psiClass() {
+            return InfixDeclaration.class;
+        }
+
+        @Override
+        public TypeOfExposed<OperatorSymbolRef> exposedAs() {
+            return TypeOfExposed.OPERATOR;
+        }
+    };
+
     TypeOfDeclaration<PortDeclaration, ValueExposing> PORT = new TypeOfDeclaration<PortDeclaration, ValueExposing>() {
         @Override
         public Class<PortDeclaration> psiClass() {

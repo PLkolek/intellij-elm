@@ -14,6 +14,7 @@ import com.intellij.usageView.UsageInfo;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.boilerplate.ElmLanguage;
 import mkolaczek.elm.psi.node.ExposingNode;
+import mkolaczek.elm.psi.node.InfixDeclaration;
 import mkolaczek.elm.psi.node.ValueNameRef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +59,8 @@ public class ElmSafeDeleteDelegate implements SafeDeleteProcessorDelegate {
 
     public static boolean isSafeToDelete(PsiElement refElement) {
         return getParentOfType(refElement, ExposingNode.class) != null
-                || getParentOfType(refElement, ValueNameRef.class) != null;
+                || getParentOfType(refElement, ValueNameRef.class) != null
+                || getParentOfType(refElement, InfixDeclaration.class) != null;
     }
 
     public static boolean isInside(PsiElement refElement, PsiElement ancestor) {
