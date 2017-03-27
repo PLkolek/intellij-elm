@@ -80,6 +80,7 @@ public class Resolver<T> {
         List<? extends PsiNamedElement> found = locals.map(s -> s.filter(e -> target.getName().equals(e.getName()))
                                                                  .collect(toList()))
                                                       .filter(c -> !c.isEmpty())
+
                                                       .findFirst()
                                                       .orElse(Lists.newArrayList());
         if (!found.isEmpty()) {
