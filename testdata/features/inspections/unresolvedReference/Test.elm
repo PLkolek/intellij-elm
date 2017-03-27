@@ -8,3 +8,5 @@ type alias Alias = <error descr="Unresolved type">BadType</error>
 type Type = Cons <error descr="Unresolved module">ModuleToImport<caret></error>.<EOLError descr="[Token.CAP_VAR] expected"></EOLError>
 
 properValue = <error descr="Unresolved value">improperValue</error>
+
+infixl 2 <error descr="Unresolved operator"><>></error>
