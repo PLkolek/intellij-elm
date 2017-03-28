@@ -8,7 +8,7 @@ import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
-import mkolaczek.elm.references.TypeReference;
+import mkolaczek.elm.references.Resolver;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,7 +19,6 @@ import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
@@ -33,6 +32,7 @@ public class TypeCompletion {
         c.autocomplete(afterLeaf(e(ALIAS)),                                     TypeCompletion::exposedConstructorlessTypes);
         c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),       TypeCompletion::exposedTypeConstructors);
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),                  TypeCompletion::visibleTypes);
+        c.autocomplete(e().inside(e(TYPE_NAME_REF)),                            TypeCompletion::visibleTypes);
         c.autocomplete(
                 e().andOr(
                         childOf(TYPE_NAME_REF),
@@ -44,7 +44,9 @@ public class TypeCompletion {
     }
 
     private static Stream<String> visibleTypes(CompletionParameters parameters) {
-        return stream(TypeReference.variants(parameters.getPosition())).map(TypeDeclaration::getName);
+        TypeAliasDeclNode aliasDeclNode = getParentOfType(parameters.getPosition(), TypeAliasDeclNode.class);
+        String aliasName = aliasDeclNode != null ? aliasDeclNode.typeDeclaration().getName() : null;
+        return Resolver.forTypes().variants(parameters.getPosition()).filter(s -> !s.equals(aliasName));
     }
 
     private static Stream<String> typesFromModule(CompletionParameters parameters) {
