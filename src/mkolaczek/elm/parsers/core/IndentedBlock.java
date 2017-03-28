@@ -1,6 +1,7 @@
 package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.parsers.core.context.IndentationUtil;
 
@@ -19,10 +20,10 @@ public class IndentedBlock implements Parser {
     }
 
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
-        indentation.push(IndentationUtil.column(builder));
-        Result result = contents.parse(builder, nextParsers, indentation);
-        indentation.pop();
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
+        context.getIndentation().push(IndentationUtil.column(builder));
+        Result result = contents.parse(builder, nextParsers, context);
+        context.getIndentation().pop();
         return result;
     }
 

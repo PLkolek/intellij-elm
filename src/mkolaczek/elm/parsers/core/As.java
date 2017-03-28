@@ -1,6 +1,7 @@
 package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.psi.Element;
 
@@ -21,10 +22,10 @@ public class As implements Parser {
     }
 
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
         int startingOffset = builder.getCurrentOffset();
         PsiBuilder.Marker marker = builder.mark();
-        Result result = content.parse(builder, nextParsers, indentation);
+        Result result = content.parse(builder, nextParsers, context);
         if (mode == Mode.MARK_ALWAYS || startingOffset != builder.getCurrentOffset()) {
             marker.done(as);
         } else {

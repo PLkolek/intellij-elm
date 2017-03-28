@@ -2,6 +2,7 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.base.Preconditions;
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 
 import java.util.Collection;
@@ -46,13 +47,13 @@ public class Or implements Parser {
     }
 
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers, Indentation indentation) {
+    public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers, Context context) {
         //noinspection SuspiciousMethodCalls
         if (builder.eof()) {
             return Result.TOKEN_ERROR;
         }
         for (Parser parser : parsers) {
-            Result result = parser.parse(builder, myNextParsers, indentation);
+            Result result = parser.parse(builder, myNextParsers, context);
             if (result != Result.TOKEN_ERROR) {
                 return result;
             }

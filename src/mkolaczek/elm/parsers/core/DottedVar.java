@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
+import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
@@ -50,7 +51,7 @@ public class DottedVar implements Parser {
     }
 
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
         if (builder.eof() || !isVar(builder)) {
             return Result.TOKEN_ERROR;
         }
@@ -62,12 +63,12 @@ public class DottedVar implements Parser {
         builder.advanceLexer();
         int start = builder.getCurrentOffset();
         if (type == CAP_VAR) {
-            while (isDot(builder) && WhiteSpace.Type.NO.accepts(builder, indentation)) {
+            while (isDot(builder) && WhiteSpace.Type.NO.accepts(builder, context.getIndentation())) {
                 prefixEnd = replace(builder, prefixEnd);
                 builder.advanceLexer();
                 suffix = replace(builder, suffix);
                 suffixStart = builder.getCurrentOffset();
-                if (!isVar(builder) || !WhiteSpace.Type.NO.accepts(builder, indentation)) {
+                if (!isVar(builder) || !WhiteSpace.Type.NO.accepts(builder, context.getIndentation())) {
                     builder.error(varTokens + " expected");
                     break;
                 }

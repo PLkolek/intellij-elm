@@ -2,6 +2,7 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 
 import java.util.Collection;
@@ -23,22 +24,22 @@ public class Try implements Parser {
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers, Indentation indentation) {
+    public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers, Context context) {
         PsiBuilder.Marker start = builder.mark();
         int startOffset = builder.getCurrentOffset();
-        Result result = contents.parse(builder, myNextParsers, indentation);
+        Result result = contents.parse(builder, myNextParsers, context);
         if (startOffset == builder.getCurrentOffset()) {
             start.rollbackTo();
         } else {
             start.drop();
         }
         if (result == Result.TOKEN_ERROR) {
-            if (!anyWillParse(myNextParsers, builder, indentation) && willParseAfterSkipping(this,
+            if (!anyWillParse(myNextParsers, builder, context.getIndentation()) && willParseAfterSkipping(this,
                     myNextParsers,
                     builder,
-                    indentation)) {
-                SkipUntil.skipUntil(name(), Lists.newArrayList(this), builder, indentation);
-                return contents.parse(builder, myNextParsers, indentation);
+                    context.getIndentation())) {
+                SkipUntil.skipUntil(name(), Lists.newArrayList(this), builder, context.getIndentation());
+                return contents.parse(builder, myNextParsers, context);
             } else {
                 return Result.OK;
             }

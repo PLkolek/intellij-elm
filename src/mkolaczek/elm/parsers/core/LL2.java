@@ -2,6 +2,7 @@ package mkolaczek.elm.parsers.core;
 
 
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.psi.Token;
 
@@ -22,9 +23,9 @@ public class LL2 implements Parser {
     }
 
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
-        if (willParse(builder, indentation)) {
-            return contents.parse(builder, nextParsers, indentation);
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
+        if (willParse(builder, context.getIndentation())) {
+            return contents.parse(builder, nextParsers, context);
         }
         return Result.TOKEN_ERROR;
     }

@@ -2,6 +2,7 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,17 +54,17 @@ public class Many implements Parser {
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers, Indentation indentation) {
+    public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers, Context context) {
         Collection<Parser> childNextParsers = Lists.newArrayList(myNextParsers);
         childNextParsers.add(this);
         do {
-            if (willParse(builder, indentation)) {
-                parser.parse(builder, childNextParsers, indentation);
-            } else if (anyWillParse(myNextParsers, builder, indentation) || builder.eof()) {
+            if (willParse(builder, context.getIndentation())) {
+                parser.parse(builder, childNextParsers, context);
+            } else if (anyWillParse(myNextParsers, builder, context.getIndentation()) || builder.eof()) {
                 break;
             } else {
-                if (willParseAfterSkipping(this, myNextParsers, builder, indentation)) {
-                    skipUntil(parser.name(), Lists.newArrayList(this), builder, indentation);
+                if (willParseAfterSkipping(this, myNextParsers, builder, context.getIndentation())) {
+                    skipUntil(parser.name(), Lists.newArrayList(this), builder, context.getIndentation());
                 } else {
                     break;
                 }

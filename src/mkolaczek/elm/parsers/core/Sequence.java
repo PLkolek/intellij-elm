@@ -3,6 +3,7 @@ package mkolaczek.elm.parsers.core;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 
 import java.util.Arrays;
@@ -68,27 +69,27 @@ public class Sequence implements Parser {
     }
 
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
-        if (builder.eof() || !willParse(builder, indentation)) {
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
+        if (builder.eof() || !willParse(builder, context.getIndentation())) {
             return Result.TOKEN_ERROR;
         }
         //noinspection SuspiciousMethodCalls
-        return parse2(builder, nextParsers, indentation);
+        return parse2(builder, nextParsers, context);
     }
 
-    public Result parse2(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
+    public Result parse2(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
         List<Collection<Parser>> childrenNextParsers = nextParsers(nextParsers);
 
         Result result = Result.OK;
         for (int i = 0; i < parsers.length; i++) {
             Parser parser = parsers[i];
             Collection<Parser> parserNextParsers = childrenNextParsers.get(i);
-            result = parser.parse(builder, parserNextParsers, indentation);
+            result = parser.parse(builder, parserNextParsers, context);
             if (result == Result.TOKEN_ERROR) {
                 Collection<Parser> skipUntilParsers = Lists.newArrayList(parserNextParsers);
                 skipUntilParsers.add(parser);
-                SkipUntil.skipUntil(parser.name(), skipUntilParsers, builder, indentation);
-                parser.parse(builder, parserNextParsers, indentation);
+                SkipUntil.skipUntil(parser.name(), skipUntilParsers, builder, context.getIndentation());
+                parser.parse(builder, parserNextParsers, context);
                 result = Result.OK;
             }
         }

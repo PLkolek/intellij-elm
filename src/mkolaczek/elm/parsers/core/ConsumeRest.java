@@ -2,6 +2,7 @@ package mkolaczek.elm.parsers.core;
 
 import com.google.common.collect.Sets;
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 
 import java.util.Collection;
@@ -19,9 +20,9 @@ public class ConsumeRest implements Parser {
     }
 
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
         if (!builder.eof()) {
-            SkipUntil.skipUntil(name, Sets.newHashSet(), builder, indentation);
+            SkipUntil.skipUntil(name, Sets.newHashSet(), builder, context.getIndentation());
         }
         return Result.OK;
     }

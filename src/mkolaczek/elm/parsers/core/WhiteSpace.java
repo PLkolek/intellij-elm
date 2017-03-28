@@ -1,6 +1,7 @@
 package mkolaczek.elm.parsers.core;
 
 import com.intellij.lang.PsiBuilder;
+import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.parsers.core.context.IndentationUtil;
 import org.jetbrains.annotations.NotNull;
@@ -50,14 +51,14 @@ public class WhiteSpace implements Parser {
     }
 
     @Override
-    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Indentation indentation) {
-        if (!type.accepts(builder, indentation)) {
+    public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
+        if (!type.accepts(builder, context.getIndentation())) {
             builder.error(type.name + " expected");
             if (!skipWsError) {
                 return Result.WS_ERROR;
             }
         }
-        return prefixedParsed.parse(builder, nextParsers, indentation);
+        return prefixedParsed.parse(builder, nextParsers, context);
     }
 
     @Override
