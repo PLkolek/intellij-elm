@@ -6,7 +6,6 @@ import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.TypeConstructor;
 import mkolaczek.elm.psi.node.TypeDeclaration;
 import mkolaczek.elm.psi.node.TypeExposing;
-import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import mkolaczek.elm.references.Resolver;
 
 import java.util.Set;
@@ -17,7 +16,6 @@ import static mkolaczek.elm.features.autocompletion.Patterns.childOf;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
-import static mkolaczek.elm.psi.node.Module.module;
 
 public class TypeConstructorCompletion {
 
@@ -25,7 +23,8 @@ public class TypeConstructorCompletion {
 
     public static void typeConstructors(ElmCompletionContributor c) {
         c.autocomplete(
-                childOf(TYPE_CONSTRUCTOR_REF).inside(e(MODULE_HEADER)), TypeConstructorCompletion::constructorsFromType
+                childOf(TYPE_CONSTRUCTOR_REF).inside(e(MODULE_HEADER, IMPORT_LINE)),
+                TypeConstructorCompletion::constructorsFromType
         );
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_CONSTRUCTOR_REF)),
                 TypeConstructorCompletion::visibleConstructors);
@@ -51,10 +50,12 @@ public class TypeConstructorCompletion {
 
         Set<String> excluded = Sets.newHashSet(typeExposing.constructorNames());
 
-        return module(typeExposing).declarations(TypeOfDeclaration.TYPE, typeExposing.exposedName())
-                                   .flatMap(TypeDeclaration::constructors)
-                                   .filter(elem -> !excluded.contains(elem.getName()))
-                                   .map(TypeConstructor::getName);
+
+        return Resolver.forTypes().resolve(typeExposing.typeName())
+                       .map(d -> (TypeDeclaration) d)
+                       .flatMap(TypeDeclaration::constructors)
+                       .filter(elem -> !excluded.contains(elem.getName()))
+                       .map(TypeConstructor::getName);
     }
 }
 
