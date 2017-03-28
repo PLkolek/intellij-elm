@@ -7,6 +7,7 @@ import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.node.extensions.Declaration;
+import mkolaczek.elm.psi.node.extensions.DefinesValues;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import mkolaczek.util.Streams;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 
 import static mkolaczek.elm.psi.node.Module.module;
 
-public class OperatorDeclaration extends ElmNamedElement implements Declaration {
+public class OperatorDeclaration extends ElmNamedElement implements Declaration, DefinesValues {
     public OperatorDeclaration(ASTNode node) {
         super(node);
     }
