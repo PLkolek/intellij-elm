@@ -1,8 +1,10 @@
 package mkolaczek.elm.features.autocompletion.completions;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.psi.PsiNamedElement;
+import com.intellij.patterns.PsiElementPattern;
+import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
+import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
 import mkolaczek.elm.psi.node.extensions.Declaration;
@@ -37,24 +39,16 @@ public class ValueCompletion {
                 params -> exposed(params, TypeOfExposed.VALUE)
         );
 
-        c.autocomplete(
-                e().andOr(e().inside(e(OPERATOR)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
-                ValueCompletion::moduleOperators
-        );
-        c.autocomplete(
-                e().andOr(e().inside(e(OPERATOR)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(IMPORT_LINE)),
-                ValueCompletion::notImportedOperators
-        );
         c.autocompletePlain(e().andOr(
                 inside(OPERATOR_SYMBOL_REF).inside(e(EXPRESSION)),
                 e().inside(e(QUALIFIED_VAR).withParent(e().afterSibling(e(TERM))))),
                 ValueCompletion::visibleOperators
         );
 
-        c.autocomplete(
-                e().andOr(e().inside(e(VALUE_EXPOSING)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
-                ValueCompletion::moduleValues
-        );
+        c.autocomplete(inExposing(MODULE_HEADER, OPERATOR), ValueCompletion::moduleOperators);
+        c.autocomplete(inExposing(IMPORT_LINE, OPERATOR), ValueCompletion::notImportedOperators);
+        c.autocomplete(inExposing(MODULE_HEADER, VALUE_EXPOSING), ValueCompletion::moduleValues);
+        c.autocomplete(inExposing(IMPORT_LINE, OPERATOR), ValueCompletion::notImportedValues);
 
         c.autocomplete(
                 inside(EXPRESSION).afterLeaf(e(LPAREN)), p -> visibleOperators(p).map(OperatorDeclaration::parens)
@@ -64,14 +58,27 @@ public class ValueCompletion {
 
     }
 
+    public static PsiElementPattern.Capture<PsiElement> inExposing(Element exposingLine, Element exposedItem) {
+        return e().andOr(e().inside(e(exposedItem)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(exposingLine));
+    }
+
     private static Stream<String> notImportedOperators(CompletionParameters parameters) {
+        return notImported(Resolver.forOperators(), TypeOfExposed.OPERATOR, parameters)
+                .map(OperatorDeclaration::parens);
+    }
+
+    private static Stream<String> notImportedValues(CompletionParameters parameters) {
+        return notImported(Resolver.forValues(), TypeOfExposed.VALUE, parameters);
+    }
+
+    private static Stream<String> notImported(Resolver<?> resolver,
+                                              TypeOfExposed<? extends Exposed> typeOfExposed,
+                                              CompletionParameters parameters) {
         Import import_ = getParentOfType(parameters.getPosition(), Import.class);
         assert import_ != null;
-        Set<String> exposed = import_.exposed(TypeOfExposed.OPERATOR).map(PsiNamedElement::getName).collect(toSet());
-        return Resolver.forOperators()
-                       .variants(parameters.getPosition())
-                       .filter(o -> !exposed.contains(o))
-                       .map(OperatorDeclaration::parens);
+        Set<String> exposed = import_.exposed(typeOfExposed).map(Exposed::exposedName).collect(toSet());
+        return resolver.variants(parameters.getPosition())
+                       .filter(o -> !exposed.contains(o));
     }
 
     public static Stream<String> exposed(CompletionParameters parameters,
