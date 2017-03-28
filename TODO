@@ -9,6 +9,7 @@ Features:
 * Remove whole type when removing last constructor
 * import type quick fix
 * autocompletion + references + go to for record fields
+* elm-package.json handling (exposed modules)
 
 Refactorings:
 * startingTokens() doesnt do any caching
