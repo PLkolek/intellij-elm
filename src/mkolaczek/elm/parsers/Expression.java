@@ -61,7 +61,7 @@ public class Expression {
     public static Sequence operatorDefinition() {
         return sequence(
                 Basic.operator(Elements.OPERATOR_SYMBOL)
-                     .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP)),
+                     .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP, CONS)),
                 or(
                         sequence(
                                 expect(Tokens.COLON),
@@ -188,7 +188,7 @@ public class Expression {
 
     private static Parser operator() {
         return or(
-                Basic.operator(Elements.OPERATOR_SYMBOL_REF).ll2(newHashSet(LPAREN), newHashSet(SYM_OP)),
+                Basic.operator(Elements.OPERATOR_SYMBOL_REF).ll2(newHashSet(LPAREN), newHashSet(SYM_OP, CONS)),
                 Basic.parens("minus operator", expect(MINUS)).ll2(newHashSet(LPAREN), newHashSet(MINUS)),
                 Basic.parens("tuple operator", or(expect(Tokens.COMMA_OP), expect(COMMA)))
                      .ll2(newHashSet(LPAREN), newHashSet(COMMA, COMMA_OP))

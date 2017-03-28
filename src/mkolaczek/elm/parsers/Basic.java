@@ -45,7 +45,8 @@ public class Basic {
     public static Parser operatorSymbol(Element as) {
         return or("operator symbol",
                 expect(Tokens.RUNE_OF_AUTOCOMPLETION),
-                expect(Tokens.SYM_OP)
+                expect(Tokens.SYM_OP),
+                expect(Tokens.CONS)
         ).as(as);
     }
 
