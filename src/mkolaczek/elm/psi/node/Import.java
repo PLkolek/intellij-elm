@@ -18,8 +18,11 @@ public class Import extends ASTWrapperPsiElement implements HasExposing {
     }
 
     public Stream<Module> importedModule() {
-        return ProjectUtil.modules(getProject())
-                          .filter(m -> nameEquals(m.getName()));
+        if (!importedModuleName().isPresent()) {
+            return Stream.empty();
+        }
+
+        return ProjectUtil.modules(getProject(), importedModuleName().get().getName());
     }
 
     public Optional<ModuleNameRef> importedModuleName() {

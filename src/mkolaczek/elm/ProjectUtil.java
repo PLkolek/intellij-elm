@@ -1,5 +1,6 @@
 package mkolaczek.elm;
 
+import com.google.common.collect.ImmutableSet;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
@@ -9,10 +10,12 @@ import com.intellij.util.indexing.FileBasedIndex;
 import mkolaczek.elm.boilerplate.ElmFileType;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.Module;
+import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -39,7 +42,11 @@ public class ProjectUtil {
     }
 
     public static Stream<Module> modules(Project project, String searchedModuleName) {
-        return modules(project).filter(module -> module.sameName(searchedModuleName));
+        return modules(project, ImmutableSet.of(searchedModuleName));
+    }
+
+    public static Stream<Module> modules(Project project, Set<String> searchedModuleNames) {
+        return modules(project).filter(ElmNamedElement.nameIn(searchedModuleNames));
     }
 
     public static Stream<String> otherModuleNames(Project project, Module module) {

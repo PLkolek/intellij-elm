@@ -13,6 +13,7 @@ import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static mkolaczek.elm.psi.node.Module.module;
@@ -32,15 +33,16 @@ public class ModuleReference extends PsiReferenceBase.Poly<ModuleNameRef> {
     }
 
     private Stream<? extends ASTWrapperPsiElement> modules() {
-        return Stream.concat(
+        return Stream.of(
                 module(myElement)
                         .notAliasedImports()
                         .flatMap(Import::importedModule),
                 module(myElement)
                         .aliasedImports()
                         .map(Import::alias)
-                        .flatMap(Streams::stream)
-        );
+                        .flatMap(Streams::stream),
+                DefaultImports.modules(myElement.getProject())
+        ).flatMap(Function.identity());
     }
 
     @NotNull
