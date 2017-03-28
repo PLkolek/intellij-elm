@@ -55,7 +55,6 @@ public class Module {
 
     private static Parser exposed() {
         return or(
-                expect(Tokens.RUNE_OF_AUTOCOMPLETION).as(Elements.RUNE_OF_AUTOCOMPLETION_EL),
                 expect(Tokens.LOW_VAR).as(Elements.VALUE_EXPOSING),
                 Basic.operator(OPERATOR_SYMBOL_REF),
                 exposedType()

@@ -51,7 +51,7 @@ public class ValueCompletion {
     }
 
     private static PsiElementPattern.Capture<PsiElement> inExposing(Element exposedItem) {
-        return e().andOr(e().inside(e(exposedItem)), childOf(RUNE_OF_AUTOCOMPLETION_EL))
+        return e().andOr(e().inside(e(exposedItem)), e(RUNE_OF_AUTOCOMPLETION))
                   .inside(e(MODULE_HEADER, IMPORT_LINE));
     }
 
