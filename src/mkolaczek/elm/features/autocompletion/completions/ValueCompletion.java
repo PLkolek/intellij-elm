@@ -1,15 +1,20 @@
 package mkolaczek.elm.features.autocompletion.completions;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
+import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
 import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.Exposed;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import mkolaczek.elm.references.Resolver;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
+import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
@@ -36,6 +41,10 @@ public class ValueCompletion {
                 e().andOr(e().inside(e(OPERATOR)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(MODULE_HEADER)),
                 ValueCompletion::moduleOperators
         );
+        c.autocomplete(
+                e().andOr(e().inside(e(OPERATOR)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(IMPORT_LINE)),
+                ValueCompletion::notImportedOperators
+        );
         c.autocompletePlain(e().andOr(
                 inside(OPERATOR_SYMBOL_REF).inside(e(EXPRESSION)),
                 e().inside(e(QUALIFIED_VAR).withParent(e().afterSibling(e(TERM))))),
@@ -55,6 +64,16 @@ public class ValueCompletion {
 
     }
 
+    private static Stream<String> notImportedOperators(CompletionParameters parameters) {
+        Import import_ = getParentOfType(parameters.getPosition(), Import.class);
+        assert import_ != null;
+        Set<String> exposed = import_.exposed(TypeOfExposed.OPERATOR).map(PsiNamedElement::getName).collect(toSet());
+        return Resolver.forOperators()
+                       .variants(parameters.getPosition())
+                       .filter(o -> !exposed.contains(o))
+                       .map(OperatorDeclaration::parens);
+    }
+
     public static Stream<String> exposed(CompletionParameters parameters,
                                          TypeOfExposed<? extends Exposed> typeOfExposed) {
         return module(parameters.getPosition()).exposedNames(typeOfExposed);
@@ -71,7 +90,8 @@ public class ValueCompletion {
     private static Stream<String> moduleOperators(CompletionParameters parameters) {
         return module(parameters.getPosition()).notExposed(
                 TypeOfExposed.OPERATOR,
-                Declaration::declaredOperatorName).map(OperatorDeclaration::parens);
+                Declaration::declaredOperatorName
+        ).map(OperatorDeclaration::parens);
     }
 
     private static Stream<String> moduleValues(CompletionParameters parameters) {

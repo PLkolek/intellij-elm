@@ -92,25 +92,14 @@ public class Resolver<T> {
         if (target.getName() == null) {
             return Stream.empty();
         }
-        if (insideModuleHeader(target)) {
-            return declared(module(target)).filter(e -> target.getName().equals(e.getName()));
-        } else if (insideImport(target)) {
-            return containingImport(target).importedModule()
-                                           .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)));
-        } else {
-            return resolveCodeReference(target);
-        }
-    }
-
-    private Stream<? extends PsiNamedElement> resolveCodeReference(PsiNamedElement target) {
         assert target.getName() != null;
-        Optional<Stream<PsiNamedElement>> qualified = qualified(target);
+        Optional<Stream<? extends PsiNamedElement>> qualified = inSpecificLocations(target);
         if (qualified.isPresent()) {
             return qualified.get().filter(e -> target.getName().equals(e.getName()));
         }
         Module module = module(target);
         Stream<Stream<? extends PsiNamedElement>> locals = locals(target);
-        Stream<? extends PsiNamedElement> declared = declared(module);
+        Stream<? extends PsiNamedElement> declared1 = declared(module);
         Stream<PsiNamedElement> exposedValues = exposed(module);
         List<? extends PsiNamedElement> found = locals.map(s -> s.filter(e -> target.getName().equals(e.getName()))
                                                                  .collect(toList()))
@@ -120,17 +109,18 @@ public class Resolver<T> {
         if (!found.isEmpty()) {
             return found.stream();
         }
-        found = declared.filter(e -> target.getName().equals(e.getName())).collect(toList());
+        found = declared1.filter(e -> target.getName().equals(e.getName())).collect(toList());
         if (!found.isEmpty()) {
             return found.stream();
         }
         return exposedValues.filter(e -> target.getName().equals(e.getName()));
+
     }
 
     public Stream<String> variants(PsiElement target) {
-        Optional<Stream<PsiNamedElement>> qualified = qualified(target);
-        if (qualified.isPresent()) {
-            return qualified.get().map(PsiNamedElement::getName);
+        Optional<Stream<? extends PsiNamedElement>> specific = inSpecificLocations(target);
+        if (specific.isPresent()) {
+            return specific.get().map(PsiNamedElement::getName);
         }
 
         return unqualifiedVariants(target);
@@ -149,8 +139,16 @@ public class Resolver<T> {
         );
     }
 
-    private Optional<Stream<PsiNamedElement>> qualified(PsiElement target) {
+    private Optional<Stream<? extends PsiNamedElement>> inSpecificLocations(PsiElement target) {
         Module module = module(target);
+        if (insideModuleHeader(target)) {
+            return Optional.of(declared(module(target)));
+        } else if (insideImport(target)) {
+            return Optional.of(containingImport(target).importedModule()
+                                                       .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)))
+            );
+        }
+
         QualifiedRef qualifiedRef = getParentOfType(target, QualifiedRef.class);
         if (qualifiedRef != null && qualifiedRef.moduleName().isPresent()) {
             return Optional.of(
