@@ -20,10 +20,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.intellij.psi.util.PsiTreeUtil.*;
+import static java.util.stream.Collectors.toSet;
 import static mkolaczek.util.Streams.stream;
 
 public class Module extends ElmNamedElement implements DocCommented {
@@ -116,10 +118,10 @@ public class Module extends ElmNamedElement implements DocCommented {
         return imports().filter(i -> !i.isAliased());
     }
 
-
     public Stream<Declaration> declarations() {
         return findChildrenOfType(this, Declaration.class).stream();
     }
+
 
     public <T extends PsiElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration) {
         return Streams.stream(declarationsNode())
@@ -151,7 +153,7 @@ public class Module extends ElmNamedElement implements DocCommented {
 
     public <D extends PsiNamedElement> Stream<D> exportedDeclaration(TypeOfDeclaration<D, ? extends Exposed> typeOfDeclaration,
                                                                      String symbol) {
-        boolean isExposed = exposed(typeOfDeclaration.exposedAs()).map(Exposed::exposedName)
+        boolean isExposed = exposedNames(typeOfDeclaration.exposedAs())
                                                                   .filter(symbol::equals)
                                                                   .count() > 0;
 
@@ -161,6 +163,19 @@ public class Module extends ElmNamedElement implements DocCommented {
 
     public boolean exposesEverything() {
         return header().flatMap(HasExposing::exposingList).map(ModuleValueList::isOpenListing).orElse(true);
+    }
+
+    public Stream<String> notExposed(TypeOfExposed<?> typeOfExposed,
+                                     Function<Declaration, Stream<String>> valueExtractor) {
+        Set<String> excluded = exposedNames(typeOfExposed).collect(toSet());
+        return declarations()
+                .flatMap(valueExtractor)
+                .flatMap(Streams::stream)
+                .filter(o -> !excluded.contains(o));
+    }
+
+    public Stream<String> exposedNames(TypeOfExposed<?> typeOfExposed) {
+        return this.exposed(typeOfExposed).map(Exposed::exposedName);
     }
 
     //SHORTCUTS
