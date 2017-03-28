@@ -75,8 +75,7 @@ public class ValueCompletion {
     }
 
     private static Stream<String> moduleValues(CompletionParameters parameters) {
-        return module(parameters.getPosition()).notExposed(TypeOfExposed.VALUE, Declaration::topLevelValueNames
-        );
+        return module(parameters.getPosition()).notExposed(TypeOfExposed.VALUE, Declaration::topLevelValueNames);
     }
 
 }

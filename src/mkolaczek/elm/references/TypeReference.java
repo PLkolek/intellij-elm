@@ -3,6 +3,7 @@ package mkolaczek.elm.references;
 import com.google.common.collect.Sets;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
@@ -15,7 +16,6 @@ import java.util.stream.Stream;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.psi.PsiUtil.*;
 import static mkolaczek.elm.psi.node.Module.module;
 import static mkolaczek.elm.psi.node.extensions.TypeOfDeclaration.TYPE;
@@ -28,6 +28,9 @@ public class TypeReference extends PsiReferenceBase.Poly<TypeNameRef> {
     @NotNull
     @Override
     public Object[] getVariants() {
+        if (PsiTreeUtil.getParentOfType(myElement, ModuleHeader.class) != null) {
+            return PsiReferenceBase.EMPTY_ARRAY;
+        }
         return variants(myElement);
     }
 
@@ -40,24 +43,19 @@ public class TypeReference extends PsiReferenceBase.Poly<TypeNameRef> {
         Set<String> excluded = Sets.newHashSet();
 
         TypeAliasDeclNode aliasDeclNode = getParentOfType(myElement, TypeAliasDeclNode.class);
-        ModuleValueList exposingList = getParentOfType(myElement, ModuleValueList.class);
         if (aliasDeclNode != null) {
             String aliasName = aliasDeclNode.typeDeclaration().getName();
             excluded = newHashSet(aliasName);
-        } else if (exposingList != null) {
-            excluded = exposingList.exposed(TypeOfExposed.TYPE)
-                                   .map(TypeExposing::exposedName)
-                                   .collect(toSet());
         }
 
         Set<String> finalExcluded = excluded;
 
-        return typeDeclarations(myElement, exposingList == null)
+        return typeDeclarations(myElement)
                 .filter(elem -> !finalExcluded.contains(elem.getName()))
                 .toArray(TypeDeclaration[]::new);
     }
 
-    private static Stream<TypeDeclaration> typeDeclarations(PsiElement myElement, boolean includeImported) {
+    private static Stream<TypeDeclaration> typeDeclarations(PsiElement myElement) {
         QualifiedTypeNameRef qualifiedName = getParentOfType(myElement, QualifiedTypeNameRef.class);
         if (qualifiedName != null && qualifiedName.moduleName().isPresent()) {
             return module(myElement).imports(qualifiedName.moduleName().get().getName())
@@ -65,11 +63,9 @@ public class TypeReference extends PsiReferenceBase.Poly<TypeNameRef> {
         }
 
         Stream<TypeDeclaration> typeDecls = module(myElement).declarations(TypeOfDeclaration.TYPE);
-        if (includeImported) {
-            Stream<TypeDeclaration> imported = module(myElement).imports()
-                                                                .flatMap(TypeReference::importedTypes);
-            typeDecls = Stream.concat(typeDecls, imported);
-        }
+        Stream<TypeDeclaration> imported = module(myElement).imports()
+                                                            .flatMap(TypeReference::importedTypes);
+        typeDecls = Stream.concat(typeDecls, imported);
         return typeDecls;
     }
 

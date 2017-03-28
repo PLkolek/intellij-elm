@@ -14,4 +14,8 @@ public interface Declaration extends DocCommented, NavigatablePsiElement {
         return Stream.empty();
     }
 
+    default Stream<String> declaredTypeName() {
+        return Stream.empty();
+    }
+
 }

@@ -67,4 +67,9 @@ public class TypeDeclaration extends ElmNamedElement implements Declaration {
         }
         return result;
     }
+
+    @Override
+    public Stream<String> declaredTypeName() {
+        return Stream.of(getName());
+    }
 }
