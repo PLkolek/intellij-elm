@@ -61,22 +61,20 @@ public class ValueCompletion {
     }
 
     private static Stream<String> notExposedOperators(CompletionParameters parameters) {
-        return notExposed(Resolver.forOperators(), TypeOfExposed.OPERATOR, parameters)
-                .map(OperatorDeclaration::parens);
+        return notExposed(TypeOfExposed.OPERATOR, parameters).map(OperatorDeclaration::parens);
     }
 
     private static Stream<String> notExposedValues(CompletionParameters parameters) {
-        return notExposed(Resolver.forValues(), TypeOfExposed.VALUE, parameters);
+        return notExposed(TypeOfExposed.VALUE, parameters);
     }
 
-    private static Stream<String> notExposed(Resolver<?> resolver,
-                                             TypeOfExposed<? extends Exposed> typeOfExposed,
+    private static Stream<String> notExposed(TypeOfExposed<? extends Exposed> typeOfExposed,
                                              CompletionParameters parameters) {
         HasExposing hasExposing = getParentOfType(parameters.getPosition(), HasExposing.class);
         assert hasExposing != null;
         Set<String> exposed = hasExposing.exposed(typeOfExposed).map(Exposed::exposedName).collect(toSet());
-        return resolver.variants(parameters.getPosition())
-                       .filter(o -> !exposed.contains(o));
+        return typeOfExposed.resolver().variants(parameters.getPosition())
+                            .filter(o -> !exposed.contains(o));
     }
 
     public static Stream<String> exposed(CompletionParameters parameters,
