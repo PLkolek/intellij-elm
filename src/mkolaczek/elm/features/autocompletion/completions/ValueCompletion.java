@@ -23,19 +23,22 @@ import static mkolaczek.elm.psi.node.Module.module;
 
 public class ValueCompletion {
     public static void values(ElmCompletionContributor c) {
-        c.autocompletePlain(afterLeaf(e(DIGIT)).inside(e(INFIX_DECLARATION)),
-                params -> exposed(params, TypeOfExposed.OPERATOR)
-        );
-        c.autocomplete(afterLeaf(e(PORT).inside(e(PORT_DECLARATION))), params -> exposed(params, TypeOfExposed.VALUE));
-        c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)), params -> exposed(params, TypeOfExposed.VALUE));
-        c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)),
-                params -> exposed(params, TypeOfExposed.OPERATOR).map(OperatorDeclaration::parens));
+        //@formatter:off
+        c.autocompletePlain(afterLeaf(e(DIGIT)).inside(e(INFIX_DECLARATION)), ValueCompletion::exposedOperators);
+        c.autocomplete(afterLeaf(e(PORT).inside(e(PORT_DECLARATION))),        ValueCompletion::exposedValues);
+        c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)),                   ValueCompletion::exposedValues);
+        c.autocomplete(e().atStartOf(e(VALUE_DECLARATION)),                   ValueCompletion::exposedOperatorsInParens);
+        c.autocomplete(inExposing(OPERATOR),                                  ValueCompletion::notExposedOperators);
+        c.autocomplete(inExposing(VALUE_EXPOSING),                            ValueCompletion::notExposedValues);
+        c.autocomplete(inside(EXPRESSION).afterLeaf(e(LPAREN)),               ValueCompletion::visibleOperatorsInParens);
+        c.autocomplete(e().inside(e(QUALIFIED_VAR)),                          ValueCompletion::visibleValues);
+        //@formatter:on
         c.autocomplete(e().inside((e(OPERATOR).atStartOf(e(OPERATOR_DECLARATION)))),
-                params -> exposed(params, TypeOfExposed.OPERATOR).map(OperatorDeclaration::parens));
+                ValueCompletion::exposedOperatorsInParens);
         //noinspection unchecked
         c.autocomplete(e().andOr(e(RUNE_OF_AUTOCOMPLETION), e().inside(e(VALUE_NAME)))
                           .inside(e(PATTERN_TERM).atStartOf(e(VALUE_DECLARATION))),
-                params -> exposed(params, TypeOfExposed.VALUE)
+                ValueCompletion::exposedValues
         );
 
         c.autocompletePlain(e().andOr(
@@ -44,20 +47,24 @@ public class ValueCompletion {
                 ValueCompletion::visibleOperators
         );
 
-        c.autocomplete(inExposing(OPERATOR), ValueCompletion::notExposedOperators);
-        c.autocomplete(inExposing(VALUE_EXPOSING), ValueCompletion::notExposedValues);
-
-        c.autocomplete(
-                inside(EXPRESSION).afterLeaf(e(LPAREN)), p -> visibleOperators(p).map(OperatorDeclaration::parens)
-        );
-
-        c.autocomplete(e().inside(e(QUALIFIED_VAR)), ValueCompletion::visibleValues);
 
     }
 
-    public static PsiElementPattern.Capture<PsiElement> inExposing(Element exposedItem) {
+    private static PsiElementPattern.Capture<PsiElement> inExposing(Element exposedItem) {
         return e().andOr(e().inside(e(exposedItem)), childOf(RUNE_OF_AUTOCOMPLETION_EL))
                   .inside(e(MODULE_HEADER, IMPORT_LINE));
+    }
+
+    private static Stream<String> exposedOperators(CompletionParameters parameters) {
+        return exposed(parameters, TypeOfExposed.OPERATOR);
+    }
+
+    private static Stream<String> exposedOperatorsInParens(CompletionParameters parameters) {
+        return exposedOperators(parameters).map(OperatorDeclaration::parens);
+    }
+
+    private static Stream<String> exposedValues(CompletionParameters parameters) {
+        return exposed(parameters, TypeOfExposed.VALUE);
     }
 
     private static Stream<String> notExposedOperators(CompletionParameters parameters) {
@@ -84,6 +91,10 @@ public class ValueCompletion {
 
     private static Stream<String> visibleOperators(CompletionParameters parameters) {
         return Resolver.forOperators().variants(parameters.getPosition());
+    }
+
+    private static Stream<String> visibleOperatorsInParens(CompletionParameters parameters) {
+        return Resolver.forOperators().variants(parameters.getPosition()).map(OperatorDeclaration::parens);
     }
 
     private static Stream<String> visibleValues(CompletionParameters parameters) {
