@@ -44,10 +44,8 @@ public class ValueCompletion {
                 ValueCompletion::visibleOperators
         );
 
-        c.autocomplete(inExposing(MODULE_HEADER, OPERATOR), ValueCompletion::notExposedOperators);
-        c.autocomplete(inExposing(IMPORT_LINE, OPERATOR), ValueCompletion::notExposedOperators);
-        c.autocomplete(inExposing(MODULE_HEADER, VALUE_EXPOSING), ValueCompletion::notExposedValues);
-        c.autocomplete(inExposing(IMPORT_LINE, OPERATOR), ValueCompletion::notExposedValues);
+        c.autocomplete(inExposing(OPERATOR), ValueCompletion::notExposedOperators);
+        c.autocomplete(inExposing(VALUE_EXPOSING), ValueCompletion::notExposedValues);
 
         c.autocomplete(
                 inside(EXPRESSION).afterLeaf(e(LPAREN)), p -> visibleOperators(p).map(OperatorDeclaration::parens)
@@ -57,8 +55,9 @@ public class ValueCompletion {
 
     }
 
-    public static PsiElementPattern.Capture<PsiElement> inExposing(Element exposingLine, Element exposedItem) {
-        return e().andOr(e().inside(e(exposedItem)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(exposingLine));
+    public static PsiElementPattern.Capture<PsiElement> inExposing(Element exposedItem) {
+        return e().andOr(e().inside(e(exposedItem)), childOf(RUNE_OF_AUTOCOMPLETION_EL))
+                  .inside(e(MODULE_HEADER, IMPORT_LINE));
     }
 
     private static Stream<String> notExposedOperators(CompletionParameters parameters) {
