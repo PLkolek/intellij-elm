@@ -1,6 +1,7 @@
 package mkolaczek.elm.references;
 
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.intellij.psi.PsiElement;
@@ -11,10 +12,7 @@ import mkolaczek.elm.psi.node.TypeDeclaration;
 import mkolaczek.elm.psi.node.extensions.*;
 import one.util.streamex.StreamEx;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -30,16 +28,19 @@ public class Resolver<T> {
     private final Function<Module, T> declared;
     private final BiFunction<HasExposing, T, T> exposedFilter;
     private final Function<T, Stream<? extends PsiNamedElement>> toStream;
+    private final Collection<String> builtIn;
     private final boolean includeLocal;
 
     private Resolver(Function<Module, T> declared,
                      BiFunction<HasExposing, T, T> exposedFilter,
                      Function<T, Stream<? extends PsiNamedElement>> toStream,
+                     Collection<String> builtIn,
                      boolean includeLocal
     ) {
         this.declared = declared;
         this.exposedFilter = exposedFilter;
         this.toStream = toStream;
+        this.builtIn = builtIn;
         this.includeLocal = includeLocal;
     }
 
@@ -48,6 +49,7 @@ public class Resolver<T> {
                 m -> TypeDeclaration.constructorsMultimap(m.declarations(TypeOfDeclaration.TYPE).collect(toSet())),
                 HasExposing::filterExposedConstructors,
                 m -> m.values().stream(),
+                ImmutableList.of(),
                 false
         );
     }
@@ -57,6 +59,7 @@ public class Resolver<T> {
                 m -> m.declarations(TypeOfDeclaration.OPERATOR),
                 ((hasExposing, declarations) -> hasExposing.filterExposed(declarations, TypeOfExposed.OPERATOR)),
                 identity(),
+                ImmutableList.of(),
                 false
         );
     }
@@ -67,6 +70,7 @@ public class Resolver<T> {
                 Module::declaredValues,
                 ((hasExposing, declarations) -> hasExposing.filterExposed(declarations, TypeOfExposed.VALUE)),
                 identity(),
+                ImmutableList.of(),
                 true
         );
     }
@@ -76,6 +80,7 @@ public class Resolver<T> {
                 m -> m.declarations(TypeOfDeclaration.TYPE),
                 ((hasExposing, declarations) -> hasExposing.filterExposed(declarations, TypeOfExposed.TYPE)),
                 Function.identity(),
+                DefaultImports.typeNames(),
                 false
         );
     }
@@ -121,9 +126,12 @@ public class Resolver<T> {
         Stream<? extends PsiNamedElement> locals = locals(target).flatMap(identity());
         Stream<? extends PsiNamedElement> exposedValues = exposed(module);
         Stream<? extends PsiNamedElement> declared = declared(module);
-        return Stream.of(locals, declared, exposedValues)
-                     .flatMap(identity())
-                     .map(PsiNamedElement::getName);
+        return Stream.concat(
+                Stream.of(locals, declared, exposedValues)
+                      .flatMap(identity())
+                      .map(PsiNamedElement::getName),
+                builtIn.stream()
+        );
     }
 
     private Optional<Stream<PsiNamedElement>> qualified(PsiElement target) {

@@ -46,7 +46,7 @@ public class Declaration {
     private static Parser portDecl() {
         return sequence("port declaration",
                 expect(Tokens.PORT),
-                expect(Tokens.LOW_VAR).as(Elements.PORT_NAME),
+                or(expect(Tokens.LOW_VAR), expect(Tokens.RUNE_OF_AUTOCOMPLETION)).as(Elements.PORT_NAME),
                 expect(Tokens.COLON),
                 Type.expression
         ).separatedBy(WhiteSpace::maybeWhitespace).as(Elements.PORT_DECLARATION);

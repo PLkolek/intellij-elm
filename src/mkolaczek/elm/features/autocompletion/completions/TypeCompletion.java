@@ -46,7 +46,9 @@ public class TypeCompletion {
     private static Stream<String> visibleTypes(CompletionParameters parameters) {
         TypeAliasDeclNode aliasDeclNode = getParentOfType(parameters.getPosition(), TypeAliasDeclNode.class);
         String aliasName = aliasDeclNode != null ? aliasDeclNode.typeDeclaration().getName() : null;
-        return Resolver.forTypes().variants(parameters.getPosition()).filter(s -> !s.equals(aliasName));
+        return Resolver.forTypes()
+                       .variants(parameters.getPosition())
+                       .filter(s -> !s.equals(aliasName));
     }
 
     private static Stream<String> typesFromModule(CompletionParameters parameters) {
