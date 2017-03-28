@@ -6,12 +6,13 @@ import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
+import mkolaczek.elm.psi.node.extensions.Exposed;
 import mkolaczek.elm.references.ValueReference;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ValueExposing extends ElmNamedElement {
+public class ValueExposing extends ElmNamedElement implements Exposed {
     public ValueExposing(ASTNode node) {
         super(node);
     }
@@ -38,5 +39,10 @@ public class ValueExposing extends ElmNamedElement {
         if (!ModuleValueList.maybeDeleteChild(this)) {
             super.delete();
         }
+    }
+
+    @Override
+    public String exposedName() {
+        return getName();
     }
 }

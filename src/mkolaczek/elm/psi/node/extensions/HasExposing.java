@@ -26,7 +26,7 @@ public interface HasExposing extends PsiElement {
 
     default Optional<TypeExposing> exposedType(String typeName) {
         return exposed(TypeOfExposed.TYPE)
-                .filter(export -> typeName.equals(export.typeNameString())).findFirst();
+                .filter(export -> typeName.equals(export.exposedName())).findFirst();
     }
 
     default Stream<ValueExposing> exposedValue(String valueName) {
@@ -34,7 +34,7 @@ public interface HasExposing extends PsiElement {
                 .filter(export -> valueName.equals(export.getName()));
     }
 
-    default <T extends PsiElement> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
+    default <T extends Exposed> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
         return Streams.stream(exposingList()).flatMap(l -> l.exposed(exposedElementsType));
     }
 
@@ -45,7 +45,7 @@ public interface HasExposing extends PsiElement {
 
         Map<String, TypeExposing> exposedTypes =
                 exposed(TypeOfExposed.TYPE).collect(toMap(
-                        TypeExposing::typeNameString,
+                        TypeExposing::exposedName,
                         identity()
                 ));
 

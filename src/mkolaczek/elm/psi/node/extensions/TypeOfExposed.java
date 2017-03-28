@@ -1,11 +1,10 @@
 package mkolaczek.elm.psi.node.extensions;
 
-import com.intellij.psi.PsiElement;
 import mkolaczek.elm.psi.node.OperatorSymbolRef;
 import mkolaczek.elm.psi.node.TypeExposing;
 import mkolaczek.elm.psi.node.ValueExposing;
 
-public interface TypeOfExposed<T extends PsiElement> {
+public interface TypeOfExposed<T extends Exposed> {
 
     Class<T> psiClass();
 

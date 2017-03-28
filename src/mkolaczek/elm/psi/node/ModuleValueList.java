@@ -6,6 +6,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import mkolaczek.elm.psi.node.extensions.Exposed;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import mkolaczek.util.Streams;
 
@@ -32,7 +33,7 @@ public class ModuleValueList extends ASTWrapperPsiElement {
         return Optional.ofNullable(getChildOfType(this, CommaSeparatedList.class));
     }
 
-    public <T extends PsiElement> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
+    public <T extends Exposed> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
         return values(ExposedValue.class).stream()
                                          .map(e -> e.exposed(exposedElementsType))
                                          .flatMap(Streams::stream);

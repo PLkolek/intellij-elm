@@ -3,7 +3,7 @@ package mkolaczek.elm.psi.node;
 import com.google.common.base.Joiner;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.util.PsiTreeUtil;
+import mkolaczek.elm.psi.node.extensions.Exposed;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -13,17 +13,13 @@ import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
-public class TypeExposing extends ASTWrapperPsiElement {
+public class TypeExposing extends ASTWrapperPsiElement implements Exposed {
     public TypeExposing(ASTNode node) {
         super(node);
     }
 
     public TypeNameRef typeName() {
         return findChildOfType(this, TypeNameRef.class);
-    }
-
-    public String typeNameString() {
-        return PsiTreeUtil.firstChild(this).getText();
     }
 
     public boolean withoutConstructors() {
@@ -53,6 +49,14 @@ public class TypeExposing extends ASTWrapperPsiElement {
 
     //WEIRD STUFF
     public static String declarationString(TypeExposing typeExposing) {
-        return typeExposing.typeNameString() + " = " + Joiner.on(" | ").join(typeExposing.constructorNames());
+        return typeExposing.exposedName() + " = " + Joiner.on(" | ").join(typeExposing.constructorNames());
+    }
+
+    @Override
+    public String exposedName() {
+        if (typeName() != null) {
+            return typeName().getName();
+        }
+        return null;
     }
 }

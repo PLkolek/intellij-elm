@@ -6,6 +6,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
+import mkolaczek.elm.psi.node.extensions.Exposed;
 import mkolaczek.elm.references.OperatorReference;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 
 
-public class OperatorSymbolRef extends ElmNamedElement {
+public class OperatorSymbolRef extends ElmNamedElement implements Exposed {
     public OperatorSymbolRef(ASTNode node) {
         super(node);
     }
@@ -29,6 +30,11 @@ public class OperatorSymbolRef extends ElmNamedElement {
     @Override
     public PsiElement getNameIdentifier() {
         return this;
+    }
+
+    @Override
+    public String exposedName() {
+        return getName();
     }
 
     @NotNull

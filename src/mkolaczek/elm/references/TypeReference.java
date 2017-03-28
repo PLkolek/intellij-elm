@@ -55,7 +55,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
             excluded = newHashSet(aliasName);
         } else if (exposingList != null) {
             excluded = exposingList.exposed(TypeOfExposed.TYPE)
-                                   .map(TypeExposing::typeNameString)
+                                   .map(TypeExposing::exposedName)
                                    .collect(toSet());
         }
 
@@ -92,7 +92,7 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
             return decls;
         }
         Set<String> typeExports = i.exposed(TypeOfExposed.TYPE)
-                                   .map(TypeExposing::typeNameString)
+                                   .map(TypeExposing::exposedName)
                                    .collect(Collectors.toSet());
         return decls.filter(d -> typeExports.contains(d.getName()));
     }

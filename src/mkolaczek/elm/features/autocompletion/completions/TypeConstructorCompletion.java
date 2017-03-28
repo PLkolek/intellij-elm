@@ -51,7 +51,7 @@ public class TypeConstructorCompletion {
 
         Set<String> excluded = Sets.newHashSet(typeExposing.constructorNames());
 
-        return module(typeExposing).declarations(TypeOfDeclaration.TYPE, typeExposing.typeNameString())
+        return module(typeExposing).declarations(TypeOfDeclaration.TYPE, typeExposing.exposedName())
                                    .flatMap(TypeDeclaration::constructors)
                                    .filter(elem -> !excluded.contains(elem.getName()))
                                    .map(TypeConstructor::getName);

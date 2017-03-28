@@ -51,7 +51,7 @@ public class TypeCompletion {
         return module(parameters.getPosition())
                 .exposed(TypeOfExposed.TYPE)
                 .filter(TypeExposing::withoutConstructors)
-                .map(TypeExposing::typeNameString);
+                .map(TypeExposing::exposedName);
     }
 
     private static Stream<String> exposedTypes(CompletionParameters parameters) {
@@ -61,7 +61,7 @@ public class TypeCompletion {
     }
 
     private static Stream<String> typeCompletions(TypeExposing typeExposing) {
-        ArrayList<String> result = Lists.newArrayList(typeExposing.typeNameString());
+        ArrayList<String> result = Lists.newArrayList(typeExposing.exposedName());
         if (!typeExposing.withoutConstructors()) {
             result.add(TypeExposing.declarationString(typeExposing));
         }
