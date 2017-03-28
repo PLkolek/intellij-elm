@@ -16,4 +16,9 @@ public class AsTypes {
     public Element pop() {
         return asTypes.pop();
     }
+
+    public void swap(Element as) {
+        asTypes.pop();
+        asTypes.push(as);
+    }
 }

@@ -33,6 +33,11 @@ public interface Parser {
         return new As(this, as, mode);
     }
 
+    default Parser swapAs(Element as) {
+        return new SwapAs(this, as);
+    }
+
+
     default Parser ll2(HashSet<Token> firstTokens, HashSet<Token> secondTokens) {
         return new LL2(this, firstTokens, secondTokens);
     }

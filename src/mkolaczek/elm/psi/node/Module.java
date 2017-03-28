@@ -12,10 +12,12 @@ import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.extensions.*;
+import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -120,7 +122,11 @@ public class Module extends ElmNamedElement implements DocCommented {
     }
 
     public <T extends PsiElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration) {
-        return findChildrenOfType(this, typeOfDeclaration.psiClass()).stream();
+        return Streams.stream(declarationsNode())
+                      .flatMap(n -> {
+                          T[] decls = getChildrenOfType(n, typeOfDeclaration.psiClass());
+                          return decls != null ? Arrays.stream(decls) : Stream.empty();
+                      });
     }
 
     public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration, String name) {
@@ -129,9 +135,7 @@ public class Module extends ElmNamedElement implements DocCommented {
 
     public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration,
                                                               Set<String> names) {
-        return findChildrenOfType(this, typeOfDeclaration.psiClass())
-                .stream()
-                .filter(decl -> names.contains(decl.getName()));
+        return declarations(typeOfDeclaration).filter(decl -> names.contains(decl.getName()));
     }
 
     public Stream<? extends ElmNamedElement> declaredValues() {
