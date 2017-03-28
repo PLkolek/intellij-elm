@@ -3,7 +3,6 @@ package mkolaczek.elm.references;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.psi.node.Import;
@@ -12,7 +11,10 @@ import mkolaczek.elm.psi.node.TypeDeclaration;
 import mkolaczek.elm.psi.node.extensions.*;
 import one.util.streamex.StreamEx;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -90,22 +92,18 @@ public class Resolver<T> {
         if (target.getName() == null) {
             return Stream.empty();
         }
-        Stream<? extends PsiNamedElement> resolved;
         if (insideModuleHeader(target)) {
-            resolved = declared(module(target)).filter(e -> target.getName().equals(e.getName()));
+            return declared(module(target)).filter(e -> target.getName().equals(e.getName()));
         } else if (insideImport(target)) {
-            resolved = containingImport(target).importedModule()
-                                               .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)));
+            return containingImport(target).importedModule()
+                                           .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)));
         } else {
-            resolved = resolveCodeReference(target);
+            return resolveCodeReference(target);
         }
-        return resolved;
     }
 
-    public Stream<? extends PsiNamedElement> resolveCodeReference(PsiNamedElement target) {
-        if (target.getName() == null) {
-            return Stream.empty();
-        }
+    private Stream<? extends PsiNamedElement> resolveCodeReference(PsiNamedElement target) {
+        assert target.getName() != null;
         Optional<Stream<PsiNamedElement>> qualified = qualified(target);
         if (qualified.isPresent()) {
             return qualified.get().filter(e -> target.getName().equals(e.getName()));
@@ -158,7 +156,7 @@ public class Resolver<T> {
             return Optional.of(
                     module.imports(qualifiedRef.moduleName().get().getName())
                           .flatMap(Import::importedModule)
-                          .flatMap(m -> removeDuplicates(toStream.apply(declaredAndExposedFrom(m))))
+                          .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)))
             );
         }
         return Optional.empty();
@@ -193,15 +191,5 @@ public class Resolver<T> {
             decls = exposedFilter.apply(m.header().get(), decls);
         }
         return decls;
-    }
-
-    private Stream<? extends PsiNamedElement> removeDuplicates(Stream<? extends PsiNamedElement> items) {
-        Map<String, PsiNamedElement> unique = Maps.newLinkedHashMap();
-        items.forEachOrdered(e -> {
-            if (!unique.containsKey(e.getName())) {
-                unique.put(e.getName(), e);
-            }
-        });
-        return unique.values().stream();
     }
 }
