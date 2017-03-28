@@ -1,17 +1,19 @@
 package mkolaczek.elm.parsers.core.context;
 
 public class Context {
-    private final Indentation indentation;
+    private final Indentation indentation = new Indentation();
+    private final AsTypes asTypes = new AsTypes();
 
-    private Context(Indentation indentation) {
-        this.indentation = indentation;
-    }
 
     public Indentation getIndentation() {
         return indentation;
     }
 
     public static Context create() {
-        return new Context(Indentation.create());
+        return new Context();
+    }
+
+    public AsTypes getAsTypes() {
+        return asTypes;
     }
 }

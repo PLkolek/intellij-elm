@@ -25,9 +25,11 @@ public class As implements Parser {
     public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
         int startingOffset = builder.getCurrentOffset();
         PsiBuilder.Marker marker = builder.mark();
+        context.getAsTypes().push(as);
         Result result = content.parse(builder, nextParsers, context);
+        Element stackAs = context.getAsTypes().pop();
         if (mode == Mode.MARK_ALWAYS || startingOffset != builder.getCurrentOffset()) {
-            marker.done(as);
+            marker.done(stackAs);
         } else {
             marker.drop();
         }

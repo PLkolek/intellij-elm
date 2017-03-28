@@ -7,11 +7,6 @@ import java.util.Optional;
 public class Indentation {
     private final Deque<Integer> indentationLevels = new ArrayDeque<>();
 
-
-    public static Indentation create() {
-        return new Indentation();
-    }
-
     public void push(int indent) {
         indentationLevels.push(indent);
     }
