@@ -17,7 +17,7 @@ import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
 public class Type {
 
-    public static ParserBox expression = new ParserBox("type expression");
+    public static final ParserBox expression = new ParserBox("type expression");
 
     @NotNull
     private static Sequence fieldSuffix() {
@@ -28,7 +28,7 @@ public class Type {
     }
 
 
-    private static Parser term =
+    private static final Parser term =
             or("type term",
                     typeRef(),
                     expect(Tokens.LOW_VAR),
@@ -36,7 +36,7 @@ public class Type {
                     record("record type", fieldSuffix())
             );
 
-    private static Parser app =
+    private static final Parser app =
             sequence("type application",
                     typeRef(),
                     spacePrefix(term)
@@ -49,7 +49,7 @@ public class Type {
         ).as(Elements.QUALIFIED_TYPE_NAME_REF);
     }
 
-    private static Parser expression2 =
+    private static final Parser expression2 =
             sequence("type expression",
                     or(
                             app,

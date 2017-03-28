@@ -151,20 +151,6 @@ public class Module extends ElmNamedElement implements DocCommented {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
     }
 
-    public <D extends PsiNamedElement> Stream<D> exportedDeclaration(TypeOfDeclaration<D, ? extends Exposed> typeOfDeclaration,
-                                                                     String symbol) {
-        boolean isExposed = exposedNames(typeOfDeclaration.exposedAs())
-                                                                  .filter(symbol::equals)
-                                                                  .count() > 0;
-
-        return isExposed || exposesEverything() ? declarations(typeOfDeclaration, symbol) : Stream.empty();
-
-    }
-
-    public boolean exposesEverything() {
-        return header().flatMap(HasExposing::exposingList).map(ModuleValueList::isOpenListing).orElse(true);
-    }
-
     public Stream<String> notExposed(TypeOfExposed<?> typeOfExposed,
                                      Function<Declaration, Stream<String>> valueExtractor) {
         Set<String> excluded = exposedNames(typeOfExposed).collect(toSet());

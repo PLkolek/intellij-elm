@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 public class ElmStructureViewBuilderFactory implements PsiStructureViewFactory {
     @Override
     @NotNull
-    public TreeBasedStructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
+    public TreeBasedStructureViewBuilder getStructureViewBuilder(PsiFile psiFile) {
         return new TreeBasedStructureViewBuilder() {
             @NotNull
             @Override

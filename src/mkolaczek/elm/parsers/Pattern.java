@@ -21,7 +21,7 @@ import static mkolaczek.elm.psi.Tokens.*;
 
 public class Pattern {
 
-    public static ParserBox expression = new ParserBox("pattern expression");
+    public static final ParserBox expression = new ParserBox("pattern expression");
 
     public static Parser term() {
         return or(

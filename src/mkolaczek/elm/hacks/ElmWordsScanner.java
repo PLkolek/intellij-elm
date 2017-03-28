@@ -45,8 +45,8 @@ public class ElmWordsScanner extends VersionedWordsScanner {
      * @param commentTokenSet    the set of token types which represent comments.
      * @param literalTokenSet    the set of token types which represent literals.
      */
-    public ElmWordsScanner(final Lexer lexer, final TokenSet identifierTokenSet, final TokenSet commentTokenSet,
-                           final TokenSet literalTokenSet) {
+    public ElmWordsScanner(Lexer lexer, TokenSet identifierTokenSet, TokenSet commentTokenSet,
+                           TokenSet literalTokenSet) {
         this(lexer, identifierTokenSet, commentTokenSet, literalTokenSet, TokenSet.EMPTY);
     }
 
@@ -59,8 +59,8 @@ public class ElmWordsScanner extends VersionedWordsScanner {
      * @param literalTokenSet         the set of token types which represent literals.
      * @param skipCodeContextTokenSet the set of token types which should not be considered as code context.
      */
-    public ElmWordsScanner(final Lexer lexer, final TokenSet identifierTokenSet, final TokenSet commentTokenSet,
-                           final TokenSet literalTokenSet, final @NotNull TokenSet skipCodeContextTokenSet) {
+    public ElmWordsScanner(Lexer lexer, TokenSet identifierTokenSet, TokenSet commentTokenSet,
+                           TokenSet literalTokenSet, @NotNull TokenSet skipCodeContextTokenSet) {
         this(lexer, identifierTokenSet, commentTokenSet, literalTokenSet, skipCodeContextTokenSet, TokenSet.EMPTY);
     }
 
@@ -74,9 +74,9 @@ public class ElmWordsScanner extends VersionedWordsScanner {
      * @param skipCodeContextTokenSet the set of token types which should not be considered as code context.
      * @param processAsWordTokenSet   the set of token types which represent overload operators.
      */
-    public ElmWordsScanner(final Lexer lexer, final TokenSet identifierTokenSet, final TokenSet commentTokenSet,
-                           final TokenSet literalTokenSet, @NotNull TokenSet skipCodeContextTokenSet,
-                           final @NotNull TokenSet processAsWordTokenSet) {
+    public ElmWordsScanner(Lexer lexer, TokenSet identifierTokenSet, TokenSet commentTokenSet,
+                           TokenSet literalTokenSet, @NotNull TokenSet skipCodeContextTokenSet,
+                           @NotNull TokenSet processAsWordTokenSet) {
         myLexer = lexer;
         myIdentifierTokenSet = identifierTokenSet;
         myCommentTokenSet = commentTokenSet;
@@ -142,11 +142,11 @@ public class ElmWordsScanner extends VersionedWordsScanner {
         }
     }
 
-    protected static boolean stripWords(final Processor<WordOccurrence> processor,
-                                        final CharSequence tokenText,
+    protected static boolean stripWords(Processor<WordOccurrence> processor,
+                                        CharSequence tokenText,
                                         int from,
                                         int to,
-                                        final WordOccurrence.Kind kind,
+                                        WordOccurrence.Kind kind,
                                         @NotNull WordOccurrence occurrence,
                                         boolean mayHaveFileRefs
     ) {
@@ -200,7 +200,7 @@ public class ElmWordsScanner extends VersionedWordsScanner {
         return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '$';
     }
 
-    public void setMayHaveFileRefsInLiterals(final boolean mayHaveFileRefsInLiterals) {
+    public void setMayHaveFileRefsInLiterals(boolean mayHaveFileRefsInLiterals) {
         myMayHaveFileRefsInLiterals = mayHaveFileRefsInLiterals;
     }
 }

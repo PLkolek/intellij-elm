@@ -3,13 +3,12 @@ package mkolaczek.elm.features.refactoring.rename;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.refactoring.rename.RenameHandler;
 import com.intellij.refactoring.rename.inplace.MemberInplaceRenameHandler;
 import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
 import mkolaczek.elm.boilerplate.ElmLanguage;
 import org.jetbrains.annotations.NotNull;
 
-public class InplaceRenameHandler extends MemberInplaceRenameHandler implements RenameHandler {
+public class InplaceRenameHandler extends MemberInplaceRenameHandler {
 
 
     @NotNull

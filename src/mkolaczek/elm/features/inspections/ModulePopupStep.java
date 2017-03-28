@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.util.List;
 
 class ModulePopupStep extends BaseListPopupStep<Module> {
-    private AddImportIntentionAction addImportIntentionAction;
+    private final AddImportIntentionAction addImportIntentionAction;
     private final Project project;
     private final PsiFile file;
 
