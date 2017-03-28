@@ -4,7 +4,7 @@ module Module exposing (Type(BadCons),
 import BadModule
 import ModuleToImport
 
-type alias Alias = BadType
+type alias Alias = BadType (List Int)
 
 type Type = Cons ModuleToImport<caret>.
 
