@@ -7,13 +7,18 @@ import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.completions.*;
 import mkolaczek.elm.features.autocompletion.providers.LambdaBasedCompletionProvider;
 import mkolaczek.elm.features.autocompletion.providers.PlainMatchingCompletionProvider;
+import mkolaczek.elm.psi.node.extensions.Exposed;
+import mkolaczek.elm.psi.node.extensions.HasExposing;
+import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toSet;
 
 
 public class ElmCompletionContributor extends CompletionContributor {
@@ -36,6 +41,15 @@ public class ElmCompletionContributor extends CompletionContributor {
         T parent = getParentOfType(position, parentType);
         assert parent != null;
         return parent;
+    }
+
+    public static Stream<String> notExposed(TypeOfExposed<? extends Exposed> typeOfExposed,
+                                            CompletionParameters parameters) {
+        HasExposing hasExposing = getParentOfType(parameters.getPosition(), HasExposing.class);
+        assert hasExposing != null;
+        Set<String> exposed = hasExposing.exposed(typeOfExposed).map(Exposed::exposedName).collect(toSet());
+        return typeOfExposed.resolver().variants(parameters.getPosition())
+                            .filter(o -> !exposed.contains(o));
     }
 
     public void autocomplete(Capture<PsiElement> pattern, LookupElementBuilder... completions) {

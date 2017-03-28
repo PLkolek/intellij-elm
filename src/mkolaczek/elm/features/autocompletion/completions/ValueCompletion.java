@@ -1,21 +1,14 @@
 package mkolaczek.elm.features.autocompletion.completions;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
-import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
 import mkolaczek.elm.psi.node.extensions.Exposed;
-import mkolaczek.elm.psi.node.extensions.HasExposing;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import mkolaczek.elm.references.Resolver;
 
-import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
-import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
@@ -50,11 +43,6 @@ public class ValueCompletion {
 
     }
 
-    private static PsiElementPattern.Capture<PsiElement> inExposing(Element exposedItem) {
-        return e().andOr(e().inside(e(exposedItem)), e(RUNE_OF_AUTOCOMPLETION))
-                  .inside(e(MODULE_HEADER, IMPORT_LINE));
-    }
-
     private static Stream<String> exposedOperators(CompletionParameters parameters) {
         return exposed(parameters, TypeOfExposed.OPERATOR);
     }
@@ -68,20 +56,11 @@ public class ValueCompletion {
     }
 
     private static Stream<String> notExposedOperators(CompletionParameters parameters) {
-        return notExposed(TypeOfExposed.OPERATOR, parameters).map(OperatorDeclaration::parens);
+        return ElmCompletionContributor.notExposed(TypeOfExposed.OPERATOR, parameters).map(OperatorDeclaration::parens);
     }
 
     private static Stream<String> notExposedValues(CompletionParameters parameters) {
-        return notExposed(TypeOfExposed.VALUE, parameters);
-    }
-
-    private static Stream<String> notExposed(TypeOfExposed<? extends Exposed> typeOfExposed,
-                                             CompletionParameters parameters) {
-        HasExposing hasExposing = getParentOfType(parameters.getPosition(), HasExposing.class);
-        assert hasExposing != null;
-        Set<String> exposed = hasExposing.exposed(typeOfExposed).map(Exposed::exposedName).collect(toSet());
-        return typeOfExposed.resolver().variants(parameters.getPosition())
-                            .filter(o -> !exposed.contains(o));
+        return ElmCompletionContributor.notExposed(TypeOfExposed.VALUE, parameters);
     }
 
     public static Stream<String> exposed(CompletionParameters parameters,

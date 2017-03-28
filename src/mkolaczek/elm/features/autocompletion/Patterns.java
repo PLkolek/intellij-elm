@@ -14,6 +14,8 @@ import java.util.Arrays;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static com.intellij.patterns.StandardPatterns.or;
+import static mkolaczek.elm.psi.Elements.*;
+import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
 
 public class Patterns {
     public static PsiElementPattern.Capture<PsiElement> afterLeaf(PsiElementPattern.Capture<PsiElement> pattern) {
@@ -70,4 +72,8 @@ public class Patterns {
         return e().inside(e().afterSibling(e(element)));
     }
 
+    public static PsiElementPattern.Capture<PsiElement> inExposing(Element exposedItem) {
+        return e().andOr(inside(exposedItem), e(RUNE_OF_AUTOCOMPLETION).andNot(inside(TYPE_CONSTRUCTOR_REF)))
+                  .inside(e(MODULE_HEADER, IMPORT_LINE));
+    }
 }

@@ -33,13 +33,7 @@ public class TypeCompletion {
         c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),       TypeCompletion::exposedTypeConstructors);
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),                  TypeCompletion::visibleTypes);
         c.autocomplete(e().inside(e(TYPE_NAME_REF)),                            TypeCompletion::visibleTypes);
-        c.autocomplete(
-                e().andOr(
-                        childOf(TYPE_NAME_REF),
-                        e(RUNE_OF_AUTOCOMPLETION).andNot(e().withParent(e(TYPE_CONSTRUCTOR_REF)))
-                ).inside(e(MODULE_HEADER)),
-                TypeCompletion::typesFromModule
-        );
+        c.autocomplete(inExposing(TYPE_NAME_REF),                               TypeCompletion::notExposedTypes);
         //@formatter:on
     }
 
@@ -102,5 +96,9 @@ public class TypeCompletion {
 
         constructors.removeAll(declared);
         return constructors;
+    }
+
+    private static Stream<String> notExposedTypes(CompletionParameters parameters) {
+        return ElmCompletionContributor.notExposed(TypeOfExposed.TYPE, parameters);
     }
 }
