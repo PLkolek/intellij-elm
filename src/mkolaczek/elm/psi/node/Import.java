@@ -3,6 +3,7 @@ package mkolaczek.elm.psi.node;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.psi.node.extensions.HasExposing;
 
@@ -18,15 +19,15 @@ public class Import extends ASTWrapperPsiElement implements HasExposing {
     }
 
     public Stream<Module> importedModule() {
-        if (!importedModuleName().isPresent()) {
-            return Stream.empty();
-        }
-
-        return ProjectUtil.modules(getProject(), importedModuleName().get().getName());
+        return ProjectUtil.modules(getProject(), importedModuleNameString().orElse(null));
     }
 
     public Optional<ModuleNameRef> importedModuleName() {
         return Optional.ofNullable(findChildOfType(this, ModuleNameRef.class));
+    }
+
+    public Optional<String> importedModuleNameString() {
+        return importedModuleName().map(PsiNamedElement::getName);
     }
 
     public boolean isAliased() {

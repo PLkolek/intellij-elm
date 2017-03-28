@@ -1,5 +1,6 @@
 package mkolaczek.elm;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -42,6 +43,9 @@ public class ProjectUtil {
     }
 
     public static Stream<Module> modules(Project project, String searchedModuleName) {
+        if (Strings.isNullOrEmpty(searchedModuleName)) {
+            return Stream.empty();
+        }
         return modules(project, ImmutableSet.of(searchedModuleName));
     }
 
