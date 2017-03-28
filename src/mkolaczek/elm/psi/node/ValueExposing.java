@@ -45,4 +45,9 @@ public class ValueExposing extends ElmNamedElement implements Exposed {
     public String exposedName() {
         return getName();
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + getNode().getElementType().toString() + ", " + exposedName() + ")";
+    }
 }
