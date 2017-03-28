@@ -105,7 +105,11 @@ public interface Elements {
             } else if (type == OPERATOR) {
                 return new Operator(node);
             } else if (type == OPERATOR_SYMBOL) {
-                return new OperatorSymbol(node);
+                if (node.getTreeParent().getTreeParent().getElementType() == OPERATOR_DECLARATION) {
+                    return new OperatorSymbol(node);
+                } else {
+                    return new OperatorSymbolRef(node);
+                }
             } else if (type == OPERATOR_SYMBOL_REF) {
                 return new OperatorSymbolRef(node);
             } else if (type == OPEN_LISTING_NODE) {

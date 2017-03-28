@@ -58,7 +58,7 @@ public class Expression {
     }
 
     @NotNull
-    public static Sequence operatorDefinition() {
+    public static Parser operatorDefinition() {
         return sequence(
                 Basic.operator(Elements.OPERATOR_SYMBOL)
                      .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP, CONS)),
@@ -66,13 +66,13 @@ public class Expression {
                         sequence(
                                 expect(Tokens.COLON),
                                 Type.expression
-                        ),
+                        ).swapAs(TYPE_ANNOTATION),
                         sequence(
                                 spacePrefix(definedValues()),
                                 definitionEnd()
                         ).as(DEFINED_VALUES)
                 )
-        );
+        ).as(Elements.OPERATOR_DECLARATION);
     }
 
     private static Parser definitionEnd() {

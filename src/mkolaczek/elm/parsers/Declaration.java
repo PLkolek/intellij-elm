@@ -38,7 +38,7 @@ public class Declaration {
                 typeDecl(),
                 infixDecl(),
                 portDecl(),
-                Expression.operatorDefinition().as(Elements.OPERATOR_DECLARATION),
+                Expression.operatorDefinition(),
                 Expression.valueDefinition().as(Elements.VALUE_DECLARATION)
         );
     }
