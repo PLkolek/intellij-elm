@@ -21,6 +21,7 @@ import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static mkolaczek.elm.psi.PsiUtil.*;
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class Resolver<T> {
@@ -86,6 +87,22 @@ public class Resolver<T> {
     }
 
     public Stream<? extends PsiNamedElement> resolve(PsiNamedElement target) {
+        if (target.getName() == null) {
+            return Stream.empty();
+        }
+        Stream<? extends PsiNamedElement> resolved;
+        if (insideModuleHeader(target)) {
+            resolved = declared(module(target)).filter(e -> target.getName().equals(e.getName()));
+        } else if (insideImport(target)) {
+            resolved = containingImport(target).importedModule()
+                                               .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)));
+        } else {
+            resolved = resolveCodeReference(target);
+        }
+        return resolved;
+    }
+
+    public Stream<? extends PsiNamedElement> resolveCodeReference(PsiNamedElement target) {
         if (target.getName() == null) {
             return Stream.empty();
         }
