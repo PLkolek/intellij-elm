@@ -71,6 +71,15 @@ public class Resolver<T> {
         );
     }
 
+    public static Resolver<?> forTypes() {
+        return new Resolver<>(
+                m -> m.declarations(TypeOfDeclaration.TYPE),
+                ((hasExposing, declarations) -> hasExposing.filterExposed(declarations, TypeOfExposed.TYPE)),
+                Function.identity(),
+                false
+        );
+    }
+
     public Stream<? extends PsiNamedElement> resolve(PsiNamedElement target) {
         if (target.getName() == null) {
             return Stream.empty();

@@ -56,11 +56,11 @@ public interface HasExposing extends PsiElement {
     }
 
     default Stream<? extends PsiNamedElement> filterExposed(Stream<? extends PsiNamedElement> elements,
-                                                            TypeOfExposed<? extends PsiNamedElement> typeOfExposed) {
+                                                            TypeOfExposed<? extends Exposed> typeOfExposed) {
         if (exposesEverything()) {
             return elements;
         }
-        return elements.filter(nameIn(exposed(typeOfExposed)));
+        return elements.filter(nameIn(exposed(typeOfExposed).map(Exposed::exposedName)));
     }
 
     default Boolean exposesEverything() {

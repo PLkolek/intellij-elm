@@ -67,8 +67,8 @@ public abstract class ElmNamedElement extends ASTWrapperPsiElement implements Ps
         return e -> nameSet.contains(e.getName());
     }
 
-    public static Predicate<PsiNamedElement> nameIn(Stream<? extends PsiNamedElement> elements) {
-        Set<String> nameSet = elements.map(PsiNamedElement::getName).collect(Collectors.toSet());
+    public static Predicate<PsiNamedElement> nameIn(Stream<String> elements) {
+        Set<String> nameSet = elements.collect(Collectors.toSet());
         return e -> nameSet.contains(e.getName());
     }
 }

@@ -2,14 +2,12 @@ package mkolaczek.elm.references;
 
 import com.google.common.collect.Sets;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReferenceBase;
+import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,20 +16,13 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Sets.newHashSet;
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.stream.Collectors.toSet;
+import static mkolaczek.elm.psi.PsiUtil.*;
 import static mkolaczek.elm.psi.node.Module.module;
+import static mkolaczek.elm.psi.node.extensions.TypeOfDeclaration.TYPE;
 
-public class TypeReference extends PsiReferenceBase<TypeNameRef> {
+public class TypeReference extends PsiReferenceBase.Poly<TypeNameRef> {
     public TypeReference(TypeNameRef element) {
-        super(element, TextRange.create(0, element.getTextLength()));
-    }
-
-
-    @Nullable
-    @Override
-    public TypeDeclaration resolve() {
-        return typeDeclarations(myElement, true)
-                .filter(type -> myElement.getName().equals(type.getName()))
-                .findFirst().orElse(null);
+        super(element, TextRange.create(0, element.getTextLength()), false);
     }
 
     @NotNull
@@ -102,5 +93,20 @@ public class TypeReference extends PsiReferenceBase<TypeNameRef> {
                 .flatMap((module) -> module.declarations(TypeOfDeclaration.TYPE));
     }
 
-
+    @NotNull
+    @Override
+    public ResolveResult[] multiResolve(boolean incompleteCode) {
+        Stream<? extends PsiNamedElement> resolved;
+        if (insideModuleHeader(myElement)) {
+            resolved = module(myElement).declarations(TYPE)
+                                        .filter(d -> d.sameName(myElement.getName()));
+        } else if (insideImport(myElement)) {
+            resolved = containingImport(myElement).importedModule()
+                                                  .flatMap(m -> m.exportedDeclaration(TYPE, myElement.getName()));
+        } else {
+            resolved = Resolver.forTypes().resolve(myElement);
+        }
+        return resolved.map(PsiElementResolveResult::new)
+                       .toArray(ResolveResult[]::new);
+    }
 }
