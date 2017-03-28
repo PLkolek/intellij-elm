@@ -5,10 +5,9 @@ import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.Element;
-import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
-import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.Exposed;
+import mkolaczek.elm.psi.node.extensions.HasExposing;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import mkolaczek.elm.references.Resolver;
 
@@ -45,10 +44,10 @@ public class ValueCompletion {
                 ValueCompletion::visibleOperators
         );
 
-        c.autocomplete(inExposing(MODULE_HEADER, OPERATOR), ValueCompletion::moduleOperators);
-        c.autocomplete(inExposing(IMPORT_LINE, OPERATOR), ValueCompletion::notImportedOperators);
-        c.autocomplete(inExposing(MODULE_HEADER, VALUE_EXPOSING), ValueCompletion::moduleValues);
-        c.autocomplete(inExposing(IMPORT_LINE, OPERATOR), ValueCompletion::notImportedValues);
+        c.autocomplete(inExposing(MODULE_HEADER, OPERATOR), ValueCompletion::notExposedOperators);
+        c.autocomplete(inExposing(IMPORT_LINE, OPERATOR), ValueCompletion::notExposedOperators);
+        c.autocomplete(inExposing(MODULE_HEADER, VALUE_EXPOSING), ValueCompletion::notExposedValues);
+        c.autocomplete(inExposing(IMPORT_LINE, OPERATOR), ValueCompletion::notExposedValues);
 
         c.autocomplete(
                 inside(EXPRESSION).afterLeaf(e(LPAREN)), p -> visibleOperators(p).map(OperatorDeclaration::parens)
@@ -62,21 +61,21 @@ public class ValueCompletion {
         return e().andOr(e().inside(e(exposedItem)), childOf(RUNE_OF_AUTOCOMPLETION_EL)).inside(e(exposingLine));
     }
 
-    private static Stream<String> notImportedOperators(CompletionParameters parameters) {
-        return notImported(Resolver.forOperators(), TypeOfExposed.OPERATOR, parameters)
+    private static Stream<String> notExposedOperators(CompletionParameters parameters) {
+        return notExposed(Resolver.forOperators(), TypeOfExposed.OPERATOR, parameters)
                 .map(OperatorDeclaration::parens);
     }
 
-    private static Stream<String> notImportedValues(CompletionParameters parameters) {
-        return notImported(Resolver.forValues(), TypeOfExposed.VALUE, parameters);
+    private static Stream<String> notExposedValues(CompletionParameters parameters) {
+        return notExposed(Resolver.forValues(), TypeOfExposed.VALUE, parameters);
     }
 
-    private static Stream<String> notImported(Resolver<?> resolver,
-                                              TypeOfExposed<? extends Exposed> typeOfExposed,
-                                              CompletionParameters parameters) {
-        Import import_ = getParentOfType(parameters.getPosition(), Import.class);
-        assert import_ != null;
-        Set<String> exposed = import_.exposed(typeOfExposed).map(Exposed::exposedName).collect(toSet());
+    private static Stream<String> notExposed(Resolver<?> resolver,
+                                             TypeOfExposed<? extends Exposed> typeOfExposed,
+                                             CompletionParameters parameters) {
+        HasExposing hasExposing = getParentOfType(parameters.getPosition(), HasExposing.class);
+        assert hasExposing != null;
+        Set<String> exposed = hasExposing.exposed(typeOfExposed).map(Exposed::exposedName).collect(toSet());
         return resolver.variants(parameters.getPosition())
                        .filter(o -> !exposed.contains(o));
     }
@@ -92,17 +91,6 @@ public class ValueCompletion {
 
     private static Stream<String> visibleValues(CompletionParameters parameters) {
         return Resolver.forValues().variants(parameters.getPosition());
-    }
-
-    private static Stream<String> moduleOperators(CompletionParameters parameters) {
-        return module(parameters.getPosition()).notExposed(
-                TypeOfExposed.OPERATOR,
-                Declaration::declaredOperatorName
-        ).map(OperatorDeclaration::parens);
-    }
-
-    private static Stream<String> moduleValues(CompletionParameters parameters) {
-        return module(parameters.getPosition()).notExposed(TypeOfExposed.VALUE, Declaration::topLevelValueNames);
     }
 
 }
