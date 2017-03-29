@@ -26,12 +26,16 @@ public class ModuleResolver {
         return Stream.of(
                 module(target)
                         .notAliasedImports()
+                        .filter(i -> target.getName().equals(i.importedModuleNameString().orElse(null)))
                         .flatMap(import_ -> ProjectUtil.modules(import_.getProject(),
                                 import_.importedModuleNameString().orElse(null))),
+
                 module(target)
                         .aliasedImports()
                         .map(Import::alias)
-                        .flatMap(Streams::stream),
+                        .flatMap(Streams::stream)
+                        .filter(a -> a.sameName(target.getName())),
+
                 BuiltInImports.imports()
                               .filter(i -> i.importedAs().equals(target.getName()))
                               .flatMap(i -> ProjectUtil.modules(target.getProject(), i.moduleName()))
