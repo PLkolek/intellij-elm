@@ -27,7 +27,7 @@ public class ModuleCompletion {
         //@formatter:off
         c.autocomplete(Patterns.afterLeaf(Tokens.MODULE),               ModuleCompletion::fileName);
         c.autocomplete(Patterns.afterLeaf(Tokens.AS),                   ModuleCompletion::moduleNameParts);
-        c.autocomplete(inside(MODULE_NAME_REF).inside(e(IMPORT_LINE)),  ModuleCompletion::otherModules);
+        c.autocomplete(inside(MODULE_NAME_REF),                         ModuleCompletion::modules2);
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),          ModuleCompletion::modules);
         c.autocomplete(e().inside(e(QUALIFIED_TYPE_CONSTRUCTOR_REF)),   ModuleCompletion::modules);
         c.autocomplete(e().inside(e(QUALIFIED_VAR)),                    ModuleCompletion::modules);
@@ -37,7 +37,7 @@ public class ModuleCompletion {
         );
     }
 
-    private static Stream<String> otherModules(CompletionParameters parameters) {
+    private static Stream<String> modules2(CompletionParameters parameters) {
         return ModuleResolver.variants(parameters.getPosition());
     }
 
