@@ -6,6 +6,7 @@ import mkolaczek.elm.TestUtil;
 
 import java.util.List;
 
+import static mkolaczek.elm.TestUtil.withBuiltIn;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -43,11 +44,11 @@ public class OperatorCompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testSymbolCompletionInExpression() {
         myFixture.configureByFiles("asOperatorInExpression/Expression.elm");
-        autocomplete("<<<<", "someVal");
+        autocomplete(withBuiltIn("<<<<", "someVal"));
     }
 
     public void testSymbolCompletionAsFunctionInExpression() {
         myFixture.configureByFiles("asFunctionInExpression/Expression.elm");
-        autocomplete("(<<<<)", "someVal", "let", "if", "case");
+        autocomplete(withBuiltIn("(<<<<)", "someVal", "let", "if", "case"));
     }
 }

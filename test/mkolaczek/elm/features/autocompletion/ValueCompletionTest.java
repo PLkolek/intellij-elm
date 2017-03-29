@@ -7,6 +7,7 @@ import mkolaczek.elm.TestUtil;
 import java.util.List;
 
 import static mkolaczek.elm.TestUtil.files;
+import static mkolaczek.elm.TestUtil.withBuiltIn;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -21,17 +22,17 @@ public class ValueCompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testSimpleValueDeclarationCompletion() {
         myFixture.configureByFiles("declaration/Simple.elm");
-        autocomplete("someValue", "otherValue", "port", "infix", "infixl", "infixr", "type", "(***)");
+        autocomplete(withBuiltIn("someValue", "otherValue", "port", "infix", "infixl", "infixr", "type", "(***)"));
     }
 
     public void testValueDeclarationInRecordCompletion() {
         myFixture.configureByFiles("declaration/InRecord.elm");
-        autocomplete("someValue", "otherValue");
+        autocomplete(withBuiltIn("someValue", "otherValue"));
     }
 
     public void testValueDeclarationInListCompletion() {
         myFixture.configureByFiles("declaration/InList.elm");
-        autocomplete("someValue", "otherValue");
+        autocomplete(withBuiltIn("someValue", "otherValue"));
     }
 
 
@@ -57,7 +58,7 @@ public class ValueCompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testValueInLambdaExpressionCompletion() {
         myFixture.configureByFiles(files("inLambdaExpression/", "Lambda.elm"));
-        autocomplete("lambda", "arg1", "tup1", "tup2", "let", "case", "if");
+        autocomplete(withBuiltIn("lambda", "arg1", "tup1", "tup2", "let", "case", "if"));
     }
 
     public void testValueInFunctionDefinitionCompletion() {

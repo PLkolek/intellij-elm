@@ -11,9 +11,11 @@ import mkolaczek.elm.psi.node.ModuleNameRef;
 import mkolaczek.util.Streams;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class ModuleResolver {
@@ -68,25 +70,35 @@ public class ModuleResolver {
 
     public static Stream<String> variants(PsiElement target) {
         Module module = module(target);
+
+
         Optional<Stream<Module>> inImport = inImport(target);
-        if (inImport.isPresent()) {
-            return Stream.concat(
-                    inImport.get().map(Module::getName),
-                    BuiltInImports.moduleNames()
-            ).filter(name -> !module.sameName(name));
-        }
-        return Stream.of(
-                module(target)
-                        .notAliasedImports()
-                        .map(Import::importedModuleNameString)
-                        .flatMap(Streams::stream),
-                module(target)
-                        .aliasedImports()
-                        .map(Import::aliasName)
-                        .flatMap(Streams::stream),
-                BuiltInImports.imports()
-                              .map(BuiltInImport::importedAs)
-        ).flatMap(Function.identity());
+
+        return inImport.map(
+                moduleStream -> Stream.concat(
+                        moduleStream.map(Module::getName),
+                        BuiltInImports.moduleNames()
+                )
+        ).orElseGet(() -> {
+                    Set<String> alreadyImported = module.imports()
+                                                        .map(Import::importedModuleNameString)
+                                                        .flatMap(Streams::stream)
+                                                        .collect(toSet());
+                    alreadyImported.addAll(BuiltInImports.moduleNames().collect(toSet()));
+                    return Stream.of(
+                            module.notAliasedImports()
+                                  .map(Import::importedModuleNameString)
+                                  .flatMap(Streams::stream),
+                            module.aliasedImports()
+                                  .map(Import::aliasName)
+                                  .flatMap(Streams::stream),
+                            BuiltInImports.imports()
+                                          .map(BuiltInImport::importedAs),
+                            ProjectUtil.modules(target.getProject()).filter(m -> !alreadyImported.contains(m.getName()))
+                                       .map(Module::getName)
+                    ).flatMap(Function.identity());
+                }
+        ).filter(name -> !module.sameName(name));
     }
 
     private static Optional<Stream<Module>> inImport(PsiElement target) {

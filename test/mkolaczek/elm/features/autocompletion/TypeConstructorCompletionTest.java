@@ -7,6 +7,7 @@ import mkolaczek.elm.TestUtil;
 
 import java.util.List;
 
+import static mkolaczek.elm.TestUtil.withBuiltIn;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -36,17 +37,17 @@ public class TypeConstructorCompletionTest extends LightCodeInsightFixtureTestCa
 
     public void testInPatternFromCurrentModuleCompletion() {
         myFixture.configureByFiles(TestUtil.files("inPattern/fromCurrentModule/", "Current.elm"));
-        autocomplete("Cons1", "Cons2");
+        autocomplete("Cons1", "Cons2", "Cmd.", "Basics.");
     }
 
     public void testInPatternExposedCompletion() {
         myFixture.configureByFiles(TestUtil.files("inPattern/exposed/", "Importing.elm", "Imported.elm"));
-        autocomplete("Cons3", "Cons4");
+        autocomplete("Cons3", "Cons4", "Cmd.", "Basics.");
     }
 
     public void testInExpressionCompletion() {
         myFixture.configureByFiles(TestUtil.files("inExpression/", "Current.elm"));
-        autocomplete("Cons1", "Cons2", "if", "let", "case", "x");
+        autocomplete(withBuiltIn("Cons1", "Cons2", "if", "let", "case", "x"));
     }
 
     private void autocomplete(String... suggestions) {

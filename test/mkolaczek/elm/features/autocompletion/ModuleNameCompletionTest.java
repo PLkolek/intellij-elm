@@ -7,6 +7,7 @@ import mkolaczek.elm.TestUtil;
 
 import java.util.List;
 
+import static mkolaczek.elm.TestUtil.withBuiltIn;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -69,7 +70,7 @@ public class ModuleNameCompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testInExpression() {
         myFixture.configureByFiles("inExpression/Test.elm", "inExpression/PrefixSuffix.elm");
-        autocomplete("Prefix.Suffix.", "let", "if", "case", "someValue");
+        autocomplete(withBuiltIn("Prefix.Suffix.", "let", "if", "case", "someValue"));
     }
 
     private void autocomplete(String... suggestions) {

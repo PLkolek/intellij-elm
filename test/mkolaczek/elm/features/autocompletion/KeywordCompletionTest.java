@@ -23,7 +23,7 @@ public class KeywordCompletionTest extends LightFixtureCompletionTestCase {
 
     public void testAfterImportsCompletion() {
         performTest("import/Test.elm", "import/expected.elm",
-                "import", "type", "infixr", "infixl", "infix", "port");
+                TestUtil.withBuiltIn("import", "type", "infixr", "infixl", "infix", "port", "Test2."));
     }
 
     public void testAfterImportedModuleNameCompletion() {
@@ -49,7 +49,9 @@ public class KeywordCompletionTest extends LightFixtureCompletionTestCase {
     }
 
     public void testModuleCompletion() {
-        performTest("module/Test.elm", "module/expected.elm", "effect module", "module", "port module");
+        performTest("module/Test.elm",
+                "module/expected.elm",
+                TestUtil.withBuiltIn("effect module", "module", "port module"));
     }
 
     public void testAliasCompletion() {
@@ -57,27 +59,32 @@ public class KeywordCompletionTest extends LightFixtureCompletionTestCase {
     }
 
     public void testPortCompletion() {
-        performTest("port/Test.elm", "port/expected.elm", "port", "type", "infixr", "infixl", "infix", "import", "B");
+        performTest("port/Test.elm",
+                "port/expected.elm",
+                TestUtil.withBuiltIn("port", "type", "infixr", "infixl", "infix", "import", "B"));
     }
 
     public void testExpressionInIfConditionCompletion() {
         performTest("expression/inIf/Condition.elm",
                 "expression/inIf/Condition.expected.elm",
-                "let", "if", "then", "else", "case", "someValue");
+                TestUtil.withBuiltIn("let", "if", "then", "else", "case", "someValue"));
     }
 
     public void testExpressionInLastBinaryOperationCompletion() {
         performTest("expression/inBinaryOperation/Last.elm",
                 "expression/inBinaryOperation/Last.expected.elm",
-                "let", "if", "case", "someValue");
+                TestUtil.withBuiltIn("let", "if", "case", "someValue"));
     }
 
     public void testInCompletion() {
-        performTest("expression/inLet/In.elm", "expression/inLet/In.expected.elm", "in", "someVal", "letVal");
+        performTest("expression/inLet/In.elm", "expression/inLet/In.expected.elm",
+                TestUtil.withBuiltIn("in", "someVal", "letVal"));
     }
 
     public void testOfCompletion() {
-        performTest("expression/inCase/Of.elm", "expression/inCase/Of.expected.elm", "of", "someValue");
+        performTest("expression/inCase/Of.elm",
+                "expression/inCase/Of.expected.elm",
+                TestUtil.withBuiltIn("of", "someValue"));
     }
 
     private void performTest(String beforeFile, String afterFile, String... suggestions) {

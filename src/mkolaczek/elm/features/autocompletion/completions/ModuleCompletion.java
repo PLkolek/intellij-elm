@@ -2,7 +2,6 @@ package mkolaczek.elm.features.autocompletion.completions;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.psi.PsiElement;
-import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.features.autocompletion.Names;
 import mkolaczek.elm.features.autocompletion.Patterns;
@@ -20,28 +19,30 @@ import static mkolaczek.elm.features.autocompletion.Patterns.e;
 import static mkolaczek.elm.features.autocompletion.Patterns.inside;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
-import static mkolaczek.elm.psi.node.Module.module;
 
 public class ModuleCompletion {
     public static void modules(ElmCompletionContributor c) {
         //@formatter:off
-        c.autocomplete(Patterns.afterLeaf(Tokens.MODULE),               ModuleCompletion::fileName);
-        c.autocomplete(Patterns.afterLeaf(Tokens.AS),                   ModuleCompletion::moduleNameParts);
-        c.autocomplete(inside(MODULE_NAME_REF),                         ModuleCompletion::modules2);
-        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),          ModuleCompletion::modules);
-        c.autocomplete(e().inside(e(QUALIFIED_TYPE_CONSTRUCTOR_REF)),   ModuleCompletion::modules);
-        c.autocomplete(e().inside(e(QUALIFIED_VAR)),                    ModuleCompletion::modules);
+        c.autocomplete(Patterns.afterLeaf(Tokens.MODULE),                   ModuleCompletion::fileName);
+        c.autocomplete(Patterns.afterLeaf(Tokens.AS),                       ModuleCompletion::moduleNameParts);
+        c.autocomplete(inside(MODULE_NAME_REF).inside(e(IMPORT_LINE)),      ModuleCompletion::modules);
+        c.autocomplete(inside(MODULE_NAME_REF).andNot(inside(IMPORT_LINE)), ModuleCompletion::dotModules);
+        c.autocomplete(e(RUNE_OF_AUTOCOMPLETION).inside(e(PATTERN_TERM)),   ModuleCompletion::dotModules);
+        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),              ModuleCompletion::matchingModules);
+        c.autocomplete(e().inside(e(QUALIFIED_TYPE_CONSTRUCTOR_REF)),       ModuleCompletion::matchingModules);
+        c.autocomplete(e().inside(e(QUALIFIED_VAR)),                        ModuleCompletion::matchingModules);
         //@formatter:on
-        c.autocomplete(e(RUNE_OF_AUTOCOMPLETION).inside(e(PATTERN_TERM)),
-                params -> matchingModules(params.getPosition(), "")
-        );
     }
 
-    private static Stream<String> modules2(CompletionParameters parameters) {
-        return ModuleResolver.variants(parameters.getPosition());
+    private static Stream<String> dotModules(CompletionParameters parameters) {
+        return ModuleResolver.variants(parameters.getPosition()).map(s -> s + ".");
     }
 
     private static Stream<String> modules(CompletionParameters parameters) {
+        return ModuleResolver.variants(parameters.getPosition());
+    }
+
+    private static Stream<String> matchingModules(CompletionParameters parameters) {
         QualifiedRef qualifiedType = location(parameters, QualifiedRef.class);
         String prefix = qualifiedType.moduleName().map(ModuleNameRef::getName).orElse("");
         String finalPrefix = prefix.length() > 0 ? prefix + "." : "";
@@ -50,11 +51,11 @@ public class ModuleCompletion {
     }
 
     private static Stream<String> matchingModules(PsiElement location, String finalPrefix) {
-        return ProjectUtil.otherModuleNames(location.getProject(), module(location))
-                          .filter(n -> n.startsWith(finalPrefix))
-                          .map(n -> Names.suffix(n, finalPrefix))
-                          .filter(n -> !n.isEmpty())
-                          .map(n -> n + ".");
+        return ModuleResolver.variants(location)
+                             .filter(n -> n.startsWith(finalPrefix))
+                             .map(n -> Names.suffix(n, finalPrefix))
+                             .filter(n -> !n.isEmpty())
+                             .map(n -> n + ".");
     }
 
     @NotNull

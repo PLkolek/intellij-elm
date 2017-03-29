@@ -7,6 +7,7 @@ import mkolaczek.elm.TestUtil;
 
 import java.util.List;
 
+import static mkolaczek.elm.TestUtil.withBuiltIn;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -38,7 +39,7 @@ public class TypeCompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testInTypeExpressionCompletion() {
         myFixture.configureByFiles("typeExpression/Test.elm");
-        autocomplete("SomeType", "List", "String", "Int", "Float", "Bool", "Char");
+        autocomplete(withBuiltIn("SomeType", "List", "String", "Int", "Float", "Bool", "Char"));
     }
 
     public void testInExposingCompletion() {
