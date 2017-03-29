@@ -151,7 +151,7 @@ public class Module extends ElmNamedElement implements DocCommented {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
     }
 
-    public Stream<String> notExposed(TypeOfExposed<?> typeOfExposed,
+    public Stream<String> notExposed(TypeOfExposed typeOfExposed,
                                      Function<Declaration, Stream<String>> valueExtractor) {
         Set<String> excluded = exposedNames(typeOfExposed).collect(toSet());
         return declarations()
@@ -160,12 +160,12 @@ public class Module extends ElmNamedElement implements DocCommented {
                 .filter(o -> !excluded.contains(o));
     }
 
-    public Stream<String> exposedNames(TypeOfExposed<?> typeOfExposed) {
+    public Stream<String> exposedNames(TypeOfExposed typeOfExposed) {
         return this.exposed(typeOfExposed).map(Exposed::exposedName);
     }
 
     //SHORTCUTS
-    public <T extends Exposed> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
+    public Stream<Exposed> exposed(TypeOfExposed exposedElementsType) {
         return stream(header()).flatMap(h -> h.exposed(exposedElementsType));
     }
 }

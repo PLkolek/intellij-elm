@@ -4,16 +4,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.boilerplate.ElmFileType;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.*;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
-import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
+import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
+
+@SuppressWarnings({"OptionalGetWithoutIsPresent", "ConstantConditions"})
 public class ElmElementFactory {
 
     public static PsiElement typeName(Project project, String name) {
@@ -23,7 +23,7 @@ public class ElmElementFactory {
 
     public static PsiElement typeNameRef(Project project, String name) {
         ElmFile file = createFile(project, String.format("module Dummy exposing (%s)", name));
-        return file.module().header().get().exposedType(name).get().typeName();
+        return findChildOfType(file.module(), TypeExposing.class).typeName();
     }
 
     public static PsiElement typeConstructor(Project project, String name) {
@@ -39,7 +39,7 @@ public class ElmElementFactory {
 
     public static PsiElement typeConstructorRef(Project project, String name) {
         ElmFile file = createFile(project, String.format("module Dummy exposing (DummyType(%s))", name));
-        return file.module().header().get().exposedType("DummyType").get().constructors().iterator().next();
+        return findChildOfType(file.module(), TypeExposing.class).constructors().iterator().next();
     }
 
     public static ModuleName moduleName(Project project, String name) {
@@ -86,7 +86,7 @@ public class ElmElementFactory {
 
     public static PsiElement operatorNameRef(Project project, String newElementName) {
         ElmFile file = createFile(project, "module A exposing ((" + newElementName + "))");
-        return file.module().exposed(TypeOfExposed.OPERATOR).findFirst().get();
+        return findChildOfType(file.module(), OperatorSymbolRef.class);
     }
 
     public static PsiElement portName(Project project, String name) {
@@ -96,22 +96,22 @@ public class ElmElementFactory {
 
     public static ValueExposing exposedValue(Project project, String name) {
         ElmFile file = createFile(project, String.format("module Dummy exposing (%s)", name));
-        return file.module().header().get().exposedValue(name).findFirst().get();
+        return findChildOfType(file.module(), ValueExposing.class);
     }
 
     public static PsiElement var(Project project, String name) {
         ElmFile file = createFile(project, String.format("x = %s", name));
-        return PsiTreeUtil.findChildOfType(file.module(), Var.class);
+        return findChildOfType(file.module(), Var.class);
     }
 
     public static PsiElement valueName(Project project, String name) {
         ElmFile file = createFile(project, String.format("%s = 5", name));
-        return PsiTreeUtil.findChildOfType(file.module(), ValueName.class);
+        return findChildOfType(file.module(), ValueName.class);
     }
 
     public static PsiElement valueNameRef(Project project, String name) {
         ElmFile file = createFile(project, String.format("%s : Int", name));
-        return PsiTreeUtil.findChildOfType(file.module(), ValueNameRef.class);
+        return findChildOfType(file.module(), ValueNameRef.class);
     }
 
     private static ElmFile createFile(Project project, String text) {

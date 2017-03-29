@@ -1,8 +1,8 @@
 package mkolaczek.elm.psi.node.extensions;
 
-import com.intellij.psi.PsiElement;
-
-public interface Exposed extends PsiElement {
+public interface Exposed {
 
     String exposedName();
+
+    boolean exposes(String name);
 }

@@ -8,7 +8,7 @@ import mkolaczek.elm.features.autocompletion.completions.*;
 import mkolaczek.elm.features.autocompletion.providers.LambdaBasedCompletionProvider;
 import mkolaczek.elm.features.autocompletion.providers.PlainMatchingCompletionProvider;
 import mkolaczek.elm.psi.node.extensions.Exposed;
-import mkolaczek.elm.psi.node.extensions.HasExposing;
+import mkolaczek.elm.psi.node.extensions.PsiHasExposing;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,9 +43,9 @@ public class ElmCompletionContributor extends CompletionContributor {
         return parent;
     }
 
-    public static Stream<String> notExposed(TypeOfExposed<? extends Exposed> typeOfExposed,
+    public static Stream<String> notExposed(TypeOfExposed typeOfExposed,
                                             CompletionParameters parameters) {
-        HasExposing hasExposing = getParentOfType(parameters.getPosition(), HasExposing.class);
+        PsiHasExposing hasExposing = getParentOfType(parameters.getPosition(), PsiHasExposing.class);
         assert hasExposing != null;
         Set<String> exposed = hasExposing.exposed(typeOfExposed).map(Exposed::exposedName).collect(toSet());
         return typeOfExposed.resolver().variants(parameters.getPosition())

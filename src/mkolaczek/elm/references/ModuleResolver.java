@@ -31,7 +31,7 @@ public class ModuleResolver {
         return resolve(target,
                 aliased -> aliased.filter(i -> i.importedAs(target.getName()))
                                   .flatMap(import_ -> {
-                                      String moduleName = import_.importedModuleNameString().orElse(null);
+                                      String moduleName = import_.moduleNameString().orElse(null);
                                       return ProjectUtil.modules(import_.getProject(), moduleName);
                                   })
         ).map(m -> (Module) m);
@@ -63,19 +63,14 @@ public class ModuleResolver {
                 )
         ).orElseGet(() -> {
                     Set<String> alreadyImported = module.imports()
-                                                        .map(Import::importedModuleNameString)
+                                                        .map(Import::moduleNameString)
                                                         .flatMap(Streams::stream)
                                                         .collect(toSet());
+
                     alreadyImported.addAll(BuiltInImports.moduleNames().collect(toSet()));
                     return Stream.of(
-                            notAliasedImports(target).map(Import::importedModuleNameString)
-                                                     .flatMap(Streams::stream),
-
-                            aliasedImports(target).map(Import::aliasName)
-                                                  .flatMap(Streams::stream),
-
+                            module.imports().map(Import::importedAs).flatMap(Streams::stream),
                             BuiltInImports.imports().map(BuiltInImport::importedAs),
-
                             ProjectUtil.modules(target.getProject())
                                        .filter(m -> !alreadyImported.contains(m.getName()))
                                        .map(Module::getName)
@@ -96,9 +91,9 @@ public class ModuleResolver {
 
     private static Stream<Module> sameNameNotAliased(ModuleNameRef target) {
         return notAliasedImports(target)
-                .filter(i -> target.getName().equals(i.importedModuleNameString().orElse(null)))
+                .filter(i -> target.getName().equals(i.moduleNameString().orElse(null)))
                 .flatMap(import_ -> ProjectUtil.modules(import_.getProject(),
-                        import_.importedModuleNameString().orElse(null)));
+                        import_.moduleNameString().orElse(null)));
     }
 
     public static Stream<Import> aliasedImports(PsiElement target) {

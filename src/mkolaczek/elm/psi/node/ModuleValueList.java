@@ -33,7 +33,7 @@ public class ModuleValueList extends ASTWrapperPsiElement {
         return Optional.ofNullable(getChildOfType(this, CommaSeparatedList.class));
     }
 
-    public <T extends Exposed> Stream<T> exposed(TypeOfExposed<T> exposedElementsType) {
+    public Stream<Exposed> exposed(TypeOfExposed exposedElementsType) {
         return values(ExposedValue.class).stream()
                                          .map(e -> e.exposed(exposedElementsType))
                                          .flatMap(Streams::stream);

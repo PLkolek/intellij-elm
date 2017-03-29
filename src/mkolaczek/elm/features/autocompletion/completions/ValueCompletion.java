@@ -3,7 +3,6 @@ package mkolaczek.elm.features.autocompletion.completions;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.OperatorDeclaration;
-import mkolaczek.elm.psi.node.extensions.Exposed;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import mkolaczek.elm.references.Resolver;
 
@@ -64,7 +63,7 @@ public class ValueCompletion {
     }
 
     public static Stream<String> exposed(CompletionParameters parameters,
-                                         TypeOfExposed<? extends Exposed> typeOfExposed) {
+                                         TypeOfExposed typeOfExposed) {
         return module(parameters.getPosition()).exposedNames(typeOfExposed);
     }
 

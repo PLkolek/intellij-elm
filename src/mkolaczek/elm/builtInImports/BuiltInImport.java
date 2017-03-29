@@ -1,19 +1,24 @@
 package mkolaczek.elm.builtInImports;
 
-import com.intellij.util.ArrayUtil;
+import mkolaczek.elm.psi.node.extensions.Exposed;
+import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 
-public class BuiltInImport {
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+public class BuiltInImport implements AbstractImport {
 
     private final String moduleName;
     private final String asName;
     private final boolean exposesAll;
-    private final String[] names;
+    private final BuiltInExposed[] exposedItems;
 
-    public BuiltInImport(String moduleName, String asName, boolean exposesAll, String[] names) {
+    public BuiltInImport(String moduleName, String asName, boolean exposesAll, BuiltInExposed... exposedItems) {
         this.moduleName = moduleName;
         this.asName = asName;
         this.exposesAll = exposesAll;
-        this.names = names;
+        this.exposedItems = exposedItems;
     }
 
     public static AfterImport import_(String moduleName) {
@@ -24,16 +29,23 @@ public class BuiltInImport {
         return moduleName;
     }
 
-    public boolean exposesAll() {
+    @Override
+    public boolean exposesEverything() {
         return exposesAll;
     }
 
-    public String[] exposedNames() {
-        return names;
+    @Override
+    public Stream<Exposed> exposed(TypeOfExposed exposedType) {
+        return Arrays.stream(exposedItems).filter(e -> e.type() == exposedType).map(x -> x);
     }
 
     public String importedAs() {
         return asName != null ? asName : moduleName;
+    }
+
+    @Override
+    public Optional<String> moduleNameString() {
+        return Optional.of(moduleName);
     }
 
     static class AfterImport {
@@ -48,10 +60,10 @@ public class BuiltInImport {
         }
 
         BuiltInImport exposingAll() {
-            return new BuiltInImport(moduleName, null, true, ArrayUtil.EMPTY_STRING_ARRAY);
+            return new BuiltInImport(moduleName, null, true);
         }
 
-        BuiltInImport exposing(String... names) {
+        BuiltInImport exposing(BuiltInExposed... names) {
             return new BuiltInImport(moduleName, null, false, names);
         }
     }
@@ -66,11 +78,11 @@ public class BuiltInImport {
         }
 
         BuiltInImport exposingAll() {
-            return new BuiltInImport(moduleName, asName, true, ArrayUtil.EMPTY_STRING_ARRAY);
+            return new BuiltInImport(moduleName, asName, true);
         }
 
-        BuiltInImport exposing(String... names) {
-            return new BuiltInImport(moduleName, asName, false, names);
+        BuiltInImport exposing(BuiltInExposed... exposed) {
+            return new BuiltInImport(moduleName, asName, false, exposed);
         }
     }
 }

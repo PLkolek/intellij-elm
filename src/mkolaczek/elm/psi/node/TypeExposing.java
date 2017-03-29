@@ -3,7 +3,7 @@ package mkolaczek.elm.psi.node;
 import com.google.common.base.Joiner;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
-import mkolaczek.elm.psi.node.extensions.Exposed;
+import mkolaczek.elm.psi.node.extensions.PsiExposed;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -13,7 +13,7 @@ import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
-public class TypeExposing extends ASTWrapperPsiElement implements Exposed {
+public class TypeExposing extends ASTWrapperPsiElement implements PsiExposed {
     public TypeExposing(ASTNode node) {
         super(node);
     }
@@ -43,8 +43,9 @@ public class TypeExposing extends ASTWrapperPsiElement implements Exposed {
         return valueList().map(ModuleValueList::isOpenListing).orElse(false);
     }
 
-    public boolean exposes(TypeConstructor constructor) {
-        return exposesEverything() || constructorNames().contains(constructor.getName());
+    @Override
+    public boolean exposes(String constructorName) {
+        return exposesEverything() || constructorNames().contains(constructorName);
     }
 
     //WEIRD STUFF

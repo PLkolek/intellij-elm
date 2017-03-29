@@ -7,7 +7,7 @@ public interface TypeOfDeclaration<Declaration extends PsiElement, Export extend
 
     Class<Declaration> psiClass();
 
-    TypeOfExposed<Export> exposedAs();
+    TypeOfExposed exposedAs();
 
     TypeOfDeclaration<TypeDeclaration, TypeExposing> TYPE = new TypeOfDeclaration<TypeDeclaration, TypeExposing>() {
         @Override
@@ -16,7 +16,7 @@ public interface TypeOfDeclaration<Declaration extends PsiElement, Export extend
         }
 
         @Override
-        public TypeOfExposed<TypeExposing> exposedAs() {
+        public TypeOfExposed exposedAs() {
             return TypeOfExposed.TYPE;
         }
     };
@@ -29,7 +29,7 @@ public interface TypeOfDeclaration<Declaration extends PsiElement, Export extend
         }
 
         @Override
-        public TypeOfExposed<OperatorSymbolRef> exposedAs() {
+        public TypeOfExposed exposedAs() {
             return TypeOfExposed.OPERATOR;
         }
     };
@@ -42,7 +42,7 @@ public interface TypeOfDeclaration<Declaration extends PsiElement, Export extend
         }
 
         @Override
-        public TypeOfExposed<OperatorSymbolRef> exposedAs() {
+        public TypeOfExposed exposedAs() {
             return TypeOfExposed.OPERATOR;
         }
     };
@@ -54,7 +54,7 @@ public interface TypeOfDeclaration<Declaration extends PsiElement, Export extend
         }
 
         @Override
-        public TypeOfExposed<ValueExposing> exposedAs() {
+        public TypeOfExposed exposedAs() {
             return TypeOfExposed.VALUE;
         }
     };
@@ -66,7 +66,7 @@ public interface TypeOfDeclaration<Declaration extends PsiElement, Export extend
         }
 
         @Override
-        public TypeOfExposed<ValueExposing> exposedAs() {
+        public TypeOfExposed exposedAs() {
             return TypeOfExposed.VALUE;
         }
     };

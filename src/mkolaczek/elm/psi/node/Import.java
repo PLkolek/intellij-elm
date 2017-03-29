@@ -4,13 +4,14 @@ package mkolaczek.elm.psi.node;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiNamedElement;
-import mkolaczek.elm.psi.node.extensions.HasExposing;
+import mkolaczek.elm.builtInImports.AbstractImport;
+import mkolaczek.elm.psi.node.extensions.PsiHasExposing;
 
 import java.util.Optional;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 
-public class Import extends ASTWrapperPsiElement implements HasExposing {
+public class Import extends ASTWrapperPsiElement implements PsiHasExposing, AbstractImport {
 
     public Import(ASTNode node) {
         super(node);
@@ -20,7 +21,8 @@ public class Import extends ASTWrapperPsiElement implements HasExposing {
         return Optional.ofNullable(findChildOfType(this, ModuleNameRef.class));
     }
 
-    public Optional<String> importedModuleNameString() {
+    @Override
+    public Optional<String> moduleNameString() {
         return importedModuleName().map(PsiNamedElement::getName);
     }
 
@@ -37,10 +39,14 @@ public class Import extends ASTWrapperPsiElement implements HasExposing {
     }
 
     public boolean importedAs(String name) {
+        return importedAs().map(n -> n.equals(name)).orElse(false);
+    }
+
+    public Optional<String> importedAs() {
         if (aliasName().isPresent()) {
-            return aliasName().get().equals(name);
+            return aliasName();
         }
-        return nameEquals(name);
+        return moduleNameString();
     }
 
     private boolean nameEquals(String name) {

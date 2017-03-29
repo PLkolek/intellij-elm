@@ -18,7 +18,7 @@ public class ExposedValue extends ASTWrapperPsiElement {
         super(node);
     }
 
-    public <T extends Exposed> Optional<T> exposed(TypeOfExposed<T> exposedElementsType) {
+    public Optional<Exposed> exposed(TypeOfExposed exposedElementsType) {
         return Optional.ofNullable(findChildOfType(this, exposedElementsType.psiClass()));
     }
 

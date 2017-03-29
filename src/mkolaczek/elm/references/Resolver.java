@@ -121,12 +121,9 @@ public class Resolver<T> {
     }
 
     public Stream<String> variants(PsiElement target) {
-        Optional<Stream<? extends PsiNamedElement>> specific = inSpecificLocations(target);
-        if (specific.isPresent()) {
-            return specific.get().map(PsiNamedElement::getName);
-        }
+        return inSpecificLocations(target).map(stream -> stream.map(PsiNamedElement::getName))
+                                          .orElse(unqualifiedVariants(target));
 
-        return unqualifiedVariants(target);
     }
 
     public Stream<String> unqualifiedVariants(PsiElement target) {
@@ -148,7 +145,7 @@ public class Resolver<T> {
             return Optional.of(declared(module(target)));
         } else if (insideImport(target)) {
             Import import_ = containingImport(target);
-            return Optional.of(importedModules(import_.getProject(), import_.importedModuleNameString().orElse(null))
+            return Optional.of(importedModules(import_.getProject(), import_.moduleNameString().orElse(null))
                     .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)))
             );
         }
@@ -179,11 +176,14 @@ public class Resolver<T> {
     }
 
     public Stream<PsiNamedElement> exposed(Module module) {
-        return module.imports().flatMap(
-                i -> importedModules(i.getProject(), i.importedModuleNameString().orElse(null)).flatMap(
-                        m -> toStream.apply(exposedFilter.apply(i, declaredAndExposedFrom(m)))
-                )
-        );
+        Project project = module.getProject();
+        //noinspection ConstantConditions
+        return Stream.concat(module.imports(), BuiltInImports.imports())
+                     .filter(i -> i.moduleNameString().isPresent())
+                     .flatMap(i -> importedModules(project, i.moduleNameString().get()).flatMap(
+                             m -> toStream.apply(exposedFilter.apply(i, declaredAndExposedFrom(m)))
+                             )
+                     );
     }
 
     public Stream<? extends PsiNamedElement> declared(Module module) {

@@ -6,20 +6,21 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static mkolaczek.elm.builtInImports.BuiltInExposed.*;
 import static mkolaczek.elm.builtInImports.BuiltInImport.import_;
 
 public class BuiltInImports {
     private static final Set<BuiltInImport> MODULES = ImmutableSet.of(
             import_("Basics").exposingAll(),
             import_("Debug").exposing(),
-            import_("List").exposing("::"),
-            import_("Maybe").exposing("Maybe(..)"),
-            import_("Result").exposing("Result(..)"),
+            import_("List").exposing(operator("::")),
+            import_("Maybe").exposing(openType("Maybe")),
+            import_("Result").exposing(openType("Result")),
             import_("String").exposing(),
             import_("Tuple").exposing(),
-            import_("Platform").exposing("Program()"),
-            import_("Platform.Cmd").as("Cmd").exposing("Cmd(), (!)"),
-            import_("Platform.Sub").as("Sub").exposing("Sub()")
+            import_("Platform").exposing(closedType("Program")),
+            import_("Platform.Cmd").as("Cmd").exposing(closedType("Cmd"), operator("!")),
+            import_("Platform.Sub").as("Sub").exposing(closedType("Sub"))
     );
 
     private static final Set<String> TYPES = ImmutableSet.of(

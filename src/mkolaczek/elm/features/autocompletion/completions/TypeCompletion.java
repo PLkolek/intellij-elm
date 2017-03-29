@@ -55,6 +55,7 @@ public class TypeCompletion {
     private static Stream<String> exposedConstructorlessTypes(CompletionParameters parameters) {
         return module(parameters.getPosition())
                 .exposed(TypeOfExposed.TYPE)
+                .map(t -> (TypeExposing) t)
                 .filter(TypeExposing::withoutConstructors)
                 .map(TypeExposing::exposedName);
     }
@@ -62,6 +63,7 @@ public class TypeCompletion {
     private static Stream<String> exposedTypes(CompletionParameters parameters) {
         return module(parameters.getPosition())
                 .exposed(TypeOfExposed.TYPE)
+                .map(t -> (TypeExposing) t)
                 .flatMap(TypeCompletion::typeCompletions);
     }
 
@@ -88,6 +90,7 @@ public class TypeCompletion {
 
         Optional<ModuleHeader> header = module(position).header();
         Collection<String> constructors = header.flatMap(h -> h.exposedType(typeName))
+                                                .map(t -> (TypeExposing) t)
                                                 .map(TypeExposing::constructorNames)
                                                 .orElse(newArrayList());
         Set<String> declared = declaration.constructors()
