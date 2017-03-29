@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
+import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
+
 class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
 
     private static final Set<IElementType> KEYWORDS = Sets.newHashSet(
@@ -60,6 +62,8 @@ class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
 
 
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
+    public static final TextAttributesKey ELM_ARROW =
+            createTextAttributesKey("ELM_ARROW", DefaultLanguageHighlighterColors.OPERATION_SIGN);
 
     @NotNull
     @Override
@@ -71,22 +75,25 @@ class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
     @Override
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
         if (KEYWORDS.contains(tokenType)) {
-            return new TextAttributesKey[]{DefaultLanguageHighlighterColors.KEYWORD};
+            return pack(DefaultLanguageHighlighterColors.KEYWORD);
         }
         if (Tokens.COMMENT_TOKENS.contains(tokenType)) {
-            return new TextAttributesKey[]{DefaultLanguageHighlighterColors.LINE_COMMENT};
+            return pack(DefaultLanguageHighlighterColors.LINE_COMMENT);
         }
         if (STRING_LITERALS.contains(tokenType)) {
-            return new TextAttributesKey[]{DefaultLanguageHighlighterColors.STRING};
+            return pack(DefaultLanguageHighlighterColors.STRING);
         }
         if (VALID_ESCAPES.contains(tokenType)) {
-            return new TextAttributesKey[]{DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE};
+            return pack(DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE);
         }
         if (INVALID_ESCAPES.contains(tokenType)) {
-            return new TextAttributesKey[]{DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE};
+            return pack(DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE);
         }
         if (GLSL_TOKENS.contains(tokenType)) {
-            return new TextAttributesKey[]{DefaultLanguageHighlighterColors.STRING};
+            return pack(DefaultLanguageHighlighterColors.STRING);
+        }
+        if (tokenType == Tokens.ARROW) {
+            return pack(ELM_ARROW);
         }
         return EMPTY_KEYS;
     }
