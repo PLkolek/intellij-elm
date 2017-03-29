@@ -19,6 +19,10 @@ public class GoToDeclarationTest extends LightCodeInsightFixtureTestCase {
         doTest("module", "Test1.elm", "Test2.elm");
     }
 
+    public void testBuildInAliasedModuleDeclaration() {
+        doTest("module/builtInAliased", "Using.elm", "PlatformCmd.elm");
+    }
+
     public void testOperatorDeclaration() {
         doTest("operator", "Test1.elm", "Test2.elm");
     }
