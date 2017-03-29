@@ -1,5 +1,6 @@
 package mkolaczek.elm.references;
 
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -8,6 +9,8 @@ import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.intellij.util.IncorrectOperationException;
 import mkolaczek.elm.ProjectUtil;
+import mkolaczek.elm.builtInImports.BuiltInImport;
+import mkolaczek.elm.builtInImports.BuiltInImports;
 import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.ModuleNameRef;
 import mkolaczek.util.Streams;
@@ -42,15 +45,17 @@ public class ModuleReference extends PsiReferenceBase.Poly<ModuleNameRef> {
                 module(myElement)
                         .aliasedImports()
                         .map(Import::alias)
-                        .flatMap(Streams::stream),
-                DefaultImports.modules(myElement.getProject())
+                        .flatMap(Streams::stream)
         ).flatMap(Function.identity());
     }
 
     @NotNull
     @Override
     public Object[] getVariants() {
-        return modules().toArray(Object[]::new);
+        return Stream.concat(
+                modules(),
+                BuiltInImports.imports().map(BuiltInImport::importedAs).map(LookupElementBuilder::create)
+        ).toArray(Object[]::new);
     }
 
     @Override

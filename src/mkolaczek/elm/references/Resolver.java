@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import mkolaczek.elm.ProjectUtil;
+import mkolaczek.elm.builtInImports.BuiltInImports;
 import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.TypeDeclaration;
@@ -85,7 +86,7 @@ public class Resolver<T> {
                 m -> m.declarations(TypeOfDeclaration.TYPE),
                 ((hasExposing, declarations) -> hasExposing.filterExposed(declarations, TypeOfExposed.TYPE)),
                 Function.identity(),
-                DefaultImports.typeNames(),
+                BuiltInImports.typeNames(),
                 false
         );
     }
@@ -157,7 +158,7 @@ public class Resolver<T> {
             return Optional.of(
                     Stream.concat(module.imports()
                                         .map(i -> i.importedModuleNameString().orElse(null)),
-                            DefaultImports.moduleNames().stream())
+                            BuiltInImports.moduleNames())
                           .filter(s -> qualifiedRef.moduleName().get().getName().equals(s))
                           .flatMap(moduleName -> importedModules(target.getProject(), moduleName))
                           .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)))

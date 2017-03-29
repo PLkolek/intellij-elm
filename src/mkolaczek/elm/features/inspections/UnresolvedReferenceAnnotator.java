@@ -6,10 +6,10 @@ import com.intellij.lang.annotation.Annotator;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiReference;
+import mkolaczek.elm.builtInImports.BuiltInImports;
 import mkolaczek.elm.features.ElmFindUsagesProvider;
 import mkolaczek.elm.psi.node.ModuleNameRef;
 import mkolaczek.elm.psi.node.TypeNameRef;
-import mkolaczek.elm.references.DefaultImports;
 import org.jetbrains.annotations.NotNull;
 
 public class UnresolvedReferenceAnnotator implements Annotator {
@@ -21,7 +21,7 @@ public class UnresolvedReferenceAnnotator implements Annotator {
         }
         if (element instanceof ModuleNameRef) {
             String message = "Unresolved " + ElmFindUsagesProvider.type(element);
-            if (DefaultImports.moduleNames().contains(((ModuleNameRef) element).getName())) {
+            if (BuiltInImports.moduleNames().anyMatch(m -> m.equals(((ModuleNameRef) element).getName()))) {
                 message = message + ". Have you run \"elm-package install\"?";
             }
             Annotation annotation = holder.createErrorAnnotation(element, message);
@@ -35,7 +35,7 @@ public class UnresolvedReferenceAnnotator implements Annotator {
     }
 
     private boolean isBuiltIn(@NotNull TypeNameRef element) {
-        return DefaultImports.typeNames().contains(element.getName());
+        return BuiltInImports.typeNames().contains(element.getName());
     }
 
     private boolean resolves(PsiReference ref) {
