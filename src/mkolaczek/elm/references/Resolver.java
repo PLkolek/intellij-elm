@@ -3,8 +3,10 @@ package mkolaczek.elm.references;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
+import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.TypeDeclaration;
@@ -144,20 +146,28 @@ public class Resolver<T> {
         if (insideModuleHeader(target)) {
             return Optional.of(declared(module(target)));
         } else if (insideImport(target)) {
-            return Optional.of(containingImport(target).importedModule()
-                                                       .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)))
+            Import import_ = containingImport(target);
+            return Optional.of(importedModules(import_.getProject(), import_.importedModuleNameString().orElse(null))
+                    .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)))
             );
         }
 
         QualifiedRef qualifiedRef = getParentOfType(target, QualifiedRef.class);
         if (qualifiedRef != null && qualifiedRef.moduleName().isPresent()) {
             return Optional.of(
-                    module.imports(qualifiedRef.moduleName().get().getName())
-                          .flatMap(Import::importedModule)
+                    Stream.concat(module.imports()
+                                        .map(i -> i.importedModuleNameString().orElse(null)),
+                            DefaultImports.moduleNames().stream())
+                          .filter(s -> qualifiedRef.moduleName().get().getName().equals(s))
+                          .flatMap(moduleName -> importedModules(target.getProject(), moduleName))
                           .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)))
             );
         }
         return Optional.empty();
+    }
+
+    private Stream<Module> importedModules(Project project, String moduleName) {
+        return ProjectUtil.modules(project, moduleName);
     }
 
     public Stream<Stream<? extends PsiNamedElement>> locals(PsiElement target) {
@@ -173,7 +183,7 @@ public class Resolver<T> {
 
     public Stream<PsiNamedElement> exposed(Module module) {
         return module.imports().flatMap(
-                i -> i.importedModule().flatMap(
+                i -> importedModules(i.getProject(), i.importedModuleNameString().orElse(null)).flatMap(
                         m -> toStream.apply(exposedFilter.apply(i, declaredAndExposedFrom(m)))
                 )
         );

@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElementResolveResult;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.ResolveResult;
 import com.intellij.util.IncorrectOperationException;
+import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.ModuleNameRef;
 import mkolaczek.util.Streams;
@@ -36,7 +37,8 @@ public class ModuleReference extends PsiReferenceBase.Poly<ModuleNameRef> {
         return Stream.of(
                 module(myElement)
                         .notAliasedImports()
-                        .flatMap(Import::importedModule),
+                        .flatMap(import_ -> ProjectUtil.modules(import_.getProject(),
+                                import_.importedModuleNameString().orElse(null))),
                 module(myElement)
                         .aliasedImports()
                         .map(Import::alias)

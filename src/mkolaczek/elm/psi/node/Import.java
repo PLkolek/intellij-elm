@@ -4,11 +4,9 @@ package mkolaczek.elm.psi.node;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiNamedElement;
-import mkolaczek.elm.ProjectUtil;
 import mkolaczek.elm.psi.node.extensions.HasExposing;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildOfType;
 
@@ -16,10 +14,6 @@ public class Import extends ASTWrapperPsiElement implements HasExposing {
 
     public Import(ASTNode node) {
         super(node);
-    }
-
-    public Stream<Module> importedModule() {
-        return ProjectUtil.modules(getProject(), importedModuleNameString().orElse(null));
     }
 
     public Optional<ModuleNameRef> importedModuleName() {

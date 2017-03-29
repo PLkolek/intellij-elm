@@ -31,6 +31,10 @@ public class GoToDeclarationTest extends LightCodeInsightFixtureTestCase {
         doTest("value", "Test1.elm", "Test2.elm");
     }
 
+    public void testBuiltInValueDeclaration() {
+        doTest("value/builtInImport", "UsingBuiltIn.elm", "List.elm");
+    }
+
     private void doTest(String dir, String... fileNames) {
         String[] fullFileNames = Arrays.stream(fileNames).map(n -> dir + "/" + n).toArray(String[]::new);
         PsiFile[] files = myFixture.configureByFiles(fullFileNames);
@@ -40,6 +44,10 @@ public class GoToDeclarationTest extends LightCodeInsightFixtureTestCase {
         myFixture.openFileInEditor(files[files.length - 1].getVirtualFile());
         new GotoDeclarationAction().invoke(getProject(), oldEditor, files[0]);
 
-        myFixture.checkResultByFile(dir + "/Test2.expected.elm");
+        String lastFile = fileNames[fileNames.length - 1];
+        String withoutExtension = lastFile.substring(0, lastFile.indexOf("."));
+        String expected = "/" + withoutExtension + ".expected.elm";
+
+        myFixture.checkResultByFile(dir + expected);
     }
 }
