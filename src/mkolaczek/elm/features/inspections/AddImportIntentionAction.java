@@ -1,5 +1,6 @@
 package mkolaczek.elm.features.inspections;
 
+import com.intellij.codeInsight.FileModificationService;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.AbstractIntentionAction;
 import com.intellij.openapi.application.ApplicationManager;
@@ -42,6 +43,9 @@ public class AddImportIntentionAction extends AbstractIntentionAction {
 
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        if (!FileModificationService.getInstance().prepareFileForWrite(file)) {
+            return;
+        }
         List<Module> modules = modules(project, moduleNameToImport).collect(toList());
         if (modules.size() == 0) {
             HintManager.getInstance().showErrorHint(editor, "No module called'" + moduleNameToImport + "' found");

@@ -5,7 +5,6 @@ Features:
 * Module reference in documentation comments?
 * External documentation?
 * Smart enter
-* Prelude libs
 * Remove whole type when removing last constructor
 * import type quick fix
 * autocompletion + references + go to for record fields
