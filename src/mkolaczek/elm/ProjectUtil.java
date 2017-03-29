@@ -7,7 +7,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.indexing.FileBasedIndex;
 import mkolaczek.elm.boilerplate.ElmFileType;
 import mkolaczek.elm.psi.ElmFile;
 import mkolaczek.elm.psi.node.Module;
@@ -30,9 +29,9 @@ public class ProjectUtil {
     @NotNull
     public static Stream<VirtualFile> elmFiles(Project project) {
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
-        return FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, ElmFileType.INSTANCE, scope)
-                             .stream()
-                             .filter(f -> !isPackageTestFile(f));
+        return FileTypeIndex.getFiles(ElmFileType.INSTANCE, scope)
+                            .stream()
+                            .filter(f -> !isPackageTestFile(f));
     }
 
     private static boolean isPackageTestFile(VirtualFile f) {
