@@ -7,8 +7,10 @@ import mkolaczek.elm.builtInImports.BuiltInImports;
 import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.ModuleNameRef;
+import mkolaczek.util.Streams;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static mkolaczek.elm.psi.node.Module.module;
@@ -20,7 +22,19 @@ public class ModuleResolver {
         if (inImport.isPresent()) {
             return inImport.get().filter(m -> m.sameName(target.getName())).map(x -> x);
         }
-        return Stream.empty();
+        return Stream.of(
+                module(target)
+                        .notAliasedImports()
+                        .flatMap(import_ -> ProjectUtil.modules(import_.getProject(),
+                                import_.importedModuleNameString().orElse(null))),
+                module(target)
+                        .aliasedImports()
+                        .map(Import::alias)
+                        .flatMap(Streams::stream),
+                BuiltInImports.imports()
+                              .filter(i -> i.importedAs().equals(target.getName()))
+                              .flatMap(i -> ProjectUtil.modules(target.getProject(), i.moduleName()))
+        ).flatMap(Function.identity());
     }
 
     public static Stream<Module> resolveToModule(ModuleNameRef target) {
