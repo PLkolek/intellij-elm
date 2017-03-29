@@ -5,10 +5,6 @@ import mkolaczek.elm.boilerplate.ElmLanguage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-
-import static java.util.stream.Collectors.toList;
-
 public class Token extends IElementType {
 
     private final String name;
@@ -31,7 +27,4 @@ public class Token extends IElementType {
         return name;
     }
 
-    public static Collection<String> names(Collection<Token> tokens) {
-        return tokens.stream().map(Token::getName).collect(toList());
-    }
 }

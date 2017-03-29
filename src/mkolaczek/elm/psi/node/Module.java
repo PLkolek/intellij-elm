@@ -20,12 +20,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.intellij.psi.util.PsiTreeUtil.*;
-import static java.util.stream.Collectors.toSet;
 import static mkolaczek.util.Streams.stream;
 
 public class Module extends ElmNamedElement implements DocCommented {
@@ -106,10 +104,6 @@ public class Module extends ElmNamedElement implements DocCommented {
         return Optional.ofNullable(findChildOfType(this, Imports.class));
     }
 
-    public Stream<Import> imports(String name) {
-        return imports().filter(i -> i.importedAs(name));
-    }
-
     public Stream<Import> aliasedImports() {
         return imports().filter(Import::isAliased);
     }
@@ -123,7 +117,7 @@ public class Module extends ElmNamedElement implements DocCommented {
     }
 
 
-    public <T extends PsiElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration) {
+    public <T extends PsiElement> Stream<T> declarations(TypeOfDeclaration<T> typeOfDeclaration) {
         return Streams.stream(declarationsNode())
                       .flatMap(n -> {
                           T[] decls = getChildrenOfType(n, typeOfDeclaration.psiClass());
@@ -131,11 +125,11 @@ public class Module extends ElmNamedElement implements DocCommented {
                       });
     }
 
-    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration, String name) {
+    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T> typeOfDeclaration, String name) {
         return declarations(typeOfDeclaration, Sets.newHashSet(name));
     }
 
-    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T, ?> typeOfDeclaration,
+    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T> typeOfDeclaration,
                                                               Set<String> names) {
         return declarations(typeOfDeclaration).filter(decl -> names.contains(decl.getName()));
     }
@@ -149,15 +143,6 @@ public class Module extends ElmNamedElement implements DocCommented {
 
     public Optional<Declarations> declarationsNode() {
         return Optional.ofNullable(getChildOfType(this, Declarations.class));
-    }
-
-    public Stream<String> notExposed(TypeOfExposed typeOfExposed,
-                                     Function<Declaration, Stream<String>> valueExtractor) {
-        Set<String> excluded = exposedNames(typeOfExposed).collect(toSet());
-        return declarations()
-                .flatMap(valueExtractor)
-                .flatMap(Streams::stream)
-                .filter(o -> !excluded.contains(o));
     }
 
     public Stream<String> exposedNames(TypeOfExposed typeOfExposed) {

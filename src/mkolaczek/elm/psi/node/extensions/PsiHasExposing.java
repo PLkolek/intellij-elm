@@ -23,11 +23,6 @@ public interface PsiHasExposing extends PsiElement, HasExposing {
                 .filter(export -> typeName.equals(export.exposedName())).findFirst();
     }
 
-    default Stream<Exposed> exposedValue(String valueName) {
-        return exposed(TypeOfExposed.VALUE)
-                .filter(export -> valueName.equals(export.exposedName()));
-    }
-
     @Override
     default Stream<Exposed> exposed(TypeOfExposed exposedElementsType) {
         return Streams.stream(exposingList()).flatMap(l -> l.exposed(exposedElementsType));

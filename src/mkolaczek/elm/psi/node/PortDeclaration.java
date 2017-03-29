@@ -7,13 +7,9 @@ import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
-import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
-import java.util.stream.Stream;
 
 public class PortDeclaration extends ElmNamedElement implements Declaration {
     public PortDeclaration(ASTNode node) {
@@ -37,8 +33,4 @@ public class PortDeclaration extends ElmNamedElement implements Declaration {
         return new ItemPresentation(this);
     }
 
-    @Override
-    public Stream<String> topLevelValueNames() {
-        return Streams.stream(Optional.ofNullable(getName()));
-    }
 }

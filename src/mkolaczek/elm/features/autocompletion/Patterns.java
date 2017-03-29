@@ -27,10 +27,6 @@ public class Patterns {
         return or(psiElement(TokenType.WHITE_SPACE), psiElement(PsiErrorElement.class));
     }
 
-    public static PsiElementPattern.Capture<PsiElement> justAfterLeaf(IElementType elementType) {
-        return psiElement().afterLeaf(psiElement(elementType));
-    }
-
     public static PsiElementPattern.Capture<PsiElement> childOf(IElementType elementType) {
         return psiElement().withParent(psiElement(elementType));
     }

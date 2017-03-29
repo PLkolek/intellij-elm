@@ -1,10 +1,6 @@
 package mkolaczek.elm.psi;
 
-import com.google.common.collect.Sets;
-import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.TokenSet;
-
-import java.util.function.Predicate;
 
 public interface Tokens {
 
@@ -80,13 +76,5 @@ public interface Tokens {
     TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR, SYM_OP);
     TokenSet COMMENT_TOKENS = TokenSet.create(COMMENT_CONTENT, BEGIN_COMMENT, END_COMMENT,
             LINE_COMMENT);
-
-    static boolean is(Token compared, Token... expected) {
-        return Sets.newHashSet(expected).contains(compared);
-    }
-
-    static Predicate<PsiBuilder> is(Token... expected) {
-        return builder -> is((Token) builder.getTokenType(), expected);
-    }
 
 }

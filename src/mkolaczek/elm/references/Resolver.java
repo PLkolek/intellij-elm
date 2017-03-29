@@ -140,7 +140,6 @@ public class Resolver<T> {
     }
 
     private Optional<Stream<? extends PsiNamedElement>> inSpecificLocations(PsiElement target) {
-        Module module = module(target);
         if (insideModuleHeader(target)) {
             return Optional.of(declared(module(target)));
         } else if (insideImport(target)) {

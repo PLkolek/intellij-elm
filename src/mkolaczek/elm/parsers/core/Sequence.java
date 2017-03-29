@@ -96,10 +96,6 @@ public class Sequence implements Parser {
         return result;
     }
 
-    public boolean shouldContinue(int i) {
-        return i < parsers.length - 1 && parsers[i + 1] instanceof ConsumeRest;
-    }
-
     @Override
     public boolean isRequired() {
         return Parser.anyRequired(parsers);

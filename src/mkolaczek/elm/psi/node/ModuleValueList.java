@@ -4,7 +4,6 @@ package mkolaczek.elm.psi.node;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.psi.node.extensions.Exposed;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
@@ -41,10 +40,6 @@ public class ModuleValueList extends ASTWrapperPsiElement {
 
     public <T extends PsiElement> Collection<T> values(Class<T> nodeType) {
         return stream(valuesList()).flatMap(l -> l.values(nodeType).stream()).collect(toList());
-    }
-
-    public <T extends PsiNamedElement> Optional<T> item(Class<T> type, String name) {
-        return values(type).stream().filter(i -> name.equals(i.getName())).findAny();
     }
 
     public static boolean maybeDeleteChild(PsiElement child) {

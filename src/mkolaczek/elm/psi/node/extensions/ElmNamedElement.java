@@ -57,10 +57,6 @@ public abstract class ElmNamedElement extends ASTWrapperPsiElement implements Ps
         return getName() != null && getName().equals(name);
     }
 
-    public boolean sameName(PsiNamedElement other) {
-        return sameName(other.getName());
-    }
-
 
     public static Predicate<PsiNamedElement> nameIn(Collection<String> names) {
         Set<String> nameSet = Sets.newHashSet(names);

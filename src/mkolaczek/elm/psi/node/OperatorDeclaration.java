@@ -10,13 +10,11 @@ import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.DefinesValues;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
 import mkolaczek.elm.psi.node.extensions.TypeOfDeclaration;
-import mkolaczek.util.Streams;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static mkolaczek.elm.psi.node.Module.module;
 
@@ -49,11 +47,6 @@ public class OperatorDeclaration extends ElmNamedElement implements Declaration,
 
     public boolean sameParensName(String name) {
         return name.equals(parensName().orElse(null));
-    }
-
-    @Override
-    public Stream<String> declaredOperatorName() {
-        return Streams.stream(Optional.ofNullable(getName()));
     }
 
     @Override

@@ -17,7 +17,6 @@ public class ValueDeclaration extends ASTWrapperPsiElement implements Declaratio
         super(node);
     }
 
-    @Override
     public Stream<String> topLevelValueNames() {
         return topLevelValues().map(ValueName::getName);
     }

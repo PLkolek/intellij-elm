@@ -14,7 +14,7 @@ public class BuiltInImport implements AbstractImport {
     private final boolean exposesAll;
     private final BuiltInExposed[] exposedItems;
 
-    public BuiltInImport(String moduleName, String asName, boolean exposesAll, BuiltInExposed... exposedItems) {
+    private BuiltInImport(String moduleName, String asName, boolean exposesAll, BuiltInExposed... exposedItems) {
         this.moduleName = moduleName;
         this.asName = asName;
         this.exposesAll = exposesAll;
@@ -75,10 +75,6 @@ public class BuiltInImport implements AbstractImport {
         private AfterAs(String moduleName, String asName) {
             this.moduleName = moduleName;
             this.asName = asName;
-        }
-
-        BuiltInImport exposingAll() {
-            return new BuiltInImport(moduleName, asName, true);
         }
 
         BuiltInImport exposing(BuiltInExposed... exposed) {

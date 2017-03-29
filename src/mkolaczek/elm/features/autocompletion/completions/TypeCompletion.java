@@ -6,7 +6,6 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.psi.node.*;
-import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 import mkolaczek.elm.references.Resolver;
 import org.jetbrains.annotations.NotNull;
@@ -43,13 +42,6 @@ public class TypeCompletion {
         return Resolver.forTypes()
                        .variants(parameters.getPosition())
                        .filter(s -> !s.equals(aliasName));
-    }
-
-    private static Stream<String> typesFromModule(CompletionParameters parameters) {
-        TypeAliasDeclNode aliasDeclNode = getParentOfType(parameters.getPosition(), TypeAliasDeclNode.class);
-        String aliasName = aliasDeclNode != null ? aliasDeclNode.typeDeclaration().getName() : null;
-        return module(parameters.getPosition()).notExposed(TypeOfExposed.TYPE, Declaration::declaredTypeName)
-                                               .filter(s -> !s.equals(aliasName));
     }
 
     private static Stream<String> exposedConstructorlessTypes(CompletionParameters parameters) {

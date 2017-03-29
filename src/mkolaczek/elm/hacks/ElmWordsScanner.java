@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
  * Copy paste of DefaultWordsScanner just to allow indexing of symbols
  */
 
+@SuppressWarnings("ALL")
 public class ElmWordsScanner extends VersionedWordsScanner {
     private final Lexer myLexer;
     private final TokenSet myIdentifierTokenSet;

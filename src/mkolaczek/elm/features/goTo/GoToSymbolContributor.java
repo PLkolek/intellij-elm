@@ -53,7 +53,7 @@ public class GoToSymbolContributor implements ChooseByNameContributor {
                      .toArray(NavigationItem[]::new);
     }
 
-    private <T extends PsiElement> Stream<T> decls(Project project, TypeOfDeclaration<T, ?> type) {
+    private <T extends PsiElement> Stream<T> decls(Project project, TypeOfDeclaration<T> type) {
         return modules(project).flatMap((module) -> module.declarations(type));
     }
 }
