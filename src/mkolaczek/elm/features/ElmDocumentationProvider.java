@@ -21,7 +21,7 @@ import static mkolaczek.elm.psi.node.Module.module;
 
 public class ElmDocumentationProvider implements DocumentationProvider {
 
-    public static final String NEWLINE = "\n&nbsp&nbsp&nbsp&nbsp ";
+    private static final String NEWLINE = "\n&nbsp&nbsp&nbsp&nbsp ";
 
     @Nullable
     @Override

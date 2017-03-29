@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class ElmStructureViewElement implements StructureViewTreeElement, SortableTreeElement {
+class ElmStructureViewElement implements StructureViewTreeElement, SortableTreeElement {
     private final NavigatablePsiElement element;
 
     public ElmStructureViewElement(NavigatablePsiElement element) {

@@ -62,8 +62,8 @@ public class ValueCompletion {
         return ElmCompletionContributor.notExposed(TypeOfExposed.VALUE, parameters);
     }
 
-    public static Stream<String> exposed(CompletionParameters parameters,
-                                         TypeOfExposed typeOfExposed) {
+    private static Stream<String> exposed(CompletionParameters parameters,
+                                          TypeOfExposed typeOfExposed) {
         return module(parameters.getPosition()).exposedNames(typeOfExposed);
     }
 

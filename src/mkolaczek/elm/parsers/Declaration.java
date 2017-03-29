@@ -18,7 +18,7 @@ import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.freshLine;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
-public class Declaration {
+class Declaration {
 
     public static Parser declarations() {
         return sequence("declarations",

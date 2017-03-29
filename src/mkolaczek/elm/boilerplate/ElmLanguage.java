@@ -5,7 +5,7 @@ import com.intellij.lang.Language;
 public class ElmLanguage extends Language {
     public static final ElmLanguage INSTANCE = new ElmLanguage();
 
-    public ElmLanguage() {
+    private ElmLanguage() {
         super("Elm");
     }
 }

@@ -8,14 +8,14 @@ import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.Basic.*;
-import static mkolaczek.elm.parsers.core.DottedVar.dottedCapVar;
+import static mkolaczek.elm.parsers.core.DottedVar.qualifiedCapVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
-public class Type {
+class Type {
 
     public static final ParserBox expression = new ParserBox("type expression");
 
@@ -43,8 +43,7 @@ public class Type {
             );
 
     private static Parser typeRef() {
-        return dottedCapVar("type name",
-                Elements.MODULE_NAME_REF,
+        return qualifiedCapVar("type name",
                 Elements.TYPE_NAME_REF
         ).as(Elements.QUALIFIED_TYPE_NAME_REF);
     }

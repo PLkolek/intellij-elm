@@ -9,8 +9,8 @@ import java.util.stream.Stream;
 
 public class Names {
     @NotNull
-    public static String concatLast(@NotNull String[] words,
-                                    int wordCount) {
+    private static String concatLast(@NotNull String[] words,
+                                     int wordCount) {
         StringBuilder buffer = new StringBuilder();
         buffer.append(words[words.length - wordCount]);
 

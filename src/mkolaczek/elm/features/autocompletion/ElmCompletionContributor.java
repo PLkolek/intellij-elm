@@ -71,6 +71,7 @@ public class ElmCompletionContributor extends CompletionContributor {
         );
     }
 
+    @SuppressWarnings("EmptyMethod")
     @Override
     public void fillCompletionVariants(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result) {
         super.fillCompletionVariants(parameters, result);

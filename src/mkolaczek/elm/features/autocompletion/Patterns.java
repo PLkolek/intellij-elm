@@ -37,7 +37,7 @@ public class Patterns {
     }
 
     @NotNull
-    public static PsiElementPattern.Capture<? extends PsiElement> e(Class<? extends PsiElement> tClass) {
+    private static PsiElementPattern.Capture<? extends PsiElement> e(Class<? extends PsiElement> tClass) {
         return psiElement(tClass);
     }
 

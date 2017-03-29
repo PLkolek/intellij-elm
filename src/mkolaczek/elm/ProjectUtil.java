@@ -27,7 +27,7 @@ public class ProjectUtil {
     }
 
     @NotNull
-    public static Stream<VirtualFile> elmFiles(Project project) {
+    private static Stream<VirtualFile> elmFiles(Project project) {
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
         return FileTypeIndex.getFiles(ElmFileType.INSTANCE, scope)
                             .stream()
@@ -45,7 +45,7 @@ public class ProjectUtil {
         return modules(project, ImmutableSet.of(searchedModuleName));
     }
 
-    public static Stream<Module> modules(Project project, Set<String> searchedModuleNames) {
+    private static Stream<Module> modules(Project project, Set<String> searchedModuleNames) {
         return modules(project).filter(ElmNamedElement.nameIn(searchedModuleNames));
     }
 

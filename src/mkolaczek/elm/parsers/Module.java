@@ -1,6 +1,7 @@
 package mkolaczek.elm.parsers;
 
 import mkolaczek.elm.parsers.core.As;
+import mkolaczek.elm.parsers.core.DottedVar;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.Sequence;
 import mkolaczek.elm.psi.Elements;
@@ -8,7 +9,6 @@ import mkolaczek.elm.psi.Tokens;
 
 import static mkolaczek.elm.parsers.Basic.listing;
 import static mkolaczek.elm.parsers.SepBy.tryCommaSep;
-import static mkolaczek.elm.parsers.core.DottedVar.dottedCapVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Many.many;
 import static mkolaczek.elm.parsers.core.Or.or;
@@ -21,7 +21,7 @@ import static mkolaczek.elm.psi.Elements.OPERATOR_SYMBOL_REF;
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
 import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
 
-public class Module {
+class Module {
 
     public static Parser moduleHeader() {
         return sequence("Module Header",
@@ -31,10 +31,10 @@ public class Module {
         );
     }
 
-    public static Parser importLine() {
+    private static Parser importLine() {
         return freshLine(sequence(
                 expect(Tokens.IMPORT),
-                maybeWhitespace(dottedCapVar("module name").as(Elements.MODULE_NAME_REF)),
+                maybeWhitespace(DottedVar.moduleName().as(Elements.MODULE_NAME_REF)),
                 tryP(
                         sequence("as clause",
                                 maybeWhitespace(expect(Tokens.AS)).skipWsError(),
@@ -45,7 +45,7 @@ public class Module {
         ).as(Elements.IMPORT_LINE));
     }
 
-    public static Parser exposing() {
+    private static Parser exposing() {
         return sequence(
                 expect(Tokens.EXPOSING),
                 maybeWhitespace(listing("list of exposed values", exposed()))
@@ -76,7 +76,7 @@ public class Module {
     }
 
 
-    public static Parser settings() {
+    private static Parser settings() {
         return sequence(
                 expect(Tokens.WHERE),
                 maybeWhitespace(settingsList())
@@ -95,12 +95,12 @@ public class Module {
         ).as(Elements.EFFECT_MODULE_SETTINGS_LIST);
     }
 
-    static Parser moduleDeclaration() {
+    private static Parser moduleDeclaration() {
         Sequence effectSequence =
                 sequence("Module declaration",
                         expect(Tokens.EFFECT),
                         maybeWhitespace(expect(Tokens.MODULE)),
-                        maybeWhitespace(dottedCapVar("module name").as(Elements.MODULE_NAME)),
+                        maybeWhitespace(DottedVar.moduleName().as(Elements.MODULE_NAME)),
                         maybeWhitespace(settings()).skipWsError(),
                         maybeWhitespace(exposing()).skipWsError()
                 );
@@ -114,7 +114,7 @@ public class Module {
                                 ),
                                 expect(Tokens.MODULE)
                         ),
-                        maybeWhitespace(dottedCapVar("module name").as(Elements.MODULE_NAME)),
+                        maybeWhitespace(DottedVar.moduleName().as(Elements.MODULE_NAME)),
                         maybeWhitespace(exposing()).skipWsError()
                 );
         return or(effectSequence, sequence).as(Elements.MODULE_HEADER);

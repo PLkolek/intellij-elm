@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 public abstract class ElmNamedElement extends ASTWrapperPsiElement implements PsiNameIdentifierOwner {
 
-    public ElmNamedElement(@NotNull ASTNode node) {
+    protected ElmNamedElement(@NotNull ASTNode node) {
         super(node);
     }
 

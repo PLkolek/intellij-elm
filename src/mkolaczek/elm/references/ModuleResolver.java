@@ -40,6 +40,7 @@ public class ModuleResolver {
     private static Stream<? extends PsiElement> resolve(ModuleNameRef target,
                                                         Function<Stream<Import>, Stream<PsiElement>> aliasedTransform) {
         Optional<Stream<Module>> inImport = inImport(target);
+        //noinspection OptionalIsPresent
         if (inImport.isPresent()) {
             return inImport.get().filter(m -> m.sameName(target.getName()));
         }
@@ -96,7 +97,7 @@ public class ModuleResolver {
                         import_.moduleNameString().orElse(null)));
     }
 
-    public static Stream<Import> aliasedImports(PsiElement target) {
+    private static Stream<Import> aliasedImports(PsiElement target) {
         return module(target).aliasedImports();
     }
 

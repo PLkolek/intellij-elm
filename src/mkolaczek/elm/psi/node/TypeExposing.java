@@ -35,11 +35,11 @@ public class TypeExposing extends ASTWrapperPsiElement implements PsiExposed {
         return ofNullable(valueList).map(vl -> vl.values(TypeConstructorRef.class)).orElse(newArrayList());
     }
 
-    public Optional<ModuleValueList> valueList() {
+    private Optional<ModuleValueList> valueList() {
         return Optional.ofNullable(findChildOfType(this, ModuleValueList.class));
     }
 
-    public boolean exposesEverything() {
+    private boolean exposesEverything() {
         return valueList().map(ModuleValueList::isOpenListing).orElse(false);
     }
 

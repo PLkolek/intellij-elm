@@ -11,6 +11,7 @@ public class ConsumeRest implements Parser {
 
     private final String name;
 
+    @SuppressWarnings("SameParameterValue")
     public static ConsumeRest consumeRest(String name) {
         return new ConsumeRest(name);
     }

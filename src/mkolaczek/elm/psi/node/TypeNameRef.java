@@ -46,7 +46,7 @@ public class TypeNameRef extends ASTWrapperPsiElement implements PsiNamedElement
         }
     }
 
-    public boolean isQualified() {
+    private boolean isQualified() {
         return getParentOfType(this, QualifiedTypeNameRef.class) != null;
     }
 }

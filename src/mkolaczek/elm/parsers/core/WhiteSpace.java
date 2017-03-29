@@ -31,7 +31,7 @@ public class WhiteSpace implements Parser {
         return new WhiteSpace(prefixedParsed, Type.INDENTED, false);
     }
 
-    public WhiteSpace(Parser prefixedParsed, Type type, boolean skipWsError) {
+    private WhiteSpace(Parser prefixedParsed, Type type, boolean skipWsError) {
         this.prefixedParsed = prefixedParsed;
         this.type = type;
         this.skipWsError = skipWsError;
@@ -41,7 +41,7 @@ public class WhiteSpace implements Parser {
         return builder.getOriginalText().charAt(builder.getCurrentOffset() - 1);
     }
 
-    public static boolean isFreshLine(@NotNull PsiBuilder builder) {
+    private static boolean isFreshLine(@NotNull PsiBuilder builder) {
         return builder.getCurrentOffset() <= 0 || builder.getOriginalText()
                                                          .charAt(builder.getCurrentOffset() - 1) == '\n';
     }
@@ -66,7 +66,7 @@ public class WhiteSpace implements Parser {
         return acceptsWhiteSpace(builder, indentation) && prefixedParsed.willParse(builder, indentation);
     }
 
-    boolean acceptsWhiteSpace(PsiBuilder psiBuilder, Indentation indentation) {
+    private boolean acceptsWhiteSpace(PsiBuilder psiBuilder, Indentation indentation) {
         return skipWsError || type.accepts(psiBuilder, indentation);
     }
 

@@ -18,7 +18,7 @@ public class Try implements Parser {
         return new Try(contents);
     }
 
-    public Try(Parser contents) {
+    private Try(Parser contents) {
         this.contents = contents;
     }
 

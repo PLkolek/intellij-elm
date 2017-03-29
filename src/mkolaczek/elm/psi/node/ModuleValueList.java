@@ -28,7 +28,7 @@ public class ModuleValueList extends ASTWrapperPsiElement {
         return PsiTreeUtil.getChildOfType(this, OpenListing.class) != null;
     }
 
-    public Optional<CommaSeparatedList> valuesList() {
+    private Optional<CommaSeparatedList> valuesList() {
         return Optional.ofNullable(getChildOfType(this, CommaSeparatedList.class));
     }
 

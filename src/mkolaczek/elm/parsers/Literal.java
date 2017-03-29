@@ -14,7 +14,7 @@ import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.psi.Tokens.*;
 
-public class Literal {
+class Literal {
     public static Parser literal() {
         return or(
                 string(),

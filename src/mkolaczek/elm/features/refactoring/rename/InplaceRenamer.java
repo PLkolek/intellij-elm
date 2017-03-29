@@ -10,7 +10,7 @@ import mkolaczek.elm.psi.node.*;
 
 import java.util.regex.Pattern;
 
-public class InplaceRenamer extends MemberInplaceRenamer {
+class InplaceRenamer extends MemberInplaceRenamer {
     private static final Pattern MODULE_PATTERN = Pattern.compile("[A-Z][a-zA-Z0-9]*(\\.[A-Z][a-zA-Z0-9]*)*");
     private static final Pattern CAP_VAR_PATTERN = Pattern.compile("[A-Z][a-zA-Z0-9]*");
     private static final Pattern LOW_VAR_PATTERN = Pattern.compile("[a-z][a-zA-Z0-9]*");

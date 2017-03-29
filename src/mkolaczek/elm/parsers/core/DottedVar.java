@@ -15,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
+import static mkolaczek.elm.psi.Elements.MODULE_NAME_REF;
+import static mkolaczek.elm.psi.Elements.VAR;
 import static mkolaczek.elm.psi.Tokens.*;
 
 public class DottedVar implements Parser {
@@ -26,23 +28,23 @@ public class DottedVar implements Parser {
     @Nullable
     private final Element suffixType;
 
-    public DottedVar(String name, Set<Token> varTokens, @Nullable Element prefixType, @Nullable Element suffixType) {
+    private DottedVar(String name, Set<Token> varTokens, @Nullable Element prefixType, @Nullable Element suffixType) {
         this.name = name;
         this.varTokens = varTokens;
         this.prefixType = prefixType;
         this.suffixType = suffixType;
     }
 
-    public static DottedVar dottedCapVar(String name) {
-        return new DottedVar(name, ImmutableSet.of(CAP_VAR), null, null);
+    public static DottedVar moduleName() {
+        return new DottedVar("module name", ImmutableSet.of(CAP_VAR), null, null);
     }
 
-    public static DottedVar dottedCapVar(String name, @NotNull Element prefix, @NotNull Element suffix) {
-        return new DottedVar(name, ImmutableSet.of(CAP_VAR), prefix, suffix);
+    public static DottedVar qualifiedCapVar(String name, @NotNull Element suffix) {
+        return new DottedVar(name, ImmutableSet.of(CAP_VAR), MODULE_NAME_REF, suffix);
     }
 
-    public static Parser dottedVar(String name, @NotNull Element prefix, @NotNull Element suffix) {
-        return new DottedVar(name, ImmutableSet.of(CAP_VAR, LOW_VAR), prefix, suffix);
+    public static Parser qualifiedVar() {
+        return new DottedVar("qualified variable", ImmutableSet.of(CAP_VAR, LOW_VAR), MODULE_NAME_REF, VAR);
     }
 
     @Override

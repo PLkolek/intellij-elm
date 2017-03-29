@@ -163,7 +163,7 @@ public class Resolver<T> {
         return ProjectUtil.modules(project, moduleName);
     }
 
-    public Stream<Stream<? extends PsiNamedElement>> locals(PsiElement target) {
+    private Stream<Stream<? extends PsiNamedElement>> locals(PsiElement target) {
         Stream<Stream<? extends PsiNamedElement>> locals = Stream.empty();
         if (includeLocal) {
             Stream<DefinesValues> lets = StreamEx.iterate(getParentOfType(target, DefinesValues.class),
@@ -174,7 +174,7 @@ public class Resolver<T> {
         return locals;
     }
 
-    public Stream<PsiNamedElement> exposed(Module module) {
+    private Stream<PsiNamedElement> exposed(Module module) {
         Project project = module.getProject();
         //noinspection ConstantConditions
         return Stream.concat(module.imports(), BuiltInImports.imports())
@@ -185,7 +185,7 @@ public class Resolver<T> {
                      );
     }
 
-    public Stream<? extends PsiNamedElement> declared(Module module) {
+    private Stream<? extends PsiNamedElement> declared(Module module) {
         return toStream.apply(declared.apply(module));
     }
 

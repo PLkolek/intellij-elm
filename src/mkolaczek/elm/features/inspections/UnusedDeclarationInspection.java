@@ -69,7 +69,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
                 .toArray(ProblemDescriptor[]::new);
     }
 
-    public ProblemDescriptor check(InspectionManager manager, PsiFile file, PsiNameIdentifierOwner element) {
+    private ProblemDescriptor check(InspectionManager manager, PsiFile file, PsiNameIdentifierOwner element) {
         return descriptor(manager, element, findUsages(file, element));
     }
 

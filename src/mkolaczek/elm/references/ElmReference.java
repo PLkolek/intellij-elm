@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.stream.Stream;
 
 
-public abstract class ElmReference<T extends PsiNamedElement> extends PsiReferenceBase.Poly<T> {
-    public ElmReference(T element) {
+abstract class ElmReference<T extends PsiNamedElement> extends PsiReferenceBase.Poly<T> {
+    ElmReference(T element) {
         super(element, TextRange.create(0, element.getTextLength()), false);
     }
 

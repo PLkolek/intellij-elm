@@ -30,7 +30,7 @@ public class Import extends ASTWrapperPsiElement implements PsiHasExposing, Abst
         return aliasName().isPresent();
     }
 
-    public Optional<String> aliasName() {
+    private Optional<String> aliasName() {
         return Optional.ofNullable(findChildOfType(this, ModuleAlias.class)).map(ModuleAlias::getName);
     }
 

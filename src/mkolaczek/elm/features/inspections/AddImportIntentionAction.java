@@ -26,7 +26,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 import static mkolaczek.elm.ProjectUtil.modules;
 
-public class AddImportIntentionAction extends AbstractIntentionAction {
+class AddImportIntentionAction extends AbstractIntentionAction {
 
     private final String moduleNameToImport;
 

@@ -13,7 +13,7 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
-public class SepBy {
+class SepBy {
     public static Parser pipeSep(Parser parser) {
         return sepBy(Elements.PIPE_SEP, Tokens.PIPE, parser);
     }

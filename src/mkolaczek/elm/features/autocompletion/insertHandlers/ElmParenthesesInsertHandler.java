@@ -5,7 +5,7 @@ import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 
 public class ElmParenthesesInsertHandler extends ParenthesesInsertHandler<LookupElement> {
-    public ElmParenthesesInsertHandler() {
+    private ElmParenthesesInsertHandler() {
         super(true, false, true, true);
     }
 

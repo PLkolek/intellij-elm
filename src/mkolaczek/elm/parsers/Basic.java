@@ -16,7 +16,7 @@ import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
 import static mkolaczek.elm.psi.Tokens.RPAREN;
 
-public class Basic {
+class Basic {
 
     public static Parser listing(String name, Parser listedValue) {
         return sequence(
@@ -27,7 +27,7 @@ public class Basic {
          .as(Elements.MODULE_VALUE_LIST);
     }
 
-    public static Parser listingContent(String name, Parser listedValue) {
+    private static Parser listingContent(String name, Parser listedValue) {
         return or(name,
                 expect(Tokens.OPEN_LISTING).as(Elements.OPEN_LISTING_NODE),
                 commaSep(listedValue)
@@ -50,7 +50,7 @@ public class Basic {
         ).as(as);
     }
 
-    static Parser squareBrackets(String name, Parser contents) {
+    private static Parser squareBrackets(String name, Parser contents) {
         return surround(name, Tokens.LSQUAREBRACKET, Tokens.RSQUAREBRACKET, contents);
     }
 
@@ -62,15 +62,15 @@ public class Basic {
         return surround(Tokens.LBRACKET, Tokens.RBRACKET, contents);
     }
 
-    public static Parser brackets(String name, Parser contents) {
+    private static Parser brackets(String name, Parser contents) {
         return surround(name, Tokens.LBRACKET, Tokens.RBRACKET, contents);
     }
 
-    public static Parser surround(String name, Token left, Token right, Parser contents) {
+    private static Parser surround(String name, Token left, Token right, Parser contents) {
         return sequence(name, surroundContent(left, right, contents));
     }
 
-    public static Parser surround(Token left, Token right, Parser contents) {
+    private static Parser surround(Token left, Token right, Parser contents) {
         return sequence(surroundContent(left, right, contents));
     }
 

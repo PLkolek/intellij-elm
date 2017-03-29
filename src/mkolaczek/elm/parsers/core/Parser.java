@@ -11,6 +11,7 @@ import java.util.HashSet;
 
 import static java.util.Arrays.stream;
 
+@SuppressWarnings("SameParameterValue")
 public interface Parser {
 
     enum Result {

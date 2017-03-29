@@ -24,18 +24,24 @@ import static org.junit.Assert.assertTrue;
 
 public class InPlaceRenamerTest {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private
     Editor editor;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private
     Module module;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private
     TypeDeclaration type;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private
     TypeConstructor constructor;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private
     ValueName valueName;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private
     PsiElement something;
 
     @Before

@@ -67,7 +67,7 @@ public class ElmSafeDeleteDelegate implements SafeDeleteProcessorDelegate {
         return isInside(refElement, new PsiElement[]{ancestor});
     }
 
-    public static boolean isInside(PsiElement refElement, PsiElement[] ancestors) {
+    private static boolean isInside(PsiElement refElement, PsiElement[] ancestors) {
         for (PsiElement element : ancestors) {
             if (SafeDeleteProcessor.isInside(refElement, element)) {
                 return true;

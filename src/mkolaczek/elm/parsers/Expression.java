@@ -12,7 +12,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static mkolaczek.elm.parsers.Basic.*;
 import static mkolaczek.elm.parsers.Literal.glsl;
 import static mkolaczek.elm.parsers.Literal.literal;
-import static mkolaczek.elm.parsers.core.DottedVar.dottedVar;
+import static mkolaczek.elm.parsers.core.DottedVar.qualifiedVar;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Many.indentedMany1;
 import static mkolaczek.elm.parsers.core.Many.many;
@@ -23,9 +23,9 @@ import static mkolaczek.elm.parsers.core.WhiteSpace.noWhiteSpace;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
 
-public class Expression {
+class Expression {
 
-    public static Parser definition() {
+    private static Parser definition() {
         return or("definition",
                 operatorDefinition(),
                 valueDefinition()
@@ -205,9 +205,8 @@ public class Expression {
 
     @NotNull
     private static Sequence variable() {
-        return accessible(dottedVar("qualified variable",
-                Elements.MODULE_NAME_REF,
-                Elements.VAR).as(Elements.QUALIFIED_VAR));
+        return accessible(qualifiedVar(
+        ).as(Elements.QUALIFIED_VAR));
     }
 
     @NotNull

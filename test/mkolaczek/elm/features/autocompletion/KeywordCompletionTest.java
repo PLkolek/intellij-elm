@@ -13,6 +13,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+@SuppressWarnings("ConstantConditions")
 public class KeywordCompletionTest extends LightFixtureCompletionTestCase {
 
 

@@ -10,7 +10,7 @@ public class ElmFileType extends LanguageFileType {
 
     public static final ElmFileType INSTANCE = new ElmFileType();
 
-    protected ElmFileType() {
+    private ElmFileType() {
         super(ElmLanguage.INSTANCE);
     }
 

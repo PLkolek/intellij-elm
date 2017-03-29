@@ -6,7 +6,7 @@ import mkolaczek.elm.parsers.core.context.Indentation;
 
 import java.util.Collection;
 
-public class SkipUntil {
+class SkipUntil {
 
     public static void skipUntil(String expectedName,
                                  Collection<Parser> nextParsers,

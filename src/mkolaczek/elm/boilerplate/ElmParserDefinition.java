@@ -21,8 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ElmParserDefinition implements ParserDefinition {
 
-    public static final IFileElementType FILE = new IFileElementType(ElmLanguage.INSTANCE);
-    public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
+    private static final IFileElementType FILE = new IFileElementType(ElmLanguage.INSTANCE);
+    private static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
 
 
     @NotNull

@@ -8,7 +8,7 @@ import com.intellij.psi.PsiFile;
 import mkolaczek.elm.psi.ElmFile;
 import org.jetbrains.annotations.NotNull;
 
-public class ElmStructureViewModel extends StructureViewModelBase implements
+class ElmStructureViewModel extends StructureViewModelBase implements
         StructureViewModel.ElementInfoProvider {
     public ElmStructureViewModel(PsiFile psiFile) {
         super(psiFile, root(psiFile));

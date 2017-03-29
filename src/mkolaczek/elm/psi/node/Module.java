@@ -129,8 +129,8 @@ public class Module extends ElmNamedElement implements DocCommented {
         return declarations(typeOfDeclaration, Sets.newHashSet(name));
     }
 
-    public <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T> typeOfDeclaration,
-                                                              Set<String> names) {
+    private <T extends PsiNamedElement> Stream<T> declarations(TypeOfDeclaration<T> typeOfDeclaration,
+                                                               Set<String> names) {
         return declarations(typeOfDeclaration).filter(decl -> names.contains(decl.getName()));
     }
 

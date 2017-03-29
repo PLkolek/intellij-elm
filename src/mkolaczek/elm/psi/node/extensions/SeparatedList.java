@@ -17,7 +17,7 @@ import static com.intellij.psi.util.PsiTreeUtil.*;
 public abstract class SeparatedList extends ASTWrapperPsiElement {
     private final Token separator;
 
-    public SeparatedList(@NotNull ASTNode node, Token separator) {
+    protected SeparatedList(@NotNull ASTNode node, Token separator) {
         super(node);
         this.separator = separator;
     }
