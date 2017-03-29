@@ -10,26 +10,35 @@ import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.ModuleNameRef;
 import mkolaczek.elm.psi.node.extensions.QualifiedRef;
+import mkolaczek.elm.references.ModuleResolver;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
 
 import static mkolaczek.elm.features.autocompletion.ElmCompletionContributor.location;
 import static mkolaczek.elm.features.autocompletion.Patterns.e;
+import static mkolaczek.elm.features.autocompletion.Patterns.inside;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class ModuleCompletion {
     public static void modules(ElmCompletionContributor c) {
-        c.autocomplete(Patterns.afterLeaf(Tokens.MODULE), ModuleCompletion::fileName);
-        c.autocomplete(Patterns.afterLeaf(Tokens.AS), ModuleCompletion::moduleNameParts);
-        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)), ModuleCompletion::modules);
-        c.autocomplete(e().inside(e(QUALIFIED_TYPE_CONSTRUCTOR_REF)), ModuleCompletion::modules);
-        c.autocomplete(e().inside(e(QUALIFIED_VAR)), ModuleCompletion::modules);
+        //@formatter:off
+        c.autocomplete(Patterns.afterLeaf(Tokens.MODULE),               ModuleCompletion::fileName);
+        c.autocomplete(Patterns.afterLeaf(Tokens.AS),                   ModuleCompletion::moduleNameParts);
+        c.autocomplete(inside(MODULE_NAME_REF).inside(e(IMPORT_LINE)),  ModuleCompletion::otherModules);
+        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),          ModuleCompletion::modules);
+        c.autocomplete(e().inside(e(QUALIFIED_TYPE_CONSTRUCTOR_REF)),   ModuleCompletion::modules);
+        c.autocomplete(e().inside(e(QUALIFIED_VAR)),                    ModuleCompletion::modules);
+        //@formatter:on
         c.autocomplete(e(RUNE_OF_AUTOCOMPLETION).inside(e(PATTERN_TERM)),
                 params -> matchingModules(params.getPosition(), "")
         );
+    }
+
+    private static Stream<String> otherModules(CompletionParameters parameters) {
+        return ModuleResolver.variants(parameters.getPosition());
     }
 
     private static Stream<String> modules(CompletionParameters parameters) {
