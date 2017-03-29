@@ -30,10 +30,12 @@ public class ModuleReference extends PsiReferenceBase.Poly<ModuleNameRef> {
     @NotNull
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
-        return modules()
-                .filter(e -> Objects.equals(e.getName(), myElement.getName()))
-                .map(PsiElementResolveResult::new)
-                .toArray(ResolveResult[]::new);
+        return Stream.concat(
+                modules().filter(e -> Objects.equals(e.getName(), myElement.getName())),
+                BuiltInImports.imports()
+                              .filter(i -> i.importedAs().equals(myElement.getName()))
+                              .flatMap(i -> ProjectUtil.modules(myElement.getProject(), i.moduleName()))
+        ).map(PsiElementResolveResult::new).toArray(ResolveResult[]::new);
     }
 
     private Stream<? extends ASTWrapperPsiElement> modules() {
