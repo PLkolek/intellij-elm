@@ -21,7 +21,18 @@ public class ModuleNameCompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testImportCompletion() {
         myFixture.configureByFiles("import/Test2.elm", "Test1.elm");
-        autocomplete("Test1");
+        autocomplete("Test1",
+                "Basics",
+                "Debug",
+                "List",
+                "Maybe",
+                "Result",
+                "String",
+                "Tuple",
+                "Platform",
+                "Platform.Cmd",
+                "Platform.Sub"
+        );
     }
 
     public void testModuleNameCompletion() {

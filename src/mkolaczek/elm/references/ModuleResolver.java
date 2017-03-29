@@ -3,6 +3,7 @@ package mkolaczek.elm.references;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import mkolaczek.elm.ProjectUtil;
+import mkolaczek.elm.builtInImports.BuiltInImports;
 import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.Module;
 import mkolaczek.elm.psi.node.ModuleNameRef;
@@ -31,9 +32,13 @@ public class ModuleResolver {
     }
 
     public static Stream<String> variants(PsiElement target) {
+        Module module = module(target);
         Optional<Stream<Module>> inImport = inImport(target);
         if (inImport.isPresent()) {
-            return inImport.get().filter(module -> !module(target).sameName(module)).map(Module::getName);
+            return Stream.concat(
+                    inImport.get().map(Module::getName),
+                    BuiltInImports.moduleNames()
+            ).filter(name -> !module.sameName(name));
         }
         return Stream.empty();
     }
