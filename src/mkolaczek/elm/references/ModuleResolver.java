@@ -47,7 +47,23 @@ public class ModuleResolver {
         if (inImport.isPresent()) {
             return inImport.get().filter(m -> m.sameName(target.getName()));
         }
-        return Stream.empty();
+        return Stream.of(
+                module(target)
+                        .notAliasedImports()
+                        .filter(i -> target.getName().equals(i.importedModuleNameString().orElse(null)))
+                        .flatMap(import_ -> ProjectUtil.modules(import_.getProject(),
+                                import_.importedModuleNameString().orElse(null))),
+
+                module(target)
+                        .aliasedImports()
+                        .filter(i -> i.importedAs(target.getName()))
+                        .flatMap(import_ -> ProjectUtil.modules(import_.getProject(),
+                                import_.importedModuleNameString().orElse(null))),
+
+                BuiltInImports.imports()
+                              .filter(i -> i.importedAs().equals(target.getName()))
+                              .flatMap(i -> ProjectUtil.modules(target.getProject(), i.moduleName()))
+        ).flatMap(Function.identity());
     }
 
     public static Stream<String> variants(PsiElement target) {

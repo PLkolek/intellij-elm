@@ -156,12 +156,8 @@ public class Resolver<T> {
         QualifiedRef qualifiedRef = getParentOfType(target, QualifiedRef.class);
         if (qualifiedRef != null && qualifiedRef.moduleName().isPresent()) {
             return Optional.of(
-                    Stream.concat(module.imports()
-                                        .map(i -> i.importedModuleNameString().orElse(null)),
-                            BuiltInImports.moduleNames())
-                          .filter(s -> qualifiedRef.moduleName().get().getName().equals(s))
-                          .flatMap(moduleName -> importedModules(target.getProject(), moduleName))
-                          .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)))
+                    ModuleResolver.resolveToModule(qualifiedRef.moduleName().get())
+                                  .flatMap(m -> toStream.apply(declaredAndExposedFrom(m)))
             );
         }
         return Optional.empty();
