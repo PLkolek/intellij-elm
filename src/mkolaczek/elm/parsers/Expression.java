@@ -25,7 +25,7 @@ import static mkolaczek.elm.psi.Tokens.*;
 
 class Expression {
 
-    private static Parser definition() {
+    static Parser definition() {
         return or("definition",
                 operatorDefinition(),
                 valueDefinition()
@@ -49,7 +49,7 @@ class Expression {
                                 spacePrefix(definedValues())
                         ).as(DEFINED_VALUES),
                         definitionEnd()
-                )
+                ).as(VALUE_DECLARATION)
         );
     }
 
