@@ -113,7 +113,7 @@ public class Module extends ElmNamedElement implements DocCommented {
     }
 
     public Stream<Declaration> declarations() {
-        return findChildrenOfType(this, Declaration.class).stream();
+        return Streams.stream(declarationsNode()).flatMap(Declarations::declarations);
     }
 
 
