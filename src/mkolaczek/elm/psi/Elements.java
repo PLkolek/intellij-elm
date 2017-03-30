@@ -72,6 +72,8 @@ public interface Elements {
     Element MAIN_DEFINED_VALUES = new Element("main defined values");
     Element TYPE_ANNOTATION = new Element("type annotation");
     Element TERM = new Element("term");
+    Element TYPE_EXPRESSION = new Element("type expression");
+    Element TYPE_VARIABLE = new Element("type variable");
 
     class Factory {
 
@@ -141,6 +143,10 @@ public interface Elements {
                 return new TypeName(node);
             } else if (type == TYPE_NAME_REF) {
                 return new TypeNameRef(node);
+            } else if (type == TYPE_EXPRESSION) {
+                return new TypeExpression(node);
+            } else if (type == TYPE_VARIABLE) {
+                return new TypeVariable(node);
             } else if (type == QUALIFIED_TYPE_NAME_REF) {
                 return new QualifiedTypeNameRef(node);
             } else if (type == QUALIFIED_TYPE_CONSTRUCTOR_REF) {

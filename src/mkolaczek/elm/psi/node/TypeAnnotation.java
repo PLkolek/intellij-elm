@@ -22,5 +22,8 @@ public class TypeAnnotation extends ASTWrapperPsiElement implements Declaration 
         return getChildOfType2(this, ValueNameRef.class);
     }
 
+    public Optional<TypeExpression> typeExpression() {
+        return getChildOfType2(this, TypeExpression.class);
+    }
 
 }

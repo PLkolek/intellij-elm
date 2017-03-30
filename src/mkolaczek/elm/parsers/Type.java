@@ -31,7 +31,7 @@ class Type {
     private static final Parser term =
             or("type term",
                     typeRef(),
-                    expect(Tokens.LOW_VAR),
+                    expect(Tokens.LOW_VAR).as(Elements.TYPE_VARIABLE),
                     tuple("tuple type", expression),
                     record("record type", fieldSuffix())
             );
@@ -50,17 +50,14 @@ class Type {
 
     private static final Parser expression2 =
             sequence("type expression",
-                    or(
-                            app,
-                            term
-                    ),
+                    or(app, term),
                     tryP(
                             sequence(
                                     maybeWhitespace(expect(Tokens.ARROW)),
                                     maybeWhitespace(expression)
                             )
                     )
-            );
+            ).as(Elements.TYPE_EXPRESSION);
 
     public static Parser unionConstructor() {
         return sequence("union constructor",
@@ -70,7 +67,6 @@ class Type {
     }
 
     static {
-
         expression.setParser(expression2);
     }
 }
