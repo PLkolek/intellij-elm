@@ -73,8 +73,10 @@ public interface Tokens {
     Token COMMA_OP = new Token("tuple constructor operator");
     Token DIGIT = new Token("digit");
     Token RUNE_OF_AUTOCOMPLETION = new Token("RUNE_OF_AUTOCOMPLETION");
+
+
     TokenSet KEY_TOKENS = TokenSet.create(CAP_VAR, LOW_VAR, SYM_OP);
-    TokenSet COMMENT_TOKENS = TokenSet.create(COMMENT_CONTENT, BEGIN_COMMENT, END_COMMENT,
-            LINE_COMMENT);
+    TokenSet COMMENT_TOKENS = TokenSet.create(COMMENT_CONTENT, BEGIN_COMMENT, END_COMMENT, LINE_COMMENT);
+    TokenSet STRING_LITERAL_TOKENS = TokenSet.create(Tokens.STRING_CONTENT, GLSL_CONTENT);
 
 }

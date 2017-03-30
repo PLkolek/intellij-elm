@@ -56,7 +56,7 @@ public class ElmParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public TokenSet getStringLiteralElements() {
-        return TokenSet.EMPTY;
+        return Tokens.STRING_LITERAL_TOKENS;
     }
 
     @NotNull
