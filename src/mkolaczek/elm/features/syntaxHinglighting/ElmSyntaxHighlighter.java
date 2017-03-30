@@ -55,6 +55,7 @@ class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
             Tokens.END_GLSL
     );
 
+    private static final TokenSet NUMBERS = TokenSet.create(Tokens.NUMBER, Tokens.INVALID_HEX_NUMBER, Tokens.DIGIT);
     private static final TokenSet PARENTHESES = TokenSet.create(Tokens.LPAREN, Tokens.RPAREN);
     private static final TokenSet BRACES = TokenSet.create(Tokens.LBRACKET, Tokens.RBRACKET);
     private static final TokenSet BRACKETS = TokenSet.create(Tokens.LSQUAREBRACKET, Tokens.RBRACKET);
@@ -81,11 +82,13 @@ class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
         safeMap(coloring, STRING_LITERALS, DefaultLanguageHighlighterColors.STRING);
         safeMap(coloring, INVALID_ESCAPES, DefaultLanguageHighlighterColors.INVALID_STRING_ESCAPE);
         safeMap(coloring, GLSL_TOKENS, DefaultLanguageHighlighterColors.STRING);
+        safeMap(coloring, NUMBERS, DefaultLanguageHighlighterColors.NUMBER);
         safeMap(coloring, PARENTHESES, ELM_PARENTHESIS);
         safeMap(coloring, BRACES, ELM_BRACES);
         safeMap(coloring, BRACKETS, ELM_BRACKETS);
         safeMap(coloring, Tokens.COMMENT_TOKENS, DefaultLanguageHighlighterColors.LINE_COMMENT);
         safeMap(coloring, Tokens.VALID_STRING_ESCAPE_TOKEN, DefaultLanguageHighlighterColors.VALID_STRING_ESCAPE);
+        safeMap(coloring, Tokens.DOT, DefaultLanguageHighlighterColors.DOT);
         safeMap(coloring, Tokens.ARROW, ELM_ARROW);
         safeMap(coloring, Tokens.EQUALS, ELM_EQ);
         safeMap(coloring, Tokens.PIPE, ELM_PIPE);
