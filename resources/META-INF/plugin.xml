@@ -70,7 +70,7 @@
     <actions>
         <group id="NewElm" text="Elm">
             <action id="NewElmModule" class="mkolaczek.elm.CreateElmModuleAction"/>
-            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
         </group>
         <!-- Add your actions here -->
     </actions>
