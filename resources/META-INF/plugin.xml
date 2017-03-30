@@ -57,6 +57,8 @@
         <annotator language="Elm" implementationClass="mkolaczek.elm.features.syntaxHinglighting.ElmNumberAnnotator"/>
         <additionalTextAttributes scheme="Default" file="colorSchemes/ElmDefault.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/ElmDarcula.xml"/>
+        <annotator language="Elm"
+                   implementationClass="mkolaczek.elm.features.syntaxHinglighting.ElmSyntaxHighlightingAnnotator"/>
     </extensions>
 
     <actions>
