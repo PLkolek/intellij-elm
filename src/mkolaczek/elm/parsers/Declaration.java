@@ -46,8 +46,7 @@ class Declaration {
         return sequence("port declaration",
                 expect(Tokens.PORT),
                 or(expect(Tokens.LOW_VAR), expect(Tokens.RUNE_OF_AUTOCOMPLETION)).as(Elements.PORT_NAME),
-                expect(Tokens.COLON),
-                Type.expression
+                Type.annotationEnd()
         ).separatedBy(WhiteSpace::maybeWhitespace).as(Elements.PORT_DECLARATION);
     }
 

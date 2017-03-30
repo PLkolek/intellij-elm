@@ -37,7 +37,7 @@ class Expression {
         return or(
                 sequence(
                         expect(Tokens.LOW_VAR).as(Elements.VALUE_NAME_REF),
-                        typeAnnotationEnd()
+                        Type.annotationEnd()
                 ).as(Elements.TYPE_ANNOTATION).ll2(newHashSet(LOW_VAR), newHashSet(COLON)),
                 sequence(
                         sequence(
@@ -58,21 +58,13 @@ class Expression {
                 Basic.operator(Elements.OPERATOR_SYMBOL)
                      .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP, CONS)),
                 or(
-                        typeAnnotationEnd().swapAs(TYPE_ANNOTATION),
+                        Type.annotationEnd().swapAs(TYPE_ANNOTATION),
                         sequence(
                                 spacePrefix(definedValues()),
                                 definitionEnd()
                         ).as(DEFINED_VALUES)
                 )
         ).as(Elements.OPERATOR_DECLARATION);
-    }
-
-    @NotNull
-    private static Sequence typeAnnotationEnd() {
-        return sequence(
-                expect(Tokens.COLON),
-                Type.expression
-        );
     }
 
     private static Parser definitionEnd() {

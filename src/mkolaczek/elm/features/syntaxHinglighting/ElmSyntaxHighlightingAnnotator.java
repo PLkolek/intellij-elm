@@ -6,11 +6,7 @@ import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
-import mkolaczek.elm.psi.node.Declarations;
-import mkolaczek.elm.psi.node.PortDeclaration;
-import mkolaczek.elm.psi.node.TypeAnnotation;
-import mkolaczek.elm.psi.node.ValueDeclaration;
-import mkolaczek.elm.psi.node.extensions.HasTypeAnnotation;
+import mkolaczek.elm.psi.node.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,12 +32,12 @@ public class ElmSyntaxHighlightingAnnotator implements Annotator {
         if (element instanceof Declarations) {
             highlightTopLevelValues((Declarations) element, holder);
         }
-        if (element instanceof HasTypeAnnotation) {
-            highlightTypeAnnotations((HasTypeAnnotation) element, holder);
+        if (element instanceof TypeAnnotationEnd) {
+            highlightTypeAnnotations((TypeAnnotationEnd) element, holder);
         }
     }
 
-    private void highlightTypeAnnotations(@NotNull HasTypeAnnotation element,
+    private void highlightTypeAnnotations(@NotNull TypeAnnotationEnd element,
                                           @NotNull AnnotationHolder holder) {
         stream(element.typeExpression())
                 .flatMap(e -> Stream.concat(e.typeRefs(), e.typeVariables()))

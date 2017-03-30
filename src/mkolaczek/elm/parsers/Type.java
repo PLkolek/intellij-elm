@@ -22,8 +22,7 @@ class Type {
     @NotNull
     private static Sequence fieldSuffix() {
         return sequence("record field suffix",
-                maybeWhitespace(expect(Tokens.COLON)),
-                maybeWhitespace(expression)
+                annotationEnd()
         );
     }
 
@@ -68,5 +67,12 @@ class Type {
 
     static {
         expression.setParser(expression2);
+    }
+
+    public static Parser annotationEnd() {
+        return sequence(
+                maybeWhitespace(expect(Tokens.COLON)),
+                maybeWhitespace(Type.expression)
+        ).as(Elements.TYPE_ANNOTATION_END);
     }
 }

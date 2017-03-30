@@ -74,6 +74,7 @@ public interface Elements {
     Element TERM = new Element("term");
     Element TYPE_EXPRESSION = new Element("type expression");
     Element TYPE_VARIABLE = new Element("type variable");
+    Element TYPE_ANNOTATION_END = new Element("type annotation end");
 
     class Factory {
 
@@ -169,6 +170,8 @@ public interface Elements {
                 return new PortDeclaration(node);
             } else if (type == TYPE_ANNOTATION) {
                 return new TypeAnnotation(node);
+            } else if (type == TYPE_ANNOTATION_END) {
+                return new TypeAnnotationEnd(node);
             } else if (type == PORT_NAME) {
                 return new PortName(node);
             } else if (type == STRING_LITERAL) {
