@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
 import static java.util.stream.Collectors.toList;
+import static mkolaczek.elm.psi.PsiUtil.findChildrenOfType2;
 
 public class TypeDeclaration extends ElmNamedElement implements Declaration {
 
@@ -55,6 +56,11 @@ public class TypeDeclaration extends ElmNamedElement implements Declaration {
     @Override
     public ItemPresentation getPresentation() {
         return new ItemPresentation(this);
+    }
+
+    public Stream<QualifiedTypeNameRef> typeRefs() {
+        return findChildrenOfType2(this, QualifiedTypeNameRef.class);
+
     }
 
 

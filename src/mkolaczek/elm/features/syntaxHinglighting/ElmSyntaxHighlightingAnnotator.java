@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.stream.Stream;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
+import static java.util.function.Function.identity;
 import static mkolaczek.util.Streams.stream;
 
 public class ElmSyntaxHighlightingAnnotator implements Annotator {
@@ -35,6 +36,18 @@ public class ElmSyntaxHighlightingAnnotator implements Annotator {
         if (element instanceof TypeAnnotationEnd) {
             highlightTypeAnnotations((TypeAnnotationEnd) element, holder);
         }
+        if (element instanceof TypeDeclaration) {
+            highlightTypeDeclaration((TypeDeclaration) element, holder);
+        }
+    }
+
+    private void highlightTypeDeclaration(@NotNull TypeDeclaration element, @NotNull AnnotationHolder holder) {
+        Stream.of(
+                element.typeRefs(),
+                element.constructors().map(TypeConstructor::getNameIdentifier),
+                Stream.of(element.getNameIdentifier())
+        ).flatMap(identity()).forEach(t -> highlight(t, holder, ELM_TYPE));
+
     }
 
     private void highlightTypeAnnotations(@NotNull TypeAnnotationEnd element,
