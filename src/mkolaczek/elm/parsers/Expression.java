@@ -42,14 +42,10 @@ class Expression {
                 ).as(Elements.TYPE_ANNOTATION).ll2(newHashSet(LOW_VAR), newHashSet(COLON)),
                 sequence(
                         sequence(
-                                expect(Tokens.LOW_VAR).as(VALUE_NAME).as(MAIN_DEFINED_VALUES),
-                                spacePrefix(definedValues())
-                        ).as(DEFINED_VALUES),
-                        definitionEnd()
-                ),
-                sequence(
-                        sequence(
-                                Pattern.term().as(MAIN_DEFINED_VALUES),
+                                or(
+                                        expect(Tokens.LOW_VAR).as(VALUE_NAME).as(MAIN_DEFINED_VALUES),
+                                        Pattern.term().as(MAIN_DEFINED_VALUES)
+                                ),
                                 spacePrefix(definedValues())
                         ).as(DEFINED_VALUES),
                         definitionEnd()
