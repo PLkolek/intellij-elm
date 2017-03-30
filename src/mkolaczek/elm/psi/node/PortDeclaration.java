@@ -7,11 +7,12 @@ import mkolaczek.elm.ElmElementFactory;
 import mkolaczek.elm.features.goTo.ItemPresentation;
 import mkolaczek.elm.psi.node.extensions.Declaration;
 import mkolaczek.elm.psi.node.extensions.ElmNamedElement;
+import mkolaczek.elm.psi.node.extensions.HasTypeAnnotation;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PortDeclaration extends ElmNamedElement implements Declaration {
+public class PortDeclaration extends ElmNamedElement implements Declaration, HasTypeAnnotation {
     public PortDeclaration(ASTNode node) {
         super(node);
     }

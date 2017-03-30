@@ -10,6 +10,7 @@ import mkolaczek.elm.psi.node.Declarations;
 import mkolaczek.elm.psi.node.PortDeclaration;
 import mkolaczek.elm.psi.node.TypeAnnotation;
 import mkolaczek.elm.psi.node.ValueDeclaration;
+import mkolaczek.elm.psi.node.extensions.HasTypeAnnotation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +25,8 @@ public class ElmSyntaxHighlightingAnnotator implements Annotator {
             createTextAttributesKey("ELM_DEFINITION_NAME", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION);
     private static final TextAttributesKey ELM_TYPE_ANNOTATION_NAME =
             createTextAttributesKey("ELM_TYPE_ANNOTATION_NAME", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION);
+    private static final TextAttributesKey ELM_TYPE =
+            createTextAttributesKey("ELM_TYPE", DefaultLanguageHighlighterColors.CLASS_NAME);
     private static final TextAttributesKey ELM_TYPE_ANNOTATION_SIGNATURE_TYPES =
             createTextAttributesKey("ELM_TYPE_ANNOTATION_SIGNATURE_TYPES",
                     DefaultLanguageHighlighterColors.CLASS_REFERENCE);
@@ -33,12 +36,16 @@ public class ElmSyntaxHighlightingAnnotator implements Annotator {
         if (element instanceof Declarations) {
             highlightTopLevelValues((Declarations) element, holder);
         }
-        if (element instanceof TypeAnnotation) {
-            TypeAnnotation typeAnnotation = (TypeAnnotation) element;
-            stream(typeAnnotation.typeExpression())
-                    .flatMap(e -> Stream.concat(e.typeRefs(), e.typeVariables()))
-                    .forEach(t -> highlight(t, holder, ELM_TYPE_ANNOTATION_SIGNATURE_TYPES));
+        if (element instanceof HasTypeAnnotation) {
+            highlightTypeAnnotations((HasTypeAnnotation) element, holder);
         }
+    }
+
+    private void highlightTypeAnnotations(@NotNull HasTypeAnnotation element,
+                                          @NotNull AnnotationHolder holder) {
+        stream(element.typeExpression())
+                .flatMap(e -> Stream.concat(e.typeRefs(), e.typeVariables()))
+                .forEach(t -> highlight(t, holder, ELM_TYPE_ANNOTATION_SIGNATURE_TYPES));
     }
 
     private void highlightTopLevelValues(@NotNull Declarations element, @NotNull AnnotationHolder holder) {
