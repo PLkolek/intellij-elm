@@ -60,6 +60,8 @@
         <additionalTextAttributes scheme="Default" file="colorSchemes/ElmDefault.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/ElmDarcula.xml"/>
         <highlightRangeExtension implementation="mkolaczek.elm.features.syntaxHinglighting.ElmHighlightRangeExtension"/>
+        <moduleType id="Elm" implementationClass="mkolaczek.elm.ElmModuleType"/>
+        <moduleBuilder builderClass="mkolaczek.elm.ElmModuleBuilder"/>
     </extensions>
 
     <actions>
