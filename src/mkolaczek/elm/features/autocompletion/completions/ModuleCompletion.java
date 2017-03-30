@@ -4,7 +4,6 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.psi.PsiElement;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.features.autocompletion.Names;
-import mkolaczek.elm.features.autocompletion.Patterns;
 import mkolaczek.elm.psi.Tokens;
 import mkolaczek.elm.psi.node.Import;
 import mkolaczek.elm.psi.node.ModuleNameRef;
@@ -15,22 +14,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.stream.Stream;
 
 import static mkolaczek.elm.features.autocompletion.ElmCompletionContributor.location;
-import static mkolaczek.elm.features.autocompletion.Patterns.e;
-import static mkolaczek.elm.features.autocompletion.Patterns.inside;
+import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
 
 public class ModuleCompletion {
     public static void modules(ElmCompletionContributor c) {
         //@formatter:off
-        c.autocomplete(Patterns.afterLeaf(Tokens.MODULE),                   ModuleCompletion::fileName);
-        c.autocomplete(Patterns.afterLeaf(Tokens.AS),                       ModuleCompletion::moduleNameParts);
+        c.autocomplete(afterLeaf(Tokens.MODULE),                            ModuleCompletion::fileName);
+        c.autocomplete(afterLeaf(Tokens.AS),                                ModuleCompletion::moduleNameParts);
         c.autocomplete(inside(MODULE_NAME_REF).inside(e(IMPORT_LINE)),      ModuleCompletion::modules);
         c.autocomplete(inside(MODULE_NAME_REF).andNot(inside(IMPORT_LINE)), ModuleCompletion::dotModules);
         c.autocomplete(e(RUNE_OF_AUTOCOMPLETION).inside(e(PATTERN_TERM)),   ModuleCompletion::dotModules);
-        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),              ModuleCompletion::matchingModules);
-        c.autocomplete(e().inside(e(QUALIFIED_TYPE_CONSTRUCTOR_REF)),       ModuleCompletion::matchingModules);
-        c.autocomplete(e().inside(e(QUALIFIED_VAR)),                        ModuleCompletion::matchingModules);
+        c.autocomplete(inside(QUALIFIED_TYPE_NAME_REF),                     ModuleCompletion::matchingModules);
+        c.autocomplete(inside(QUALIFIED_TYPE_CONSTRUCTOR_REF),              ModuleCompletion::matchingModules);
+        c.autocomplete(inside(QUALIFIED_VAR),                               ModuleCompletion::matchingModules);
         //@formatter:on
     }
 
@@ -45,9 +43,9 @@ public class ModuleCompletion {
     private static Stream<String> matchingModules(CompletionParameters parameters) {
         QualifiedRef qualifiedType = location(parameters, QualifiedRef.class);
         String prefix = qualifiedType.moduleName().map(ModuleNameRef::getName).orElse("");
-        String finalPrefix = prefix.length() > 0 ? prefix + "." : "";
+        prefix = prefix.length() > 0 ? prefix + "." : "";
 
-        return matchingModules(qualifiedType, finalPrefix);
+        return matchingModules(qualifiedType, prefix);
     }
 
     private static Stream<String> matchingModules(PsiElement location, String finalPrefix) {

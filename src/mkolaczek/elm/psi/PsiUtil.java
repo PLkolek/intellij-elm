@@ -10,8 +10,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.intellij.psi.util.PsiTreeUtil.findChildrenOfType;
-import static com.intellij.psi.util.PsiTreeUtil.getChildrenOfType;
+import static com.intellij.psi.util.PsiTreeUtil.*;
 
 public class PsiUtil {
 
@@ -38,5 +37,9 @@ public class PsiUtil {
 
     public static <T extends PsiElement> Stream<T> findChildrenOfType2(PsiElement element, Class<T> aClass) {
         return findChildrenOfType(element, aClass).stream();
+    }
+
+    public static <T extends PsiElement> Optional<T> getParentOfType2(PsiElement element, Class<T> aClass) {
+        return Optional.ofNullable(getParentOfType(element, aClass));
     }
 }

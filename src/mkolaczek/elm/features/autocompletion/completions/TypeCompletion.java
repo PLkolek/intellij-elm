@@ -17,28 +17,28 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 import static java.util.stream.Collectors.toSet;
 import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
+import static mkolaczek.elm.psi.PsiUtil.getParentOfType2;
 import static mkolaczek.elm.psi.Tokens.*;
 import static mkolaczek.elm.psi.node.Module.module;
 
 public class TypeCompletion {
     public static void types(ElmCompletionContributor c) {
         //@formatter:off
-        c.autocomplete(afterLeaf(e(TYPE)),                                      TypeCompletion::exposedTypes);
-        c.autocomplete(afterLeaf(e(ALIAS)),                                     TypeCompletion::exposedConstructorlessTypes);
-        c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),       TypeCompletion::exposedTypeConstructors);
-        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),                  TypeCompletion::visibleTypes);
-        c.autocomplete(e().inside(e(TYPE_NAME_REF)),                            TypeCompletion::visibleTypes);
-        c.autocomplete(inExposing(TYPE_NAME_REF),                               TypeCompletion::notExposedTypes);
+        c.autocomplete(afterLeaf(e(TYPE)),                                  TypeCompletion::exposedTypes);
+        c.autocomplete(afterLeaf(e(ALIAS)),                                 TypeCompletion::exposedConstructorlessTypes);
+        c.autocomplete(afterLeaf(EQUALS, PIPE).inside(e(TYPE_DECL_NODE)),   TypeCompletion::exposedTypeConstructors);
+        c.autocomplete(e().inside(e(QUALIFIED_TYPE_NAME_REF)),              TypeCompletion::visibleTypes);
+        c.autocomplete(e().inside(e(TYPE_NAME_REF)),                        TypeCompletion::visibleTypes);
+        c.autocomplete(inExposing(TYPE_NAME_REF),                           TypeCompletion::notExposedTypes);
         //@formatter:on
     }
 
     private static Stream<String> visibleTypes(CompletionParameters parameters) {
-        TypeAliasDeclNode aliasDeclNode = getParentOfType(parameters.getPosition(), TypeAliasDeclNode.class);
-        String aliasName = aliasDeclNode != null ? aliasDeclNode.typeDeclaration().getName() : null;
+        Optional<TypeAliasDeclNode> aliasDeclNode = getParentOfType2(parameters.getPosition(), TypeAliasDeclNode.class);
+        String aliasName = aliasDeclNode.map(a -> a.typeDeclaration().getName()).orElse(null);
         return Resolver.forTypes()
                        .variants(parameters.getPosition())
                        .filter(s -> !s.equals(aliasName));

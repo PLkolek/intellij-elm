@@ -9,6 +9,8 @@ import mkolaczek.elm.features.autocompletion.insertHandlers.BracesInsertHandler;
 import mkolaczek.elm.psi.Elements;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 import static mkolaczek.elm.features.autocompletion.ModulePattern.module;
 import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.features.autocompletion.insertHandlers.ElmParenthesesInsertHandler.parentheses;
@@ -50,17 +52,12 @@ public class KeywordCompletion {
         c.autocomplete(afterLeaf(childOf(MODULE_NAME_REF).inside(e(IMPORT_LINE))).andNot(onFreshLine()),
                 keyword("as"), exposingCompletion()
         );
-        c.autocomplete(
-                e().afterLeaf(e().isNull()),
-                keyword("module"), keyword("port module"), keyword("effect module")
-        );
+        c.autocomplete(e().afterLeaf(e().isNull()), keywords("module", "port module", "effect module"));
     }
 
     private static LookupElementBuilder whereCompletion() {
-        return LookupElementBuilder.create("where")
-                                   .withInsertHandler(new BracesInsertHandler());
+        return LookupElementBuilder.create("where").withInsertHandler(new BracesInsertHandler());
     }
-
 
     @NotNull
     private static LookupElementBuilder exposingCompletion() {
@@ -70,6 +67,11 @@ public class KeywordCompletion {
     @NotNull
     private static LookupElementBuilder keyword(String item) {
         return LookupElementBuilder.create(item).withInsertHandler(AddSpaceInsertHandler.INSTANCE);
+    }
+
+    @NotNull
+    private static LookupElementBuilder[] keywords(String... items) {
+        return Arrays.stream(items).map(KeywordCompletion::keyword).toArray(LookupElementBuilder[]::new);
     }
 
 }
