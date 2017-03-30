@@ -3,8 +3,10 @@ package mkolaczek.elm.features.syntaxHinglighting;
 import com.google.common.collect.Maps;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import mkolaczek.elm.lexer.ElmLexerAdapter;
@@ -93,6 +95,7 @@ class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
         safeMap(coloring, Tokens.EQUALS, ELM_EQ);
         safeMap(coloring, Tokens.PIPE, ELM_PIPE);
         safeMap(coloring, Tokens.COMMA, ELM_COMMA);
+        safeMap(coloring, TokenType.BAD_CHARACTER, HighlighterColors.BAD_CHARACTER);
     }
 
     @NotNull
