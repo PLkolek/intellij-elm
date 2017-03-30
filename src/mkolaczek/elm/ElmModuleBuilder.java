@@ -6,7 +6,9 @@ import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import mkolaczek.elm.boilerplate.ElmIcon;
 import org.jetbrains.annotations.NotNull;
@@ -67,6 +69,7 @@ public class ElmModuleBuilder extends JavaModuleBuilder implements ModuleBuilder
 
     @Override
     public void moduleCreated(@NotNull Module module) {
-        ElmSdkType.prepareModule(myJdk, module);
+        Sdk sdk = myJdk == null ? ProjectRootManager.getInstance(module.getProject()).getProjectSdk() : myJdk;
+        ElmSdkType.prepareModule(sdk, module);
     }
 }
