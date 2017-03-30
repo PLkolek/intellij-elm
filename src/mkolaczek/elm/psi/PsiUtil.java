@@ -7,6 +7,7 @@ import mkolaczek.elm.psi.node.ModuleHeader;
 import one.util.streamex.StreamEx;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.intellij.psi.util.PsiTreeUtil.getChildrenOfType;
@@ -28,5 +29,9 @@ public class PsiUtil {
 
     public static <T extends PsiElement> Stream<T> getChildrenOfType2(PsiElement element, Class<T> aClass) {
         return StreamEx.ofNullable(getChildrenOfType(element, aClass)).flatMap(Arrays::stream);
+    }
+
+    public static <T extends PsiElement> Optional<T> getChildOfType2(PsiElement element, Class<T> aClass) {
+        return Optional.ofNullable(PsiTreeUtil.getChildOfType(element, aClass));
     }
 }

@@ -53,6 +53,6 @@ public class ValueExposing extends ElmNamedElement implements PsiExposed {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + getNode().getElementType().toString() + ", " + exposedName() + ")";
+        return getClass().getSimpleName() + "(" + getNode().getElementType().toString() + ")";
     }
 }

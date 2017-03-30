@@ -51,14 +51,15 @@
         <renameHandler implementation="mkolaczek.elm.features.refactoring.rename.InplaceRenameHandler"/>
         <refactoring.safeDeleteProcessor
                 implementation="mkolaczek.elm.features.refactoring.safeDelete.ElmSafeDeleteDelegate"/>
-        <annotator language="Elm"
-                   implementationClass="mkolaczek.elm.features.inspections.UnresolvedReferenceAnnotator"/>
         <annotator language="Elm" implementationClass="mkolaczek.elm.features.syntaxHinglighting.ElmStringAnnotator"/>
         <annotator language="Elm" implementationClass="mkolaczek.elm.features.syntaxHinglighting.ElmNumberAnnotator"/>
-        <additionalTextAttributes scheme="Default" file="colorSchemes/ElmDefault.xml"/>
-        <additionalTextAttributes scheme="Darcula" file="colorSchemes/ElmDarcula.xml"/>
         <annotator language="Elm"
                    implementationClass="mkolaczek.elm.features.syntaxHinglighting.ElmSyntaxHighlightingAnnotator"/>
+        <annotator language="Elm"
+                   implementationClass="mkolaczek.elm.features.inspections.UnresolvedReferenceAnnotator"/>
+        <additionalTextAttributes scheme="Default" file="colorSchemes/ElmDefault.xml"/>
+        <additionalTextAttributes scheme="Darcula" file="colorSchemes/ElmDarcula.xml"/>
+        <highlightRangeExtension implementation="mkolaczek.elm.features.syntaxHinglighting.ElmHighlightRangeExtension"/>
     </extensions>
 
     <actions>

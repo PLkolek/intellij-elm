@@ -36,9 +36,8 @@ class Expression {
     public static Parser valueDefinition() {
         return or(
                 sequence(
-                        expect(Tokens.LOW_VAR).as(Elements.VALUE_NAME_REF).as(MAIN_DEFINED_VALUES),
-                        expect(Tokens.COLON),
-                        Type.expression
+                        expect(Tokens.LOW_VAR).as(Elements.VALUE_NAME_REF),
+                        typeAnnotationEnd()
                 ).as(Elements.TYPE_ANNOTATION).ll2(newHashSet(LOW_VAR), newHashSet(COLON)),
                 sequence(
                         sequence(
@@ -59,16 +58,21 @@ class Expression {
                 Basic.operator(Elements.OPERATOR_SYMBOL)
                      .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP, CONS)),
                 or(
-                        sequence(
-                                expect(Tokens.COLON),
-                                Type.expression
-                        ).swapAs(TYPE_ANNOTATION),
+                        typeAnnotationEnd().swapAs(TYPE_ANNOTATION),
                         sequence(
                                 spacePrefix(definedValues()),
                                 definitionEnd()
                         ).as(DEFINED_VALUES)
                 )
         ).as(Elements.OPERATOR_DECLARATION);
+    }
+
+    @NotNull
+    private static Sequence typeAnnotationEnd() {
+        return sequence(
+                expect(Tokens.COLON),
+                Type.expression
+        );
     }
 
     private static Parser definitionEnd() {
