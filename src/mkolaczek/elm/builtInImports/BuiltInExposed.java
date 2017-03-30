@@ -3,7 +3,7 @@ package mkolaczek.elm.builtInImports;
 import mkolaczek.elm.psi.node.extensions.Exposed;
 import mkolaczek.elm.psi.node.extensions.TypeOfExposed;
 
-public class BuiltInExposed implements Exposed {
+class BuiltInExposed implements Exposed {
 
     private final TypeOfExposed type;
     private final String name;
@@ -16,16 +16,16 @@ public class BuiltInExposed implements Exposed {
         this.exposesAll = exposesAll;
     }
 
-    public static BuiltInExposed operator(String name) {
+    static BuiltInExposed operator(String name) {
         return new BuiltInExposed(TypeOfExposed.OPERATOR, name, false);
 
     }
 
-    public static BuiltInExposed openType(String name) {
+    static BuiltInExposed openType(String name) {
         return new BuiltInExposed(TypeOfExposed.TYPE, name, true);
     }
 
-    public static BuiltInExposed closedType(String name) {
+    static BuiltInExposed closedType(String name) {
         return new BuiltInExposed(TypeOfExposed.TYPE, name, false);
     }
 

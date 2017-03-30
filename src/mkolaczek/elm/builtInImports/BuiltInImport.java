@@ -21,8 +21,8 @@ public class BuiltInImport implements AbstractImport {
         this.exposedItems = exposedItems;
     }
 
-    public static AfterImport import_(String moduleName) {
-        return new AfterImport(moduleName);
+    static Builder import_(String moduleName) {
+        return new Builder(moduleName);
     }
 
     public String moduleName() {
@@ -48,37 +48,25 @@ public class BuiltInImport implements AbstractImport {
         return Optional.of(moduleName);
     }
 
-    static class AfterImport {
+    static class Builder {
         private final String moduleName;
+        private String asName;
 
-        private AfterImport(String moduleName) {
+        private Builder(String moduleName) {
             this.moduleName = moduleName;
         }
 
-        AfterAs as(String asName) {
-            return new AfterAs(moduleName, asName);
+        Builder as(String asName) {
+            this.asName = asName;
+            return this;
         }
 
         BuiltInImport exposingAll() {
-            return new BuiltInImport(moduleName, null, true);
+            return new BuiltInImport(moduleName, asName, true);
         }
 
         BuiltInImport exposing(BuiltInExposed... names) {
-            return new BuiltInImport(moduleName, null, false, names);
-        }
-    }
-
-    static class AfterAs {
-        private final String moduleName;
-        private final String asName;
-
-        private AfterAs(String moduleName, String asName) {
-            this.moduleName = moduleName;
-            this.asName = asName;
-        }
-
-        BuiltInImport exposing(BuiltInExposed... exposed) {
-            return new BuiltInImport(moduleName, asName, false, exposed);
+            return new BuiltInImport(moduleName, asName, false, names);
         }
     }
 }
