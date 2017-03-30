@@ -62,6 +62,7 @@
         <highlightRangeExtension implementation="mkolaczek.elm.features.syntaxHinglighting.ElmHighlightRangeExtension"/>
         <moduleType id="Elm" implementationClass="mkolaczek.elm.ElmModuleType"/>
         <moduleBuilder builderClass="mkolaczek.elm.ElmModuleBuilder"/>
+        <sdkType implementation="mkolaczek.elm.ElmSdkType"/>
     </extensions>
 
     <actions>

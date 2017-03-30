@@ -1,17 +1,27 @@
 package mkolaczek.elm;
 
 import com.intellij.ide.util.projectWizard.JavaModuleBuilder;
+import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import mkolaczek.elm.boilerplate.ElmIcon;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public class ElmModuleBuilder extends JavaModuleBuilder {
+public class ElmModuleBuilder extends JavaModuleBuilder implements ModuleBuilderListener {
 
     public ElmModuleBuilder() {
+        addListener(this);
+    }
+
+    @Override
+    public boolean isSuitableSdkType(SdkTypeId sdkType) {
+        return sdkType instanceof ElmSdkType;
     }
 
     @Override
@@ -31,13 +41,12 @@ public class ElmModuleBuilder extends JavaModuleBuilder {
 
     @Override
     public String getDescription() {
-        /*if (ProjectJdkTable.getInstance().getSdksOfType(RsSdkType.getInstance()).isEmpty()) {
-            return "<html><body>Before you start make sure you have Redline Smalltalk installed." +
-                    "<br/>Download <a href='https://github.com/redline-smalltalk/redline-smalltalk.github.com/raw/master/assets/redline-deploy.zip'>the latest version</a>" +
-                    "<br/>Unpack the zip file to any folder and select it as Redline SDK</body></html>";
-        } else {*/
-        return "Elm module";
-        //}
+        if (ProjectJdkTable.getInstance().getSdksOfType(ElmSdkType.getInstance()).isEmpty()) {
+            return "<html><body>Before you start make sure you have Elm installed." +
+                    "</body></html>";
+        } else {
+            return "Elm module";
+        }
     }
 
     @Override
@@ -56,4 +65,8 @@ public class ElmModuleBuilder extends JavaModuleBuilder {
         return new ModuleWizardStep[]{};
     }
 
+    @Override
+    public void moduleCreated(@NotNull Module module) {
+        ElmSdkType.prepareModule(myJdk, module);
+    }
 }
