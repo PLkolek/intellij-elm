@@ -63,9 +63,15 @@
         <moduleType id="Elm" implementationClass="mkolaczek.elm.ElmModuleType"/>
         <moduleBuilder builderClass="mkolaczek.elm.ElmModuleBuilder"/>
         <sdkType implementation="mkolaczek.elm.ElmSdkType"/>
+        <internalFileTemplate name="ElmModule"/>
+
     </extensions>
 
     <actions>
+        <group id="NewElm" text="Elm">
+            <action id="NewElmModule" class="mkolaczek.elm.CreateElmModuleAction"/>
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
+        </group>
         <!-- Add your actions here -->
     </actions>
 
