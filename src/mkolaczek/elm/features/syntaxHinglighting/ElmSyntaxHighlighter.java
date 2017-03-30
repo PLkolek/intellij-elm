@@ -60,7 +60,7 @@ class ElmSyntaxHighlighter extends SyntaxHighlighterBase {
     private static final TokenSet NUMBERS = TokenSet.create(Tokens.NUMBER, Tokens.INVALID_HEX_NUMBER, Tokens.DIGIT);
     private static final TokenSet PARENTHESES = TokenSet.create(Tokens.LPAREN, Tokens.RPAREN);
     private static final TokenSet BRACES = TokenSet.create(Tokens.LBRACKET, Tokens.RBRACKET);
-    private static final TokenSet BRACKETS = TokenSet.create(Tokens.LSQUAREBRACKET, Tokens.RBRACKET);
+    private static final TokenSet BRACKETS = TokenSet.create(Tokens.LSQUAREBRACKET, Tokens.RSQUAREBRACKET);
 
     private static final TextAttributesKey ELM_ARROW =
             createTextAttributesKey("ELM_ARROW", DefaultLanguageHighlighterColors.OPERATION_SIGN);
