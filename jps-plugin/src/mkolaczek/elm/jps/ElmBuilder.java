@@ -88,11 +88,12 @@ public class ElmBuilder extends ModuleLevelBuilder {
             String result = readerToString(reader);
             int jsonBegin = result.indexOf("[");
             int jsonEnd = result.lastIndexOf("]");
-            if (jsonBegin > 0) {
-                String message = result.substring(0, jsonBegin);
-                context.processMessage(new CompilerMessage(COMPILER_NAME, BuildMessage.Kind.INFO, message));
-            }
-            if (jsonBegin != -1 && jsonEnd != -1 && jsonBegin < jsonEnd) {
+            if (jsonBegin != -1 && jsonEnd != -1) {
+
+                if (jsonBegin > 0) {
+                    String message = result.substring(0, jsonBegin);
+                    context.processMessage(new CompilerMessage(COMPILER_NAME, BuildMessage.Kind.INFO, message));
+                }
                 String json = result.substring(jsonBegin, jsonEnd + 1);
                 ErrorJson[] errors = new Gson().fromJson(json, ErrorJson[].class);
                 for (ErrorJson error : errors) {
@@ -101,7 +102,7 @@ public class ElmBuilder extends ModuleLevelBuilder {
                     context.processMessage(new CompilerMessage(
                                     COMPILER_NAME,
                                     kind,
-                                    error.overview,
+                            error.overview + "\n" + error.details,
                                     sourcePath,
                                     -1,
                                     -1,
@@ -111,10 +112,20 @@ public class ElmBuilder extends ModuleLevelBuilder {
                             )
                     );
                 }
-            }
-            if (jsonEnd != -1 && jsonEnd < result.length() - 1) {
-                String message = result.substring(jsonEnd + 1);
-                context.processMessage(new CompilerMessage(COMPILER_NAME, BuildMessage.Kind.INFO, message));
+                if (jsonEnd < result.length() - 1) {
+                    String message = result.substring(jsonEnd + 1);
+                    context.processMessage(new CompilerMessage(COMPILER_NAME, BuildMessage.Kind.INFO, message));
+                }
+            } else {
+                String file = null;
+                BuildMessage.Kind kind = BuildMessage.Kind.INFO;
+                if (result.contains("SYNTAX PROBLEM")) {
+                    String[] parts = result.substring(0, result.indexOf("\n")).split("\\s+");
+                    file = parts[parts.length - 1];
+                    file = getContentRootPath(module) + File.separator + file;
+                    kind = BuildMessage.Kind.ERROR;
+                }
+                context.processMessage(new CompilerMessage(COMPILER_NAME, kind, result, file));
             }
         }
     }
