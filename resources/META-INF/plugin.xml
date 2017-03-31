@@ -64,7 +64,7 @@
         <moduleBuilder builderClass="mkolaczek.elm.ElmModuleBuilder"/>
         <sdkType implementation="mkolaczek.elm.ElmSdkType"/>
         <internalFileTemplate name="ElmModule"/>
-
+        <compileServer.plugin classpath="elm-jps-plugin.jar;gson-2.3.jar"/>
     </extensions>
 
     <actions>

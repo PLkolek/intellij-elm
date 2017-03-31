@@ -5,6 +5,7 @@ import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
@@ -71,5 +72,11 @@ public class ElmModuleBuilder extends JavaModuleBuilder implements ModuleBuilder
     public void moduleCreated(@NotNull Module module) {
         Sdk sdk = myJdk == null ? ProjectRootManager.getInstance(module.getProject()).getProjectSdk() : myJdk;
         ElmSdkType.prepareModule(sdk, module);
+    }
+
+
+    @Override
+    public ModuleType getModuleType() {
+        return ElmModuleType.INSTANCE;
     }
 }
