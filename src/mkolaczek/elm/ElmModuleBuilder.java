@@ -1,9 +1,6 @@
 package mkolaczek.elm;
 
-import com.intellij.ide.util.projectWizard.JavaModuleBuilder;
-import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.ide.util.projectWizard.*;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
@@ -66,6 +63,12 @@ public class ElmModuleBuilder extends JavaModuleBuilder implements ModuleBuilder
     public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext,
                                                 @NotNull ModulesProvider modulesProvider) {
         return new ModuleWizardStep[]{};
+    }
+
+    @Override
+    public ModuleWizardStep modifyProjectTypeStep(@NotNull SettingsStep settingsStep) {
+        return ProjectWizardStepFactory.getInstance().createJavaSettingsStep(settingsStep, this,
+                this::isSuitableSdkType);
     }
 
     @Override

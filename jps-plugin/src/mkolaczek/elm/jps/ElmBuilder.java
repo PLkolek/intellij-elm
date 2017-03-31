@@ -118,12 +118,14 @@ public class ElmBuilder extends ModuleLevelBuilder {
                 }
             } else {
                 String file = null;
-                BuildMessage.Kind kind = BuildMessage.Kind.INFO;
+                BuildMessage.Kind kind = BuildMessage.Kind.ERROR;
                 if (result.contains("SYNTAX PROBLEM")) {
                     String[] parts = result.substring(0, result.indexOf("\n")).split("\\s+");
                     file = parts[parts.length - 1];
                     file = getContentRootPath(module) + File.separator + file;
-                    kind = BuildMessage.Kind.ERROR;
+                }
+                if (result.contains("Successfully generated")) {
+                    kind = BuildMessage.Kind.INFO;
                 }
                 context.processMessage(new CompilerMessage(COMPILER_NAME, kind, result, file));
             }
