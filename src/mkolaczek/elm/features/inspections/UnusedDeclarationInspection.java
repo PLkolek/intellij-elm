@@ -93,6 +93,7 @@ public class UnusedDeclarationInspection extends LocalInspectionTool {
     @NotNull
     private CommonProcessors.CollectProcessor<UsageInfo> findUsages(@NotNull PsiFile file, PsiElement element) {
         FindUsagesOptions options = new FindUsagesOptions(file.getProject());
+        options.isSearchForTextOccurrences = false;
         options.isUsages = true;
         CommonProcessors.CollectProcessor<UsageInfo> collector = new CommonProcessors.CollectProcessor<UsageInfo>() {
             @Override
