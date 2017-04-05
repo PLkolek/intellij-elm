@@ -46,7 +46,8 @@ class Basic {
         return or("operator symbol",
                 expect(Tokens.RUNE_OF_AUTOCOMPLETION),
                 expect(Tokens.SYM_OP),
-                expect(Tokens.CONS)
+                expect(Tokens.CONS),
+                expect(Tokens.MINUS)
         ).as(as);
     }
 

@@ -56,7 +56,7 @@ class Expression {
     public static Parser operatorDefinition() {
         return sequence(
                 Basic.operator(Elements.OPERATOR_SYMBOL)
-                     .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP, CONS)),
+                     .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP, CONS, MINUS)),
                 or(
                         Type.annotationEnd().swapAs(TYPE_ANNOTATION),
                         sequence(
