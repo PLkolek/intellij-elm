@@ -37,8 +37,8 @@ CLRF="\r"|"\n"|"\r\n"
 LINE_WS=[\ \f\t]
 WS={CLRF}|{LINE_WS}
 DIGIT=[0-9]
-CAP_VAR=[A-Z][a-zA-Z0-9ᛜ]*
-LOW_VAR=[a-z][a-zA-Z0-9ᛜ]*
+CAP_VAR=[A-Z][a-zA-Z0-9_ᛜ]*
+LOW_VAR=[a-z][a-zA-Z0-9_ᛜ]*
 SYMBOL= [\+\-\/\*=\.<>:&\|\^\?%#~\!]
 SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
 ESCAPE_CHAR=[abfnrtv\"\\\']

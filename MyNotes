@@ -6,4 +6,4 @@ com.intellij.codeInsight.JavaTargetElementEvaluator.getNamedElement !!!
 com.intellij.formatting.engine.WrapProcessor.processWrap
 SingleTargetRequestResultProcessor.java:42
 
--Didea.system.path=/home/kolzi/.IdeaIC2016.3/system
+-Didea.system.path=/home/kolzi/.IdeaIC20`16.3/system
