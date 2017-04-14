@@ -39,8 +39,9 @@ WS={CLRF}|{LINE_WS}
 DIGIT=[0-9]
 CAP_VAR=[A-Z][a-zA-Z0-9_ᛜ]*
 LOW_VAR=[a-z][a-zA-Z0-9_ᛜ]*
-SYMBOL= [\+\-\/\*=\.<>:&\|\^\?%#~\!]
-SYMBOL_OP={SYMBOL}({SYMBOL}|ᛜ)*
+NOT_MINUS=[\+\/\*=\.<>:&\|\^\?%#~\!]
+SYMBOL= {NOT_MINUS}|"-"
+SYMBOL_OP= ({SYMBOL}|("-"{NOT_MINUS}|{NOT_MINUS}{SYMBOL}){SYMBOL}*)
 ESCAPE_CHAR=[abfnrtv\"\\\']
 HEX=[a-fA-F0-9]
 UNICODE_ESCAPE="\\"u{HEX}{4}
@@ -54,6 +55,7 @@ FRACTIONAL_PART = "."{DIGIT}+
 INT=([1-9]{DIGIT}*) | "0"
 FRACTIONAL_NUMBER = {INT} {FRACTIONAL_PART}? {EXPONENT_PART}?
 NUMBER = {FRACTIONAL_NUMBER} | {HEX_LITERAL}
+
 
 %state INCOMMENT
 %state DOCCOMMENT

@@ -1,3 +1,3 @@
-module Module exposing ((---))
+module Module exposing ((<--))
 
 (<caret>
