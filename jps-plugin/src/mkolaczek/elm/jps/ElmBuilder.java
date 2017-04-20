@@ -95,23 +95,26 @@ public class ElmBuilder extends ModuleLevelBuilder {
                     context.processMessage(new CompilerMessage(COMPILER_NAME, BuildMessage.Kind.INFO, message));
                 }
                 String json = result.substring(jsonBegin, jsonEnd + 1);
-                ErrorJson[] errors = new Gson().fromJson(json, ErrorJson[].class);
-                for (ErrorJson error : errors) {
-                    BuildMessage.Kind kind = kind(error.type);
-                    String sourcePath = getContentRootPath(module) + File.separator + error.file;
-                    context.processMessage(new CompilerMessage(
-                                    COMPILER_NAME,
-                                    kind,
-                            error.overview + "\n" + error.details,
-                                    sourcePath,
-                                    -1,
-                                    -1,
-                                    -1,
-                                    error.region.start.line,
-                                    error.region.start.column
-                            )
-                    );
+                for (String subJson : json.split("\n")) {
+                    ErrorJson[] errors = new Gson().fromJson(subJson, ErrorJson[].class);
+                    for (ErrorJson error : errors) {
+                        BuildMessage.Kind kind = kind(error.type);
+                        String sourcePath = getContentRootPath(module) + File.separator + error.file;
+                        context.processMessage(new CompilerMessage(
+                                        COMPILER_NAME,
+                                        kind,
+                                        error.overview + "\n" + error.details,
+                                        sourcePath,
+                                        -1,
+                                        -1,
+                                        -1,
+                                        error.region.start.line,
+                                        error.region.start.column
+                                )
+                        );
+                    }
                 }
+
                 if (jsonEnd < result.length() - 1) {
                     String message = result.substring(jsonEnd + 1);
                     context.processMessage(new CompilerMessage(COMPILER_NAME, BuildMessage.Kind.INFO, message));
