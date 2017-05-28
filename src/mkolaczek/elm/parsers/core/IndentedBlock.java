@@ -4,6 +4,7 @@ import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.parsers.core.context.IndentationUtil;
+import mkolaczek.elm.parsers.core.context.WillParseResult;
 
 import java.util.Collection;
 
@@ -28,8 +29,8 @@ public class IndentedBlock implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
-        return contents.willParse(psiBuilder, indentation);
+    public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
+        return contents.willParse(psiBuilder, indentation, lookahead);
     }
 
     @Override

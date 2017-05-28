@@ -1,11 +1,13 @@
 package mkolaczek.elm.parsers.core;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import mkolaczek.elm.features.autocompletion.ElmCompletionContributor;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
+import mkolaczek.elm.parsers.core.context.WillParseResult;
 import mkolaczek.elm.psi.Element;
 import mkolaczek.elm.psi.Token;
 import mkolaczek.elm.psi.Tokens;
@@ -48,8 +50,9 @@ public class DottedVar implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
-        return isVar(psiBuilder);
+    public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
+        Preconditions.checkArgument(lookahead == 1);
+        return WillParseResult.create(isVar(psiBuilder), lookahead - 1);
     }
 
     @Override

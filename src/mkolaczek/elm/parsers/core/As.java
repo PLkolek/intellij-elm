@@ -3,6 +3,7 @@ package mkolaczek.elm.parsers.core;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
+import mkolaczek.elm.parsers.core.context.WillParseResult;
 import mkolaczek.elm.psi.Element;
 
 import java.util.Collection;
@@ -37,8 +38,8 @@ public class As implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
-        return content.willParse(psiBuilder, indentation);
+    public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
+        return content.willParse(psiBuilder, indentation, lookahead);
     }
 
     @Override

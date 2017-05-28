@@ -3,9 +3,12 @@ package mkolaczek.elm.parsers.core;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
+import mkolaczek.elm.parsers.core.context.WillParseResult;
 import mkolaczek.elm.psi.Token;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+
 
 public class Expect implements Parser {
 
@@ -28,9 +31,16 @@ public class Expect implements Parser {
         return Result.OK;
     }
 
+    @NotNull
     @Override
-    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
-        return psiBuilder.getTokenType() == expectedToken;
+    public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
+        if (psiBuilder.getTokenType() == expectedToken) {
+            if (lookahead > 1) {
+                psiBuilder.advanceLexer();
+            }
+            return WillParseResult.success(lookahead - 1);
+        }
+        return WillParseResult.failure();
     }
 
     @Override

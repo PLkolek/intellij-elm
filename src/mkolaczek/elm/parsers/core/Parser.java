@@ -3,11 +3,11 @@ package mkolaczek.elm.parsers.core;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
+import mkolaczek.elm.parsers.core.context.WillParseResult;
 import mkolaczek.elm.psi.Element;
-import mkolaczek.elm.psi.Token;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import static java.util.Arrays.stream;
 
@@ -20,11 +20,16 @@ public interface Parser {
 
     Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context);
 
-    boolean willParse(PsiBuilder psiBuilder, Indentation indentation);
+    @NotNull
+    WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead);
 
     boolean isRequired();
 
     String name();
+
+    default boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
+        return willParse(psiBuilder, indentation, 1).isSuccess();
+    }
 
     default Parser as(Element as) {
         return new As(this, as, As.Mode.SKIP_EMPTY);
@@ -39,8 +44,8 @@ public interface Parser {
     }
 
 
-    default Parser ll2(HashSet<Token> firstTokens, HashSet<Token> secondTokens) {
-        return new LL2(this, firstTokens, secondTokens);
+    default Parser llk(int lookahead) {
+        return new LL2(this, lookahead);
     }
 
     static boolean anyRequired(Parser... parsers) {

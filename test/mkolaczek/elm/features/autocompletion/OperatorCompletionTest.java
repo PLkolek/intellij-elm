@@ -49,6 +49,7 @@ public class OperatorCompletionTest extends LightCodeInsightFixtureTestCase {
 
     public void testSymbolCompletionAsFunctionInExpression() {
         myFixture.configureByFiles("asFunctionInExpression/Expression.elm");
+
         autocomplete(withBuiltIn("(<<<<)", "someVal", "let", "if", "case"));
     }
 }

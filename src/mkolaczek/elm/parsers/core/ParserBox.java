@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
+import mkolaczek.elm.parsers.core.context.WillParseResult;
 
 import java.util.Collection;
 
@@ -27,8 +28,8 @@ public class ParserBox implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
-        return containedParser.willParse(psiBuilder, indentation);
+    public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
+        return containedParser.willParse(psiBuilder, indentation, lookahead);
     }
 
     @Override

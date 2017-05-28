@@ -36,15 +36,18 @@ public class KeywordCompletion {
         c.autocomplete(onFreshLine().and(after(IMPORTS)),                                       keyword("port"));
 
         c.autocomplete(e().atStartOf(e(EXPRESSION)),                                            keyword("let"));
+        c.autocomplete(inside(EXPRESSION).afterLeaf(e(LPAREN)),                                 keyword("let"));
         c.autocomplete(e().atStartOf(e(OPERAND)),                                               keyword("let"));
         c.autocomplete(e().inside(e(LET_EXPRESSION)),                                           keyword("in")); //too broad, but...
 
         c.autocomplete(e().atStartOf(e(EXPRESSION)),                                            keyword("if"));
+        c.autocomplete(inside(EXPRESSION).afterLeaf(e(LPAREN)),                                 keyword("if"));
         c.autocomplete(e().atStartOf(e(OPERAND)),                                               keyword("if"));
         c.autocomplete(e().inside(e(Elements.IF_EXPRESSION)),                                   keyword("then")); //too broad, but...
         c.autocomplete(e().inside(e(IF_EXPRESSION)),                                            keyword("else")); //too broad, but...
 
         c.autocomplete(e().atStartOf(e(EXPRESSION)),                                            keyword("case"));
+        c.autocomplete(inside(EXPRESSION).afterLeaf(e(LPAREN)),                                 keyword("case"));
         c.autocomplete(e().atStartOf(e(OPERAND)),                                               keyword("case"));
         c.autocomplete(e().inside(e(CASE_EXPRESSION)),                                          keyword("of")); //too broad, but...
         //@formatter:on

@@ -4,6 +4,7 @@ import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.parsers.core.context.IndentationUtil;
+import mkolaczek.elm.parsers.core.context.WillParseResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -62,8 +63,11 @@ public class WhiteSpace implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder builder, Indentation indentation) {
-        return acceptsWhiteSpace(builder, indentation) && prefixedParsed.willParse(builder, indentation);
+    public WillParseResult willParse(PsiBuilder builder, Indentation indentation, int lookahead) {
+        if (!acceptsWhiteSpace(builder, indentation)) {
+            return WillParseResult.failure();
+        }
+        return prefixedParsed.willParse(builder, indentation, lookahead);
     }
 
     private boolean acceptsWhiteSpace(PsiBuilder psiBuilder, Indentation indentation) {

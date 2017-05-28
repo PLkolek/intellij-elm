@@ -23,6 +23,7 @@ public class ValueCompletion {
         c.autocomplete(inExposing(OPERATOR),                                  ValueCompletion::notExposedOperators);
         c.autocomplete(inExposing(VALUE_EXPOSING),                            ValueCompletion::notExposedValues);
         c.autocomplete(inside(EXPRESSION).afterLeaf(e(LPAREN)),               ValueCompletion::visibleOperatorsInParens);
+        c.autocomplete(inside(EXPRESSION).afterLeaf(e(LPAREN)),               ValueCompletion::visibleValues);
         c.autocomplete(e().inside(e(QUALIFIED_VAR)),                          ValueCompletion::visibleValues);
         //@formatter:on
         c.autocomplete(e().inside((e(OPERATOR).atStartOf(e(OPERATOR_DECLARATION)))),

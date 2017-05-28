@@ -8,7 +8,6 @@ import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static mkolaczek.elm.parsers.Basic.*;
 import static mkolaczek.elm.parsers.Literal.glsl;
 import static mkolaczek.elm.parsers.Literal.literal;
@@ -38,7 +37,7 @@ class Expression {
                 sequence(
                         expect(Tokens.LOW_VAR).as(Elements.VALUE_NAME_REF),
                         Type.annotationEnd()
-                ).as(Elements.TYPE_ANNOTATION).ll2(newHashSet(LOW_VAR), newHashSet(COLON)),
+                ).as(Elements.TYPE_ANNOTATION).llk(2),
                 sequence(
                         sequence(
                                 or(
@@ -56,7 +55,7 @@ class Expression {
     public static Parser operatorDefinition() {
         return sequence(
                 Basic.operator(Elements.OPERATOR_SYMBOL)
-                     .ll2(newHashSet(LPAREN), newHashSet(RUNE_OF_AUTOCOMPLETION, SYM_OP, CONS, MINUS)),
+                     .llk(2),
                 or(
                         Type.annotationEnd().swapAs(TYPE_ANNOTATION),
                         sequence(
@@ -180,10 +179,9 @@ class Expression {
 
     private static Parser operator() {
         return or(
-                Basic.operator(Elements.OPERATOR_SYMBOL_REF).ll2(newHashSet(LPAREN), newHashSet(SYM_OP, CONS)),
-                Basic.parens("minus operator", expect(MINUS)).ll2(newHashSet(LPAREN), newHashSet(MINUS)),
-                Basic.parens("tuple operator", or(expect(Tokens.COMMA_OP), expect(COMMA)))
-                     .ll2(newHashSet(LPAREN), newHashSet(COMMA, COMMA_OP))
+                Basic.operator(Elements.OPERATOR_SYMBOL_REF).llk(2),
+                Basic.parens("minus operator", expect(MINUS)).llk(2),
+                Basic.parens("tuple operator", or(expect(Tokens.COMMA_OP), expect(COMMA))).llk(2)
         );
     }
 

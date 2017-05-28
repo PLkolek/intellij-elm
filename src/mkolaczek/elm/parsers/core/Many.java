@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
+import mkolaczek.elm.parsers.core.context.WillParseResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -74,8 +75,9 @@ public class Many implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
-        return parser.willParse(psiBuilder, indentation);
+    public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
+        //TODO TODO TODO
+        return parser.willParse(psiBuilder, indentation, lookahead);
     }
 
     @Override

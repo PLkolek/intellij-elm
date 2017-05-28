@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
+import mkolaczek.elm.parsers.core.context.WillParseResult;
 
 import java.util.Collection;
 
@@ -37,13 +38,14 @@ public class Or implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder builder, Indentation indentation) {
+    public WillParseResult willParse(PsiBuilder builder, Indentation indentation, int lookahead) {
         for (Parser parser : parsers) {
-            if (parser.willParse(builder, indentation)) {
-                return true;
+            WillParseResult parseResult = parser.willParse(builder, indentation, lookahead);
+            if (parseResult.isSuccess()) {
+                return parseResult;
             }
         }
-        return false;
+        return WillParseResult.failure();
     }
 
     @Override

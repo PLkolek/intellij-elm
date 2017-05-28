@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
+import mkolaczek.elm.parsers.core.context.WillParseResult;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,16 +57,23 @@ public class Sequence implements Parser {
     }
 
     @Override
-    public boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
+    public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
+        PsiBuilder.Marker marker = psiBuilder.mark();
         for (Parser parser : parsers) {
-            if (parser.willParse(psiBuilder, indentation)) {
-                return true;
-            }
-            if (parser.isRequired()) {
-                return false;
+            WillParseResult parseResult = parser.willParse(psiBuilder, indentation, lookahead);
+            if (parseResult.isSuccess()) {
+                if (parseResult.remainingLookahead() == 0) {
+                    marker.rollbackTo();
+                    return parseResult;
+                }
+                lookahead = parseResult.remainingLookahead();
+            } else if (parser.isRequired()) {
+                marker.rollbackTo();
+                return WillParseResult.failure();
             }
         }
-        return false;
+        marker.drop();
+        return WillParseResult.success(lookahead);
     }
 
     @Override
