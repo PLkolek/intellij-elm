@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import static mkolaczek.elm.features.autocompletion.ElmCompletionContributor.location;
 import static mkolaczek.elm.features.autocompletion.Patterns.*;
 import static mkolaczek.elm.psi.Elements.*;
+import static mkolaczek.elm.psi.Tokens.DOT;
 import static mkolaczek.elm.psi.Tokens.RUNE_OF_AUTOCOMPLETION;
 
 public class ModuleCompletion {
@@ -25,7 +26,7 @@ public class ModuleCompletion {
         c.autocomplete(afterLeaf(Tokens.AS),                                ModuleCompletion::moduleNameParts);
         c.autocomplete(inside(MODULE_NAME_REF).inside(e(IMPORT_LINE)),      ModuleCompletion::modules);
         c.autocomplete(inside(MODULE_NAME_REF).andNot(inside(IMPORT_LINE)), ModuleCompletion::dotModules);
-        c.autocomplete(e(RUNE_OF_AUTOCOMPLETION).inside(e(PATTERN_TERM)),   ModuleCompletion::dotModules);
+        c.autocomplete(e(RUNE_OF_AUTOCOMPLETION).inside(e(PATTERN_TERM)).andNot(afterLeaf(DOT)),   ModuleCompletion::dotModules);
         c.autocomplete(inside(QUALIFIED_TYPE_NAME_REF),                     ModuleCompletion::matchingModules);
         c.autocomplete(inside(QUALIFIED_TYPE_CONSTRUCTOR_REF),              ModuleCompletion::matchingModules);
         c.autocomplete(inside(QUALIFIED_VAR),                               ModuleCompletion::matchingModules);
