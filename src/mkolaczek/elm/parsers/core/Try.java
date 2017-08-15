@@ -5,11 +5,12 @@ import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.parsers.core.context.WillParseResult;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 
 import static mkolaczek.elm.parsers.core.SkipUntil.anyWillParse;
-import static mkolaczek.elm.parsers.core.SkipUntil.willParseAfterSkipping;
 
 public class Try implements Parser {
 
@@ -35,11 +36,10 @@ public class Try implements Parser {
             start.drop();
         }
         if (result == Result.TOKEN_ERROR) {
-            if (!anyWillParse(myNextParsers, builder, context.getIndentation()) && willParseAfterSkipping(this,
-                    myNextParsers,
-                    builder,
-                    context.getIndentation())) {
-                SkipUntil.skipUntil(name(), Lists.newArrayList(this), builder, context.getIndentation());
+            if (!anyWillParse(myNextParsers, builder, context.getIndentation())) {
+                List<Parser> next = Lists.newArrayList(myNextParsers);
+                next.add(this);
+                SkipUntil.skipUntil(myNextParsers.iterator().next().name(), next, builder, context.getIndentation());
                 return contents.parse(builder, myNextParsers, context);
             } else {
                 return Result.OK;
@@ -49,6 +49,7 @@ public class Try implements Parser {
         return result;
     }
 
+    @NotNull
     @Override
     public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
         return contents.willParse(psiBuilder, indentation, lookahead);

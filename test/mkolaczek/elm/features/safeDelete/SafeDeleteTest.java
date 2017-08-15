@@ -37,7 +37,7 @@ public class SafeDeleteTest extends MultiFileTestCase {
                 "module <b><code>Test2</code></b> has 2 usages that are not safe to delete.<br>Of those 1 usage is in strings, comments, non-code files or generated code.",
                 "module/used/Test1.elm",
                 "module/used/Test2.elm");
-        assertNotNull(getProject().getBaseDir().getChildren()[1].findChild("Test2.elm"));
+        assertNotNull(getProject().getBaseDir().getChildren()[0].findChild("Test2.elm"));
     }
 
     public void testSafeDeleteModuleUsedOnlyByItself() throws Exception {

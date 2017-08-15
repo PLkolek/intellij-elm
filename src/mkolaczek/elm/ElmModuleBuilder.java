@@ -29,10 +29,6 @@ public class ElmModuleBuilder extends JavaModuleBuilder implements ModuleBuilder
         return "elm";
     }
 
-    @Override
-    public Icon getBigIcon() {
-        return null;
-    }
 
     @Override
     public Icon getNodeIcon() {

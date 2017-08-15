@@ -32,10 +32,6 @@ public class ElmModuleType extends ModuleType<ElmModuleBuilder> {
         return "Support for Elm";
     }
 
-    @Override
-    public Icon getBigIcon() {
-        return null;
-    }
 
     @Override
     public Icon getNodeIcon(boolean isOpened) {

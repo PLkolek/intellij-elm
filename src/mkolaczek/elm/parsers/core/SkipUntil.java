@@ -30,26 +30,6 @@ class SkipUntil {
         }
     }
 
-    public static boolean willParseAfterSkipping(Parser me,
-                                                 Collection<Parser> nextParsers,
-                                                 PsiBuilder builder,
-                                                 Indentation indentation) {
-        PsiBuilder.Marker errorStart = builder.mark();
-        nextParsers = Lists.newArrayList(nextParsers);
-        nextParsers.add(me);
-        while (!builder.eof()) {
-            //noinspection SuspiciousMethodCalls
-            if (anyWillParse(nextParsers, builder, indentation)) {
-                boolean result = me.willParse(builder, indentation);
-                errorStart.rollbackTo();
-                return result;
-            }
-            builder.advanceLexer();
-        }
-        errorStart.rollbackTo();
-        return false;
-    }
-
     public static boolean anyWillParse(Collection<Parser> nextParsers, PsiBuilder builder, Indentation indentation) {
         return nextParsers.stream().anyMatch(p -> p.willParse(builder, indentation));
     }

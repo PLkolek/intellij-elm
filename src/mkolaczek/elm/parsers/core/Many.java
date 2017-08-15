@@ -64,16 +64,13 @@ public class Many implements Parser {
             } else if (anyWillParse(myNextParsers, builder, context.getIndentation()) || builder.eof()) {
                 break;
             } else {
-                if (willParseAfterSkipping(this, myNextParsers, builder, context.getIndentation())) {
-                    skipUntil(parser.name(), Lists.newArrayList(this), builder, context.getIndentation());
-                } else {
-                    break;
-                }
+                skipUntil(parser.name(), childNextParsers, builder, context.getIndentation());
             }
         } while (true);
         return Result.OK;
     }
 
+    @NotNull
     @Override
     public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
         //TODO TODO TODO
