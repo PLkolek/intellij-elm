@@ -10,12 +10,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class LL2 implements Parser {
+public class LLK implements Parser {
 
     private final Parser contents;
     private final int lookahead;
 
-    public LL2(Parser contents, int lookahead) {
+    public LLK(Parser contents, int lookahead) {
         this.contents = contents;
         this.lookahead = lookahead;
     }
@@ -33,7 +33,10 @@ public class LL2 implements Parser {
     @Override
     public WillParseResult willParse(PsiBuilder builder, Indentation indentation, int lookahead) {
         Preconditions.checkArgument(lookahead == 1);
-        return contents.willParse(builder, indentation, this.lookahead);
+        PsiBuilder.Marker marker = builder.mark();
+        WillParseResult result = contents.willParse(builder, indentation, this.lookahead);
+        marker.rollbackTo();
+        return result;
     }
 
     @Override

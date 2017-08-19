@@ -28,7 +28,10 @@ public interface Parser {
     String name();
 
     default boolean willParse(PsiBuilder psiBuilder, Indentation indentation) {
-        return willParse(psiBuilder, indentation, 1).isSuccess();
+        PsiBuilder.Marker marker = psiBuilder.mark();
+        boolean result = willParse(psiBuilder, indentation, 1).isSuccess();
+        marker.rollbackTo();
+        return result;
     }
 
     default Parser as(Element as) {
@@ -45,7 +48,7 @@ public interface Parser {
 
 
     default Parser llk(int lookahead) {
-        return new LL2(this, lookahead);
+        return new LLK(this, lookahead);
     }
 
     static boolean anyRequired(Parser... parsers) {

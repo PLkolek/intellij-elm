@@ -63,7 +63,7 @@ public class Sequence implements Parser {
             WillParseResult parseResult = parser.willParse(psiBuilder, indentation, lookahead);
             if (parseResult.isSuccess()) {
                 if (parseResult.remainingLookahead() == 0) {
-                    marker.rollbackTo();
+                    marker.drop();
                     return parseResult;
                 }
                 lookahead = parseResult.remainingLookahead();

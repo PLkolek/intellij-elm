@@ -73,8 +73,15 @@ public class Many implements Parser {
     @NotNull
     @Override
     public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
-        //TODO TODO TODO
-        return parser.willParse(psiBuilder, indentation, lookahead);
+        WillParseResult finalResult = WillParseResult.failure();
+        WillParseResult lastResult;
+        do {
+            lastResult = parser.willParse(psiBuilder, indentation, lookahead);
+            if(lastResult.isSuccess()) {
+                finalResult = lastResult;
+            }
+        } while (lastResult.isSuccess() && lastResult.remainingLookahead() > 0);
+        return finalResult;
     }
 
     @Override

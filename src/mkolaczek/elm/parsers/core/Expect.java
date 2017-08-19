@@ -35,9 +35,7 @@ public class Expect implements Parser {
     @Override
     public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
         if (psiBuilder.getTokenType() == expectedToken) {
-            if (lookahead > 1) {
-                psiBuilder.advanceLexer();
-            }
+            psiBuilder.advanceLexer();
             return WillParseResult.success(lookahead - 1);
         }
         return WillParseResult.failure();
