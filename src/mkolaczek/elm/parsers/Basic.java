@@ -12,7 +12,6 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.psi.Tokens.LPAREN;
 import static mkolaczek.elm.psi.Tokens.RPAREN;
 
@@ -23,7 +22,7 @@ class Basic {
                 expect(LPAREN),
                 listingContent(name + " content", listedValue),
                 expect(RPAREN)
-        ).separatedBy(WhiteSpace::maybeWhitespace)
+        )
          .as(Elements.MODULE_VALUE_LIST);
     }
 
@@ -39,7 +38,7 @@ class Basic {
                 expect(Tokens.LPAREN),
                 operatorSymbol(operatorSymbol),
                 expect(Tokens.RPAREN)
-        ).separatedBy(WhiteSpace::maybeWhitespace).as(Elements.OPERATOR);
+        ).as(Elements.OPERATOR);
     }
 
     public static Parser operatorSymbol(Element as) {
@@ -77,7 +76,7 @@ class Basic {
 
     @NotNull
     private static Parser[] surroundContent(Token left, Token right, Parser contents) {
-        return new Parser[]{expect(left), maybeWhitespace(contents), maybeWhitespace(expect(right))};
+        return new Parser[]{expect(left), contents, expect(right)};
     }
 
     public static Parser docComment() {
@@ -89,7 +88,7 @@ class Basic {
 
     public static Parser spacePrefix(Parser parser) {
         return Many.many(String.format("space prefixed list of %ss", parser.name()),
-                Try.tryP(maybeWhitespace(parser))
+                Try.tryP(parser)
         );
     }
 
@@ -112,16 +111,16 @@ class Basic {
                 tryP(
                         sequence(
                                 expect(Tokens.LOW_VAR),
-                                maybeWhitespace(or(
+                                or(
                                         sequence(
                                                 expect(Tokens.PIPE),
-                                                maybeWhitespace(tryCommaSep(recordField(fieldSuffix)))
+                                                tryCommaSep(recordField(fieldSuffix))
                                         ),
                                         sequence(
                                                 fieldSuffix,
-                                                maybeWhitespace(commaSepSuffix(recordField(fieldSuffix)))
+                                                commaSepSuffix(recordField(fieldSuffix))
                                         )
-                                ))
+                                )
                         ).as(Elements.SURROUND_CONTENTS)
                 )
         );

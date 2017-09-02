@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
 class SepBy {
     public static Parser pipeSep(Parser parser) {
@@ -42,8 +41,8 @@ class SepBy {
     @NotNull
     private static Many sepSuffix(Token separator, Parser parser) {
         return Many.many(String.format("more %ss", parser.name()),
-                maybeWhitespace(expect(separator)),
-                maybeWhitespace(parser)
+                expect(separator),
+                parser
         );
     }
 }

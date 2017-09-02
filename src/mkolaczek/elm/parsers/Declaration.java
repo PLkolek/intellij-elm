@@ -3,7 +3,6 @@ package mkolaczek.elm.parsers;
 import mkolaczek.elm.parsers.core.Many;
 import mkolaczek.elm.parsers.core.Parser;
 import mkolaczek.elm.parsers.core.Sequence;
-import mkolaczek.elm.parsers.core.WhiteSpace;
 import mkolaczek.elm.psi.Elements;
 import mkolaczek.elm.psi.Tokens;
 import org.jetbrains.annotations.NotNull;
@@ -15,8 +14,6 @@ import static mkolaczek.elm.parsers.core.ConsumeRest.consumeRest;
 import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
-import static mkolaczek.elm.parsers.core.WhiteSpace.freshLine;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
 class Declaration {
 
@@ -24,7 +21,7 @@ class Declaration {
         return sequence("declarations",
                 Many.many1(
                         sequence("declaration",
-                                freshLine(declaration())
+                                declaration()
                         )
                 ),
                 consumeRest("declaration")
@@ -47,7 +44,7 @@ class Declaration {
                 expect(Tokens.PORT),
                 or(expect(Tokens.LOW_VAR), expect(Tokens.RUNE_OF_AUTOCOMPLETION)).as(Elements.PORT_NAME),
                 Type.annotationEnd()
-        ).separatedBy(WhiteSpace::maybeWhitespace).as(Elements.PORT_DECLARATION);
+        ).as(Elements.PORT_DECLARATION);
     }
 
     private static Parser infixDecl() {
@@ -55,17 +52,17 @@ class Declaration {
                 or(expect(Tokens.INFIXL), expect(Tokens.INFIXR), expect(Tokens.INFIX)),
                 expect(Tokens.DIGIT),
                 operatorSymbol(Elements.OPERATOR_SYMBOL_REF)
-        ).separatedBy(WhiteSpace::maybeWhitespace).as(Elements.INFIX_DECLARATION);
+        ).as(Elements.INFIX_DECLARATION);
 
     }
 
     private static Parser typeDecl() {
         return sequence(
                 expect(Tokens.TYPE),
-                maybeWhitespace(or("type declaration contents",
+                or("type declaration contents",
                         typeAliasDecl(),
                         typeDeclContents()
-                ))
+                )
         ).as(Elements.TYPE_DECLARATION);
     }
 
@@ -73,8 +70,8 @@ class Declaration {
         return sequence("type declaration contents suffix",
                 nameArgs(),
                 sequence(
-                        maybeWhitespace(expect(Tokens.EQUALS)),
-                        maybeWhitespace(pipeSep(Type.unionConstructor()))
+                        expect(Tokens.EQUALS),
+                        pipeSep(Type.unionConstructor())
                 ).as(Elements.TYPE_DECL_DEF_NODE)
         ).as(Elements.TYPE_DECL_NODE);
     }
@@ -82,9 +79,9 @@ class Declaration {
     private static Parser typeAliasDecl() {
         return sequence("type alias declaration",
                 expect(Tokens.ALIAS),
-                maybeWhitespace(nameArgs()),
-                maybeWhitespace(expect(Tokens.EQUALS)),
-                maybeWhitespace(Type.expression)
+                nameArgs(),
+                expect(Tokens.EQUALS),
+                Type.expression
         ).as(Elements.TYPE_ALIAS_DECL_NODE);
     }
 

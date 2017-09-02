@@ -14,8 +14,6 @@ import static mkolaczek.elm.parsers.core.Many.many;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
-import static mkolaczek.elm.parsers.core.WhiteSpace.freshLine;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 import static mkolaczek.elm.psi.Elements.MODULE_ALIAS;
 import static mkolaczek.elm.psi.Elements.OPERATOR_SYMBOL_REF;
 import static mkolaczek.elm.psi.Tokens.CAP_VAR;
@@ -25,30 +23,30 @@ class Module {
 
     public static Parser moduleHeader() {
         return sequence("Module Header",
-                tryP(freshLine(moduleDeclaration())),
-                tryP(freshLine(Basic.docComment())),
+                tryP(moduleDeclaration()),
+                tryP(Basic.docComment()),
                 many(Module.importLine()).as(Elements.IMPORTS, As.Mode.MARK_ALWAYS)
         );
     }
 
     private static Parser importLine() {
-        return freshLine(sequence(
+        return sequence(
                 expect(Tokens.IMPORT),
-                maybeWhitespace(DottedVar.moduleName().as(Elements.MODULE_NAME_REF)),
+                DottedVar.moduleName().as(Elements.MODULE_NAME_REF),
                 tryP(
                         sequence("as clause",
-                                maybeWhitespace(expect(Tokens.AS)).skipWsError(),
-                                maybeWhitespace(expect(CAP_VAR).as(MODULE_ALIAS))
+                                expect(Tokens.AS),
+                                expect(CAP_VAR).as(MODULE_ALIAS)
                         )
                 ),
-                tryP(maybeWhitespace(exposing()).skipWsError())
-        ).as(Elements.IMPORT_LINE));
+                tryP(exposing())
+        ).as(Elements.IMPORT_LINE);
     }
 
     private static Parser exposing() {
         return sequence(
                 expect(Tokens.EXPOSING),
-                maybeWhitespace(listing("list of exposed values", exposed()))
+                listing("list of exposed values", exposed())
         ).as(Elements.EXPOSING_NODE);
 
     }
@@ -79,7 +77,7 @@ class Module {
     private static Parser settings() {
         return sequence(
                 expect(Tokens.WHERE),
-                maybeWhitespace(settingsList())
+                settingsList()
         ).as(Elements.EFFECT_MODULE_SETTINGS);
     }
 
@@ -88,8 +86,8 @@ class Module {
                 tryCommaSep(
                         sequence(
                                 expect(Tokens.LOW_VAR),
-                                maybeWhitespace(expect(Tokens.EQUALS)),
-                                maybeWhitespace(expect(Tokens.CAP_VAR))
+                                expect(Tokens.EQUALS),
+                                expect(Tokens.CAP_VAR)
                         ).as(Elements.EFFECT_MODULE_SETTING)
                 )
         ).as(Elements.EFFECT_MODULE_SETTINGS_LIST);
@@ -99,10 +97,10 @@ class Module {
         Sequence effectSequence =
                 sequence("Module declaration",
                         expect(Tokens.EFFECT),
-                        maybeWhitespace(expect(Tokens.MODULE)),
-                        maybeWhitespace(DottedVar.moduleName().as(Elements.MODULE_NAME)),
-                        maybeWhitespace(settings()).skipWsError(),
-                        maybeWhitespace(exposing()).skipWsError()
+                        expect(Tokens.MODULE),
+                        DottedVar.moduleName().as(Elements.MODULE_NAME),
+                        settings(),
+                        exposing()
                 );
 
         Sequence sequence =
@@ -110,12 +108,12 @@ class Module {
                         or("Module declaration keywords",
                                 sequence("Port module declaration keywords",
                                         expect(Tokens.PORT),
-                                        maybeWhitespace(expect(Tokens.MODULE)).skipWsError()
+                                        expect(Tokens.MODULE)
                                 ),
                                 expect(Tokens.MODULE)
                         ),
-                        maybeWhitespace(DottedVar.moduleName().as(Elements.MODULE_NAME)),
-                        maybeWhitespace(exposing()).skipWsError()
+                        DottedVar.moduleName().as(Elements.MODULE_NAME),
+                        exposing()
                 );
         return or(effectSequence, sequence).as(Elements.MODULE_HEADER);
     }

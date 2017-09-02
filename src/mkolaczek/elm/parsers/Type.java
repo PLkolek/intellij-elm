@@ -13,7 +13,6 @@ import static mkolaczek.elm.parsers.core.Expect.expect;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.Try.tryP;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
 
 class Type {
 
@@ -52,8 +51,8 @@ class Type {
                     or(app, term),
                     tryP(
                             sequence(
-                                    maybeWhitespace(expect(Tokens.ARROW)),
-                                    maybeWhitespace(expression)
+                                    expect(Tokens.ARROW),
+                                    expression
                             )
                     )
             ).as(Elements.TYPE_EXPRESSION);
@@ -71,8 +70,8 @@ class Type {
 
     public static Parser annotationEnd() {
         return sequence(
-                maybeWhitespace(expect(Tokens.COLON)),
-                maybeWhitespace(Type.expression)
+                expect(Tokens.COLON),
+                Type.expression
         ).as(Elements.TYPE_ANNOTATION_END);
     }
 }

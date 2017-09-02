@@ -35,12 +35,6 @@ public class Sequence implements Parser {
         return "Something is wrong, that name should never be needed!";
     }
 
-    public Sequence separatedBy(Function<Parser, WhiteSpace> whiteSpace) {
-        Parser[] parsers = Arrays.stream(this.parsers).map(whiteSpace).toArray(Parser[]::new);
-        parsers[0] = this.parsers[0]; //it's separated, not prefixed
-        return new Sequence(name, parsers);
-    }
-
     private Sequence(String name, Parser... parsers) {
         this.name = name;
         this.parsers = parsers;

@@ -68,12 +68,12 @@ public class DottedVar implements Parser {
         builder.advanceLexer();
         int start = builder.getCurrentOffset();
         if (type == CAP_VAR) {
-            while (isDot(builder) && WhiteSpace.Type.NO.accepts(builder, context.getIndentation())) {
+            while (isDot(builder)) {
                 prefixEnd = replace(builder, prefixEnd);
                 builder.advanceLexer();
                 suffix = replace(builder, suffix);
                 suffixStart = builder.getCurrentOffset();
-                if (!isVar(builder) || !WhiteSpace.Type.NO.accepts(builder, context.getIndentation())) {
+                if (!isVar(builder)) {
                     builder.error(varTokens + " expected");
                     break;
                 }

@@ -17,8 +17,6 @@ import static mkolaczek.elm.parsers.core.Many.indentedMany1;
 import static mkolaczek.elm.parsers.core.Many.many;
 import static mkolaczek.elm.parsers.core.Or.or;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
-import static mkolaczek.elm.parsers.core.WhiteSpace.maybeWhitespace;
-import static mkolaczek.elm.parsers.core.WhiteSpace.noWhiteSpace;
 import static mkolaczek.elm.psi.Elements.*;
 import static mkolaczek.elm.psi.Tokens.*;
 
@@ -68,8 +66,8 @@ class Expression {
 
     private static Parser definitionEnd() {
         return sequence("definitionEnd",
-                maybeWhitespace(expect(EQUALS)),
-                maybeWhitespace(expression)
+                expect(EQUALS),
+                expression
         );
     }
 
@@ -121,12 +119,10 @@ class Expression {
     private static Sequence minusOperator() {
         return sequence(
                 expect(MINUS).as(Elements.OPERATOR_SYMBOL_REF),
-                maybeWhitespace(
-                        or(
-                                term(),
-                                finalExpression().as(EXPRESSION)
-                        ).as(Elements.OPERAND)
-                )
+                or(
+                        term(),
+                        finalExpression().as(EXPRESSION)
+                ).as(Elements.OPERAND)
         );
     }
 
@@ -134,10 +130,10 @@ class Expression {
     private static Sequence otherOperator() {
         return sequence(
                 operatorSymbol(Elements.OPERATOR_SYMBOL_REF),
-                maybeWhitespace(or(
+                or(
                         possiblyNegativeTerm(),
                         finalExpression().as(EXPRESSION)
-                ).as(Elements.OPERAND))
+                ).as(Elements.OPERAND)
         );
     }
 
@@ -145,7 +141,7 @@ class Expression {
         return or(
                 sequence(
                         expect(MINUS),
-                        noWhiteSpace(term())
+                        term()
                 ),
                 term()
         );
@@ -166,7 +162,7 @@ class Expression {
     private static Parser accessor() {
         return sequence("accessor",
                 expect(DOT),
-                noWhiteSpace(expect(LOW_VAR))
+                expect(LOW_VAR)
         );
     }
 
@@ -188,8 +184,8 @@ class Expression {
     @NotNull
     private static Sequence fieldSuffix() {
         return sequence("record field suffix",
-                maybeWhitespace(expect(Tokens.EQUALS)),
-                maybeWhitespace(expression)
+                expect(Tokens.EQUALS),
+                expression
         );
     }
 
@@ -204,8 +200,8 @@ class Expression {
         return sequence(
                 parser,
                 many("accessors",
-                        noWhiteSpace(expect(DOT)),
-                        noWhiteSpace(expect(LOW_VAR))
+                        expect(DOT),
+                        expect(LOW_VAR)
                 )
         );
     }
@@ -213,17 +209,17 @@ class Expression {
     private static Parser function() {
         return sequence(
                 expect(LAMBDA),
-                maybeWhitespace(definedValues()).as(DEFINED_VALUES),
+                definedValues().as(DEFINED_VALUES),
                 spacePrefix(definedValues()).as(DEFINED_VALUES),
-                maybeWhitespace(expect(ARROW)),
-                maybeWhitespace(expression)
+                expect(ARROW),
+                expression
         ).as(Elements.LAMBDA_EXPRESSION);
     }
 
     private static Parser case_() {
         return sequence(
                 expect(CASE),
-                maybeWhitespace(expression),
+                expression,
                 expect(OF),
                 indentedMany1(caseBranch())
         ).as(CASE_EXPRESSION);
@@ -233,28 +229,28 @@ class Expression {
         return sequence(
                 Pattern.expression.as(DEFINED_VALUES),
                 expect(Tokens.ARROW),
-                maybeWhitespace(expression)
+                expression
         ).as(Elements.CASE_BRANCH);
     }
 
     private static Parser if_() {
         return sequence(
-                maybeWhitespace(expect(Tokens.IF)),
-                maybeWhitespace(expression),
-                maybeWhitespace(expect(Tokens.THEN)),
-                maybeWhitespace(expression),
-                maybeWhitespace(expect(Tokens.ELSE)),
-                maybeWhitespace(expression) //this should handle else if
+                expect(Tokens.IF),
+                expression,
+                expect(Tokens.THEN),
+                expression,
+                expect(Tokens.ELSE),
+                expression //this should handle else if
         ).as(IF_EXPRESSION);
 
     }
 
     private static Parser let() {
         return sequence(
-                maybeWhitespace(expect(Tokens.LET)),
+                expect(Tokens.LET),
                 Many.indentedMany1(definition()),
-                maybeWhitespace(expect(Tokens.IN)),
-                maybeWhitespace(expression)
+                expect(Tokens.IN),
+                expression
         ).as(Elements.LET_EXPRESSION);
     }
 

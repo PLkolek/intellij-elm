@@ -12,7 +12,6 @@ import java.util.Collection;
 import static mkolaczek.elm.parsers.core.IndentedBlock.indentedBlock;
 import static mkolaczek.elm.parsers.core.Sequence.sequence;
 import static mkolaczek.elm.parsers.core.SkipUntil.*;
-import static mkolaczek.elm.parsers.core.WhiteSpace.indented;
 
 public class Many implements Parser {
 
@@ -43,7 +42,7 @@ public class Many implements Parser {
         return indentedBlock(
                 sequence(
                         itemParser,
-                        many(indented(itemParser))
+                        many(itemParser)
                 )
         );
     }
