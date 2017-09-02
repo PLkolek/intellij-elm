@@ -7,10 +7,8 @@ import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.parsers.core.context.WillParseResult;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 
 public class Sequence implements Parser {
 
@@ -76,10 +74,6 @@ public class Sequence implements Parser {
             return Result.TOKEN_ERROR;
         }
         //noinspection SuspiciousMethodCalls
-        return parse2(builder, nextParsers, context);
-    }
-
-    public Result parse2(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
         List<Collection<Parser>> childrenNextParsers = nextParsers(nextParsers);
 
         Result result = Result.OK;

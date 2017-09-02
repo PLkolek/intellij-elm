@@ -6,6 +6,7 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
+import mkolaczek.elm.parsers.core.ConsumeRest;
 import mkolaczek.elm.parsers.core.Sequence;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.psi.Elements;
@@ -39,6 +40,7 @@ public class ElmParser implements PsiParser {
                 tryP(Module.moduleHeader()),
                 Declaration.declarations()
         );
-        parser.parse2(builder, Sets.newHashSet(), Context.create());
+        parser.parse(builder, Sets.newHashSet(), Context.create());
+        ConsumeRest.consumeRest("aaa").parse(builder, Sets.newHashSet(), Context.create());
     }
 }
