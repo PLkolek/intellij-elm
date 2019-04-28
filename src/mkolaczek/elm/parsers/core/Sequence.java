@@ -70,26 +70,25 @@ public class Sequence implements Parser {
 
     @Override
     public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
-        if (builder.eof() || !willParse(builder, context.getIndentation())) {
-            return Result.TOKEN_ERROR;
-        }
-        //noinspection SuspiciousMethodCalls
+        System.out.println(name);
         List<Collection<Parser>> childrenNextParsers = nextParsers(nextParsers);
-
-        Result result = Result.OK;
+        boolean oneParsed = false;
         for (int i = 0; i < parsers.length; i++) {
             Parser parser = parsers[i];
             Collection<Parser> parserNextParsers = childrenNextParsers.get(i);
-            result = parser.parse(builder, parserNextParsers, context);
-            if (result == Result.TOKEN_ERROR) {
+            Result result = parser.parse(builder, parserNextParsers, context);
+            if (result == Result.ERROR) {
+                if(!oneParsed) {
+                    return Result.ERROR;
+                }
                 Collection<Parser> skipUntilParsers = Lists.newArrayList(parserNextParsers);
                 skipUntilParsers.add(parser);
                 SkipUntil.skipUntil(parser.name(), skipUntilParsers, builder, context.getIndentation());
-                parser.parse(builder, parserNextParsers, context);
-                result = Result.OK;
+                result = parser.parse(builder, parserNextParsers, context);
             }
+            oneParsed = oneParsed || result == Result.OK;
         }
-        return result;
+        return oneParsed ? Result.OK : Result.ERROR;
     }
 
     @Override

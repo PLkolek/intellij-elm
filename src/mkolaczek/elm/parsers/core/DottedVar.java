@@ -58,7 +58,7 @@ public class DottedVar implements Parser {
     @Override
     public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
         if (builder.eof() || !isVar(builder)) {
-            return Result.TOKEN_ERROR;
+            return Result.ERROR;
         }
         PsiBuilder.Marker prefix = builder.mark();
         PsiBuilder.Marker prefixEnd = builder.mark();

@@ -25,7 +25,7 @@ public class LLK implements Parser {
         if (willParse(builder, context.getIndentation())) {
             return contents.parse(builder, nextParsers, context);
         }
-        return Result.TOKEN_ERROR;
+        return Result.ERROR;
     }
 
     @NotNull

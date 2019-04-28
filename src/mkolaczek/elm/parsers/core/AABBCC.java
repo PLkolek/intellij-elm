@@ -4,42 +4,37 @@ import com.intellij.lang.PsiBuilder;
 import mkolaczek.elm.parsers.core.context.Context;
 import mkolaczek.elm.parsers.core.context.Indentation;
 import mkolaczek.elm.parsers.core.context.WillParseResult;
-import mkolaczek.elm.psi.Element;
+import mkolaczek.elm.psi.Tokens;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class SwapAs implements Parser {
-
-    private final Parser content;
-    private final Element as;
-
-    public SwapAs(Parser content, Element as) {
-        this.content = content;
-        this.as = as;
-    }
-
+public class AABBCC implements Parser {
     @Override
     public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
-        Result result = content.parse(builder, nextParsers, context);
-        if (result != Result.ERROR) {
-            context.getAsTypes().swap(as);
+        int count = 0;
+        while(builder.getTokenType() == Tokens.IF) {
+            count++;
+            builder.getTokenType() ==
         }
 
-        return result;
+
+        return null;
     }
 
+    @NotNull
     @Override
     public WillParseResult willParse(PsiBuilder psiBuilder, Indentation indentation, int lookahead) {
-        return content.willParse(psiBuilder, indentation, lookahead);
+        return null;
     }
 
     @Override
     public boolean isRequired() {
-        return content.isRequired();
+        return true;
     }
 
     @Override
     public String name() {
-        return content.name();
+        return "context sensitive";
     }
 }

@@ -29,7 +29,7 @@ public class TypeDeclaration extends ElmNamedElement implements Declaration {
     }
 
     public Stream<TypeConstructor> constructors() {
-        return findChildrenOfType(this, TypeConstructor.class).stream();
+        return findChildrenOfType2(this, TypeConstructor.class);
     }
 
     public boolean isAlias() {

@@ -15,7 +15,7 @@ import static java.util.Arrays.stream;
 public interface Parser {
 
     enum Result {
-        OK, WS_ERROR, TOKEN_ERROR
+        OK, ERROR, SKIPPED
     }
 
     Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context);

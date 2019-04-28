@@ -25,7 +25,7 @@ public class Expect implements Parser {
     @Override
     public Result parse(PsiBuilder builder, Collection<Parser> nextParsers, Context context) {
         if (builder.eof() || expectedToken != builder.getTokenType()) {
-            return Result.TOKEN_ERROR;
+            return Result.ERROR;
         }
         builder.advanceLexer();
         return Result.OK;

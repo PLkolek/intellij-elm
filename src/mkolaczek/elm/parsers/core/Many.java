@@ -57,16 +57,18 @@ public class Many implements Parser {
     public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers, Context context) {
         Collection<Parser> childNextParsers = Lists.newArrayList(myNextParsers);
         childNextParsers.add(this);
+        boolean parsedOnce = false;
         do {
-            if (willParse(builder, context.getIndentation())) {
-                parser.parse(builder, childNextParsers, context);
+            Result result = parser.parse(builder, childNextParsers, context);
+            if (result == Result.OK) {
+                parsedOnce = true;
             } else if (anyWillParse(myNextParsers, builder, context.getIndentation()) || builder.eof()) {
                 break;
             } else {
                 skipUntil(parser.name(), childNextParsers, builder, context.getIndentation());
             }
         } while (true);
-        return Result.OK;
+        return parsedOnce ? Result.OK : Result.SKIPPED;
     }
 
     @NotNull

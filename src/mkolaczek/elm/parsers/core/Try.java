@@ -27,26 +27,16 @@ public class Try implements Parser {
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
     public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers, Context context) {
-        PsiBuilder.Marker start = builder.mark();
-        int startOffset = builder.getCurrentOffset();
         Result result = contents.parse(builder, myNextParsers, context);
-        if (startOffset == builder.getCurrentOffset()) {
-            start.rollbackTo();
-        } else {
-            start.drop();
+        if(result == Result.OK) {
+            return Result.OK;
+        } else if(!anyWillParse(myNextParsers, builder, context.getIndentation())) {
+            List<Parser> next = Lists.newArrayList(myNextParsers);
+            next.add(this);
+            SkipUntil.skipUntil(myNextParsers.iterator().next().name(), next, builder, context.getIndentation());
+            return contents.parse(builder, myNextParsers, context);
         }
-        if (result == Result.TOKEN_ERROR) {
-            if (!anyWillParse(myNextParsers, builder, context.getIndentation())) {
-                List<Parser> next = Lists.newArrayList(myNextParsers);
-                next.add(this);
-                SkipUntil.skipUntil(myNextParsers.iterator().next().name(), next, builder, context.getIndentation());
-                return contents.parse(builder, myNextParsers, context);
-            } else {
-                return Result.OK;
-            }
-
-        }
-        return result;
+        return Result.SKIPPED;
     }
 
     @NotNull

@@ -50,17 +50,12 @@ public class Or implements Parser {
 
     @Override
     public Result parse(PsiBuilder builder, Collection<Parser> myNextParsers, Context context) {
-        //noinspection SuspiciousMethodCalls
-        if (builder.eof()) {
-            return Result.TOKEN_ERROR;
-        }
         for (Parser parser : parsers) {
-            Result result = parser.parse(builder, myNextParsers, context);
-            if (result != Result.TOKEN_ERROR) {
-                return result;
+            if (parser.parse(builder, myNextParsers, context) == Result.OK) {
+                return Result.OK;
             }
         }
-        return Result.TOKEN_ERROR;
+        return Result.ERROR;
     }
 
     @Override
